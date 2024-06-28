@@ -11,7 +11,7 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['fabrica.png'],
+      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'Painel da Sepe',
         short_name: 'FabricaPainel',
