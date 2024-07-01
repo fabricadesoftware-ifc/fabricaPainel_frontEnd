@@ -1,9 +1,6 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
 import { useScreen } from '@/composables/screen';
-
 const { menu } = useScreen();
-
 </script>
 
 <template>
@@ -12,7 +9,3 @@ const { menu } = useScreen();
 <RouterView />
 </div>
 </template>
-
-<style scoped>
-
-</style>
