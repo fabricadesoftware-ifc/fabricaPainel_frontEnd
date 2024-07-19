@@ -9,7 +9,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-    }
+    },
+    {
+      path: '/test-fields',
+      name: 'test-fields',
+      component: () => import("@/views/tests/FieldTestView.vue"),
+    },
   ]
 })
 
