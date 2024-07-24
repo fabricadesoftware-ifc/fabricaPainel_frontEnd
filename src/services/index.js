@@ -1,3 +1,3 @@
-import KeywordService from './keyword';
+import KeywordService from '../services/others/keyword';
 
-export { KeywordService }
+export { KeywordService };
