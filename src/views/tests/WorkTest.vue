@@ -6,7 +6,7 @@ import { useWorkStore } from '@/stores';
 const workStore = new useWorkStore()
 
 onMounted(() => {
-    workStore.getFields()
+    workStore.getWorks()
 })
 
 </script>
