@@ -16,15 +16,16 @@ export const uselayout = defineStore(
     const loading = computed(() => state.value.loading)
     const drawer = computed(() => state.value.drawer)
     const navbar = computed(() => state.value.layout.navbar)
+    const navbarDashboard = computed(() => state.value.layout.navbarDashboard)
     const colorTheme = computed(() => state.value.layout.theme)
     const darkMode = useStorage('darkMode', false)
     const currentPage = computed(() => state.value.currentPage)
     const links = computed(() => {
-      const result = navbar.value.filter((i:any) => i.value === state.value.currentPage)
+      const result = navbarDashboard.value.filter((i:any) => i.value === state.value.currentPage)
       return result.length > 0 ? result[0].links : undefined
     })
     const actionLinks = computed(() => {
-      const result = navbar.value.filter((i:any) => i.value === state.value.currentPage)
+      const result = navbarDashboard.value.filter((i:any) => i.value === state.value.currentPage)
       return result.length > 0 ? result[0].actions : undefined
     })
 
@@ -39,21 +40,33 @@ export const uselayout = defineStore(
             theme: 'primary',
             navbar: [
               {
-                text: 'Edições',
+                text: 'Página Inicial',
                 value: '/',
+              }, {
+                text: 'Sobre o Projeto',
+                value: '/settings',
+              }, {
+                text: 'Todas as Edições',
+                value: '/colaborators',
+              },
+            ],
+            navbarDashboard: [
+              {
+                text: 'Edições',
+                value: '/dashboard',
                 links: [
                   {
                     text: 'Atual',
-                    value: '/',
+                    value: '/dashboard',
                   }, {
                     text: 'Anteriores',
-                    value: '/',
+                    value: '/dashboard',
                   },
                 ],
                 actions: [
                   {
                     text: 'Nova Edição',
-                    value: '/',
+                    value: '/dashboard',
                   },
                 ],
               }, {
@@ -74,6 +87,7 @@ export const uselayout = defineStore(
 
     return {
       navbar,
+      navbarDashboard,
       colorTheme,
       drawer,
       loading,

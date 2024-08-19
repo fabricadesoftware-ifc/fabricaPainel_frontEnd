@@ -6,7 +6,7 @@
         <v-btn
           v-for="link in layoutStore.navbar"
           :key="link.text"
-          class="mr-2"
+          class="mr-1"
           :color="link.value == '/' ? 'primary' : ''"
           rounded="xl"
           :text="link.text"
@@ -16,57 +16,16 @@
 
         <v-spacer />
         <v-btn
-          class="mr-2"
+          color="primary"
           rounded="xl"
-          text="Nome de usuário"
-          variant="text"
+          text="ENTRAR COMO ALUNO"
+          variant="flat"
         />
-        <v-avatar
-          image="@/assets/user.jpg"
-          size="48"
-        />
-
       </v-container>
     </v-app-bar>
-    <v-main class="mt-7">
+    <v-main>
       <v-container>
-        <v-row>
-          <v-col cols="2">
-            <v-sheet>
-              <v-btn
-                v-for="link in layoutStore.links"
-                :key="link.text"
-                block
-                class="my-2 justify-start"
-                rounded="xl"
-                :text="link.text"
-                :to="link.value"
-                variant="plain"
-              />
-              <v-divider class="mt-3 mb-4" />
-              <v-btn
-                v-for="actionLink in layoutStore.actionLinks"
-                :key="actionLink.text"
-                block
-                class="my-2 justify-start"
-                color="primary"
-                rounded="xl"
-                :text="actionLink.text"
-                :to="actionLink.value"
-                variant="flat"
-              />
-            </v-sheet>
-          </v-col>
-
-          <v-col>
-            <v-sheet
-              min-height="70vh"
-              rounded="xl"
-            >
-              <router-view />
-            </v-sheet>
-          </v-col>
-        </v-row>
+        <router-view />
       </v-container>
     </v-main>
     <footer>
