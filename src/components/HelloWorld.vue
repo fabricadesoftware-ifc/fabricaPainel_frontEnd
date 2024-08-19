@@ -10,7 +10,7 @@
         <h1 class="text-h2 font-weight-bold">Vuetify</h1>
       </div>
 
-      <v-divider class="my-4 border-thin"></v-divider>
+      <v-divider class="my-4 border-thin" />
 
       <v-row>
         <v-col cols="12">
@@ -37,11 +37,11 @@
             </template>
 
             <v-overlay
-              opacity=".12"
-              scrim="primary"
               contained
               model-value
+              opacity=".12"
               persistent
+              scrim="primary"
             />
           </v-card>
         </v-col>
@@ -61,11 +61,11 @@
             variant="text"
           >
             <v-overlay
-              opacity=".06"
-              scrim="primary"
               contained
               model-value
+              opacity=".06"
               persistent
+              scrim="primary"
             />
           </v-card>
         </v-col>
@@ -85,11 +85,11 @@
             variant="text"
           >
             <v-overlay
-              opacity=".06"
-              scrim="primary"
               contained
               model-value
+              opacity=".06"
               persistent
+              scrim="primary"
             />
           </v-card>
         </v-col>
@@ -109,11 +109,11 @@
             variant="text"
           >
             <v-overlay
-              opacity=".06"
-              scrim="primary"
               contained
               model-value
+              opacity=".06"
               persistent
+              scrim="primary"
             />
           </v-card>
         </v-col>
@@ -133,11 +133,11 @@
             variant="text"
           >
             <v-overlay
-              opacity=".06"
-              scrim="primary"
               contained
               model-value
+              opacity=".06"
               persistent
+              scrim="primary"
             />
           </v-card>
         </v-col>
