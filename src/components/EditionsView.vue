@@ -1,21 +1,41 @@
 <template>
-  <v-container class="d-flex justify-around flex-wrap mt-10 pa-2 ga-4" style="justify-content: space-between;">
+  <v-container
+    class="d-flex justify-around flex-wrap mt-10 pa-2 ga-4"
+    style="justify-content: space-between"
+  >
     <v-card
       v-for="edition in editions"
       :key="edition.id"
-      class="ma-0, border-md"
-      color="primary"
-      hover="true"
-      width="340"
+      v-slot="{ isSelected, toggle, selectedClass }"
+      class="mx-3 border-md"
+      :class="[
+        'ma-4',
+        selectedClass,
+        { 'border-primary border-opacity-100': isSelected },
+        { 'border-white': !isSelected },
+      ]"
+      height="300"
+      rounded="xl"
+      variant="outlined"
+      width="320"
+      @click="toggle"
     >
-      <p :class="['m-10', edition.status, {'text-red': !edition.status}, {'text-green': edition.status} ]">{{ edition.status ? 'Em Aberto' : 'Finalizado' }}</p>
-      <v-card-text class="bg-surface-light pt-4">
-        <v-card-title>{{ edition.description }}</v-card-title>
-        <v-card-text>{{ edition.text }}</v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" text="Saiba mais" :to="edition.to" />
-        </v-card-actions>
-      </v-card-text>
+      <div class="h-100 d-flex flex-column justify-space-between pa-6">
+        <p :class="[edition.edition, {'text-red': !edition.status}, {'text-info': edition.status}]">{{ edition.status ? 'Em Aberto' : 'Finalizado' }}</p>
+        <h2
+          class="text-primary font-weight-bold text-h5"
+          :class="[{ 'text-red': isSelected }]"
+        >
+          {{ edition.name }}
+        </h2>
+        <p class="text-grey">
+          {{ edition.text }}
+        </p>
+        <p v-if="!isSelected" class="mr-2 font-weight-medium">
+          Clique para Ver mais
+        </p>
+        <p v-else class="mr-2 font-weight-medium">Mais informações a baixo</p>
+      </div>
     </v-card>
   </v-container>
 </template>
@@ -24,4 +44,5 @@
   defineProps({
     editions: Array,
   })
+
 </script>

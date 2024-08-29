@@ -4,18 +4,16 @@
       <v-container class="w-lg-75" fluid>
         <TitleH1 text="Edições anteriores" />
       </v-container>
-      <v-slide-group
-        v-model="model"
-        center-active
-        class="py-8"
-        show-arrows
-      >
-        <v-slide-group-item
-          v-slot="{ isSelected, toggle, selectedClass }"
-        >
+      <v-slide-group v-model="model" center-active class="py-8" show-arrows>
+        <v-slide-group-item v-slot="{ isSelected, toggle, selectedClass }">
           <v-card
             class="mx-3 border-md"
-            :class="['ma-4', selectedClass, {'border-primary border-opacity-100': isSelected}, {'border-white': !isSelected}]"
+            :class="[
+              'ma-4',
+              selectedClass,
+              { 'border-primary border-opacity-100': isSelected },
+              { 'border-white': !isSelected },
+            ]"
             height="300"
             rounded="xl"
             variant="outlined"
@@ -31,18 +29,20 @@
             />
             <div class="h-100 d-flex flex-column justify-space-between pa-6">
               <p class="text-info">Em aberto</p>
-              <h2 class="text-primary font-weight-bold text-h5" :class="[{'text-red': isSelected}]">Edição 2024</h2>
-              <p class="text-grey">breve desrição sobre oq rolou sla (asdfasdf saf a asdfas asd s fasd asd  asd a as as sad adasd asd a asd sda)....</p>
-              <p
-                v-if="!isSelected"
-                class="mr-2 font-weight-medium"
+              <h2
+                class="text-primary font-weight-bold text-h5"
+                :class="[{ 'text-red': isSelected }]"
               >
+                Edição 2024
+              </h2>
+              <p class="text-grey">
+                breve desrição sobre oq rolou sla (asdfasdf saf a asdfas asd s
+                fasd asd asd a as as sad adasd asd a asd sda)....
+              </p>
+              <p v-if="!isSelected" class="mr-2 font-weight-medium">
                 Clique para Ver mais
               </p>
-              <p
-                v-else
-                class="mr-2 font-weight-medium"
-              >
+              <p v-else class="mr-2 font-weight-medium">
                 Mais informações a baixo
               </p>
             </div>
@@ -55,7 +55,12 @@
         >
           <v-card
             class="mx-3 border-md"
-            :class="['ma-4', selectedClass, {'border-primary border-opacity-100': isSelected}, {'border-white': !isSelected}]"
+            :class="[
+              'ma-4',
+              selectedClass,
+              { 'border-primary border-opacity-100': isSelected },
+              { 'border-white': !isSelected },
+            ]"
             height="300"
             rounded="xl"
             variant="outlined"
@@ -71,18 +76,20 @@
             />
             <div class="h-100 d-flex flex-column justify-space-between pa-6">
               <p class="text-red">finalizado</p>
-              <h2 class="text-primary font-weight-bold text-h5" :class="[{'text-red': isSelected}]">Edição 2023</h2>
-              <p class="text-grey">breve desrição sobre oq rolou sla (asdfasdf saf a asdfas asd s fasd asd  asd a as as sad adasd asd a asd sda)....</p>
-              <p
-                v-if="!isSelected"
-                class="mr-2 font-weight-medium"
+              <h2
+                class="text-primary font-weight-bold text-h5"
+                :class="[{ 'text-red': isSelected }]"
               >
+                Edição 2023
+              </h2>
+              <p class="text-grey">
+                breve desrição sobre oq rolou sla (asdfasdf saf a asdfas asd s
+                fasd asd asd a as as sad adasd asd a asd sda)....
+              </p>
+              <p v-if="!isSelected" class="mr-2 font-weight-medium">
                 Clique para Ver mais
               </p>
-              <p
-                v-else
-                class="mr-2 font-weight-medium"
-              >
+              <p v-else class="mr-2 font-weight-medium">
                 Mais informações a baixo
               </p>
             </div>
@@ -90,14 +97,9 @@
         </v-slide-group-item>
       </v-slide-group>
       <v-expand-transition>
-        <v-sheet
-          v-if="model != null"
-          height="200"
-        >
+        <v-sheet v-if="model != null" height="200">
           <div class="d-flex fill-height align-center justify-center">
-            <h3 class="text-h6">
-              Selected {{ model }}
-            </h3>
+            <h3 class="text-h6">Selected {{ model }}</h3>
           </div>
         </v-sheet>
       </v-expand-transition>
