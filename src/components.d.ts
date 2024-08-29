@@ -19,6 +19,7 @@ declare module 'vue' {
     IssuesPreview: typeof import('./components/IssuesPreview.vue')['default']
     LayoutDashboard: typeof import('./components/LayoutDashboard.vue')['default']
     LayoutDefault: typeof import('./components/LayoutDefault.vue')['default']
+    LayoutEditions: typeof import('./components/LayoutEditions.vue')['default']
     MainBanner: typeof import('./components/MainBanner.vue')['default']
     PersonTable: typeof import('./components/PersonTable.vue')['default']
     RecivedTable: typeof import('./components/RecivedTable.vue')['default']
