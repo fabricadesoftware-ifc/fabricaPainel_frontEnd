@@ -1,9 +1,9 @@
 <template>
   <LayoutDashboard>
     <h1>
-      trash router
+      all editions
     </h1>
   </LayoutDashboard>
 </template>
 
-  <script lang="ts" setup></script>
+<script lang="ts" setup></script>

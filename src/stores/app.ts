@@ -1,6 +1,7 @@
 import { computed, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import { useStorage } from '@vueuse/core'
+import { useRouter } from 'vue-router'
 
 export const uselayout = defineStore(
   'layoutDefault',
@@ -9,8 +10,10 @@ export const uselayout = defineStore(
       layout: {},
       drawer: false,
       loading: false,
-      currentPage: '/',
     })
+
+    const router = useRouter()
+    const currentPage = computed(() => router.currentRoute.value.path)
 
     const state = useStorage('layout', initialState)
     const loading = computed(() => state.value.loading)
@@ -19,19 +22,22 @@ export const uselayout = defineStore(
     const navbarDashboard = computed(() => state.value.layout.navbarDashboard)
     const colorTheme = computed(() => state.value.layout.theme)
     const darkMode = useStorage('darkMode', false)
-    const currentPage = computed(() => state.value.currentPage)
     const links = computed(() => {
-      const result = navbarDashboard.value.filter((i:any) => i.value === state.value.currentPage)
+      const result = navbarDashboard.value.filter((i:any) => {
+        return i.value.split('/')[2] === currentPage.value.split('/')[2]
+      })
       return result.length > 0 ? result[0].links : undefined
     })
     const actionLinks = computed(() => {
-      const result = navbarDashboard.value.filter((i:any) => i.value === state.value.currentPage)
+      const result = navbarDashboard.value.filter((i:any) => {
+        return i.value.split('/')[2] === currentPage.value.split('/')[2]
+      })
       return result.length > 0 ? result[0].actions : undefined
     })
 
     const toggleDrawer = () => state.value.drawer = !state.value.drawer
     const toggleDarkMode = () => darkMode.value = !darkMode.value
-    const setPage = (page: string) => state.value.currentPage = page
+    const setPage = (page: string) => currentPage.value = page
     const getSettings = async () => {
       try {
         // const data = await getLayout();
@@ -53,28 +59,37 @@ export const uselayout = defineStore(
             navbarDashboard: [
               {
                 text: 'Edições',
-                value: '/dashboard',
+                value: '/dashboard/editions',
                 links: [
                   {
                     text: 'Atual',
-                    value: '/dashboard',
+                    value: '/dashboard/editions',
                   }, {
                     text: 'Anteriores',
-                    value: '/dashboard',
+                    value: '/dashboard/editions/all',
                   },
                 ],
                 actions: [
                   {
                     text: 'Nova Edição',
-                    value: '/dashboard',
+                    value: '/dashboard/editions/add',
                   },
                 ],
               }, {
-                text: 'Colaboradores',
-                value: '/colaborators',
-              }, {
-                text: 'Configurações',
-                value: '/settings',
+                text: 'Servidores',
+                value: '/dashboard/colaborators',
+                links: [
+                  {
+                    text: 'Permissões',
+                    value: '/dashboard/colaborators',
+                  },
+                ],
+                actions: [
+                  {
+                    text: 'Filtrar por Área',
+                    value: '',
+                  },
+                ],
               },
             ],
           },
@@ -86,6 +101,7 @@ export const uselayout = defineStore(
     }
 
     return {
+      state,
       navbar,
       navbarDashboard,
       colorTheme,
