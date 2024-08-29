@@ -53,7 +53,7 @@ export const uselayout = defineStore(
                 value: '/about',
               }, {
                 text: 'Todas as Edições',
-                value: '/colaborators',
+                value: '/editions',
               },
             ],
             navbarDashboard: [
