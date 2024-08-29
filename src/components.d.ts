@@ -9,11 +9,16 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     BtnPrimary: typeof import('./components/BtnPrimary.vue')['default']
-    EditionCard: typeof import('./components/EditionCard.vue')['default']
+    EvaluationSection: typeof import('./components/EvaluationSection.vue')['default']
+    FooterComp: typeof import('./components/FooterComp.vue')['default']
+    FooterComp2: typeof import('./components/FooterComp2.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    IssuesPreview: typeof import('./components/IssuesPreview.vue')['default']
+    LayoutDashboard: typeof import('./components/LayoutDashboard.vue')['default']
+    LayoutDefault: typeof import('./components/LayoutDefault.vue')['default']
+    MainBanner: typeof import('./components/MainBanner.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SecondaryContainer: typeof import('./components/SecondaryContainer.vue')['default']
     TitleH1: typeof import('./components/TitleH1.vue')['default']
   }
 }

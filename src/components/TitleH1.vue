@@ -1,5 +1,5 @@
 <template>
-  <h1>
+  <h1 class="text-h1 H1">
     {{ props.text }}
   </h1>
   <p class="pt-8">
@@ -15,8 +15,8 @@
 </script>
 
 <style>
-h1 {
-  font-size: 2em;
-  font-weight: 600;
+.H1 {
+  font-size: 4.5em !important;
+  font-weight: 600 !important;
 }
 </style>

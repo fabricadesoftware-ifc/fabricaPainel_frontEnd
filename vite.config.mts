@@ -23,7 +23,7 @@ export default defineConfig({
         'vue',
         {
           'vue-router/auto': ['useRoute', 'useRouter'],
-        },
+        }
       ],
       dts: 'src/auto-imports.d.ts',
       eslintrc: {
@@ -46,8 +46,8 @@ export default defineConfig({
     }),
     Fonts({
       google: {
-        families: [{
-          name: 'Roboto',
+        families: [ {
+          name: 'Poppins',
           styles: 'wght@100;300;400;500;700;900',
         }],
       },
