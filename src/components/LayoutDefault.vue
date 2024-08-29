@@ -7,10 +7,10 @@
           v-for="link in layoutStore.navbar"
           :key="link.text"
           class="mr-1"
-          :color="link.value == '/' ? 'primary' : ''"
+          :color="link.value == layoutStore.currentPage ? 'primary' : ''"
           rounded="xl"
           :text="link.text"
-          to="/settings/"
+          :to="link.value"
           variant="text"
         />
 
