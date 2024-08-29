@@ -50,7 +50,7 @@ export const uselayout = defineStore(
                 value: '/',
               }, {
                 text: 'Sobre o Projeto',
-                value: '/settings',
+                value: '/about',
               }, {
                 text: 'Todas as Edições',
                 value: '/colaborators',
