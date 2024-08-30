@@ -19,6 +19,7 @@ declare module 'vue' {
     LayoutDashboard: typeof import('./components/LayoutDashboard.vue')['default']
     LayoutDefault: typeof import('./components/LayoutDefault.vue')['default']
     MainBanner: typeof import('./components/MainBanner.vue')['default']
+    RecivedTable: typeof import('./components/RecivedTable.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TitleH1: typeof import('./components/TitleH1.vue')['default']

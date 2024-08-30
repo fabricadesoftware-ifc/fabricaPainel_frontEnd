@@ -15,14 +15,11 @@
       </v-btn>
 
       <v-spacer />
-      <v-btn
-        class=""
-        rounded="xl"
-        variant="text"
-        v-bind="props"
+      <p
+        class="px-2"
       >
         Nome de usuário
-      </v-btn>
+      </p>
       <v-btn
         class="rounded-xl justify-center"
         color="red"
@@ -35,7 +32,7 @@
       </v-btn>
     </v-container>
   </v-app-bar>
-  <v-main class="mt-7">
+  <v-main>
     <v-container>
       <v-row>
         <v-col cols="2">
@@ -75,7 +72,7 @@
           </v-sheet>
         </v-col>
       </v-row>
-      <footer>
+      <footer class="pt-16 pb-2">
         <v-row>
           <v-col class="d-flex justify-start align-center" cols="10">
             <img class="h-8" src="@/assets/footer_logos.png">
