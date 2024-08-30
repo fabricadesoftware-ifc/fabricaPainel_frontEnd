@@ -13,6 +13,14 @@ import { createVuetify } from 'vuetify'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
+  locale: {
+    locale: 'pt_BR',
+  },
+  date: {
+    locale: {
+      pt_BR: 'pt-BR',
+    },
+  },
   theme: {
     defaultTheme: 'light',
     themes: {
