@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-h1 H1">
+  <h1 class="text-h1 H1" :class="color">
     {{ props.text }}
   </h1>
   <p class="pt-8">
@@ -11,6 +11,7 @@
   const props = defineProps({
     text: String,
     content: String,
+    color: String,
   })
 </script>
 
