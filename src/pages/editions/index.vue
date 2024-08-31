@@ -12,7 +12,6 @@
     text: string;
     to: string;
     status: boolean;
-    theme: string;
   }
   const editions: Edition[] = [
     {
