@@ -26,5 +26,8 @@ declare module 'vue-router/auto-routes' {
     '/dashboard/editions/add/': RouteRecordInfo<'/dashboard/editions/add/', '/dashboard/editions/add', Record<never, never>, Record<never, never>>,
     '/dashboard/editions/all/': RouteRecordInfo<'/dashboard/editions/all/', '/dashboard/editions/all', Record<never, never>, Record<never, never>>,
     '/dashboard/editions/view/[id]': RouteRecordInfo<'/dashboard/editions/view/[id]', '/dashboard/editions/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/editions/': RouteRecordInfo<'/editions/', '/editions', Record<never, never>, Record<never, never>>,
+    '/editions/all/': RouteRecordInfo<'/editions/all/', '/editions/all', Record<never, never>, Record<never, never>>,
+    '/editions/view/[id]': RouteRecordInfo<'/editions/view/[id]', '/editions/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
   }
 }

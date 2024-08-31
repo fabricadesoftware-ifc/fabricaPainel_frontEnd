@@ -10,7 +10,7 @@ declare module 'vue' {
     AboutIntrodution: typeof import('./components/AboutIntrodution.vue')['default']
     AboutProgramation: typeof import('./components/AboutProgramation.vue')['default']
     BtnPrimary: typeof import('./components/BtnPrimary.vue')['default']
-    copy: typeof import('./components/RecivedTable copy.vue')['default']
+    EditionsView: typeof import('./components/EditionsView.vue')['default']
     EvaluationSection: typeof import('./components/EvaluationSection.vue')['default']
     FooterComp: typeof import('./components/FooterComp.vue')['default']
     FooterComp2: typeof import('./components/FooterComp2.vue')['default']
