@@ -15,6 +15,16 @@
               {{ edition.edition_name }} - {{ edition.year }}
             </h2>
             <p class="text-grey-darken-2">
+              <span class="d-block">Data de Registro de tema:</span>
+              <span class="text-black font-weight-bold">
+                {{ formatDate(edition.initil_submission_date) }}
+              </span>
+              até
+              <span class="text-black font-weight-bold">
+                {{ formatDate(edition.final_submission_date) }}
+              </span>
+            </p>
+            <p class="text-grey-darken-2">
               <span class="d-block">Data de Submissão:</span>
               <span class="text-black font-weight-bold">
                 {{ formatDate(edition.initil_submission_date) }}
@@ -35,7 +45,17 @@
               </span>
             </p>
             <p class="text-grey-darken-2">
-              <span class="d-block">Data de Avaliadores:</span>
+              <span class="d-block">Data de Registro de Avaliadores:</span>
+              <span class="text-black font-weight-bold">
+                {{ formatDate(edition.initil_submission_date) }}
+              </span>
+              até
+              <span class="text-black font-weight-bold">
+                {{ formatDate(edition.final_submission_date) }}
+              </span>
+            </p>
+            <p class="text-grey-darken-2">
+              <span class="d-block">Data de Avaliação</span>
               <span class="text-black font-weight-bold">
                 {{ formatDate(edition.initial_evaluators_date) }}
               </span>

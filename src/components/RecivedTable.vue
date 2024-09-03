@@ -1,5 +1,8 @@
 <template>
-  <v-autocomplete
+  <h2>
+    temporariamente travado
+  </h2>
+  <!-- <v-autocomplete
     v-model="search"
     chips
     clearable
@@ -33,7 +36,7 @@
         </v-chip>
       </div>
     </template>
-  </v-data-table>
+  </v-data-table> -->
 </template>
 <script setup>
   const headers = [
