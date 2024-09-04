@@ -11,43 +11,37 @@
             <v-card-text>
               <h2 class="text-h6 mb-2">Categorias</h2>
               <v-chip-group v-model="amenities" column multiple>
-                <v-chip filter text="Elevator" variant="outlined" />
-                <v-chip filter text="Washer" variant="outlined" />
-                <v-chip filter text="Fireplace" variant="outlined" />
-                <v-chip filter text="Wheelchair " variant="outlined" />
-                <v-chip filter text="Dogs ok" variant="outlined" />
-                <v-chip filter text="Cats ok" variant="outlined" />
+                <v-chip
+                  v-for="category in props.categoria"
+                  :key="category.id"
+                  filter
+                  :text="category.category"
+                  variant="outlined"
+                />
               </v-chip-group>
             </v-card-text>
             <v-card-text>
               <h2 class="text-h6 mb-2">Ano</h2>
-              <v-chip-group v-model="neighborhoods" column multiple>
-                <v-chip filter text="Snowy Rock Place" variant="outlined" />
-                <v-chip filter text="Honeylane Circle" variant="outlined" />
-                <v-chip filter text="Donna Drive" variant="outlined" />
-                <v-chip filter text="Elaine Street" variant="outlined" />
-                <v-chip filter text="Court Street" variant="outlined" />
-                <v-chip filter text="Kennedy Park" variant="outlined" />
-              </v-chip-group>
+              <range-component :ano="anos" />
             </v-card-text>
           </v-card>
         </v-sheet>
       </v-col>
       <v-col>
-        <v-sheet class="ml-auto mr-0 d-flex flex-wrap ga-4" style="justify-content: space-around">
+        <v-sheet class="ml-auto mr-0 d-flex flex-wrap ga-2" style="justify-content: space-between">
           <v-card
-            v-for="edition in editions"
+            v-for="edition in props.editions"
             :key="edition.id"
             class="border-b border-white"
             height="260"
             :hover="true"
             rounded="xl"
             variant="outlined"
-            width="320"
+            width="300"
             @click="selectCard(edition.edition_name)"
           >
             <div class="h-100 d-flex flex-column justify-space-between pa-6">
-              <p :class="[edition.edition,{ 'text-red': !edition.status },{ 'text-info': edition.status },]">
+              <p :class="[edition.edition, { 'text-red': !edition.status }, { 'text-info': edition.status }]">
                 {{ edition.status ? "Em Aberto" : "Finalizado" }}
               </p>
               <h2 class="text-primary font-weight-bold text-h5">
@@ -65,16 +59,45 @@
       </v-col>
     </v-row>
   </v-container>
+  {{ props.ano }}
 </template>
 
 <script lang="ts" setup>
+  import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  defineProps({
+
+  const props: any = defineProps({
     editions: {
-      type: Array<any>,
+      type: Array,
+      required: true,
+    },
+    categoria: {
+      type: Array,
+      required: true,
+    },
+    ano: {
+      type: Array,
       required: true,
     },
   })
+
+  interface Anos {
+    years: Array<Number>;
+    max: Number;
+    min: Number;
+    seasons: Object;
+  }
+
+  // Calculando os valores max, min e seasons para passar para o componente de range
+  const anos: Anos = {
+    years: props.ano,
+    max: Math.max(...props.ano.map((a: { year: any; }) => a.year)),
+    min: Math.min(...props.ano.map((a: { year: any; }) => a.year)),
+    seasons: props.ano.reduce((acc: { [x: string]: any; }, a: { year: string | number; }) => {
+      acc[a.year] = a.year.toString()
+      return acc
+    }, {}),
+  }
 
   const router = useRouter()
 
@@ -83,5 +106,4 @@
   }
 
   const amenities = ref<string[]>([])
-  const neighborhoods = ref<string[]>([])
 </script>

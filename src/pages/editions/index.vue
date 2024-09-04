@@ -1,7 +1,7 @@
 <template>
   <LayoutDefault>
     <MainBanner :btnvisible="false" :text="'Todas as edições'" />
-    <EditionsView :editions="editions" />
+    <EditionsView :ano="ano" :categoria="categoria" :editions="editions" />
   </LayoutDefault>
 </template>
 
@@ -14,6 +14,106 @@
     to: string;
     status: boolean;
   }
+  interface Ano {
+    year: Number;
+  }
+  interface Categoria {
+    id: number;
+    category: string;
+  }
+
+  const ano: Ano[] = [
+    {
+      year: 2012,
+    },
+    {
+      year: 2013,
+    },
+    {
+      year: 2014,
+    },
+    {
+      year: 2015,
+    },
+    {
+      year: 2016,
+    },
+    {
+      year: 2017,
+    },
+    {
+      year: 2018,
+    },
+    {
+      year: 2019,
+    },
+    {
+      year: 2020,
+    },
+    {
+      year: 2021,
+    },
+    {
+      year: 2022,
+    },
+    {
+      year: 2023,
+    },
+    {
+      year: 2024,
+    },
+
+  ]
+  const categoria: Categoria[] = [
+    {
+      id: 1,
+      category: 'Tecnologia',
+    },
+    {
+      id: 2,
+      category: 'Saúde',
+    },
+    {
+      id: 3,
+      category: 'Negócios',
+    },
+    {
+      id: 4,
+      category: 'Educação',
+    },
+    {
+      id: 5,
+      category: 'Meio Ambiente',
+    },
+    {
+      id: 6,
+      category: 'Cultura',
+    },
+    {
+      id: 7,
+      category: 'Esportes',
+    },
+    {
+      id: 8,
+      category: 'Moda',
+    },
+    {
+      id: 9,
+      category: 'Gastronomia',
+    },
+    {
+      id: 10,
+      category: 'Arte',
+    },
+    {
+      id: 11,
+      category: 'Música',
+    },
+    {
+      id: 12,
+      category: 'Cinema',
+    },
+  ]
   const editions: Edition[] = [
     {
       id: 1,

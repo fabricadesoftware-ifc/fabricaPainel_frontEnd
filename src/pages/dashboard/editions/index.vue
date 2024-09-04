@@ -79,6 +79,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue';
+
   const editions = [
     {
       year: 2024,
