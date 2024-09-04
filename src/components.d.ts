@@ -27,6 +27,7 @@ declare module 'vue' {
     PaperAcceptanceTable: typeof import('./components/PaperAcceptanceTable.vue')['default']
     PaperAccrptanceTable: typeof import('./components/PaperAccrptanceTable.vue')['default']
     PersonTable: typeof import('./components/PersonTable.vue')['default']
+    RangeComponent: typeof import('./components/rangeComponent.vue')['default']
     RecivedTable: typeof import('./components/RecivedTable.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
