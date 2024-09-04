@@ -1,6 +1,6 @@
 <template>
   <LayoutDefault>
-    <MainBanner />
+    <MainBanner :btnvisible="true" />
     <IssuesPreview />
     <EvaluationSection />
   </LayoutDefault>
