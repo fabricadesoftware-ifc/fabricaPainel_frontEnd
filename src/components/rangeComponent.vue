@@ -2,7 +2,7 @@
   <v-range-slider
     :max="ano.max"
     :min="ano.min"
-    :model-value="[2012, 2013]"
+    :model-value="data"
     show-ticks="always"
     :step="1"
     strict
@@ -22,9 +22,10 @@
       required: true,
     },
   })
+  const data = ref([2012, 2013])
 
   const season = (modelValue: any) => {
     return props.ano.seasons[modelValue]
-}
+  }
 
 </script>
