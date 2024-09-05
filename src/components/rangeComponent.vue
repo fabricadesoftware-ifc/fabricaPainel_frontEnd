@@ -22,7 +22,7 @@
       required: true,
     },
   })
-  const data = ref([2012, 2013])
+  const data = ref([2012, 2024])
 
   const season = (modelValue: any) => {
     return props.ano.seasons[modelValue]

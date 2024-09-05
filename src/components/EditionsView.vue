@@ -16,12 +16,12 @@
                   :key="category.id"
                   filter
                   :text="category.category"
-                  variant="outlined"
+                  variant="tonal"
                 />
               </v-chip-group>
             </v-card-text>
             <v-card-text>
-              <h2 class="text-h6 mb-2">Ano</h2>
+              <h2 class="text-h6 mb-2">Anos</h2>
               <range-component :ano="anos" />
             </v-card-text>
           </v-card>
