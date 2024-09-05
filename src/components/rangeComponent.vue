@@ -5,11 +5,12 @@
     :model-value="[2012, 2013]"
     show-ticks="always"
     :step="1"
+    strict
     thumb-label="always"
     tick-size="4"
   >
     <template #thumb-label="{ modelValue }">
-      <span>{{ season(modelValue)?.year }}</span>
+      <span>{{ season(modelValue) }}</span>
     </template>
   </v-range-slider>
 </template>
