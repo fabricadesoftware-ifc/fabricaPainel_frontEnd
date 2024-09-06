@@ -1,6 +1,6 @@
 <template>
   <LayoutDefault>
-    <MainBanner :btnvisible="false" :text="'Todas as edições'" />
+    <MainBanner :btnvisible="false" :class="'border-0'" :text="'Todas as edições'" />
     <EditionsView :ano="ano" :categoria="categoria" :editions="editions" />
   </LayoutDefault>
 </template>
