@@ -3,9 +3,9 @@
     <v-row>
       <v-col cols="2">
         <v-sheet>
-          <v-card>
+          <v-card variant="tonal">
             <v-toolbar color="primary">
-              <v-toolbar-title>Filters</v-toolbar-title>
+              <v-toolbar-title>Filtros</v-toolbar-title>
             </v-toolbar>
 
             <v-card-text>
@@ -16,7 +16,7 @@
                   :key="category.id"
                   filter
                   :text="category.category"
-                  variant="tonal"
+                  variant="outlined"
                 />
               </v-chip-group>
             </v-card-text>
@@ -33,11 +33,11 @@
             v-for="edition in props.editions"
             :key="edition.id"
             class="border-b border-white"
-            height="260"
+            height="15vw"
             :hover="true"
             rounded="xl"
             variant="outlined"
-            width="300"
+            width="20vw"
             @click="selectCard(edition.edition_name)"
           >
             <div class="h-100 d-flex flex-column justify-space-between pa-6">
@@ -88,7 +88,6 @@
     seasons: Object;
   }
 
-  // Calculando os valores max, min e seasons para passar para o componente de range
   const anos: Anos = {
     years: props.ano,
     max: Math.max(...props.ano.map((a: { year: any; }) => a.year)),
