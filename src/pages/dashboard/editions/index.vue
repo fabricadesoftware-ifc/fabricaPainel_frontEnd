@@ -92,6 +92,14 @@
             text="Editar Informações"
             variant="flat"
           />
+          <v-btn
+            block
+            class="rounded-xl mt-6"
+            color="primary"
+            text="Registrar Avaliadores"
+            to="/dashboard/register-evaluators"
+            variant="flat"
+          />
         </v-row>
       </div>
     </v-card>

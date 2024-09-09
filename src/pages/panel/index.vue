@@ -102,19 +102,11 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col>
-                    <h1 class="text-h5 py-4">
-                      Registros de Submissões
-                    </h1>
-                    <RecivedTable />
-                  </v-col>
-                </v-row>
-                <v-row>
                   <v-btn
                     block
                     class="rounded-xl mt-6"
                     color="primary"
-                    text="registration_theme"
+                    text="Registrar-se nos temas transversais"
                     to="/panel/registration-of-topics"
                     variant="flat"
                   />
@@ -122,7 +114,7 @@
                     block
                     class="rounded-xl mt-6"
                     color="primary"
-                    text="submission"
+                    text="Enviar um trabalho"
                     to="/panel/work-submission"
                     variant="flat"
                   />
@@ -130,16 +122,8 @@
                     block
                     class="rounded-xl mt-6"
                     color="primary"
-                    text="advisor"
+                    text="painel de aprovação"
                     to="/panel/evaluation"
-                    variant="flat"
-                  />
-                  <v-btn
-                    block
-                    class="rounded-xl mt-6"
-                    color="primary"
-                    text="registration_evaluators"
-                    to="/panel/registration_evaluators"
                     variant="flat"
                   />
                   <v-btn
@@ -188,13 +172,6 @@
   const logout = () => {
     router.push('/')
   }
-
-  // const formatDate = computed(() => {
-  //   return dateTime => {
-  //     const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
-  //     return new Date(dateTime).toLocaleDateString('pt-BR', options)
-  //   }
-  // })
 
   onMounted(() => {
     panelStore.getEdition()
