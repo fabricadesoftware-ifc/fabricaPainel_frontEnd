@@ -10,8 +10,8 @@
               accept="image/*"
               label="Banner"
               required
-              variant="outlined"
               rounded="xl"
+              variant="outlined"
             />
           </v-col>
 
@@ -22,8 +22,8 @@
               accept="image/*"
               label="Logo"
               required
-              variant="outlined"
               rounded="xl"
+              variant="outlined"
             />
           </v-col>
 
@@ -33,9 +33,9 @@
               v-model="form.edition_name"
               label="Nome da Edição"
               required
+              rounded="xl"
               :rules="[v => !!v || 'Nome da Edição é obrigatório']"
               variant="outlined"
-              rounded="xl"
             />
           </v-col>
 
@@ -45,10 +45,10 @@
               v-model="form.year"
               label="Ano"
               required
+              rounded="xl"
               :rules="[v => !!v || 'Ano é obrigatório']"
               type="number"
               variant="outlined"
-              rounded="xl"
             />
           </v-col>
 
@@ -58,9 +58,9 @@
               v-model="form.theme"
               label="Tema"
               required
+              rounded="xl"
               :rules="[v => !!v || 'Tema é obrigatório']"
               variant="outlined"
-              rounded="xl"
             />
           </v-col>
 
@@ -70,114 +70,124 @@
               v-model="form.workload"
               label="Carga Horária"
               required
+              rounded="xl"
               :rules="[v => !!v || 'Carga horária é obrigatória']"
               type="number"
               variant="outlined"
+            />
+          </v-col>
+
+          <!-- Initial REGISTRO DE TEMA Date -->
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="form.initial_registration_theme_date"
+              label="Data de Início de Registro de Tema"
+              required
               rounded="xl"
+              variant="outlined"
+            />
+          </v-col>
+
+          <!-- Final REGISTRO DE TEMA Date -->
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="form.final_registration_theme_date"
+              label="Data de Fim de Registro de Tema"
+              required
+              rounded="xl"
+              variant="outlined"
             />
           </v-col>
 
           <!-- Initial Submission Date -->
           <v-col cols="12" md="6">
-            <v-dialog v-model="dialogInitialSubmission" v-model:return-value="form.initil_submission_date" persistent width="290px">
-              <template #activator="{ props }">
-                <v-text-field
-                  v-model="form.initil_submission_date"
-                  label="Data de Início de Submissão"
-                  v-bind="props"
-                  required
-                  variant="outlined"
-                  rounded="xl"
-                />
-              </template>
-              <v-date-picker v-model="form.initil_submission_date" @input="dialogInitialSubmission = false" />
-            </v-dialog>
+            <v-text-field
+              v-model="form.initial_submission_date"
+              label="Data de Início de Submissão"
+              required
+              rounded="xl"
+              variant="outlined"
+            />
           </v-col>
 
           <!-- Final Submission Date -->
           <v-col cols="12" md="6">
-            <v-dialog v-model="dialogFinalSubmission" v-model:return-value="form.final_submission_date" persistent width="290px">
-              <template #activator="{ props }">
-                <v-text-field
-                  v-model="form.final_submission_date"
-                  label="Data de Fim de Submissão"
-                  v-bind="props"
-                  required
-                  variant="outlined"
-                  rounded="xl"
-                />
-              </template>
-              <v-date-picker v-model="form.final_submission_date" @input="dialogFinalSubmission = false" />
-            </v-dialog>
+            <v-text-field
+              v-model="form.final_submission_date"
+              label="Data de Fim de Submissão"
+              required
+              rounded="xl"
+              variant="outlined"
+            />
           </v-col>
 
           <!-- Initial Advisor Date -->
           <v-col cols="12" md="6">
-            <v-dialog v-model="dialogInitialAdvisor" v-model:return-value="form.initial_advisor_date" persistent width="290px">
-              <template #activator="{ props }">
-                <v-text-field
-                  v-model="form.initial_advisor_date"
-                  label="Data de Início de Orientação"
-                  v-bind="props"
-                  required
-                  variant="outlined"
-                  rounded="xl"
-                />
-              </template>
-              <v-date-picker v-model="form.initial_advisor_date" @input="dialogInitialAdvisor = false" />
-            </v-dialog>
+            <v-text-field
+              v-model="form.initial_advisor_date"
+              label="Data de Início de Orientação"
+              required
+              rounded="xl"
+              variant="outlined"
+            />
           </v-col>
 
           <!-- Final Advisor Date -->
           <v-col cols="12" md="6">
-            <v-dialog v-model="dialogFinalAdvisor" v-model:return-value="form.final_advisor_date" persistent width="290px">
-              <template #activator="{ props }">
-                <v-text-field
-                  v-model="form.final_advisor_date"
-                  label="Data de Fim de Orientação"
-                  v-bind="props"
-                  required
-                  variant="outlined"
-                  rounded="xl"
-                />
-              </template>
-              <v-date-picker v-model="form.final_advisor_date" @input="dialogFinalAdvisor = false" />
-            </v-dialog>
+            <v-text-field
+              v-model="form.final_advisor_date"
+              label="Data de Fim de Orientação"
+              required
+              rounded="xl"
+              variant="outlined"
+            />
           </v-col>
 
           <!-- Initial Evaluators Date -->
           <v-col cols="12" md="6">
-            <v-dialog v-model="dialogInitialEvaluators" v-model:return-value="form.initial_evaluators_date" persistent width="290px">
-              <template #activator="{ props }">
-                <v-text-field
-                  v-model="form.initial_evaluators_date"
-                  label="Data de Início para Avaliadores"
-                  v-bind="props"
-                  required
-                  variant="outlined"
-                  rounded="xl"
-                />
-              </template>
-              <v-date-picker v-model="form.initial_evaluators_date" @input="dialogInitialEvaluators = false" />
-            </v-dialog>
+            <v-text-field
+              v-model="form.initial_registration_evaluator_date"
+              label="Data de Início para Avaliadores"
+              required
+              rounded="xl"
+              variant="outlined"
+            />
           </v-col>
 
           <!-- Final Evaluators Date -->
           <v-col cols="12" md="6">
-            <v-dialog v-model="dialogFinalEvaluators" v-model:return-value="form.final_evaluators_date" persistent width="290px">
-              <template #activator="{ props }">
-                <v-text-field
-                  v-model="form.final_evaluators_date"
-                  label="Data de Fim para Avaliadores"
-                  v-bind="props"
-                  required
-                  variant="outlined"
-                  rounded="xl"
-                />
-              </template>
-              <v-date-picker v-model="form.final_evaluators_date" @input="dialogFinalEvaluators = false" />
-            </v-dialog>
+            <v-text-field
+              v-model="form.final_registration_evaluator_date"
+              label="Data de Fim para Avaliadores"
+              required
+              rounded="xl"
+              variant="outlined"
+            />
           </v-col>
+
+          <!-- Initial Evaluators Date -->
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="form.initial_evaluators_date"
+              label="Data de Início para Avaliadores"
+              required
+              rounded="xl"
+              variant="outlined"
+            />
+          </v-col>
+
+          <!-- Final Evaluators Date -->
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="form.final_evaluators_date"
+              label="Data de Fim para Avaliadores"
+              required
+              rounded="xl"
+              variant="outlined"
+            />
+          </v-col>
+
+          <!-- btn -->
           <v-col cols="12">
             <v-btn
               block
@@ -194,38 +204,42 @@
   </layoutdashboard>
 </template>
 
-<script setup>
+<script setup lang="ts">
+  import { usePanel } from '@/stores/panel'
+
+  const panelStore = usePanel()
   const valid = ref(false)
 
   const form = ref({
     year: '',
     theme: '',
     edition_name: '',
-    initil_submission_date: '',
+    initial_registration_theme_date: '',
+    final_registration_theme_date: '',
+    initial_submission_date: '',
     final_submission_date: '',
     initial_advisor_date: '',
     final_advisor_date: '',
+    initial_registration_evaluator_date: '',
+    final_registration_evaluator_date: '',
     initial_evaluators_date: '',
     final_evaluators_date: '',
     workload: '',
     banner: null,
     logo: null,
+    is_open: true,
   })
 
-  const dialogInitialSubmission = ref(false)
-  const dialogFinalSubmission = ref(false)
-  const dialogInitialAdvisor = ref(false)
-  const dialogFinalAdvisor = ref(false)
-  const dialogInitialEvaluators = ref(false)
-  const dialogFinalEvaluators = ref(false)
-
   const submitForm = () => {
-    if (valid.value) {
-      // Implementar a lógica para enviar os dados do formulário para a API ou backend
-      console.log('Formulário enviado:', form.value)
-    } else {
-      console.log('O formulário não é válido')
-    }
+    console.log('Compoenten: O formulário foi enviado')
+    console.log(form.value)
+    panelStore.createEdition({
+      ...form.value,
+      banner: null,
+      logo: null,
+      year: Number(form.value.year),
+      workload: Number(form.value.workload),
+    })
   }
 </script>
 

@@ -26,11 +26,11 @@
     </div>
     <div class="w-75">
       <VImg
-        src="../assets/imagem-test.jpg"
         alt="imagem de teste"
         class="rounded-xl"
         cover
-      ></VImg>
+        src="../assets/imagem-test.jpg"
+      />
     </div>
   </div>
 </template>

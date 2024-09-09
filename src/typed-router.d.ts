@@ -26,5 +26,12 @@ declare module 'vue-router/auto-routes' {
     '/dashboard/editions/add/': RouteRecordInfo<'/dashboard/editions/add/', '/dashboard/editions/add', Record<never, never>, Record<never, never>>,
     '/dashboard/editions/all/': RouteRecordInfo<'/dashboard/editions/all/', '/dashboard/editions/all', Record<never, never>, Record<never, never>>,
     '/dashboard/editions/view/[id]': RouteRecordInfo<'/dashboard/editions/view/[id]', '/dashboard/editions/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/panel/': RouteRecordInfo<'/panel/', '/panel', Record<never, never>, Record<never, never>>,
+    '/panel/evaluation/': RouteRecordInfo<'/panel/evaluation/', '/panel/evaluation', Record<never, never>, Record<never, never>>,
+    '/panel/evaluation/paper/[id]': RouteRecordInfo<'/panel/evaluation/paper/[id]', '/panel/evaluation/paper/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/panel/evaluators/': RouteRecordInfo<'/panel/evaluators/', '/panel/evaluators', Record<never, never>, Record<never, never>>,
+    '/panel/registration_evaluators/': RouteRecordInfo<'/panel/registration_evaluators/', '/panel/registration_evaluators', Record<never, never>, Record<never, never>>,
+    '/panel/registration-of-topics/': RouteRecordInfo<'/panel/registration-of-topics/', '/panel/registration-of-topics', Record<never, never>, Record<never, never>>,
+    '/panel/work-submission/': RouteRecordInfo<'/panel/work-submission/', '/panel/work-submission', Record<never, never>, Record<never, never>>,
   }
 }

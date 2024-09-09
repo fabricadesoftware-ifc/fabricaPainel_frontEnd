@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AboutIntrodution: typeof import('./components/AboutIntrodution.vue')['default']
     AboutProgramation: typeof import('./components/AboutProgramation.vue')['default']
+    BackButton: typeof import('./components/BackButton.vue')['default']
     BtnPrimary: typeof import('./components/BtnPrimary.vue')['default']
     copy: typeof import('./components/RecivedTable copy.vue')['default']
     EvaluationSection: typeof import('./components/EvaluationSection.vue')['default']
@@ -17,7 +18,10 @@ declare module 'vue' {
     IssuesPreview: typeof import('./components/IssuesPreview.vue')['default']
     LayoutDashboard: typeof import('./components/LayoutDashboard.vue')['default']
     LayoutDefault: typeof import('./components/LayoutDefault.vue')['default']
+    LayoutPanel: typeof import('./components/LayoutPanel.vue')['default']
+    LayoutSteps: typeof import('./components/LayoutSteps.vue')['default']
     MainBanner: typeof import('./components/MainBanner.vue')['default']
+    PaperAccrptanceTable: typeof import('./components/PaperAccrptanceTable.vue')['default']
     PersonTable: typeof import('./components/PersonTable.vue')['default']
     RecivedTable: typeof import('./components/RecivedTable.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

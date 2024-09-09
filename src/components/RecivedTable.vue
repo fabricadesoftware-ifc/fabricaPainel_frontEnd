@@ -1,8 +1,5 @@
 <template>
-  <h2>
-    temporariamente travado
-  </h2>
-  <!-- <v-autocomplete
+  <v-autocomplete
     v-model="search"
     chips
     clearable
@@ -13,30 +10,33 @@
     rounded="xl"
     variant="plain"
   />
-  <v-data-table
-    :headers="headers"
-    :items="desserts"
-    :search="search"
-  >
-    <template #item.name="{ item }">
-      <v-btn
-        class="pa-0 hover"
-        color="primary"
-        variant="text"
-      >
-        {{ item.name }}
-      </v-btn>
-    </template>
-    <template #item.status="{ item }">
-      <div class="text-end">
-        <v-chip
-          :color="getColor(item.status)"
+  <div class="rounded-xl">
+    <v-data-table
+      class="pa-2"
+      :headers="headers"
+      :items="desserts"
+      :search="search"
+    >
+      <template #item.name="{ item }">
+        <v-btn
+          class="pa-0 hover"
+          color="primary"
+          variant="text"
         >
-          {{ item.status }}
-        </v-chip>
-      </div>
-    </template>
-  </v-data-table> -->
+          {{ item.name }}
+        </v-btn>
+      </template>
+      <template #item.status="{ item }">
+        <div class="text-end">
+          <v-chip
+            :color="getColor(item.status)"
+          >
+            {{ item.status }}
+          </v-chip>
+        </div>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 <script setup>
   const headers = [

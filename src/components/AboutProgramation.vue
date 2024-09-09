@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-const modalities = ref<{ value: string }[]>([
+  import { ref } from 'vue'
+  const modalities = ref<{ value: string }[]>([
     {
-        value: 'Agronomia'
+      value: 'Agronomia',
     },
     {
-        value: 'Educação'
+      value: 'Educação',
     },
     {
-        value: 'Informática'
+      value: 'Informática',
     },
     {
-        value: 'Medicina Veterinária'
+      value: 'Medicina Veterinária',
     },
     {
-        value: 'multidisciplinar'
+      value: 'multidisciplinar',
     },
     {
-        value: 'outros'
-    }
-]);
+      value: 'outros',
+    },
+  ])
 </script>
 <template>
   <div class="d-flex flex-column ga-3">
@@ -39,9 +39,7 @@ const modalities = ref<{ value: string }[]>([
   </div>
   <div class="w-100">
     <div class="w-100">
-      <VImg src="../assets/imagem-test.jpg"></VImg>
+      <VImg src="../assets/imagem-test.jpg" />
     </div>
   </div>
 </template>
-
-
