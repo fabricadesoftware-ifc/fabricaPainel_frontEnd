@@ -7,4 +7,7 @@ export interface IPaper {
     ods: string;
     status: string;
     abstract: string;
+    aproved?: boolean;
+    aprovedBy?: string;
+    aprovedDate?: string;
 }

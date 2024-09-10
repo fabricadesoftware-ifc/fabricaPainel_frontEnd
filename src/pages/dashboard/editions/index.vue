@@ -1,11 +1,12 @@
 <template>
   <LayoutDashboard>
+    <InformativeAlert />
     <v-card
-      class="border-md w-100"
+      class="border-md w-100 mt-5"
       rounded="xl"
       variant="outlined"
     >
-      <div class="h-100 d-flex flex-column justify-space-between pa-14">
+      <div class="h-100 d-flex flex-column justify-space-between pa-10">
         <v-row>
           <v-col class="d-flex flex-column ga-4 justify-center" cols="6">
             <p class="text-blue">
@@ -71,33 +72,18 @@
         </v-row>
         <v-row>
           <v-col>
-            <p class="text-grey">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae quo maxime mollitia illo provident ex minima tenetur voluptate aliquam omnis, tempora nesciunt qui fugit, reprehenderit perferendis asperiores expedita natus eum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus hic corrupti, minus nisi quibusdam sint quia quasi perferendis assumenda culpa? Quo reiciendis illo dolore aperiam quisquam, facere velit animi architecto?
-            </p>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <h1 class="text-h5 py-4">
+            <h1 class="text-h5 py-4 font-weight-bold">
               Registros de Submissões
             </h1>
-            <RecivedTable />
+            <RecivedTable dashboard />
           </v-col>
         </v-row>
         <v-row>
           <v-btn
             block
-            class="rounded-xl mt-6"
+            class="rounded-xl mt-6 py-6"
             color="primary"
             text="Editar Informações"
-            variant="flat"
-          />
-          <v-btn
-            block
-            class="rounded-xl mt-6"
-            color="primary"
-            text="Registrar Avaliadores"
-            to="/dashboard/register-evaluators"
             variant="flat"
           />
         </v-row>

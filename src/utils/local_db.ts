@@ -1,18 +1,21 @@
+import { IPaper } from '@/interfaces/paper'
+
 const papersHeaders = [
   {
     align: 'start',
-    key: 'name',
     sortable: false,
-    title: 'Nome do Pejeto',
+    key: 'status',
+    title: 'Status',
+
   },
-  { key: 'area', title: 'Área' },
+  { key: 'name', title: 'Nome do Pejeto' },
   { key: 'teamRep', title: 'Representante da Equipe' },
+  { key: 'area', title: 'Área' },
   { key: 'crossCuttingThemes', title: 'Tema Transversal' },
   { key: 'ods', title: 'ODS' },
-  { key: 'status', title: 'Status' },
 ]
 
-const papers = [
+const papers: IPaper[] = [
   {
     id: '1',
     name: 'Frozen Yogurt',
@@ -41,6 +44,7 @@ const papers = [
     crossCuttingThemes: 'Tema Transversal',
     ods: 'ODS',
     status: 'Pendente',
+    abstract: 'adf',
   },
   {
     id: '4',
@@ -64,7 +68,68 @@ const papers = [
   },
 ]
 
+const recivedPapers: IPaper[] = [
+  {
+    id: '1',
+    name: 'Frozen Yogurt',
+    area: 'Informática',
+    teamRep: 'Fábio Longo',
+    crossCuttingThemes: 'Tema Transversal',
+    ods: 'ODS',
+    abstract: 'Frozen Yogurt Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+    status: 'Falta Avaliadores',
+    aproved: true,
+    aprovedBy: 'Fábio Longo',
+    aprovedDate: '2024-10-06',
+  },
+  {
+    id: '2',
+    name: 'Ice cream sandwich',
+    area: 'Agropecuária',
+    teamRep: 'Fábio Longo',
+    crossCuttingThemes: 'Tema Transversal',
+    ods: 'ODS',
+    abstract: 'Lorem Ice cream sandwich ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+    status: 'Falta Avaliadores',
+    aproved: true,
+    aprovedBy: 'Fábio Longo',
+    aprovedDate: '2024-10-06',
+  },
+  {
+    id: '3',
+    name: 'Eclair',
+    area: 'Quimíca',
+    teamRep: 'Fábio Longo',
+    crossCuttingThemes: 'Tema Transversal',
+    ods: 'ODS',
+    status: 'Falta Avaliadores',
+    aproved: true,
+    aprovedBy: 'Fábio Longo',
+    aprovedDate: '2024-10-06',
+    abstract: 'sadfasdf',
+  },
+]
+
+const recivedpapersHeaders = [
+  {
+    align: 'start',
+    sortable: false,
+    key: 'status',
+    title: 'Status',
+
+  },
+  { key: 'name', title: 'Nome do Pejeto' },
+  { key: 'teamRep', title: 'Representante da Equipe' },
+  { key: 'area', title: 'Área' },
+  { key: 'crossCuttingThemes', title: 'Tema Transversal' },
+  { key: 'ods', title: 'ODS' },
+  { key: 'aprovedBy', title: 'Aprovado por' },
+  { key: 'aprovedDate', title: 'Data de Aprovação' },
+]
+
 export {
   papers,
   papersHeaders,
+  recivedPapers,
+  recivedpapersHeaders,
 }

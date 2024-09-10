@@ -5,7 +5,7 @@
       rounded="xl"
       variant="outlined"
     >
-      <div class="h-100 d-flex flex-column justify-space-between pa-14">
+      <div class="h-100 d-flex flex-column justify-space-between pa-10">
         <v-row>
           <v-col class="d-flex flex-column ga-4 justify-center" cols="6">
             <p class="text-blue">

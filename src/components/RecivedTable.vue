@@ -12,22 +12,23 @@
   />
   <div class="rounded-xl">
     <v-data-table
-      class="pa-2"
-      :headers="headers"
-      :items="desserts"
+      class="pa-2 text-caption"
+      :headers="recivedpapersHeaders"
+      :items="recivedPapers"
       :search="search"
     >
       <template #item.name="{ item }">
         <v-btn
           class="pa-0 hover"
           color="primary"
+          :to="props.dashboard ? '/dashboard/paper/:id'.replace(':id', item.id) : '/panel/evaluation/paper/:id'.replace(':id', item.id)"
           variant="text"
         >
           {{ item.name }}
         </v-btn>
       </template>
       <template #item.status="{ item }">
-        <div class="text-end">
+        <div class="text-start">
           <v-chip
             :color="getColor(item.status)"
           >
@@ -39,115 +40,23 @@
   </div>
 </template>
 <script setup>
-  const headers = [
-    {
-      align: 'start',
-      key: 'name',
-      sortable: false,
-      title: 'Nome do Pejeto',
-    },
-    { key: 'area', title: 'Área' },
-    { key: 'orientador', title: 'Orientador' },
-    { key: 'data_aceitacao', title: 'Data de Aceitação' },
-    { key: 'nota', title: 'Nota do trabalho' },
-    { key: 'status', title: 'Status' },
-  ]
-  const desserts = [
-    {
-      name: 'Frozen Yogurt',
-      area: 'Informática',
-      orientador: 'Fábio Longo',
-      data_aceitacao: '20/02/2004',
-      nota: '31/05/2024',
-      status: 'Pendente',
-    },
-    {
-      name: 'Ice cream sandwich',
-      area: 'Informática',
-      orientador: 'Fábio Longo',
-      data_aceitacao: '20/02/2004',
-      nota: '31/05/2024',
-      status: 'Pendente',
-    },
-    {
-      name: 'Eclair',
-      area: 'Informática',
-      orientador: 'Fábio Longo',
-      data_aceitacao: '20/02/2004',
-      nota: '31/05/2024',
-      status: 'Rejeitado',
-    },
-    {
-      name: 'Cupcake',
-      area: 'Agropecuária',
-      orientador: 'Fábio Longo',
-      data_aceitacao: '20/02/2004',
-      nota: '31/05/2024',
-      status: 'Aprovado',
-    },
-    {
-      name: 'Gingerbread',
-      area: 'Agropecuária',
-      orientador: 'Fábio Longo',
-      data_aceitacao: '20/02/2004',
-      nota: '31/05/2024',
-      status: 'Aprovado',
-    },
-    {
-      name: 'Jelly bean',
-      area: 'Agropecuária',
-      orientador: 'Fábio Longo',
-      data_aceitacao: '20/02/2004',
-      nota: '31/05/2024',
-      status: 'Cancelado',
-    },
-    {
-      name: 'Lollipop',
-      area: 'Agropecuária',
-      orientador: 'Fábio Longo',
-      data_aceitacao: '20/02/2004',
-      nota: '31/05/2024',
-      status: 'Aprovado',
-    },
-    {
-      name: 'Honeycomb',
-      area: 'Quimíca',
-      orientador: 'Fábio Longo',
-      data_aceitacao: '20/02/2004',
-      nota: '31/05/2024',
-      status: 'Aprovado',
-    },
-    {
-      name: 'Donut',
-      area: 'Quimíca',
-      orientador: 'Fábio Longo',
-      data_aceitacao: '20/02/2004',
-      nota: '31/05/2024',
-      status: 'Aprovado',
-    },
-    {
-      name: 'KitKat',
-      area: 'Agropecuária',
-      orientador: 'Fábio Longo',
-      data_aceitacao: '20/02/2004',
-      nota: '31/05/2024',
-      status: 'Rejeitado',
-    },
-  ]
+  import { recivedPapers, recivedpapersHeaders } from '@/utils/local_db'
+
+  const props = defineProps({
+    dashboard: Boolean,
+  })
 
   const getColor = name => {
-    if (name === 'Rejeitado') return 'red'
-    if (name === 'Pendente') return 'blue'
-    if (name === 'Aprovado') return 'green'
-    if (name === 'Cancelado') return 'grey'
-    return 'bg-blue'
+    if (name === 'Falta Avaliadores') return 'indigo'
+    if (name === 'Esperando Pontuação') return 'green'
+    if (name === 'Reprovado') return 'red'
+    return 'bg-gray'
   }
-  </script>
+</script>
 
 <style scoped>
 .hover:hover {
     cursor: pointer;
     text-decoration: underline;
 }
-
 </style>

@@ -28,8 +28,8 @@
             Integrantes da Equipe:
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <ul>
-              <li>{{ team.teamRep }} <b>[ Líder ]</b></li>
+            <ul class="font-weight-bold">
+              <li class="d-block">{{ team.teamRep }} <span class="d-inline font-weight-light">( Líder )</span></li>
               <li v-for="student in team.students" :key="student.id">
                 {{ student.name }}
               </li>
@@ -72,6 +72,7 @@
   const id = ref('')
   const panel = ref([
     'team',
+    'abstract',
   ])
   const paper: Ref<IPaper> = ref({
     id: '',
@@ -98,14 +99,16 @@
     }
   })
 
-  const team = {
-    teamRep: paper.value.teamRep,
-    students: [
-      { id: 1, name: 'Mateus Lopes Albano' },
-      { id: 2, name: 'Vinicius de Oliveira' },
-      { id: 3, name: 'Joanatas Perazaflix Junior' },
-    ],
-  }
+  const team = computed(() => {
+    return {
+      teamRep: paper.value.teamRep,
+      students: [
+        { id: 1, name: 'Mateus Lopes Albano' },
+        { id: 2, name: 'Vinicius de Oliveira' },
+        { id: 3, name: 'Joanatas Perazaflix Junior' },
+      ],
+    }
+  })
 
   onMounted(() => {
     id.value = router.params.id

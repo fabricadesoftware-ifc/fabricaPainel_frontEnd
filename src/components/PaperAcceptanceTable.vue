@@ -21,14 +21,14 @@
         <v-btn
           class="pa-0 hover"
           color="primary"
-          :to="'/panel/evaluation/paper/:id'.replace(':id', item.id)"
+          :to="'/panel/paper/:id'.replace(':id', item.id)"
           variant="text"
         >
           {{ item.name }}
         </v-btn>
       </template>
       <template #item.status="{ item }">
-        <div class="text-end">
+        <div class="text-start">
           <v-chip
             :color="getColor(item.status)"
           >

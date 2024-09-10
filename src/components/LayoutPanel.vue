@@ -25,21 +25,23 @@
       <slot />
     </v-main>
     <footer class="pt-16 pb-2">
-      <v-row>
-        <v-col class="d-flex justify-start align-center" cols="10">
-          <img class="h-8" src="@/assets/footer_logos.png">
-        </v-col>
-        <v-col class="d-flex justify-end align-center">
-          <v-btn
-            class="border border-primary"
-            color="info"
-            icon="mdi-help"
-            rounded="xl"
-            size="small"
-            variant="tonal"
-          />
-        </v-col>
-      </v-row>
+      <v-container>
+        <v-row>
+          <v-col class="d-flex justify-start align-center" cols="10">
+            <img class="h-8" src="@/assets/footer_logos.png">
+          </v-col>
+          <v-col class="d-flex justify-end align-center">
+            <v-btn
+              class="border border-primary"
+              color="info"
+              icon="mdi-help"
+              rounded="xl"
+              size="small"
+              variant="tonal"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
     </footer>
   </div>
 </template>

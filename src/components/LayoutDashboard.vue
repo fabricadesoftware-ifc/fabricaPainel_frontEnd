@@ -65,8 +65,7 @@
             </v-btn>
           </v-sheet>
         </v-col>
-
-        <v-col>
+        <v-col cols="10">
           <v-sheet class="ml-auto mr-0" min-height="65vh" rounded="xl">
             <slot />
           </v-sheet>
