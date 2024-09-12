@@ -24,7 +24,7 @@
       <v-divider class="my-4" />
       <v-expansion-panels v-model="panel" class="rounded-0 overflow-hidden" multiple variant="accordion">
         <v-expansion-panel value="team">
-          <v-expansion-panel-title collapse-icon="mdi-minus" expand-icon="mdi-plus">
+          <v-expansion-panel-title class="bg-grey-lighten-4" collapse-icon="mdi-minus" expand-icon="mdi-plus">
             Integrantes da Equipe:
           </v-expansion-panel-title>
           <v-expansion-panel-text>
@@ -37,7 +37,7 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
         <v-expansion-panel value="abstract">
-          <v-expansion-panel-title collapse-icon="mdi-minus" expand-icon="mdi-plus">
+          <v-expansion-panel-title class="bg-grey-lighten-4" collapse-icon="mdi-minus" expand-icon="mdi-plus">
             Resumo do Projeto
           </v-expansion-panel-title>
           <v-expansion-panel-text>
@@ -46,18 +46,96 @@
             </p>
           </v-expansion-panel-text>
         </v-expansion-panel>
+        <v-expansion-panel value="evaluation">
+          <v-expansion-panel-title class="bg-grey-lighten-4" collapse-icon="mdi-minus" expand-icon="mdi-plus">
+            Orientadores / Avaliadores <span class="text-red ml-2 text-caption">(só aparece dps de aprovado)</span>
+          </v-expansion-panel-title>
+          <v-expansion-panel-text><v-row>
+            <v-col cols="6">
+              <p>Orientadores</p>
+              <v-chip
+                class="mr-2 my-4"
+                color="primary"
+                outlined
+              >
+                Professor 1
+              </v-chip>
+              <p>Co-Orientadores</p>
+              <v-chip
+                class="mr-2 my-4"
+                color="primary"
+                outlined
+              >
+                Professor 1
+              </v-chip>
+            </v-col>
+            <v-col cols="6">
+              <p>Avaliadores</p>
+              <v-chip
+                class="mr-2 my-4"
+                color="primary"
+                outlined
+              >
+                Professor 2
+              </v-chip>
+              <v-chip
+                class="mr-2 my-4"
+                color="primary"
+                outlined
+              >
+                Professor 2
+              </v-chip>
+              <v-chip
+                class="mr-2 my-4"
+                color="primary"
+                outlined
+              >
+                Professor 2
+              </v-chip>
+            </v-col>
+          </v-row>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
       </v-expansion-panels>
-      <v-row class="mt-8 ga-2" justify="end">
-        <v-btn
-          color="red"
-          rounded="xl"
-          variant="flat"
-        >Rejeitar</v-btn>
-        <v-btn
-          color="green"
-          rounded="xl"
-          variant="flat"
-        >Aprovar</v-btn>
+      <v-row class="mt-8 ga-2" justify="end" no-gutters>
+        <v-col cols="2">
+          <v-btn
+            block
+            class="py-6"
+            color="red"
+            rounded="xl"
+            variant="flat"
+          >Rejeitar</v-btn>
+        </v-col>
+        <v-col cols="2">
+          <v-btn
+            block
+            class="py-6"
+            color="green"
+            rounded="xl"
+            variant="flat"
+          >Aprovar</v-btn>
+        </v-col>
+      </v-row>
+      <v-row class="mt-8" justify="end" no-gutters>
+        <v-col class="pr-4" cols="2">
+          <v-text-field
+            label="Nota"
+            max="10"
+            rounded="xl"
+            type="number"
+            variant="outlined"
+          />
+        </v-col>
+        <v-col cols="2">
+          <v-btn
+            block
+            class="py-6"
+            color="info"
+            rounded="xl"
+            variant="flat"
+          >Dar Nota</v-btn>
+        </v-col>
       </v-row>
     </v-card>
   </LayoutSteps>

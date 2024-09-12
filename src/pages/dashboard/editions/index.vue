@@ -79,13 +79,241 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-btn
-            block
-            class="rounded-xl mt-6 py-6"
-            color="primary"
-            text="Editar Informações"
-            variant="flat"
-          />
+          <v-dialog
+            v-model="dialog"
+            class="w-md-75"
+          >
+            <template #activator="{ props: activatorProps }">
+              <v-btn
+                block
+                class="rounded-xl mt-6 py-6"
+                color="primary"
+                text="Editar Informações"
+                variant="flat"
+                v-bind="activatorProps"
+              />
+            </template>
+
+            <v-card
+              prepend-icon="mdi-application-edit"
+              title="Editar Edição Atual"
+            >
+              <v-card-text>
+                <v-form v-model="valid">
+                  <v-container>
+                    <v-row>
+                      <!-- Banner -->
+                      <v-col cols="12" md="6">
+                        <v-file-input
+                          v-model="form.banner"
+                          accept="image/*"
+                          label="Banner"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Logo -->
+                      <v-col cols="12" md="6">
+                        <v-file-input
+                          v-model="form.logo"
+                          accept="image/*"
+                          label="Logo"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Edition Name -->
+                      <v-col cols="12" md="12">
+                        <v-text-field
+                          v-model="form.edition_name"
+                          label="Nome da Edição"
+                          required
+                          rounded="xl"
+                          :rules="[v => !!v || 'Nome da Edição é obrigatório']"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Year -->
+                      <v-col cols="12" md="4">
+                        <v-text-field
+                          v-model="form.year"
+                          label="Ano"
+                          required
+                          rounded="xl"
+                          :rules="[v => !!v || 'Ano é obrigatório']"
+                          type="number"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Theme -->
+                      <v-col cols="12" md="4">
+                        <v-text-field
+                          v-model="form.theme"
+                          label="Tema"
+                          required
+                          rounded="xl"
+                          :rules="[v => !!v || 'Tema é obrigatório']"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Workload -->
+                      <v-col cols="12" md="4">
+                        <v-text-field
+                          v-model="form.workload"
+                          label="Carga Horária"
+                          required
+                          rounded="xl"
+                          :rules="[v => !!v || 'Carga horária é obrigatória']"
+                          type="number"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Initial REGISTRO DE TEMA Date -->
+                      <v-col cols="12" md="6">
+                        <v-text-field
+                          v-model="form.initial_registration_theme_date"
+                          label="Data de Início de Registro de Tema"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Final REGISTRO DE TEMA Date -->
+                      <v-col cols="12" md="6">
+                        <v-text-field
+                          v-model="form.final_registration_theme_date"
+                          label="Data de Fim de Registro de Tema"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Initial Submission Date -->
+                      <v-col cols="12" md="6">
+                        <v-text-field
+                          v-model="form.initial_submission_date"
+                          label="Data de Início de Submissão"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Final Submission Date -->
+                      <v-col cols="12" md="6">
+                        <v-text-field
+                          v-model="form.final_submission_date"
+                          label="Data de Fim de Submissão"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Initial Advisor Date -->
+                      <v-col cols="12" md="6">
+                        <v-text-field
+                          v-model="form.initial_advisor_date"
+                          label="Data de Início de Orientação"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Final Advisor Date -->
+                      <v-col cols="12" md="6">
+                        <v-text-field
+                          v-model="form.final_advisor_date"
+                          label="Data de Fim de Orientação"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Initial Evaluators Date -->
+                      <v-col cols="12" md="6">
+                        <v-text-field
+                          v-model="form.initial_registration_evaluator_date"
+                          label="Data de Início para Avaliadores"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Final Evaluators Date -->
+                      <v-col cols="12" md="6">
+                        <v-text-field
+                          v-model="form.final_registration_evaluator_date"
+                          label="Data de Fim para Avaliadores"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Initial Evaluators Date -->
+                      <v-col cols="12" md="6">
+                        <v-text-field
+                          v-model="form.initial_evaluators_date"
+                          label="Data de Início para Avaliadores"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+
+                      <!-- Final Evaluators Date -->
+                      <v-col cols="12" md="6">
+                        <v-text-field
+                          v-model="form.final_evaluators_date"
+                          label="Data de Fim para Avaliadores"
+                          required
+                          rounded="xl"
+                          variant="outlined"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-form>
+              </v-card-text>
+
+              <v-divider />
+
+              <v-card-actions>
+                <v-spacer />
+
+                <v-btn
+                  class="px-8"
+                  rounded="xl"
+                  text="Close"
+                  variant="plain"
+                  @click="dialog = false"
+                />
+
+                <v-btn
+                  class="px-8"
+                  color="primary"
+                  rounded="xl"
+                  text="Salvar"
+                  variant="flat"
+                  @click="dialog = false"
+                />
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-row>
       </div>
     </v-card>
@@ -168,10 +396,32 @@
   const edition = editions[0]
 
   const formatDate = computed(() => {
-    return dateTime => {
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
+    return (dateTime: string | number | Date) => {
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit' } as Intl.DateTimeFormatOptions
       return new Date(dateTime).toLocaleDateString('pt-BR', options)
     }
   })
 
+  const valid = ref(false)
+  const dialog = ref(false)
+
+  const form = ref({
+    year: '',
+    theme: '',
+    edition_name: '',
+    initial_registration_theme_date: '',
+    final_registration_theme_date: '',
+    initial_submission_date: '',
+    final_submission_date: '',
+    initial_advisor_date: '',
+    final_advisor_date: '',
+    initial_registration_evaluator_date: '',
+    final_registration_evaluator_date: '',
+    initial_evaluators_date: '',
+    final_evaluators_date: '',
+    workload: '',
+    banner: null,
+    logo: null,
+    is_open: true,
+  })
 </script>

@@ -84,12 +84,7 @@ export const uselayout = defineStore(
                     value: '/dashboard/colaborators',
                   },
                 ],
-                actions: [
-                  {
-                    text: 'Filtrar por Área',
-                    value: '',
-                  },
-                ],
+                actions: [],
               },
             ],
           },

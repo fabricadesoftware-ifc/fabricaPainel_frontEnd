@@ -35,7 +35,7 @@
   <v-main>
     <v-container>
       <v-row>
-        <v-col cols="2">
+        <v-col v-if="layoutStore.links.length > 1" cols="2">
           <v-sheet>
             <v-btn
               v-for="link in layoutStore.links"
@@ -50,7 +50,7 @@
             >
               {{ link.text }}
             </v-btn>
-            <v-divider class="mt-3 mb-4" />
+            <v-divider v-if="layoutStore.actionLinks.length > 0" class="mt-3 mb-4" />
             <v-btn
               v-for="actionLink in layoutStore.actionLinks"
               :key="actionLink.text"
@@ -65,7 +65,7 @@
             </v-btn>
           </v-sheet>
         </v-col>
-        <v-col cols="10">
+        <v-col :cols="layoutStore.links.length > 1 ? 10 : 12">
           <v-sheet class="ml-auto mr-0" min-height="65vh" rounded="xl">
             <slot />
           </v-sheet>
