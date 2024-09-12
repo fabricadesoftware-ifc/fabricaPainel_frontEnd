@@ -4,6 +4,7 @@
       <router-view />
     </v-main>
     <div class="index">
+      DEV NAV
       <router-link to="/">
         INSTITUCIONAL
       </router-link>
@@ -23,6 +24,10 @@
 
 <style scoped>
 .index {
+  background-color: #333;
+  color: #f7fb13;
+  padding: 10px;
+  border-radius: 12px;
   z-index: 1000;
   margin: 10px;
   font-size: .7rem;
@@ -34,5 +39,17 @@
   left: 0;
   text-transform: uppercase;
   cursor: pointer;
+
+  & a {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px;
+    transition: background-color .3s;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: #555;
+    }
+  }
 }
 </style>
