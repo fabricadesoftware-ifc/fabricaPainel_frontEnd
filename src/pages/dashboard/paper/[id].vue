@@ -106,9 +106,9 @@
           >
             <template #activator="{ props: activatorProps }">
               <v-btn
-                color="primary"
+                color="info"
                 rounded="xl"
-                variant="tonal"
+                variant="flat"
                 v-bind="activatorProps"
               >Registar Avaliadores</v-btn>
             </template>
