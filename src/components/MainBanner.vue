@@ -18,7 +18,7 @@
 <template>
   <v-container class="w-lg-75" fluid>
     <v-divider :class="classDivider" />
-    <section class="h-screen d-flex justify-center align-center">
+    <section class="h-screen mt-0 d-flex justify-center align-center">
       <div>
         <TitleH1
           :content="content"

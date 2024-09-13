@@ -12,7 +12,7 @@
               <h2 class="text-h6 mb-2">Categorias</h2>
               <v-chip-group v-model="amenities" column multiple>
                 <v-chip
-                  v-for="category in props.categoria"
+                  v-for="category in store.state.category"
                   :key="category.id"
                   filter
                   :text="category.category"
@@ -22,7 +22,7 @@
             </v-card-text>
             <v-card-text>
               <h2 class="text-h6 mb-2">Anos</h2>
-              <range-component :ano="anos" />
+              <range-component @update="updateYearRange" />
             </v-card-text>
           </v-card>
         </v-sheet>
@@ -30,7 +30,7 @@
       <v-col>
         <v-sheet class="ml-auto mr-0 d-flex flex-wrap ga-2" style="justify-content: space-between">
           <v-card
-            v-for="edition in props.editions"
+            v-for="edition in filteredEditions"
             :key="edition.id"
             class="border-b border-white"
             height="15vw"
@@ -41,7 +41,7 @@
             @click="selectCard(edition.edition_name)"
           >
             <div class="h-100 d-flex flex-column justify-space-between pa-6">
-              <p :class="[edition.edition, { 'text-red': !edition.status }, { 'text-info': edition.status }]">
+              <p :class="[edition.status, { 'text-red': !edition.status }, { 'text-info': edition.status }]">
                 {{ edition.status ? "Em Aberto" : "Finalizado" }}
               </p>
               <h2 class="text-primary font-weight-bold text-h5">
@@ -59,50 +59,30 @@
       </v-col>
     </v-row>
   </v-container>
-  {{ props.ano }}
 </template>
 
 <script lang="ts" setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import { usefilter } from '@/stores/editions'
 
-  const props: any = defineProps({
-    editions: {
-      type: Array,
-      required: true,
-    },
-    categoria: {
-      type: Array,
-      required: true,
-    },
-    ano: {
-      type: Array,
-      required: true,
-    },
-  })
-
-  interface Anos {
-    years: Array<Number>;
-    max: Number;
-    min: Number;
-    seasons: Object;
-  }
-
-  const anos: Anos = {
-    years: props.ano,
-    max: Math.max(...props.ano.map((a: { year: any; }) => a.year)),
-    min: Math.min(...props.ano.map((a: { year: any; }) => a.year)),
-    seasons: props.ano.reduce((acc: { [x: string]: any; }, a: { year: string | number; }) => {
-      acc[a.year] = a.year.toString()
-      return acc
-    }, {}),
-  }
-
+  const store = usefilter()
   const router = useRouter()
+  const amenities = ref<string[]>([])
+
+  const updateYearRange = (range: number[]) => {
+    store.state.yearsRange = range
+  }
+
+  const filteredEditions = computed(() => {
+    const [minYear, maxYear] = store.state.yearsRange
+    return store.state.editions.filter((edition: any) => {
+      const editionYear = parseInt(edition.year, 10)
+      return editionYear >= minYear && editionYear <= maxYear
+    })
+  })
 
   const selectCard = (name: any) => {
     router.push(`/editions/view/${name}`)
   }
-
-  const amenities = ref<string[]>([])
 </script>
