@@ -9,6 +9,7 @@ interface Edition {
   text: string
   to: string
   status: boolean
+  category: Array<number>
 }
 
 interface Ano {
@@ -37,6 +38,7 @@ export const usefilter = defineStore('filterDefault', () => {
     category: [] as Categoria[],
     yearsProcessed: [] as Anos[],
     yearsRange: [] as number[],
+    amenities: [] as number[],
   })
 
   const state = useStorage('filter', initialState)
@@ -55,6 +57,10 @@ export const usefilter = defineStore('filterDefault', () => {
 
   const setYearsRange = (years: number[]) => {
     state.value.yearsRange = years
+  }
+
+  const setAmenities = (amenities: number[]) => {
+    state.value.amenities = amenities
   }
 
   // Você pode chamar essas funções em sua view para passar os dados:
@@ -92,6 +98,8 @@ export const usefilter = defineStore('filterDefault', () => {
       { id: 12, category: 'Cinema' },
     ])
 
+    setAmenities([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
     setEditions([
       {
         id: 1,
@@ -100,6 +108,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: true,
+        category: [1, 2],
       },
       {
         id: 2,
@@ -108,6 +117,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [3, 4],
       },
       {
         id: 3,
@@ -116,6 +126,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [1, 5],
       },
       {
         id: 4,
@@ -124,6 +135,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [8, 2],
       },
       {
         id: 5,
@@ -132,6 +144,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [1, 6],
       },
       {
         id: 6,
@@ -140,6 +153,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [1, 11],
       },
       {
         id: 7,
@@ -148,6 +162,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [1, 2],
       },
       {
         id: 8,
@@ -156,6 +171,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [1, 2],
       },
       {
         id: 9,
@@ -164,6 +180,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [1, 2],
       },
       {
         id: 10,
@@ -172,6 +189,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [1, 2],
       },
       {
         id: 11,
@@ -180,6 +198,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [1, 2],
       },
       {
         id: 12,
@@ -188,6 +207,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [1, 2],
       },
       {
         id: 13,
@@ -196,6 +216,7 @@ export const usefilter = defineStore('filterDefault', () => {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non.',
         to: '/',
         status: false,
+        category: [1, 2],
       },
     ])
   }
@@ -203,5 +224,10 @@ export const usefilter = defineStore('filterDefault', () => {
   return {
     state,
     initializeData,
+    setEditions,
+    setYears,
+    setCategory,
+    setYearsRange,
+    setAmenities,
   }
 })
