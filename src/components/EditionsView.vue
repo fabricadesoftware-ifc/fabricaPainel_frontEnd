@@ -6,7 +6,7 @@
           <v-card variant="tonal">
             <v-card-text>
               <h2 class="text-h6 mb-2">Categorias</h2>
-              <v-chip-group v-model="amenitiesLocal" column multiple>
+              <v-chip-group v-model="store.state.amenities" column multiple>
                 <v-chip
                   v-for="category in store.state.category"
                   :key="category.id"
@@ -70,19 +70,11 @@
     status: boolean
     category: Array<number>
   }
-  const amenitiesLocal: number[] = []
   const store = usefilter()
   const router = useRouter()
 
   const updateYearRange = (range: number[]) => {
     store.state.yearsRange = range
-  }
-
-  watch(amenitiesLocal, amenities => {
-    updateAmenities(amenities)
-  })
-  const updateAmenities = (amenities: number[]) => {
-    store.state.amenities = amenities
   }
 
   const filteredEditions = computed(() => {
