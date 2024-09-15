@@ -38,7 +38,7 @@ export const usefilter = defineStore('filterDefault', () => {
     category: [] as Categoria[],
     yearsProcessed: [] as Anos[],
     yearsRange: [] as number[],
-    amenities: [] as number[],
+    amenities: <string[]>[],
   })
 
   const state = useStorage('filter', initialState)
@@ -57,10 +57,6 @@ export const usefilter = defineStore('filterDefault', () => {
 
   const setYearsRange = (years: number[]) => {
     state.value.yearsRange = years
-  }
-
-  const setAmenities = (amenities: number[]) => {
-    state.value.amenities = amenities
   }
 
   // Você pode chamar essas funções em sua view para passar os dados:
@@ -97,8 +93,6 @@ export const usefilter = defineStore('filterDefault', () => {
       { id: 11, category: 'Música' },
       { id: 12, category: 'Cinema' },
     ])
-
-    setAmenities([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
     setEditions([
       {
@@ -228,6 +222,5 @@ export const usefilter = defineStore('filterDefault', () => {
     setYears,
     setCategory,
     setYearsRange,
-    setAmenities,
   }
 })
