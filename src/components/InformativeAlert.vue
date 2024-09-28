@@ -2,20 +2,35 @@
   <v-alert
     v-model="alert"
     class="rounded-xl py-6"
-    closable
     close-label="Close Alert"
-    type="info"
+    :type="props.color"
     variant="tonal"
   >
     <p>
-      Registro de Avaliadores (17/10/2024 - 30/10/2024)
+      {{ props.title }}
     </p>
     <p>
-      Está no periodo de registro de avaliadores, por favor, registre os avaliadores nos trabalhos recebidos. (Clique no botão ao lado)
+      {{ props.description }}
     </p>
   </v-alert>
+  <div v-if="props.to" class="d-flex justify-end mt-2">
+    <v-btn
+      class="rounded-xl mb-6"
+      :color="props.color"
+      :text="props.button"
+      :to="props.to"
+      variant="flat"
+    />
+  </div>
 </template>
 
 <script setup>
+  const props = defineProps({
+    title: String,
+    description: String,
+    to: String,
+    button: String,
+    color: String,
+  })
   const alert = ref(true)
 </script>

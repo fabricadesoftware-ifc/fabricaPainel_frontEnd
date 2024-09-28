@@ -11,6 +11,7 @@ declare module 'vue' {
     AboutProgramation: typeof import('./components/AboutProgramation.vue')['default']
     BackButton: typeof import('./components/BackButton.vue')['default']
     BtnPrimary: typeof import('./components/BtnPrimary.vue')['default']
+    EditionDatas: typeof import('./components/EditionDatas.vue')['default']
     EditionsView: typeof import('./components/EditionsView.vue')['default']
     EvaluationSection: typeof import('./components/EvaluationSection.vue')['default']
     FooterComp: typeof import('./components/FooterComp.vue')['default']
