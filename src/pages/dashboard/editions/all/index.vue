@@ -1,9 +1,33 @@
+<script lang="ts" setup>
+  import { onMounted, computed } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { useEdition } from '@/stores/edition'
+
+  const { state, fetchEditions } = useEdition()
+  const router = useRouter()
+
+  const selectCard = (name: string) => {
+    router.push(`/dashboard/editions/view/${name}`)
+  }
+
+  const formatDate = computed(() => {
+    return (dateTime: string) => {
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
+      return new Date(dateTime).toLocaleDateString('pt-BR', options)
+    }
+  })
+
+  onMounted(() => {
+    fetchEditions()
+  })
+</script>
+
 <template>
   <LayoutDashboard>
     <div class="d-flex flex-row flex-wrap ga-4">
       <v-card
-        v-for="edition in editions"
-        :key="edition"
+        v-for="edition in state.editions"
+        :key="edition.id"
         class="border-md w-100"
         rounded="xl"
         variant="outlined"
@@ -72,92 +96,3 @@
     </div>
   </LayoutDashboard>
 </template>
-
-<script lang="ts" setup>
-  import { useRouter } from 'vue-router'
-
-  const router = useRouter()
-
-  const selectCard = name => {
-    router.push(`/dashboard/editions/view/${name}`)
-  }
-
-  const editions = [
-    {
-      year: 2024,
-      theme: 'Technology and Innovation',
-      edition_name: 'Tech Innovators',
-      initil_submission_date: '2024-01-15T09:00:00',
-      final_submission_date: '2024-03-01T23:59:59',
-      initial_advisor_date: '2024-03-05T09:00:00',
-      final_advisor_date: '2024-04-15T23:59:59',
-      initial_evaluators_date: '2024-04-20T09:00:00',
-      final_evaluators_date: '2024-05-10T23:59:59',
-      workload: 120,
-      banner: null,
-      logo: null,
-    },
-    {
-      year: 2023,
-      theme: 'Sustainability in Business',
-      edition_name: 'EcoBiz Summit',
-      initil_submission_date: '2023-02-10T09:00:00',
-      final_submission_date: '2023-03-25T23:59:59',
-      initial_advisor_date: '2023-03-30T09:00:00',
-      final_advisor_date: '2023-05-01T23:59:59',
-      initial_evaluators_date: '2023-05-05T09:00:00',
-      final_evaluators_date: '2023-06-10T23:59:59',
-      workload: 100,
-      banner: null,
-      logo: null,
-    },
-    {
-      year: 2022,
-      theme: 'Digital Transformation',
-      edition_name: 'DigiTrans 2022',
-      initil_submission_date: '2022-01-20T09:00:00',
-      final_submission_date: '2022-03-15T23:59:59',
-      initial_advisor_date: '2022-03-20T09:00:00',
-      final_advisor_date: '2022-04-30T23:59:59',
-      initial_evaluators_date: '2022-05-05T09:00:00',
-      final_evaluators_date: '2022-06-15T23:59:59',
-      workload: 110,
-      banner: null,
-      logo: null,
-    },
-    {
-      year: 2021,
-      theme: 'Artificial Intelligence',
-      edition_name: 'AI Revolution',
-      initil_submission_date: '2021-02-01T09:00:00',
-      final_submission_date: '2021-03-20T23:59:59',
-      initial_advisor_date: '2021-03-25T09:00:00',
-      final_advisor_date: '2021-05-05T23:59:59',
-      initial_evaluators_date: '2021-05-10T09:00:00',
-      final_evaluators_date: '2021-06-20T23:59:59',
-      workload: 90,
-      banner: null,
-      logo: null,
-    },
-    {
-      year: 2020,
-      theme: 'Health and Medicine',
-      edition_name: 'MedTech Forum',
-      initil_submission_date: '2020-01-25T09:00:00',
-      final_submission_date: '2020-03-05T23:59:59',
-      initial_advisor_date: '2020-03-10T09:00:00',
-      final_advisor_date: '2020-04-20T23:59:59',
-      initial_evaluators_date: '2020-04-25T09:00:00',
-      final_evaluators_date: '2020-06-01T23:59:59',
-      workload: 100,
-      banner: null,
-      logo: null,
-    },
-  ]
-  const formatDate = computed(() => {
-    return dateTime => {
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
-      return new Date(dateTime).toLocaleDateString('pt-BR', options)
-    }
-  })
-</script>
