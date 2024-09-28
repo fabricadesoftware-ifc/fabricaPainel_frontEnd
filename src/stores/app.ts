@@ -7,13 +7,13 @@ export const uselayout = defineStore(
   'layoutDefault',
   () => {
     const initialState = reactive({
-      layout: {},
-      drawer: false,
-      loading: false,
+      layout: {} as any,
+      drawer: false as any,
+      loading: false as any,
     })
 
     const router = useRouter()
-    const currentPage = computed(() => router.currentRoute.value.path)
+    const currentPage: ComputedRef<string> = computed(() => router.currentRoute.value.path)
 
     const state = useStorage('layout', initialState)
     const loading = computed(() => state.value.loading)
@@ -37,10 +37,8 @@ export const uselayout = defineStore(
 
     const toggleDrawer = () => state.value.drawer = !state.value.drawer
     const toggleDarkMode = () => darkMode.value = !darkMode.value
-    const setPage = (page: string) => currentPage.value = page
     const getSettings = async () => {
       try {
-        // const data = await getLayout();
         const data = {
           results: {
             theme: 'primary',
@@ -107,7 +105,6 @@ export const uselayout = defineStore(
       actionLinks,
       currentPage,
       getSettings,
-      setPage,
       toggleDrawer,
       toggleDarkMode,
     }

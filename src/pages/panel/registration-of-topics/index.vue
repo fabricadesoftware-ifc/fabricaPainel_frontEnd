@@ -1,15 +1,17 @@
 <template>
   <LayoutSteps size="w-md-33" title="Selecione os temas desejados">
     <v-autocomplete
+      v-model="theme2"
       clearable
-      :items="panelStore.crossCuttingThemes"
+      :items="editionStore.crossCuttingThemes"
       label="Autocomplete"
       rounded="xl"
       variant="outlined"
     />
     <v-autocomplete
+      v-model="theme1"
       clearable
-      :items="panelStore.crossCuttingThemes"
+      :items="editionStore.crossCuttingThemes"
       label="Autocomplete"
       rounded="xl"
       variant="outlined"
@@ -20,7 +22,7 @@
       class="py-6"
       color="primary"
       rounded="xl"
-      @click="panelStore.saveCrossCuttingThemes()"
+      @click="editionStore.saveCrossCuttingThemes([theme1, theme2])"
     >
       Confirmar
     </v-btn>
@@ -28,11 +30,13 @@
 </template>
 
 <script setup>
-  import { usePanel } from '@/stores/panel'
+  import { useEdition } from '@/stores/edition'
 
-  const panelStore = usePanel()
+  const editionStore = useEdition()
+  const theme1 = ref('')
+  const theme2 = ref('')
 
   onMounted(() => {
-    panelStore.getCrossCuttingThemes()
+    editionStore.getCrossCuttingThemes()
   })
 </script>

@@ -1,4 +1,8 @@
 <script setup>
+  import { Status } from '@/interfaces/work'
+  import { useWork } from '@/stores/work'
+
+  const workStore = useWork()
   const search = ref('')
   const props = defineProps({
     title: String,
@@ -6,9 +10,9 @@
   })
 
   const getColor = name => {
-    if (name === 'Pendente') return 'blue'
-    if (name === 'Aprovado') return 'green'
-    if (name === 'Reprovado') return 'red'
+    if (name === 0) return 'blue'
+    if (name === 1) return 'green'
+    if (name === 3) return 'red'
     return 'bg-gray'
   }
 
@@ -26,10 +30,10 @@
       key: 'title',
     },
     {
-      title: 'Data de Submissão',
+      title: 'ODS',
       align: 'start',
       sortable: false,
-      key: 'initial_submission_work_date',
+      key: 'ods',
     },
     {
       title: 'Área',
@@ -38,22 +42,16 @@
       key: 'field',
     },
     {
-      title: 'Avaliador',
-      align: 'start',
-      sortable: false,
-      key: 'evaluator',
-    },
-    {
       title: 'Tema Transversal',
       align: 'start',
       sortable: false,
       key: 'cross_cutting_theme',
     },
     {
-      title: 'ODS',
+      title: 'Data de Submissão',
       align: 'start',
       sortable: false,
-      key: 'ods',
+      key: 'initial_submission_work_date',
     },
   ]
 
@@ -99,9 +97,31 @@
               <v-chip
                 :color="getColor(item.status)"
               >
-                {{ item.status }}
+                {{ Status[item.status].replace(/_/g, ' ') }}
               </v-chip>
             </div>
+          </template>
+          <template #item.initial_submission_work_date="{ item }">
+            {{ workStore.coverteData(item.initial_submission_work_date) }}
+          </template>
+          <template #item.field="{ item }">
+            {{ item.field.map(field => field.name).join(', ') }}
+          </template>
+          <template #item.cross_cutting_theme="{ item }">
+            {{ item.cross_cutting_theme.name }}
+          </template>
+          <template #item.ods="{ item }">
+            {{ item.ods.map(ods => ods.name).join(', ') }}
+          </template>
+          <template #item.title="{ item }">
+            <v-btn
+              class="pa-0 hover"
+              color="primary"
+              :to="'/panel/paper/:id'.replace(':id', item.id)"
+              variant="text"
+            >
+              {{ item.title }}
+            </v-btn>
           </template>
         </v-data-table>
       </div>

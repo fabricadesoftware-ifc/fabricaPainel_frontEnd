@@ -6,14 +6,29 @@ export const useWork = defineStore('work', () => {
   const state = reactive({
     works: [] as any[],
     currentWork: null as any | null,
+    myWorks: [] as any[],
     loading: false,
     error: null as string | null,
   })
 
+  const allWorks = computed(() => state.works)
+
+  const getWorkByCrossCuttingTheme = async (crossCuttingTheme: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const myWorks = await WorkService.getWorkByCrossCuttingTheme(crossCuttingTheme)
+      state.myWorks = myWorks
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const setLoading = (loading: boolean) => {
     state.loading = loading
   }
-
 
   const setError = (message: string | null) => {
     state.error = message
@@ -69,7 +84,9 @@ export const useWork = defineStore('work', () => {
 
   return {
     state,
+    allWorks,
     fetchWorks,
+    getWorkByCrossCuttingTheme,
     sendWork,
     updateWork,
     coverteData,

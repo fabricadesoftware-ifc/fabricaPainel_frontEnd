@@ -231,8 +231,6 @@
   })
 
   const submitForm = () => {
-    console.log('Compoenten: O formulário foi enviado')
-    console.log(form.value)
     panelStore.createEdition({
       ...form.value,
       banner: null,

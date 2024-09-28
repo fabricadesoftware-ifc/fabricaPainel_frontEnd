@@ -86,7 +86,6 @@
   }
 
   const setNewPermission = (id, permission) => {
-    console.log('Setting new permission:', id, permission)
     const person = people.value.find(person => person.id === id)
     person.permission = permission
   }
