@@ -1,120 +1,85 @@
+<script lang="ts" setup>
+  import { IWork } from '@/interfaces/paper'
+
+  const edition = {
+    year: 2024,
+    theme: 'Technology and Innovation',
+    edition_name: 'Tech Innovators',
+    initial_submission_date: '2024-01-15',
+    final_submission_date: '2024-03-01',
+    initial_advisor_date: '2024-03-05',
+    final_advisor_date: '2024-04-15',
+    initial_evaluators_date: '2024-04-20',
+    final_evaluators_date: '2024-05-10',
+    initial_registration_theme_date: '2024-01-15',
+    final_registration_theme_date: '2024-02-15',
+    initial_registration_evaluators_date: '2024-02-20',
+    final_registration_evaluators_date: '2024-03-10',
+    workload: 120,
+    banner: null,
+    logo: null,
+  }
+  const user = {
+    role: 2,
+  }
+
+  const works = ref<IWork[]>([])
+  const title = ref('')
+
+  const getDatas = () => {
+    works.value = [{
+      id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+      title: 'TRABALHO 1',
+      abstract: 'RESUMO DO TRABALHO 1',
+      edition: 0,
+      field: [
+        0,
+      ],
+      evaluator: [
+        0,
+      ],
+      cross_cutting_theme: 0,
+      initial_submission_work_date: '2024-09-28T01:33:06.548Z',
+      final_submission_work_date: '2024-09-28T01:33:06.548Z',
+      verification_token: 'string',
+      team: 0,
+      ods: [
+        0,
+      ],
+      reject_submission_work_date: '2024-09-28T01:33:06.548Z',
+      status: 0,
+    }]
+    title.value = user.role === 2 ? 'Status do meu Trabalho' : 'Registros de Submissões'
+  }
+
+  onMounted(() => {
+    getDatas()
+  })
+</script>
+
 <template>
   <LayoutPanel>
     <v-container class="pt-0 mt-0">
-      <InformativeAlert />
-      <div class="d-flex justify-end mt-2">
-        <v-btn
-          class="rounded-xl mb-6"
-          color="info"
-          text="Registrar-se nos temas transversais"
-          to="/panel/registration-of-topics"
-          variant="flat"
-        />
-      </div>
-      <v-alert
-        class="rounded-xl py-6"
-        color="red"
-        type="error"
-        variant="tonal"
-      >
-        <p>
-          Você ainda não tem trabalhos submetidos!
-        </p>
-        <p>
-          A data de submissão é de {{ panelStore.currentEdition.initial_submission_date }} até {{ panelStore.currentEdition.final_submission_date }}
-        </p>
-      </v-alert>
-      <div class="d-flex justify-end mt-2">
-        <v-btn
-          class="rounded-xl mb-6"
-          color="error"
-          text="Enviar um trabalho"
-          to="/panel/registration-of-topics"
-          variant="flat"
-        />
-      </div>
+      <InformativeAlert
+        button="Registrar-se nos temas transversais"
+        color="info"
+        description="Está no periodo de registro de avaliadores, por favor, registre os avaliadores nos trabalhos recebidos. (Clique no botão ao lado)"
+        title="Registro de Avaliadores (17/10/2024 - 30/10/2024)"
+        to="/panel/registration-of-topics"
+      />
+      <InformativeAlert
+        button="Enviar um trabalho"
+        color="error"
+        :description="'A data de submissão é de '+edition.initial_submission_date+' até '+edition.final_submission_date"
+        title="Você ainda não tem trabalhos submetidos!"
+        to="/panel/work-submission"
+      />
       <v-row>
         <v-col>
           <v-sheet class="ml-auto mr-0 mt-0" min-height="65vh" rounded="xl">
             <div class="h-100 d-flex flex-column justify-space-between px-4">
-              <v-row>
-                <v-col class="d-flex flex-column ga-4 justify-center" cols="6">
-                  <p class="text-blue">
-                    {{ panelStore.currentEdition.theme }} <span class="text-grey"> - Carga Horária: {{ panelStore.currentEdition.workload }} horas</span>
-                  </p>
-                  <h2 class="text-primary font-weight-bold text-h4 pt-2">
-                    {{ panelStore.currentEdition.edition_name }} - {{ panelStore.currentEdition.year }}
-                  </h2>
-                  <p class="text-grey-darken-2">
-                    <span class="d-block">Data de Registro de tema:</span>
-                    <span class="text-black font-weight-bold">
-                      {{ panelStore.currentEdition.initial_registration_theme_date }}
-                    </span>
-                    até
-                    <span class="text-black font-weight-bold">
-                      {{ panelStore.currentEdition.final_registration_theme_date }}
-                    </span>
-                  </p>
-                  <p class="text-grey-darken-2">
-                    <span class="d-block">Data de Submissão:</span>
-                    <span class="text-black font-weight-bold">
-                      {{ panelStore.currentEdition.initial_submission_date }}
-                    </span>
-                    até
-                    <span class="text-black font-weight-bold">
-                      {{ panelStore.currentEdition.final_submission_date }}
-                    </span>
-                  </p>
-                  <p class="text-grey-darken-2">
-                    <span class="d-block">Data de Orientação:</span>
-                    <span class="text-black font-weight-bold">
-                      {{ panelStore.currentEdition.initial_advisor_date }}
-                    </span>
-                    até
-                    <span class="text-black font-weight-bold">
-                      {{ panelStore.currentEdition.final_advisor_date }}
-                    </span>
-                  </p>
-                  <p class="text-grey-darken-2">
-                    <span class="d-block">Data de Registro de Avaliadores:</span>
-                    <span class="text-black font-weight-bold">
-                      {{ panelStore.currentEdition.initial_registration_evaluators_date }}
-                    </span>
-                    até
-                    <span class="text-black font-weight-bold">
-                      {{ panelStore.currentEdition.final_registration_evaluators_date }}
-                    </span>
-                  </p>
-                  <p class="text-grey-darken-2">
-                    <span class="d-block">Data de Avaliação</span>
-                    <span class="text-black font-weight-bold">
-                      {{ panelStore.currentEdition.initial_evaluators_date }}
-                    </span>
-                    até
-                    <span class="text-black font-weight-bold">
-                      {{ panelStore.currentEdition.final_evaluators_date }}
-                    </span>
-                  </p>
-                </v-col>
-                <v-col>
-                  <img alt="" class="w-100 rounded-xl" src="https://th.bing.com/th/id/OIP.MQJrIQeghQLdcs1uFBZHzwHaEp?rs=1&pid=ImgDetMain">
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <p class="text-grey">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae quo maxime mollitia illo provident ex minima tenetur voluptate aliquam omnis, tempora nesciunt qui fugit, reprehenderit perferendis asperiores expedita natus eum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus hic corrupti, minus nisi quibusdam sint quia quasi perferendis assumenda culpa? Quo reiciendis illo dolore aperiam quisquam, facere velit animi architecto?
-                  </p>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <h1 class="text-h5 py-4 font-weight-bold">
-                    Registros de Submissões / Status do meu Trabalho
-                  </h1>
-                  <PaperAcceptanceTable />
-                </v-col>
-              </v-row>
+              <EditionDatas :edition="edition" />
+              <PaperAcceptanceTable :title="title" :works="works" />
             </div>
           </v-sheet>
         </v-col>
@@ -122,13 +87,3 @@
     </v-container>
   </LayoutPanel>
 </template>
-
-<script lang="ts" setup>
-  import { usePanel } from '@/stores/panel'
-
-  const panelStore = usePanel()
-
-  onMounted(() => {
-    panelStore.getEdition()
-  })
-</script>

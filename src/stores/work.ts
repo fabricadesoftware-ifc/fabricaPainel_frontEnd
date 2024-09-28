@@ -61,10 +61,17 @@ export const useWork = defineStore('work', () => {
     }
   }
 
+  // data q vem = 2024-09-28T01:33:06.548Z
+  const coverteData = (date: any) => {
+    // converter para dd/mm/aaaa hh:mm
+    return new Date(date).toLocaleString('pt-BR')
+  }
+
   return {
     state,
     fetchWorks,
     sendWork,
     updateWork,
+    coverteData,
   }
 })
