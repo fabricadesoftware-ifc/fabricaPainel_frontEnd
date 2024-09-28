@@ -1,9 +1,10 @@
+<script lang="ts" setup>
+
+</script>
 <template>
   <LayoutDefault>
-    <MainBanner />
+    <MainBanner :btnvisible="true" :class="'p-0 border-0'" />
     <IssuesPreview />
     <EvaluationSection />
   </LayoutDefault>
 </template>
-
-<script lang="ts" setup></script>

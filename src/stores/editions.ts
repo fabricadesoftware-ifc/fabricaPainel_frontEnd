@@ -1,4 +1,3 @@
-import { reactive } from 'vue'
 import { defineStore } from 'pinia'
 import EditionsService from '@/services/editions'
 import { IEdition } from '@/interfaces/edition'
