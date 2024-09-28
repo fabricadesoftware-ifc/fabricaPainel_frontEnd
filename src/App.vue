@@ -19,7 +19,14 @@
 </template>
 
 <script lang="ts" setup>
-  //
+  import { onMounted } from 'vue';
+  import { useAuth } from './stores/auth';
+
+  const authStore = useAuth();
+
+  onMounted(() => {
+    authStore.checkAuth();
+  });
 </script>
 
 <style scoped>

@@ -2,22 +2,27 @@
   <div class="min-h-screen">
     <v-app-bar class="py-4" flat>
       <v-container class="mx-auto d-flex align-center justify-center">
-        <img alt="" class="pr-8" src="@/assets/logo.png">
+        <img alt="" class="pr-8" src="@/assets/logo.png" />
         <v-spacer />
-        <p
-          class="px-2"
-        >
-          Nome de usuário
-        </p>
         <v-btn
-          class="rounded-xl justify-center"
-          color="red"
-          icon
-          @click="logout()"
+          v-if="!authStore.isLogged"
+          @click="login"
+          color="primary"
+          rounded="xl"
+          variant="flat"
         >
-          <v-icon size="small">
-            mdi-logout
-          </v-icon>
+          <p>Entrar</p>
+          <v-icon>mdi-login</v-icon>
+        </v-btn>
+        <v-btn
+          v-else
+          @click="logout"
+          color="primary"
+          rounded="xl"
+          variant="flat"
+        >
+          <p>{{ authStore.user.name }}</p>
+          <v-icon size="small" color="red"> mdi-logout</v-icon>
         </v-btn>
       </v-container>
     </v-app-bar>
@@ -28,7 +33,7 @@
       <v-container>
         <v-row>
           <v-col class="d-flex justify-start align-center" cols="10">
-            <img class="h-8" src="@/assets/footer_logos.png">
+            <img class="h-8" src="@/assets/footer_logos.png" />
           </v-col>
           <v-col class="d-flex justify-end align-center">
             <v-btn
@@ -47,17 +52,27 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRouter } from 'vue-router'
-  import { uselayout } from '@/stores/app'
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { uselayout } from "@/stores/app";
+import { useAuth } from "@/stores/auth";
+import { showMessage } from "@/utils/toastify";
 
-  const router = useRouter()
-  const layoutStore = uselayout()
+const router = useRouter();
+const layoutStore = uselayout();
+const authStore = useAuth();
 
-  const logout = () => {
-    router.push('/')
-  }
+const logout = () => {
+  showMessage("Deslogado com sucesso", "success", 1500, "top-right", "auto", false);
+  authStore.logout();
+  router.push("/");
+};
 
-  onMounted(() => {
-    layoutStore.getSettings()
-  })
+const login = () => {
+  router.push("/auth/login");
+};
+
+onMounted(() => {
+  layoutStore.getSettings();
+});
 </script>
