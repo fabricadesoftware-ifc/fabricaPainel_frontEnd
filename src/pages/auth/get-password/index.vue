@@ -12,11 +12,10 @@ const email = ref("");
 const getPassword = async () => {
   try {
     await authStore.getPassword(email.value);
-  } catch (error) {
-    showMessage('Falha no envio do e-mail', 'error', 1500, 'top-right', 'auto', false );
-  } finally {
     router.push('/auth/token');
     showMessage('E-mail enviado com sucesso!', 'success', 1500,'top-right', 'auto', false );
+  } catch (error) {
+    showMessage('Falha no envio do e-mail, verifique o endereço e tente novamente', 'error', 1500, 'top-right', 'auto', false );
   }
 };
 </script>

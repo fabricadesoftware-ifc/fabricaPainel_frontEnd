@@ -5,6 +5,7 @@ import { useRouter } from "vue-router";
 import { useAuth } from "@/stores/auth";
 
 const router = useRouter();
+const authStore = useAuth();
 
 const password = ref("");
 const confirmPassword = ref("");
@@ -22,7 +23,7 @@ const validateAndConfirmPassword = () => {
     return false;
   }
 
-  if (password.value.length < 8 || !/^\d+$/.test(password.value)) {
+  if (password.value.length < 8 || !/\d/.test(password.value)) {
     showMessage(
       "A senha deve ter no mínimo 8 caracteres e conter letras e números",
       "error",
@@ -41,20 +42,20 @@ const resetPassword = async () => {
   try {
     if (!validateAndConfirmPassword()) return;
     await authStore.resetPassword(password.value);
-  } catch (error) {
     showMessage(
-      "Falha ao resetar a senha",
-      "error",
+      "Senha resetada com sucesso!",
+      "success",
       1500,
       "top-right",
       "auto",
       false
     );
-  } finally {
     router.push("/auth/login");
+  } catch (error) {
+    console.error(error);
     showMessage(
-      "Senha resetada com sucesso!",
-      "success",
+      "Falha ao resetar a senha",
+      "error",
       1500,
       "top-right",
       "auto",

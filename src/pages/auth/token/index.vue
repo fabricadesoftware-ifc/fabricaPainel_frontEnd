@@ -12,20 +12,18 @@ const token = ref("");
 const getToken = async () => {
   try {
     await authStore.verifyToken(token.value);
+    router.push('/auth/reset-password');
   } catch (error) {
     showMessage('Token inválido', 'error', 1500, 'top-right', 'auto', false );
-  } finally {
-    router.push('/auth/reset-password');
   }
 };
 
 const resendToken = async () => {
   try {
     await authStore.getPassword();
+    showMessage('E-mail reenviado com sucesso!', 'success', 1500, 'top-right', 'auto', false );
   } catch (error) {
     showMessage('Falha no reenvio do e-mail', 'error', 1500, 'top-right', 'auto', false );
-  } finally {
-    showMessage('E-mail reenviado com sucesso!', 'success', 1500,'top-right', 'auto', false );
   }
 };
 

@@ -15,9 +15,9 @@ class AuthService {
         }
     }
 
-    async resetPassword (password: string, token: string) {
+    async resetPassword (new_password: string, token: string) {
         try {
-            const { data } = await api.post('reset_password/', { password, token })
+            const { data } = await api.post('reset_password/', { new_password, token })
             return data
         } catch (error) {
             this.handleError(error, 'reset password')
