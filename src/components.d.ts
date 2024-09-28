@@ -9,7 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     AboutIntrodution: typeof import('./components/AboutIntrodution.vue')['default']
     AboutProgramation: typeof import('./components/AboutProgramation.vue')['default']
-    AlertEvaluatorsRegister: typeof import('./components/AlertEvaluatorsRegister.vue')['default']
     BackButton: typeof import('./components/BackButton.vue')['default']
     BtnPrimary: typeof import('./components/BtnPrimary.vue')['default']
     EditionsView: typeof import('./components/EditionsView.vue')['default']
@@ -25,7 +24,6 @@ declare module 'vue' {
     LayoutEditions: typeof import('./components/LayoutEditions.vue')['default']
     MainBanner: typeof import('./components/MainBanner.vue')['default']
     PaperAcceptanceTable: typeof import('./components/PaperAcceptanceTable.vue')['default']
-    PaperAccrptanceTable: typeof import('./components/PaperAccrptanceTable.vue')['default']
     PersonTable: typeof import('./components/PersonTable.vue')['default']
     RangeComponent: typeof import('./components/rangeComponent.vue')['default']
     RecivedTable: typeof import('./components/RecivedTable.vue')['default']

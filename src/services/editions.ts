@@ -2,40 +2,45 @@ import { IEdition } from '@/interfaces/edition'
 import api from '@/plugins/api'
 
 class EditionsService {
+  private handleError (error: any, action: string) {
+    console.error(`Error during ${action}:`, error)
+    throw new Error(`Failed to ${action} edition`)
+  }
+
   async getEditions () {
     try {
-      const response = await api.get('/edition/')
-      return response.data
+      const { data } = await api.get('/edition/')
+      return data
     } catch (error) {
-      throw new Error('Failed to fetch editions')
+      this.handleError(error, 'fetch')
     }
   }
 
-  async getEdition () {
+  async getOpenEdition () {
     try {
-      const response = await api.get('/edition-open/')
-      return response.data[0]
+      const { data } = await api.get('/edition-open/')
+      return data[0]
     } catch (error) {
-      throw new Error('Failed to fetch editions')
+      this.handleError(error, 'fetch')
     }
   }
 
   async createEdition (editionData: IEdition) {
     try {
-      console.log('service', editionData)
-      const response = await api.post('/edition/', editionData)
-      return response.data
+      console.log('Creating edition', editionData)
+      const { data } = await api.post('/edition/', editionData)
+      return data
     } catch (error) {
-      throw new Error('Failed to create edition')
+      this.handleError(error, 'create')
     }
   }
 
   async updateEdition (editionId: string, editionData: IEdition) {
     try {
-      const response = await api.put(`/edition/${editionId}/`, editionData)
-      return response.data
+      const { data } = await api.put(`/edition/${editionId}/`, editionData)
+      return data
     } catch (error) {
-      throw new Error('Failed to update edition')
+      this.handleError(error, 'update')
     }
   }
 }
