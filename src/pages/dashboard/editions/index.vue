@@ -58,7 +58,7 @@
                 <h1 class="text-h5 py-4 font-weight-bold">
                   Registros de Submissões
                 </h1>
-                <RecivedTable dashboard />
+                <!-- <RecivedTable dashboard /> -->
               </v-col>
             </v-row>
             <v-row>

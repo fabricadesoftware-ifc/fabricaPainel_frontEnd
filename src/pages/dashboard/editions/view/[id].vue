@@ -88,7 +88,7 @@
                 <h1 class="text-h5 py-4">
                   Registros de Submissões
                 </h1>
-                <RecivedTable />
+                <!-- <RecivedTable /> -->
               </v-col>
             </v-row>
           </div>
