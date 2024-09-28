@@ -24,7 +24,7 @@
               size="16"
             />
             <div class="h-100 d-flex flex-column justify-space-between pa-6">
-              <p v-if="edition.open" class="text-info">Aberta</p>
+              <p v-if="edition.is_open" class="text-info">Aberta</p>
               <p v-else class="text-red">Finalizada</p>
 
               <h2 class="text-primary font-weight-bold text-h5" :class="[{ 'text-red': isSelected }]">
@@ -122,108 +122,21 @@
 </template>
 
 <script setup>
+  import { ref, onMounted } from 'vue';
   import { useDate } from 'vuetify'
+  import { useEdition } from '@/stores/edition'
 
   const date = useDate()
   const model = ref(null)
 
-  const editions = [
-    {
-      id: 1,
-      year: 2024,
-      theme: 'Internet of Things',
-      edition_name: 'IoT Hipo 2024',
-      initil_submission_date: '2024-06-30',
-      final_submission_date: '2024-07-31',
-      initial_advisor_date: '2024-08-01',
-      final_advisor_date: '2024-08-15',
-      initial_evaluators_date: '2024-08-16',
-      final_evaluators_date: '2024-08-31',
-      banner: 'https://www.ahnegao.com.br/wp-content/uploads/2017/03/img-43-1.jpg',
-      logo: null,
-      workload: 60,
-      open: true,
-    },
-    {
-      id: 2,
-      year: 2023,
-      theme: 'Blockchain Technology',
-      edition_name: 'BlockSummit 2023',
-      initil_submission_date: '2023-08-30',
-      final_submission_date: '2023-09-30',
-      initial_advisor_date: '2023-10-01',
-      final_advisor_date: '2023-10-15',
-      initial_evaluators_date: '2023-10-16',
-      final_evaluators_date: '2023-10-31',
-      banner: 'https://th.bing.com/th/id/OIP.kVeIBkpMGMy9XfjgomYhoAHaDp?rs=1&pid=ImgDetMain',
-      logo: null,
-      workload: 50,
-      open: false,
-    },
-    {
-      id: 3,
-      year: 2022,
-      theme: 'Artificial Intelligence',
-      edition_name: 'AI Summit 2022',
-      initil_submission_date: '2022-10-30',
-      final_submission_date: '2022-11-30',
-      initial_advisor_date: '2022-12-01',
-      final_advisor_date: '2022-12-15',
-      initial_evaluators_date: '2022-12-16',
-      final_evaluators_date: '2022-12-31',
-      banner: 'https://i.ytimg.com/vi/g2fEjY8LDmM/maxresdefault.jpg',
-      logo: null,
-      workload: 40,
-      open: false,
-    },
+  const { fetchEditions, state } = useEdition()
 
-    {
-      id: 4,
-      year: 2021,
-      theme: 'Quantum Computing',
-      edition_name: 'Quantum Summit 2021',
-      initil_submission_date: '2025-04-30',
-      final_submission_date: '2025-05-31',
-      initial_advisor_date: '2025-06-01',
-      final_advisor_date: '2025-06-15',
-      initial_evaluators_date: '2025-06-16',
-      final_evaluators_date: '2025-06-30',
-      banner: 'https://th.bing.com/th/id/OIP.adCUFGzeIuMvDBv8FfCxnwHaEH?rs=1&pid=ImgDetMain',
-      logo: null,
-      workload: 70,
-      open: false,
-    },
-    {
-      id: 5,
-      year: 2020,
-      theme: 'Cybersecurity',
-      edition_name: 'CyberSec Summit 2020',
-      initil_submission_date: '2026-02-28',
-      final_submission_date: '2026-03-31',
-      initial_advisor_date: '2026-04-01',
-      final_advisor_date: '2026-04-15',
-      initial_evaluators_date: '2026-04-16',
-      final_evaluators_date: '2026-04-30',
-      banner: 'https://th.bing.com/th/id/OIP.bai5nGIgbFN6O5UUPcnYiQHaD5?w=650&h=342&rs=1&pid=ImgDetMain',
-      logo: null,
-      workload: 80,
-      open: false,
-    },
-    {
-      id: 6,
-      year: 2019,
-      theme: 'Big Data',
-      edition_name: 'BigData Summit 2019',
-      initil_submission_date: '2027-12-30',
-      final_submission_date: '2028-01-31',
-      initial_advisor_date: '2028-02-01',
-      final_advisor_date: '2028-02-15',
-      initial_evaluators_date: '2028-02-16',
-      final_evaluators_date: '2028-02-29',
-      banner: 'https://i.gruposwhats.app/64c95f6e63da4.jpg',
-      logo: null,
-      workload: 90,
-      open: false,
-    },
-  ]
+  const editions = ref(state.editions)
+
+  onMounted(() => {
+    console.log('====================================');
+    console.log(state.editions);
+    console.log('====================================');
+    fetchEditions()
+  })
 </script>
