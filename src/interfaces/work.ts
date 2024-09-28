@@ -14,3 +14,10 @@ export interface IWork {
     reject_submission_work_date: string
     status: number
 }
+
+export enum Status {
+    Pendente = 1,
+    Aprovado = 2,
+    Cancelado = 3,
+    Pendente_Com_Alteracoes = 4,
+}

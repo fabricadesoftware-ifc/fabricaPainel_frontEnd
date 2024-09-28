@@ -122,7 +122,6 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from 'vue';
   import { useDate } from 'vuetify'
   import { useEdition } from '@/stores/edition'
 
@@ -134,9 +133,6 @@
   const editions = ref(state.editions)
 
   onMounted(() => {
-    console.log('====================================');
-    console.log(state.editions);
-    console.log('====================================');
     fetchEditions()
   })
 </script>

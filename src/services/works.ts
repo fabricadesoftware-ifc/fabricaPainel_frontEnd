@@ -9,7 +9,6 @@ class WorkService {
   async sendWork (work: any) {
     try {
       const { data } = await api.post('/work/', work)
-      console.log('Work created:', data)
       return data
     } catch (error) {
       this.handleError(error, 'create')
@@ -19,7 +18,15 @@ class WorkService {
   async getWorks () {
     try {
       const { data } = await api.get('/work/')
-      console.log('Works fetched:', data)
+      return data
+    } catch (error) {
+      this.handleError(error, 'fetch')
+    }
+  }
+
+  async getWorkByCrossCuttingTheme (crossCuttingTheme: string) {
+    try {
+      const { data } = await api.get(`/work/?cross_cutting_theme=${crossCuttingTheme}`)
       return data
     } catch (error) {
       this.handleError(error, 'fetch')
@@ -29,7 +36,6 @@ class WorkService {
   async updateWork (workId: string, partialWorkData: any) {
     try {
       const { data } = await api.patch(`/work/${workId}/`, partialWorkData)
-      console.log('Work partially updated:', data)
       return data
     } catch (error) {
       this.handleError(error, 'patch')

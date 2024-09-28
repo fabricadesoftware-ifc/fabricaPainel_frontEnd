@@ -80,21 +80,16 @@
   const filteredEditions = computed(() => {
     const [minYear, maxYear] = store.state.yearsRange
 
-    // Filtra as edições pelo intervalo de anos
     const editionsInYearRange = store.state.editions.filter((edition: any) => {
       const editionYear = parseInt(edition.year, 10)
       return editionYear >= minYear && editionYear <= maxYear
     })
 
-    // Se nenhuma categoria estiver selecionada, exibe todas as edições no intervalo de anos
-    console.log(store.state)
     if (store.state.amenities.length === 0) {
       return editionsInYearRange
     }
 
-    // Caso contrário, filtra pelas categorias selecionadas
     return editionsInYearRange.filter((edition: Edition) => {
-      // Verifica se a edição tem alguma categoria que corresponde às selecionadas
       return edition.category.some((category: number) => store.state.amenities.includes(category))
     })
   })
