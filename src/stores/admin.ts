@@ -14,6 +14,7 @@ export const useWork = defineStore('work', () => {
     state.loading = loading
   }
 
+
   const setError = (message: string | null) => {
     state.error = message
   }
