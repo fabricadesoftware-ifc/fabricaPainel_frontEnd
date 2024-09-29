@@ -2,6 +2,7 @@ import { computed, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import { jwtDecode } from 'jwt-decode'
 import authService from '@/services/auth'
+import { useEdition } from './edition'
 
 export const useAuth = defineStore('user', () => {
   const state = reactive({
@@ -10,13 +11,15 @@ export const useAuth = defineStore('user', () => {
       id: '',
       name: '',
       email: '',
-      role: '',
+      user_type: '',
     },
     students: [] as Array<{ id: string; name: string }>,
     token: '',
     refresh: '',
     resetPasswordToken: '',
   })
+
+  const editionStore = useEdition()
 
   const isLogged = computed(() => state.isLogged)
   const user = computed(() => state.user)
@@ -29,6 +32,8 @@ export const useAuth = defineStore('user', () => {
       return student.name
     })
   })
+  const isOpenForWork = computed(() => state.user.user_type === 'STUDENT' && editionStore.isOpenForWork)
+  const isOpenForRegister = computed(() => state.user.user_type === 'TEACHER' && editionStore.isOpenForWork)
 
   const checkAuth = () => {
     const token = localStorage.getItem('token')
@@ -112,9 +117,10 @@ export const useAuth = defineStore('user', () => {
     state.token = ''
     state.refresh = ''
     state.user = {
+      id: '',
       name: '',
       email: '',
-      role: '',
+      user_type: '',
     }
     localStorage.removeItem('token')
     localStorage.removeItem('refresh')
@@ -129,6 +135,25 @@ export const useAuth = defineStore('user', () => {
     }
   }
 
+  const getUserInfo = async () => {
+    try {
+      const data = await authService.getUser(state.user.id)
+      state.user = data
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const getUser = async (id: string) => {
+    try {
+      const data = await authService.getUser(id)
+      return data
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
   return {
     isLogged,
     user,
@@ -137,7 +162,11 @@ export const useAuth = defineStore('user', () => {
     resetPasswordToken,
     uid,
     formattedStudents,
+    isOpenForWork,
+    isOpenForRegister,
     getStudents,
+    getUser,
+    getUserInfo,
     getPassword,
     resetPassword,
     verifyToken,

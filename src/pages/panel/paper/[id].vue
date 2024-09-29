@@ -1,3 +1,44 @@
+<script setup lang="ts">
+  import { useWork } from '@/stores/work'
+  import { useRouter } from 'vue-router'
+
+  const router = useRouter()
+  const work_id = router.currentRoute.value.params.id
+  const workStore = useWork()
+  const panel = ref([
+    'team',
+    'abstract',
+  ])
+
+  const categories = computed(() => {
+    const field = workStore.currentWork?.field
+    const ods = workStore.currentWork?.ods
+    const crossCuttingTheme = workStore.currentWork?.cross_cutting_theme
+
+    const mergeToArray = (item: {}) => Array.isArray(item) ? item : [item]
+
+    return [
+      ...mergeToArray(field),
+      ...mergeToArray(ods),
+      ...mergeToArray(crossCuttingTheme),
+    ].filter(Boolean)
+  })
+
+  const team = computed(() => {
+    return {
+      students: [
+        { id: 1, name: 'Mateus Lopes Albano' },
+        { id: 2, name: 'Vinicius de Oliveira' },
+        { id: 3, name: 'Joanatas Perazaflix Junior' },
+      ],
+    }
+  })
+
+  onMounted(() => {
+    workStore.getWork(work_id)
+  })
+</script>
+
 <template>
   <LayoutSteps>
     <v-card
@@ -5,31 +46,34 @@
       rounded="xl"
       variant="outlined"
     >
-      <header class="d-flex justify-space-between">
-        <h1>
-          {{ paper.id }} - {{ paper.name }}
-        </h1>
-        <div>
-          <v-chip
-            v-for="(value, key) in categories"
-            :key="key"
-            class="mr-2 my-4"
-            :color="getColor(key)"
-            outlined
-          >
-            {{ value }}
-          </v-chip>
-        </div>
+      <header>
+        <v-row class="d-flex justify-space-between" no-gutters>
+          <v-col cols="12">
+            <h1 class="pb-4">
+              {{ workStore.currentWork?.title }}
+            </h1>
+          </v-col>
+          <v-col cols="12">
+            <v-chip
+              v-for="(value, key) in categories"
+              :key="key"
+              class="mr-2 my-2"
+              color="blue"
+              outlined
+            >
+              {{ value.name }}
+            </v-chip>
+          </v-col>
+        </v-row>
       </header>
       <v-divider class="my-4" />
       <v-expansion-panels v-model="panel" class="rounded-0 overflow-hidden" multiple variant="accordion">
         <v-expansion-panel value="team">
-          <v-expansion-panel-title class="bg-grey-lighten-4" collapse-icon="mdi-minus" expand-icon="mdi-plus">
+          <v-expansion-panel-title class="py-6" collapse-icon="mdi-minus" expand-icon="mdi-plus">
             Integrantes da Equipe:
           </v-expansion-panel-title>
           <v-expansion-panel-text>
             <ul class="font-weight-bold">
-              <li class="d-block">{{ team.teamRep }} <span class="d-inline font-weight-light">( Líder )</span></li>
               <li v-for="student in team.students" :key="student.id">
                 {{ student.name }}
               </li>
@@ -37,22 +81,22 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
         <v-expansion-panel value="abstract">
-          <v-expansion-panel-title class="bg-grey-lighten-4" collapse-icon="mdi-minus" expand-icon="mdi-plus">
+          <v-expansion-panel-title class="py-6" collapse-icon="mdi-minus" expand-icon="mdi-plus">
             Resumo do Projeto
           </v-expansion-panel-title>
           <v-expansion-panel-text>
             <p>
-              {{ paper.abstract }}
+              {{ workStore.currentWork?.abstract }}
             </p>
           </v-expansion-panel-text>
         </v-expansion-panel>
         <v-expansion-panel value="evaluation">
-          <v-expansion-panel-title class="bg-grey-lighten-4" collapse-icon="mdi-minus" expand-icon="mdi-plus">
+          <v-expansion-panel-title class="py-6" collapse-icon="mdi-minus" expand-icon="mdi-plus">
             Orientadores / Avaliadores <span class="text-red ml-2 text-caption">(só aparece dps de aprovado)</span>
           </v-expansion-panel-title>
           <v-expansion-panel-text><v-row>
             <v-col cols="6">
-              <p>Orientadores</p>
+              <p>Orientador</p>
               <v-chip
                 class="mr-2 my-4"
                 color="primary"
@@ -140,59 +184,6 @@
     </v-card>
   </LayoutSteps>
 </template>
-
-<script lang="ts" setup>
-  import { useRoute } from 'vue-router'
-  import { papers } from '@/utils/local_db'
-  import { IPaper } from '@/interfaces/paper'
-
-  const router = useRoute()
-  const id = ref('')
-  const panel = ref([
-    'team',
-    'abstract',
-  ])
-  const paper: Ref<IPaper> = ref({
-    id: '',
-    name: '',
-    area: '',
-    ods: '',
-    crossCuttingThemes: '',
-    teamRep: '',
-    status: '',
-    abstract: '',
-  })
-
-  const getColor = (key: string) => {
-    if (key === 'area') return 'indigo'
-    if (key === 'ods') return 'teal'
-    return 'blue-grey'
-  }
-
-  const categories = computed(() => {
-    return {
-      area: paper.value.area,
-      ods: paper.value.ods,
-      crossCuttingThemes: paper.value.crossCuttingThemes,
-    }
-  })
-
-  const team = computed(() => {
-    return {
-      teamRep: paper.value.teamRep,
-      students: [
-        { id: 1, name: 'Mateus Lopes Albano' },
-        { id: 2, name: 'Vinicius de Oliveira' },
-        { id: 3, name: 'Joanatas Perazaflix Junior' },
-      ],
-    }
-  })
-
-  onMounted(() => {
-    id.value = router.params.id
-    paper.value = papers.find((paper: any) => paper.id === id.value) as IPaper
-  })
-</script>
 
 <style>
 li {

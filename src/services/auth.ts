@@ -38,6 +38,7 @@ class AuthService {
   async getUser (id: string) {
     try {
       const { data } = await api.get(`users/${id}`)
+      console.log(data)
       return data
     } catch (error) {
       this.handleError(error, 'get user')

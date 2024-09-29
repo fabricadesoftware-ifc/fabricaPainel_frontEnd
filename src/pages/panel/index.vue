@@ -1,18 +1,18 @@
 <script lang="ts" setup>
+  import { useAuth } from '@/stores/auth'
   import { useEdition } from '@/stores/edition'
   import { useWork } from '@/stores/work'
 
   const workStore = useWork()
   const editionStore = useEdition()
-  const user = {
-    role: 2,
-  }
+  const authStore = useAuth()
   const title = ref('')
 
   onMounted(() => {
     workStore.fetchWorks()
     editionStore.fetchCurrentEdition()
-    title.value = user.role === 2 ? 'Status do meu Trabalho' : 'Registros de Submissões'
+    authStore.getUserInfo()
+    title.value = authStore.user.user_type === 'STUDENT' ? 'Status do meu Trabalho' : 'Registros de Submissões'
   })
 </script>
 
@@ -20,6 +20,7 @@
   <LayoutPanel>
     <v-container class="pt-0 mt-0">
       <InformativeAlert
+        v-if="authStore.isOpenForRegister"
         button="Registrar-se nos temas transversais"
         color="info"
         description="Está no periodo de registro de avaliadores, por favor, registre os avaliadores nos trabalhos recebidos. (Clique no botão ao lado)"
@@ -27,6 +28,7 @@
         to="/panel/registration-of-topics"
       />
       <InformativeAlert
+        v-if="authStore.isOpenForWork"
         button="Enviar um trabalho"
         color="error"
         :description="editionStore.alertStudent"

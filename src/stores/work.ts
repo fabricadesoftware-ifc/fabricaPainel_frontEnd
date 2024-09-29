@@ -12,6 +12,7 @@ export const useWork = defineStore('work', () => {
   })
 
   const allWorks = computed(() => state.works)
+  const currentWork = computed(() => state.currentWork)
 
   const getWorkByCrossCuttingTheme = async (crossCuttingTheme: string) => {
     setLoading(true)
@@ -82,6 +83,18 @@ export const useWork = defineStore('work', () => {
     return new Date(date).toLocaleString('pt-BR')
   }
 
+  const getWork = async (workId: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const selectedWork = await WorkService.getWork(workId)
+      state.currentWork = selectedWork
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
   return {
     state,
     allWorks,
@@ -90,5 +103,7 @@ export const useWork = defineStore('work', () => {
     sendWork,
     updateWork,
     coverteData,
+    getWork,
+    currentWork,
   }
 })
