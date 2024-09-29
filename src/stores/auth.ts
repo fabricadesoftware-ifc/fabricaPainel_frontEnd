@@ -12,6 +12,7 @@ export const useAuth = defineStore('user', () => {
       email: '',
       role: '',
     },
+    students: [] as Array<{ id: string; name: string }>,
     token: '',
     refresh: '',
     resetPasswordToken: '',
@@ -23,6 +24,11 @@ export const useAuth = defineStore('user', () => {
   const refresh = computed(() => state.refresh)
   const resetPasswordToken = computed(() => state.resetPasswordToken)
   const uid = computed(() => state.user.id)
+  const formattedStudents = computed(() => {
+    return state.students.map((student: { name: string }) => {
+      return student.name
+    })
+  })
 
   const checkAuth = () => {
     const token = localStorage.getItem('token')
@@ -87,6 +93,7 @@ export const useAuth = defineStore('user', () => {
   const login = async (email: string, password: string) => {
     try {
       const { access, refresh } = await authService.login(email, password)
+      // eslint-disable-next-line camelcase
       const decoded_token = jwtDecode(access)
       state.isLogged = true
       state.token = access
@@ -116,7 +123,7 @@ export const useAuth = defineStore('user', () => {
   const getStudents = async () => {
     try {
       const data = await authService.getStudents()
-      return data
+      state.students = data
     } catch (error) {
       console.error(error)
     }
@@ -129,6 +136,7 @@ export const useAuth = defineStore('user', () => {
     refresh,
     resetPasswordToken,
     uid,
+    formattedStudents,
     getStudents,
     getPassword,
     resetPassword,

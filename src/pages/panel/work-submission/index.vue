@@ -45,7 +45,7 @@
           <v-autocomplete
             chips
             clearable
-            :items="categoryStore.crossCuttingThemes"
+            :items="authStore.formattedStudents"
             label="Selecione os integrantes da sua equipe"
             multiple
             rounded="xl"
@@ -58,7 +58,7 @@
         class="py-6"
         color="primary"
         rounded="xl"
-        @click="panelStore.saveCrossCuttingThemes()"
+        @click="workStore.sendWork(form)"
       >
         Confirmar
       </v-btn>
@@ -71,6 +71,7 @@
   import { useEdition } from '../../../stores/edition'
   import { useAuth } from '@/stores/auth'
   import { useCategory } from '@/stores/category'
+  import { useWork } from '@/stores/work'
 
   const form = reactive({
     title: '',
@@ -86,6 +87,7 @@
   const editionStore = useEdition()
   const categoryStore = useCategory()
   const authStore = useAuth()
+  const workStore = useWork()
 
   onMounted(() => {
     editionStore.fetchCurrentEdition()
