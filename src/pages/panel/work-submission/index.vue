@@ -5,7 +5,7 @@
         <v-col cols="12">
           <v-autocomplete
             clearable
-            :items="panelStore.crossCuttingThemes"
+            :items="categoryStore.crossCuttingThemes"
             label="Temas Transversais"
             rounded="xl"
             variant="outlined"
@@ -23,7 +23,7 @@
           <v-autocomplete
             chips
             clearable
-            :items="panelStore.crossCuttingThemes"
+            :items="categoryStore.ods"
             label="ODS"
             multiple
             rounded="xl"
@@ -45,7 +45,7 @@
           <v-autocomplete
             chips
             clearable
-            :items="panelStore.crossCuttingThemes"
+            :items="categoryStore.crossCuttingThemes"
             label="Selecione os integrantes da sua equipe"
             multiple
             rounded="xl"
@@ -68,7 +68,9 @@
 
   <script setup>
   import LayoutSteps from '@/components/LayoutSteps.vue'
-  import { usePanel } from '@/stores/panel'
+  import { useEdition } from '../../../stores/edition'
+  import { useAuth } from '@/stores/auth'
+  import { useCategory } from '@/stores/category'
 
   const form = reactive({
     title: '',
@@ -81,9 +83,14 @@
     team: '',
     ods: '',
   })
-  const panelStore = usePanel()
+  const editionStore = useEdition()
+  const categoryStore = useCategory()
+  const authStore = useAuth()
 
   onMounted(() => {
-    panelStore.getCrossCuttingThemes()
+    editionStore.fetchCurrentEdition()
+    categoryStore.getCrossCuttingThemes()
+    categoryStore.getOds()
+    authStore.getStudents()
   })
   </script>

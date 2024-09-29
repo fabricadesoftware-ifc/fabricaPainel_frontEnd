@@ -3,7 +3,7 @@
     <v-autocomplete
       v-model="theme2"
       clearable
-      :items="editionStore.crossCuttingThemes"
+      :items="categoryStore.crossCuttingThemes"
       label="Autocomplete"
       rounded="xl"
       variant="outlined"
@@ -11,7 +11,7 @@
     <v-autocomplete
       v-model="theme1"
       clearable
-      :items="editionStore.crossCuttingThemes"
+      :items="categoryStore.crossCuttingThemes"
       label="Autocomplete"
       rounded="xl"
       variant="outlined"
@@ -22,7 +22,7 @@
       class="py-6"
       color="primary"
       rounded="xl"
-      @click="editionStore.saveCrossCuttingThemes([theme1, theme2])"
+      @click="categoryStore.saveCrossCuttingThemes([theme1, theme2])"
     >
       Confirmar
     </v-btn>
@@ -30,13 +30,13 @@
 </template>
 
 <script setup>
-  import { useEdition } from '@/stores/edition'
+  import { useCategory } from '@/stores/theme'
 
-  const editionStore = useEdition()
+  const categoryStore = useCategory()
   const theme1 = ref('')
   const theme2 = ref('')
 
   onMounted(() => {
-    editionStore.getCrossCuttingThemes()
+    categoryStore.getCrossCuttingThemes()
   })
 </script>
