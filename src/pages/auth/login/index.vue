@@ -52,7 +52,7 @@ const login = async () => {
 
             <p class="text-center mt-4" style="font-size: 0.9rem">
               <router-link to="/auth/get-password" class="text-decoration-none text-primary"
-                >Primeira vez? Clique aqui</router-link
+                >Primeira vez ou esqueceu a senha? Clique aqui</router-link
               >
             </p>
           </v-card-text>

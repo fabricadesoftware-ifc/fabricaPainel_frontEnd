@@ -2,6 +2,7 @@ import { reactive, computed } from "vue";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 import authService from "@/services/auth";
+import { th } from "vuetify/locale";
 
 export const useAuth = defineStore("user", () => {
     const state = reactive({
@@ -43,6 +44,7 @@ export const useAuth = defineStore("user", () => {
         }
         catch (error) {
             console.error(error)
+            throw error
         }
     }
 
@@ -53,27 +55,35 @@ export const useAuth = defineStore("user", () => {
         }
         catch (error) {
             console.error(error)
+            throw error
         }
     }
 
     const resetPassword = async (password: string) => {
         try {
-            const data = await authService.resetPassword(password, state.token)
+            if (!state.resetPasswordToken) {
+                return
+            }
+            console.log(password, state.resetPasswordToken)
+            const data = await authService.resetPassword(password, state.resetPasswordToken)
+            console.log(data)
             return data
         }
         catch (error) {
             console.error(error)
+            throw error
         }
     }
 
     const verifyToken = async (token: string) => {
         try {
-            const data = await authService.verifyToken(token)
+            await authService.verifyToken(token)
             state.resetPasswordToken = token
-            return data
         }
         catch (error) {
             console.error(error)
+            console.log('bilau')
+            throw error
         }
     }
 
@@ -90,6 +100,7 @@ export const useAuth = defineStore("user", () => {
         }
         catch (error) {
             console.error(error)
+            throw error
         }
     }
 
