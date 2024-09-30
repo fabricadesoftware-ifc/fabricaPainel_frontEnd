@@ -5,19 +5,32 @@
   import jsPDF from 'jspdf'
   import 'jspdf-autotable'
 
-  const workStore = useWork()
-  const search = ref('')
-  const props = defineProps({
-    title: String,
-    works: Array,
-  })
+const workStore = useWork();
+const search = ref("");
+const props = defineProps({
+  title: String,
+  works: Array,
+});
 
-  const getColor = name => {
-    if (name === 0) return 'blue'
-    if (name === 1) return 'green'
-    if (name === 3) return 'red'
-    return 'bg-gray'
+const getColor = (name) => {
+  if (name === 0) return "blue";
+  if (name === 1) return "green";
+  if (name === 3) return "red";
+  return "bg-gray";
+};
+
+const selectedStatus = ref([]);
+const selectedFields = ref([]);
+const selectedThemes = ref([]);
+const selectedDate = ref("");
+
+const status = () => {
+  const status_strings = [];
+  for (let i = 1; i <= 4; i++) {
+    status_strings.push(Status[i].replace(/_/g, " "));
   }
+  return status_strings;
+};
 
   const worksHeaders = [
     { title: 'Status', key: 'status' },
@@ -50,6 +63,47 @@
 
     doc.save(`${props.title}.pdf`)
   }
+const works = computed(() => {
+  return props.works.filter((work) => {
+    // return selectedStatus.value.includes(Status[work.status].replace(/_/g, ' '))
+    if (
+      selectedStatus.value.length > 0 &&
+      !selectedStatus.value.includes(Status[work.status].replace(/_/g, " "))
+    )
+      return false;
+    if (
+      selectedFields.value.length > 0 &&
+      !work.field.some((field) => selectedFields.value.includes(field.name))
+    )
+      return false;
+    if (
+      selectedThemes.value.length > 0 &&
+      !selectedThemes.value.includes(work.cross_cutting_theme.name)
+    )
+      return false;
+    return true;
+  });
+});
+
+const fields = computed(() => {
+  const fields = [];
+  props.works.forEach((work) => {
+    work.field.forEach((field) => {
+      if (!fields.includes(field.name)) fields.push(field.name);
+    });
+  });
+  return fields;
+});
+
+const themes = computed(() => {
+  const themes = [];
+  props.works.forEach((work) => {
+    if (!themes.includes(work.cross_cutting_theme.name))
+      themes.push(work.cross_cutting_theme.name);
+  });
+  return themes;
+});
+
 </script>
 
 <template>
@@ -70,11 +124,55 @@
         rounded="xl"
         variant="plain"
       />
+      <div class="filters d-flex align-center">
+        <!-- <v-select placeholder="Selecione o status" multiple v-model="selectedStatus" :items="status()"/>
+         -->
+        <v-select
+          class="pa-2"
+          clearable
+          hide-details
+          label="Status"
+          multiple
+          placeholder="Selecione o status"
+          v-model="selectedStatus"
+          :items="status()"
+          rounded="xl"
+          variant="plain"
+          max-width="33%"
+        />
+        <v-select
+          class="pa-2"
+          clearable
+          hide-details
+          label="Área"
+          multiple
+          placeholder="Selecione a área"
+          v-model="selectedFields"
+          :items="fields"
+          rounded="xl"
+          variant="plain"
+          max-width="33%"
+        />
+        <v-select
+          class="pa-2"
+          clearable
+          hide-details
+          label="Tema Transversal"
+          multiple
+          placeholder
+          v-model="selectedThemes"
+          :items="themes"
+          rounded="xl"
+          variant="plain"
+          max-width="33%"
+        />
+      </div>
+
       <div class="rounded-xl">
         <v-data-table
           class="pa-2"
           :headers="worksHeaders"
-          :items="props.works"
+          :items="works"
           :search="search"
         >
           <!-- Conteúdo da tabela -->
@@ -99,13 +197,13 @@
             {{ workStore.coverteData(item.initial_submission_work_date) }}
           </template>
           <template #item.field="{ item }">
-            {{ item.field.map(field => field.name).join(', ') }}
+            {{ item.field.map((field) => field.name).join(", ") }}
           </template>
           <template #item.cross_cutting_theme="{ item }">
             {{ item.cross_cutting_theme.name }}
           </template>
           <template #item.ods="{ item }">
-            {{ item.ods.map(ods => ods.name).join(', ') }}
+            {{ item.ods.map((ods) => ods.name).join(", ") }}
           </template>
           <template #item.title="{ item }">
             <v-btn

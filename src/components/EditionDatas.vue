@@ -2,8 +2,13 @@
   import { useEdition } from '@/stores/edition'
   const editionStore = useEdition()
 
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('pt-BR')
+  }
+
   onMounted(() => {
     editionStore.fetchCurrentEdition()
+    console.log(editionStore.currentEdition?.logo)
   })
 </script>
 
@@ -23,41 +28,41 @@
       <p class="text-grey-darken-2 mt-6">
         <span class="">Data de Registro de tema: </span>
         <span class="text-black font-weight-bold">
-          {{ editionStore.currentEdition?.initial_registration_theme_date }} até
-          {{ editionStore.currentEdition?.final_registration_theme_date }}
+          {{ formatDate(editionStore.currentEdition?.initial_registration_theme_date) }} até
+          {{ formatDate(editionStore.currentEdition?.final_registration_theme_date) }}
         </span>
       </p>
       <p class="text-grey-darken-2 mt-4">
         <span class="">Data de Submissão: </span>
         <span class="text-black font-weight-bold">
-          {{ editionStore.currentEdition?.initial_submission_date }} até
-          {{ editionStore.currentEdition?.final_submission_date }}
+          {{ formatDate(editionStore.currentEdition?.initial_submission_date) }} até
+          {{ formatDate(editionStore.currentEdition?.final_submission_date) }}
         </span>
       </p>
       <p class="text-grey-darken-2 mt-4">
         <span class="">Data de Orientação: </span>
         <span class="text-black font-weight-bold">
-          {{ editionStore.currentEdition?.initial_advisor_date }} até
-          {{ editionStore.currentEdition?.final_advisor_date }}
+          {{ formatDate(editionStore.currentEdition?.initial_advisor_date) }} até
+          {{ formatDate(editionStore.currentEdition?.final_advisor_date) }}
         </span>
       </p>
       <p class="text-grey-darken-2 mt-4">
         <span class="">Data de Registro de Avaliadores: </span>
         <span class="text-black font-weight-bold">
-          {{ editionStore.currentEdition?.initial_registration_evaluator_date }} até
-          {{ editionStore.currentEdition?.final_registration_evaluator_date }}
+          {{ formatDate(editionStore.currentEdition?.initial_registration_evaluator_date) }} até
+          {{ formatDate(editionStore.currentEdition?.final_registration_evaluator_date) }}
         </span>
       </p>
       <p class="text-grey-darken-2 mt-4">
         <span class="">Data de Avaliação: </span>
         <span class="text-black font-weight-bold">
-          {{ editionStore.currentEdition?.initial_evaluators_date }} até
-          {{ editionStore.currentEdition?.final_evaluators_date }}
+          {{ formatDate(editionStore.currentEdition?.initial_evaluators_date) }} até
+          {{ formatDate(editionStore.currentEdition?.final_evaluators_date) }}
         </span>
       </p>
     </v-col>
     <v-col>
-      <img alt="" class="w-100 rounded-xl" src="https://th.bing.com/th/id/OIP.MQJrIQeghQLdcs1uFBZHzwHaEp?rs=1&pid=ImgDetMain">
+      <img :alt="editionStore.currentEdition?.logo" class="w-100 rounded-xl" :src="editionStore.currentEdition?.logo">
     </v-col>
   </v-row>
 </template>
