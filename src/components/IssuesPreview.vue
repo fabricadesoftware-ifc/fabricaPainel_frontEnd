@@ -6,7 +6,7 @@
       </v-container>
 
       <v-slide-group v-model="model" center-active class="py-8" show-arrows>
-        <v-slide-group-item v-for="edition in editions" :key="edition.id" v-slot="{ isSelected, toggle, selectedClass }">
+        <v-slide-group-item v-for="edition in state.editions" :key="edition.id" v-slot="{ isSelected, toggle, selectedClass }">
           <v-card
             class="mx-3 border-md"
             :class="['ma-4', selectedClass, { 'border-primary border-opacity-100': isSelected }, { 'border-white': !isSelected }]"
@@ -33,7 +33,7 @@
 
               <p class="text-grey">
                 O tema desta Edição é "{{ edition.theme }}".
-                A data inicial de submissões é {{ date.format(edition.initil_submission_date, "keyboardDate") }} e a
+                A data inicial de submissões é {{ date.format(state.currentEdition?.initial_submission_date, "keyboardDate") }} e a
                 data final é {{ date.format(edition.final_submission_date, "keyboardDate") }}.
               </p>
               <p v-if="!isSelected" class="mr-2 font-weight-medium">
@@ -51,48 +51,48 @@
         <v-sheet v-if="model != null" class="bg-grey-darken-4">
           <v-container class="w-lg-75 pb-0" fluid>
             <p class="text-blue pb-2">
-              {{ editions[model].theme }}
+              {{ state.editions[model].theme }}
             </p>
-            <TitleH1 color="text-primary" :text="editions[model].edition_name" />
+            <TitleH1 color="text-primary" :text="state.editions[model]?.edition_name" />
             <v-row>
               <v-col cols="12" md="6">
-                <img alt="Banner da Edição" class="w-100 rounded-xl" :src="editions[model].banner">
+                <img alt="Banner da Edição" class="w-100 rounded-xl" :src="state.editions[model]?.banner">
               </v-col>
               <v-col class="text-grey text-start" cols="12" md="6">
                 <p class="pb-4 text-white">
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam ipsum culpa fugiat itaque tempore maiores labore placeat cumque enim! Maxime expedita cupiditate nisi, minima laudantium commodi tenetur recusandae saepe eveniet.
                 </p>
                 <p class="pb-4 text-h6 ">
-                  Carga Horária: <span class="text-white font-weight-bold"> {{ editions[model].workload }} horas</span>
+                  Carga Horária: <span class="text-white font-weight-bold"> {{ state.editions[model]?.workload }} horas</span>
                 </p>
                 <p>
                   Data de Submissão:
                   <span class="text-white font-weight-bold">
-                    {{ date.format(editions[model].initil_submission_date, "keyboardDate") }}
+                    {{ date.format(state.editions[model]?.initial_submission_date, "keyboardDate") }}
                   </span>
                   até
                   <span class="text-white font-weight-bold">
-                    {{ date.format(editions[model].final_submission_date, "keyboardDate") }}
+                    {{ date.format(state.editions[model]?.final_submission_date, "keyboardDate") }}
                   </span>
                 </p>
                 <p class="py-2">
                   Data de Submissão:
                   <span class="text-white font-weight-bold">
-                    {{ date.format(editions[model].initil_advisor_date, "keyboardDate") }}
+                    {{ date.format(state.editions[model]?.initial_advisor_date, "keyboardDate") }}
                   </span>
                   até
                   <span class="text-white font-weight-bold">
-                    {{ date.format(editions[model].final_advisor_date, "keyboardDate") }}
+                    {{ date.format(state.editions[model]?.final_advisor_date, "keyboardDate") }}
                   </span>
                 </p>
                 <p>
                   Data de Submissão:
                   <span class="text-white font-weight-bold">
-                    {{ date.format(editions[model].initil_evaluators_date, "keyboardDate") }}
+                    {{ date.format(state.editions[model]?.initial_evaluators_date, "keyboardDate") }}
                   </span>
                   até
                   <span class="text-white font-weight-bold">
-                    {{ date.format(editions[model].final_evaluators_date, "keyboardDate") }}
+                    {{ date.format(state.editions[model]?.final_evaluators_date, "keyboardDate") }}
                   </span>
                 </p>
               </v-col>
@@ -104,12 +104,12 @@
                   color="primary"
                   text
                 >
-                  <span v-if="editions[model].open">
+                  <div v-if="state.editions[model]?.is_open" @click="router.push('/panel')">
                     Inscrever-se
-                  </span>
-                  <span v-else>
+                  </div>
+                  <div v-else @click="router.push(`/dashboard/editions/view/${state.editions[model]?.id}`)">
                     Ir para página da Edição
-                  </span>
+                  </div>
                 </v-btn>
               </v-col>
             </v-row>
@@ -124,15 +124,17 @@
 <script setup>
   import { useDate } from 'vuetify'
   import { useEdition } from '@/stores/edition'
+  import { useRouter } from 'vue-router'
+
+  const router = useRouter()
 
   const date = useDate()
   const model = ref(null)
 
-  const { fetchEditions, state } = useEdition()
-
-  const editions = ref(state.editions)
+  const { fetchCurrentEdition, fetchEditions, state } = useEdition()
 
   onMounted(() => {
     fetchEditions()
+    fetchCurrentEdition()
   })
 </script>

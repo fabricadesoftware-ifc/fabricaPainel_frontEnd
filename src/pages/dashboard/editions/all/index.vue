@@ -6,8 +6,9 @@
   const { state, fetchEditions } = useEdition()
   const router = useRouter()
 
-  const selectCard = (name: string) => {
-    router.push(`/dashboard/editions/view/${name}`)
+  // Corrigido para usar o 'id' em vez de 'edition_name'
+  const selectCard = (id: number) => {
+    router.push(`/dashboard/editions/view/${id}`)
   }
 
   const formatDate = computed(() => {
@@ -31,7 +32,7 @@
         class="border-md w-100"
         rounded="xl"
         variant="outlined"
-        @click="selectCard(edition.edition_name)"
+        @click="selectCard(edition.id)"
       >
         <div class="h-100 d-flex flex-column justify-space-between pa-10">
           <v-row>
@@ -51,7 +52,7 @@
               <p class="text-grey-darken-2">
                 <span class="d-block">Data de Submissão:</span>
                 <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.initil_submission_date) }}
+                  {{ formatDate(edition.initial_submission_date) }}
                 </span>
                 até
                 <span class="text-black font-weight-bold">

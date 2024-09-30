@@ -51,7 +51,7 @@ export const uselayout = defineStore(
                 value: '/about',
               }, {
                 text: 'Todas as Edições',
-                value: '/editions',
+                value: '/dashboard/editions/all',
               },
             ],
             navbarDashboard: [

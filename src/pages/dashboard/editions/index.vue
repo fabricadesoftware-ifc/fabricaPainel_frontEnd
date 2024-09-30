@@ -4,8 +4,8 @@
 
   const dialog = ref(false)
   const valid = ref(false)
-  const { state, updateEdition, fetchEditions, fetchCurrentEdition } = useEdition()
-  const form = ref({ ...state.currentEdition?.value })
+  const { state, updateEdition, fetchEditions, fetchCurrentEdition, currentEdition } = useEdition()
+  const form = ref({ ...currentEdition })
 
   const defaultBanner = 'https://th.bing.com/th/id/OIP.MQJrIQeghQLdcs1uFBZHzwHaEp?rs=1&pid=ImgDetMain'
 
@@ -13,8 +13,9 @@
 
   const saveEdition = () => {
     if (form.value) {
-      updateEdition(form.value.id, form.value)
+      updateEdition(state.editions[state.editions.length - 1].id, form.value)
       dialog.value = false
+      fetchCurrentEdition()
     }
   }
 
@@ -22,6 +23,7 @@
     fetchEditions()
     fetchCurrentEdition()
   })
+
 </script>
 
 <template>
@@ -58,7 +60,6 @@
                 <h1 class="text-h5 py-4 font-weight-bold">
                   Registros de Submissões
                 </h1>
-                <!-- <RecivedTable dashboard /> -->
               </v-col>
             </v-row>
             <v-row>
@@ -70,6 +71,21 @@
                 <v-card prepend-icon="mdi-application-edit" title="Editar Edição Atual">
                   <v-card-text>
                     <v-form v-model="valid">
+                      <v-text-field v-model="form.year" label="Ano" type="number" variant="outline"/>
+                      <v-text-field v-model="form.theme" label="Tema" variant="outline" />
+                      <v-text-field v-model="form.edition_name" label="Nome da Edição" variant="outline"/>
+                      <v-text-field v-model="form.initial_submission_date" label="Data Inicial de Submissão" type="date" variant="outline"/>
+                      <v-text-field v-model="form.final_submission_date" label="Data Final de Submissão" type="date" variant="outline" />
+                      <v-text-field v-model="form.initial_advisor_date" label="Data Inicial de Orientadores" type="date" variant="outline" />
+                      <v-text-field v-model="form.final_advisor_date" label="Data Final de Orientadores" type="date" variant="outline" />
+                      <v-text-field v-model="form.initial_evaluators_date" label="Data Inicial de Avaliadores" type="date" variant="outline" />
+                      <v-text-field v-model="form.final_evaluators_date" label="Data Final de Avaliadores" type="date" variant="outline" />
+                      <v-text-field v-model="form.initial_registration_theme_date" label="Data Inicial de Registro de Tema" type="date" variant="outline" />
+                      <v-text-field v-model="form.final_registration_theme_date" label="Data Final de Registro de Tema" type="date" variant="outline" />
+                      <v-text-field v-model="form.initial_registration_evaluator_date" label="Data Inicial de Registro de Avaliadores" type="date" variant="outline" />
+                      <v-text-field v-model="form.final_registration_evaluator_date" label="Data Final de Registro de Avaliadores" type="date" variant="outline" />
+                      <v-text-field v-model="form.workload" label="Carga Horária" type="number" variant="outline" />
+                      <v-switch v-model="form.is_open" label="Aberto para Submissões" variant="outline" />
                     </v-form>
                   </v-card-text>
 
