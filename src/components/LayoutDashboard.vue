@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar class="py-4" flat>
+  <v-app-bar class="py-4" flat flex>
     <v-container class="mx-auto d-flex align-center justify-center">
       <img alt="" class="pr-8" src="@/assets/logo.png">
       <v-btn
@@ -99,7 +99,6 @@
 
   const router = useRouter()
   const layoutStore = uselayout()
-
   const logout = () => {
     router.push('/')
   }

@@ -3,7 +3,7 @@
     <v-main>
       <router-view />
     </v-main>
-    <div class="index">
+    <!-- <div class="index">
       DEV NAV
       <router-link to="/">
         INSTITUCIONAL
@@ -14,7 +14,7 @@
       <router-link to="/panel">
         PANEL
       </router-link>
-    </div>
+    </div> -->
   </v-app>
 </template>
 
