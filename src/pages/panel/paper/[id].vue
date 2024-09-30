@@ -19,8 +19,8 @@
   const messageStudent = authStore.user.user_type === 'STUDENT' ? 'Seu trabalho foi aprovado. Parabéns!' : ''
   const dialogGrade = ref(false)
   const workGrade = ref(0)
-  const submitFeedback = () => {
-    console.log('foi submitFeedback: ', feedbackRejec.value)
+  const submitFeedback = async () => {
+    await editionStore.submitFeedback(work_id, feedbackRejec.value)
   }
   const submitGrades = () => {
     console.log('foi submitGrades: ', workGrade.value)

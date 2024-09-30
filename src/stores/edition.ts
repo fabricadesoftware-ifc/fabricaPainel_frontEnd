@@ -96,6 +96,18 @@ export const useEdition = defineStore('edition', () => {
     }
   }
 
+  const submitFeedback = async (editionId: string, feedback: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      await EditionsService.submitFeedback(editionId, feedback)
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return {
     state,
     currentEdition,
@@ -108,5 +120,6 @@ export const useEdition = defineStore('edition', () => {
     fetchCurrentEdition,
     createEdition,
     updateEdition,
+    submitFeedback,
   }
 })
