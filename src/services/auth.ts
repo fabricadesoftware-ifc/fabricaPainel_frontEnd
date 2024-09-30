@@ -47,7 +47,7 @@ class AuthService {
 
   async getStudents () {
     try {
-      const { data } = await api.get('users/?user_type=STUDENT')
+      const { data } = await api.get('users/?type=STUDENT')
       return data
     } catch (error) {
       this.handleError(error, 'get students')

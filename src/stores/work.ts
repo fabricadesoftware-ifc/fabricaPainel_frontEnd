@@ -1,8 +1,12 @@
 import { reactive } from 'vue'
 import { defineStore } from 'pinia'
 import WorkService from '@/services/works'
+import { useCategory } from '@/stores/category'
+import { useEdition } from '@/stores/edition'
 
 export const useWork = defineStore('work', () => {
+  const categoryStore = useCategory()
+  const editionStore = useEdition()
   const state = reactive({
     works: [] as any[],
     currentWork: null as any | null,
@@ -49,10 +53,26 @@ export const useWork = defineStore('work', () => {
   }
 
   const sendWork = async (work: any) => {
-    setLoading(true)
     setError(null)
     try {
-      const newWork = await WorkService.sendWork(work)
+      console.log({
+        ...work,
+        cross_cutting_theme: categoryStore.state.themes.find((t: { name: string }) => t.name === work.cross_cutting_theme).id,
+        ods: work.ods.map((odsItem: string) => categoryStore.state.ods.find((o: { name: string }) => o.name === odsItem).id),
+        field: work.field.map((fieldItem: string) => categoryStore.state.field.find((f: { name: string }) => f.name === fieldItem).id),
+        edition: editionStore.currentEdition?.id,
+        evaluator: [],
+        team: 7,
+      })
+      const newWork = await WorkService.sendWork({
+        ...work,
+        cross_cutting_theme: categoryStore.state.themes.find((t: { name: string }) => t.name === work.cross_cutting_theme).id,
+        ods: work.ods.map((odsItem: string) => categoryStore.state.ods.find((o: { name: string }) => o.name === odsItem).id),
+        field: work.field.map((fieldItem: string) => categoryStore.state.field.find((f: { name: string }) => f.name === fieldItem).id),
+        edition: editionStore.currentEdition?.id,
+        evaluator: [],
+        team: 7,
+      })
       state.works.push(newWork)
     } catch (error: any) {
       setError(error.message)

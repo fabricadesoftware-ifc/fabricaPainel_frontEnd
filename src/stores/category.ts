@@ -6,6 +6,7 @@ import CategoriesService from '@/services/categories'
 export const useCategory = defineStore('categories', () => {
   const state = reactive({
     themes: [] as any[],
+    field: [] as any[],
     ods: [] as any[],
     loading: false,
     error: null as string | null,
@@ -15,6 +16,7 @@ export const useCategory = defineStore('categories', () => {
   const router = useRouter()
   const crossCuttingThemes = computed(() => state.themes.map(t => t.name))
   const ods = computed(() => state.ods.map(o => o.name))
+  const field = computed(() => state.field.map(f => f.name))
 
   const setLoading = (loading: boolean) => {
     state.loading = loading
@@ -64,11 +66,26 @@ export const useCategory = defineStore('categories', () => {
     }
   }
 
+  const getField = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await CategoriesService.getField()
+      state.field = response
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return {
     state,
     crossCuttingThemes,
     ods,
+    field,
     getOds,
+    getField,
     getCrossCuttingThemes,
     saveCrossCuttingThemes,
   }

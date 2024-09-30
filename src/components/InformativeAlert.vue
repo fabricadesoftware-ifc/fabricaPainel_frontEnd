@@ -2,6 +2,7 @@
   <v-alert
     v-model="alert"
     class="rounded-xl py-6"
+    :closable="closable"
     close-label="Close Alert"
     :type="props.color"
     variant="tonal"
@@ -31,6 +32,7 @@
     to: String,
     button: String,
     color: String,
+    closable: Boolean,
   })
   const alert = ref(true)
 </script>

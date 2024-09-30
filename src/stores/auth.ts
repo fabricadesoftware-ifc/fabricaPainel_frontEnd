@@ -34,6 +34,7 @@ export const useAuth = defineStore('user', () => {
   })
   const isOpenForWork = computed(() => state.user.user_type === 'STUDENT' && editionStore.isOpenForWork)
   const isOpenForRegister = computed(() => state.user.user_type === 'TEACHER' && editionStore.isOpenForWork)
+  const isOpenForAprove = computed(() => editionStore.isOpenForAprove)
 
   const checkAuth = () => {
     const token = localStorage.getItem('token')
@@ -164,6 +165,7 @@ export const useAuth = defineStore('user', () => {
     formattedStudents,
     isOpenForWork,
     isOpenForRegister,
+    isOpenForAprove,
     getStudents,
     getUser,
     getUserInfo,

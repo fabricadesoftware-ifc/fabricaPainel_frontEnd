@@ -13,6 +13,7 @@ export const useEdition = defineStore('edition', () => {
   const currentEdition = computed(() => state.currentEdition)
   const alertStudent = computed(() => 'A data de submissão é de ' + state.currentEdition?.initial_submission_date + ' até ' + state.currentEdition?.final_submission_date)
   const teacherStudent = computed(() => 'Registro de Avaliadores (' + state.currentEdition?.initial_submission_date + ' até ' + state.currentEdition?.final_submission_date + ')')
+
   const isOpenForWork = computed(() => {
     const currentDate = new Date()
     const initialSubmissionDate = new Date(state.currentEdition?.initial_submission_date)
@@ -24,6 +25,12 @@ export const useEdition = defineStore('edition', () => {
     const initialSubmissionDate = new Date(state.currentEdition?.initial_registration_theme_date)
     const finalSubmissionDate = new Date(state.currentEdition?.final_registration_theme_date)
     return initialSubmissionDate <= currentDate && finalSubmissionDate >= currentDate
+  })
+  const isOpenForAprove = computed(() => {
+    const currentDate = new Date()
+    const initialAdvisorDate = new Date(state.currentEdition?.initial_advisor_date)
+    const finalAdvisorDate = new Date(state.currentEdition?.final_advisor_date)
+    return initialAdvisorDate <= currentDate && finalAdvisorDate >= currentDate
   })
 
   const setLoading = (loading: boolean) => {
@@ -96,6 +103,7 @@ export const useEdition = defineStore('edition', () => {
     teacherStudent,
     isOpenForWork,
     isOpenForRegister,
+    isOpenForAprove,
     fetchEditions,
     fetchCurrentEdition,
     createEdition,

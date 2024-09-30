@@ -4,6 +4,7 @@
       <v-row>
         <v-col cols="12">
           <v-autocomplete
+            v-model="form.cross_cutting_theme"
             clearable
             :items="categoryStore.crossCuttingThemes"
             label="Temas Transversais"
@@ -21,10 +22,23 @@
         </v-col>
         <v-col cols="12" sm="6">
           <v-autocomplete
+            v-model="form.ods"
             chips
             clearable
             :items="categoryStore.ods"
             label="ODS"
+            multiple
+            rounded="xl"
+            variant="outlined"
+          />
+        </v-col>
+        <v-col cols="12" sm="12">
+          <v-autocomplete
+            v-model="form.field"
+            chips
+            clearable
+            :items="categoryStore.field"
+            label="Áreas de Conhecimento"
             multiple
             rounded="xl"
             variant="outlined"
@@ -73,26 +87,26 @@
   import { useCategory } from '@/stores/category'
   import { useWork } from '@/stores/work'
 
-  const form = reactive({
-    title: '',
-    abstract: '',
-    edition: '',
-    field: '',
-    evaluator: '',
-    cross_cutting_theme: '',
-    initial_submission_work_date: '',
-    team: '',
-    ods: '',
-  })
   const editionStore = useEdition()
   const categoryStore = useCategory()
   const authStore = useAuth()
   const workStore = useWork()
 
+  const form = reactive({
+    title: '',
+    abstract: '',
+    field: [],
+    evaluator: [],
+    cross_cutting_theme: 0,
+    team: 2,
+    ods: [],
+  })
+
   onMounted(() => {
     editionStore.fetchCurrentEdition()
     categoryStore.getCrossCuttingThemes()
     categoryStore.getOds()
+    categoryStore.getField()
     authStore.getStudents()
   })
   </script>
