@@ -6,6 +6,15 @@ class AuthService {
     throw new Error(`Failed to ${action} user`)
   }
 
+  async forgetPassword (email: string) {
+    try {
+        const { data } = await api.post('forget_password/', { email })
+        return data
+    } catch (error) {
+        this.handleError(error, 'forgot password')
+    }
+}
+
   async resetPassword (new_password: string, token: string) {
     try {
       const { data } = await api.post('reset_password/', { new_password, token })

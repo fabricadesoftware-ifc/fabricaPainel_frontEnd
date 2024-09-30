@@ -13,7 +13,7 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   // Lazy initialize useAuth inside the request
   const authStore = useAuth();  // Only initialize here
-  const token = authStore?.access;
+  const token = authStore?.token;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
