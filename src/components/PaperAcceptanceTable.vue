@@ -1,6 +1,9 @@
 <script setup>
+  import { ref } from 'vue'
   import { Status } from '@/interfaces/work'
   import { useWork } from '@/stores/work'
+  import jsPDF from 'jspdf'
+  import 'jspdf-autotable'
 
   const workStore = useWork()
   const search = ref('')
@@ -17,44 +20,36 @@
   }
 
   const worksHeaders = [
-    {
-      title: 'Status',
-      align: 'start',
-      sortable: false,
-      key: 'status',
-    },
-    {
-      title: 'Titulo do Trabalho',
-      align: 'start',
-      sortable: false,
-      key: 'title',
-    },
-    {
-      title: 'ODS',
-      align: 'start',
-      sortable: false,
-      key: 'ods',
-    },
-    {
-      title: 'Área',
-      align: 'start',
-      sortable: false,
-      key: 'field',
-    },
-    {
-      title: 'Tema Transversal',
-      align: 'start',
-      sortable: false,
-      key: 'cross_cutting_theme',
-    },
-    {
-      title: 'Data de Submissão',
-      align: 'start',
-      sortable: false,
-      key: 'initial_submission_work_date',
-    },
+    { title: 'Status', key: 'status' },
+    { title: 'Titulo do Trabalho', key: 'title' },
+    { title: 'ODS', key: 'ods' },
+    { title: 'Área', key: 'field' },
+    { title: 'Tema Transversal', key: 'cross_cutting_theme' },
+    { title: 'Data de Submissão', key: 'initial_submission_work_date' },
   ]
 
+  const generatePDF = () => {
+    const doc = new jsPDF()
+
+    doc.text(props.title, 14, 20)
+
+    const tableData = props.works.map(work => [
+      Status[work.status].replace(/_/g, ' '),
+      work.title,
+      work.ods.map(ods => ods.name).join(', '),
+      work.field.map(field => field.name).join(', '),
+      work.cross_cutting_theme.name,
+      workStore.coverteData(work.initial_submission_work_date),
+    ])
+
+    doc.autoTable({
+      head: [worksHeaders.map(header => header.title)],
+      body: tableData,
+      startY: 30,
+    })
+
+    doc.save(`${props.title}.pdf`)
+  }
 </script>
 
 <template>
@@ -82,6 +77,7 @@
           :items="props.works"
           :search="search"
         >
+          <!-- Conteúdo da tabela -->
           <template #item.name="{ item }">
             <v-btn
               class="pa-0 hover"
@@ -94,9 +90,7 @@
           </template>
           <template #item.status="{ item }">
             <div class="text-start">
-              <v-chip
-                :color="getColor(item.status)"
-              >
+              <v-chip :color="getColor(item.status)">
                 {{ Status[item.status].replace(/_/g, ' ') }}
               </v-chip>
             </div>
@@ -124,6 +118,8 @@
             </v-btn>
           </template>
         </v-data-table>
+        <!-- Botão para baixar o PDF -->
+        <v-btn @click="generatePDF">Baixar PDF</v-btn>
       </div>
     </v-col>
   </v-row>

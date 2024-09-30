@@ -1,19 +1,18 @@
 <template>
   <LayoutDefault>
     <MainBanner :btnvisible="false" :class="'border-0'" :text="'Todas as edições'" />
-    <EditionsView :ano="state.years" :categoria="state.category" :editions="state.editions" />
+    <EditionsView :ano="state.currentEdition?.year" :editions="state.editions" />
   </LayoutDefault>
 </template>
 
 <script lang="ts" setup>
   import { onMounted } from 'vue'
-  import { usefilter } from '@/stores/editions'
+  import { useEdition } from '@/stores/edition'
 
-  const store = usefilter()
+  const { fetchCurrentEdition, state } = useEdition()
 
   onMounted(() => {
-    store.initializeData()
+    fetchCurrentEdition()
   })
 
-  const state = store.state
 </script>
