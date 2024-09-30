@@ -43,6 +43,14 @@ class EditionsService {
       this.handleError(error, 'update')
     }
   }
+
+  async submitFeedback (editionId: string, feedback: string) {
+    try {
+      await api.get(`needs-changes-work/${editionId}/?message=${feedback}`)
+    } catch (error) {
+      this.handleError(error, 'submit feedback')
+    }
+  }
 }
 
 export default new EditionsService()
