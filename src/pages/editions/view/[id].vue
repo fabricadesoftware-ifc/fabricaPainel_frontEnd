@@ -46,7 +46,7 @@
             </p>
           </v-col>
           <v-col>
-            <img alt="" class="w-100 rounded-xl" src="https://th.bing.com/th/id/OIP.MQJrIQeghQLdcs1uFBZHzwHaEp?rs=1&pid=ImgDetMain">
+            <img alt="" class="w-100 rounded-xl" :src="edition.banner?.file || defaultBanner">
           </v-col>
         </v-row>
         <v-row>

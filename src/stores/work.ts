@@ -3,20 +3,25 @@ import { defineStore } from 'pinia'
 import WorkService from '@/services/works'
 import { useCategory } from '@/stores/category'
 import { useEdition } from '@/stores/edition'
+import { useAuth } from './auth'
 
 export const useWork = defineStore('work', () => {
   const categoryStore = useCategory()
   const editionStore = useEdition()
   const state = reactive({
     works: [] as any[],
+    userWorks: [] as any[],
     currentWork: null as any | null,
     myWorks: [] as any[],
     loading: false,
     error: null as string | null,
   })
 
+  const authStore = useAuth()
+
   const allWorks = computed(() => state.works)
   const currentWork = computed(() => state.currentWork)
+  const userWorks = computed(() => state.userWorks)
 
   const getWorkByCrossCuttingTheme = async (crossCuttingTheme: string) => {
     setLoading(true)
@@ -115,6 +120,22 @@ export const useWork = defineStore('work', () => {
       setLoading(false)
     }
   }
+
+  const fetchUserWorks = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const userType = authStore.user.user_type
+      const userId = authStore.user.id
+      const works = await WorkService.getUserWorks(userType, userId)
+      state.userWorks = works
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+  
   return {
     state,
     allWorks,
@@ -125,5 +146,7 @@ export const useWork = defineStore('work', () => {
     coverteData,
     getWork,
     currentWork,
+    fetchUserWorks,
+    userWorks,
   }
 })

@@ -51,6 +51,20 @@ class WorkService {
       this.handleError(error, 'patch')
     }
   }
+
+  async getUserWorks (userType: string, userId: string) {
+    try {
+      if (userType === 'STUDENT') {
+        const { data } = await api.get(`/work/?team_member_id=${userId}`)
+        return data
+      } else if (userType === 'TEACHER') {
+        const { data } = await api.get(`/work/?advisor_id=${userId}`)
+        return data
+      }
+    } catch (error) {
+      this.handleError(error, 'fetch')
+    }
+  }
 }
 
 export default new WorkService()
