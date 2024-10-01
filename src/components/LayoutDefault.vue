@@ -27,16 +27,22 @@
           <v-icon>mdi-login</v-icon>
         </v-btn>
 
-        <v-btn
-          v-else
-          color="primary"
-          rounded="xl"
-          variant="flat"
-          @click="logout"
-        >
-          <p>{{ authStore.user.name }}</p>
-          <v-icon color="red">mdi-logout</v-icon>
-        </v-btn>
+        <div v-else class="d-flex ga-2">
+          <v-btn
+            v-if="authStore.user.user_type == 'STUDENT'"
+            color="primary"
+            rounded="xl"
+            to="/auth/my-group"
+            variant="text"
+          >
+            <p>Meu Grupo</p>
+          </v-btn>
+
+          <v-btn color="primary" rounded="xl" variant="flat" @click="logout">
+            <p>{{ authStore.user.name }}</p>
+            <v-icon color="red">mdi-logout</v-icon>
+          </v-btn>
+        </div>
       </v-container>
     </v-app-bar>
     <v-app-bar v-else flat>
@@ -106,7 +112,7 @@
   </v-app>
 </template>
 
-  <script setup>
+<script setup>
   import { uselayout } from '@/stores/app'
   import { onMounted } from 'vue'
   import { useRouter } from 'vue-router'

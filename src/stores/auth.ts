@@ -1,25 +1,27 @@
-import { useAuth } from "@/stores/auth";
-import { computed, reactive } from "vue";
-import { defineStore } from "pinia";
-import { jwtDecode } from "jwt-decode";
-import authService from "@/services/auth";
-import { useEdition } from "./edition";
+import { computed, reactive } from 'vue'
+import { defineStore } from 'pinia'
+import { jwtDecode } from 'jwt-decode'
+import authService from '@/services/auth'
+import { useEdition } from './edition'
+import { showMessage } from '@/utils/toastify'
 
 export const useAuth = defineStore("user", () => {
   const state = reactive({
     isLogged: false,
     user: {
-      id: "",
-      name: "",
-      email: "",
-      user_type: "",
+      id: '',
+      name: '',
+      email: '',
+      user_type: '',
+      team: []
     },
     students: [] as Array<{ id: string; name: string }>,
-    token: "",
-    refresh: "",
-    resetPasswordToken: "",
+    token: '',
+    refresh: '',
+    resetPasswordToken: '',
+    team: {},
     userTeam: {},
-  });
+  })
 
   const editionStore = useEdition();
 
@@ -31,16 +33,14 @@ export const useAuth = defineStore("user", () => {
   const uid = computed(() => state.user.id);
   const formattedStudents = computed(() => {
     return state.students.map((student: { name: string }) => {
-      return student.name;
-    });
-  });
-  const isOpenForWork = computed(
-    () => state.user.user_type === "STUDENT" && editionStore.isOpenForWork
-  );
-  const isOpenForRegister = computed(
-    () => state.user.user_type === "TEACHER" && editionStore.isOpenForWork
-  );
-  const isOpenForAprove = computed(() => editionStore.isOpenForAprove);
+      return student.name
+    })
+  })
+  const students = computed(() => state.students)
+  const isOpenForWork = computed(() => state.user.user_type === 'STUDENT' && editionStore.isOpenForWork)
+  const isOpenForRegister = computed(() => state.user.user_type === 'TEACHER' && editionStore.isOpenForWork)
+  const isOpenForAprove = computed(() => editionStore.isOpenForAprove)
+  const team = computed(() => state.team)
   const userTeam = computed(() => state.userTeam);
 
   const checkAuth = () => {
@@ -125,14 +125,15 @@ export const useAuth = defineStore("user", () => {
     state.token = "";
     state.refresh = "";
     state.user = {
-      id: "",
-      name: "",
-      email: "",
-      user_type: "",
-    };
-    localStorage.removeItem("token");
-    localStorage.removeItem("refresh");
-  };
+      id: '',
+      name: '',
+      email: '',
+      user_type: '',
+      team: []
+    }
+    localStorage.removeItem('token')
+    localStorage.removeItem('refresh')
+  }
 
   const getStudents = async () => {
     try {
@@ -174,6 +175,52 @@ export const useAuth = defineStore("user", () => {
     }
   };
 
+  const getTeam = async (id: string) => {
+    try {
+      const data = await authService.getTeam(id)
+      state.team = data
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  const leaveTeam = async (team: any) => {
+    try {
+      const data = await authService.updateTeam(team.id, team)
+      state.team = data
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  const createTeam = async (team: any) => {
+    const data = await authService.createTeam(team)
+    state.team = data
+  }
+
+  const updateTeam = async (team: any) => {
+    try {
+      const data = await authService.updateTeam(team.id, team)
+      state.team = data
+    } catch (error: any) {
+      console.log(error)
+      showMessage(error.response.data.error, 'error', 3000, 'top-right', 'light', false)
+      throw error
+    }
+  }
+
+  const resendInvite = async (data: any) => {
+    try {
+      await authService.resendInvite(data)
+    }
+    catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
   return {
     isLogged,
     user,
@@ -185,6 +232,8 @@ export const useAuth = defineStore("user", () => {
     isOpenForWork,
     isOpenForRegister,
     isOpenForAprove,
+    students,
+    team,
     getStudents,
     getUser,
     getUserInfo,
@@ -194,7 +243,12 @@ export const useAuth = defineStore("user", () => {
     checkAuth,
     login,
     logout,
+    getTeam,
+    leaveTeam,
+    createTeam,
+    updateTeam,
+    resendInvite,
     userTeam,
     getUserTeam,
-  };
-});
+  }
+})

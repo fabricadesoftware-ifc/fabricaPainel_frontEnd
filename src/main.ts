@@ -4,7 +4,7 @@
  * Bootstraps Vuetify and other plugins then mounts the App`
  */
 
-import "vue3-toastify/dist/index.css";
+import 'vue3-toastify/dist/index.css'
 
 // Plugins
 import { registerPlugins } from '@/plugins'

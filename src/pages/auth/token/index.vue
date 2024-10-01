@@ -1,22 +1,22 @@
 <script setup>
-import { ref } from "vue";
-import { showMessage } from "@/utils/toastify";
-import { useRouter } from "vue-router";
-import { useAuth } from "@/stores/auth";
+  import { ref } from 'vue'
+  import { showMessage } from '@/utils/toastify'
+  import { useRouter } from 'vue-router'
+  import { useAuth } from '@/stores/auth'
 
-const router = useRouter();
-const authStore = useAuth();
+  const router = useRouter()
+  const authStore = useAuth()
 
-const token = ref("");
+  const token = ref('')
 
-const getToken = async () => {
-  try {
-    await authStore.verifyToken(token.value);
-    router.push("/auth/reset-password");
-  } catch (error) {
-    showMessage("Token inválido", "error", 1500, "top-right", "auto", false);
+  const getToken = async () => {
+    try {
+      await authStore.verifyToken(token.value)
+      router.push('/auth/reset-password')
+    } catch (error) {
+      showMessage('Token inválido', 'error', 1500, 'top-right', 'auto', false)
+    }
   }
-};
 
 const resendToken = async () => {
   try {

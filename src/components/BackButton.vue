@@ -1,5 +1,5 @@
 <template>
-  <v-btn icon color="grey-lighten-3" variant="flat" @click="goBack">
+  <v-btn color="grey-lighten-3" icon variant="flat" @click="goBack">
     <v-icon>mdi-arrow-left</v-icon>
   </v-btn>
 </template>

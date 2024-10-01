@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { onMounted, computed } from 'vue'
+  import { computed, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
   import { useEdition } from '@/stores/edition'
 

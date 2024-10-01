@@ -1,7 +1,7 @@
 import api from '@/plugins/api'
 
 class AuthService {
-  private handleError (error: any, action: string) {
+  private handleError(error: any, action: string) {
     console.error(`Error during ${action}:`, error)
     throw new Error(`Failed to ${action} user`)
   }
@@ -24,7 +24,7 @@ class AuthService {
     }
   }
 
-  async verifyToken (token: string) {
+  async verifyToken(token: string) {
     try {
       const { data } = await api.post('validate_password_token/', { token })
       return data
@@ -33,7 +33,7 @@ class AuthService {
     }
   }
 
-  async login (email: string, password: string) {
+  async login(email: string, password: string) {
     try {
       const { data } = await api.post('token/', { email, password })
       return data
@@ -42,7 +42,7 @@ class AuthService {
     }
   }
 
-  async getUser (id: string) {
+  async getUser(id: string) {
     try {
       const { data } = await api.get(`users/${id}`)
       return data
@@ -51,7 +51,7 @@ class AuthService {
     }
   }
 
-  async getStudents () {
+  async getStudents() {
     try {
       const { data } = await api.get('users/?type=STUDENT')
       return data
@@ -60,7 +60,16 @@ class AuthService {
     }
   }
 
-  async refreshToken (refresh: string) {
+  async getTeam(id: string) {
+    try {
+      const { data } = await api.get(`team/${id}`)
+      return data
+    } catch (error) {
+      this.handleError(error, 'get group')
+    }
+  }
+
+  async refreshToken(refresh: string) {
     try {
       const { data } = await api.post('token/refresh/', { refresh })
       return data
@@ -78,6 +87,33 @@ class AuthService {
     }
   }
 
+  async updateTeam(id: string, team: any) {
+    const { data } = await api.patch(`team/${id}/`, team)
+    return data
+  }
+
+  async createTeam(team: any) {
+    const { data } = await api.post('team/', team)
+    return data
+  }
+
+  async acceptInvite(team: any) {
+    try {
+      const { data } = await api.patch('team/', team)
+      return data
+    } catch (error) {
+      this.handleError(error, 'accept invite')
+    }
+  }
+
+  async resendInvite(token: any) {
+    try {
+      const { data } = await api.post('resend-invite-team/', token)
+      return data
+    } catch (error) {
+      this.handleError(error, 'resend invite')
+    }
+  }
 }
 
 export default new AuthService()

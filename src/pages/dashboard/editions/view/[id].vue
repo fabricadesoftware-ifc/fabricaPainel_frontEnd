@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { onMounted, computed, ref } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
   import { useRoute } from 'vue-router'
   import { useEdition } from '@/stores/edition'
 
@@ -37,12 +37,12 @@
     <v-container>
       <template v-if="state.editions && state.editions.length > 0">
         <v-card
+          v-for="(edition, index) in state.editions"
+          :key="index"
           class="border-md w-100 mt-5"
           rounded="xl"
           variant="outlined"
-          v-for="(edition, index) in state.editions"
           :ref="setEditionRef(index)"
-          :key="index"
         >
           <div class="h-100 d-flex flex-column justify-space-between pa-10">
             <v-row>

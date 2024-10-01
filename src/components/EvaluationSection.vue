@@ -1,19 +1,19 @@
 <script setup>
-import { useRouter } from "vue-router";
-import { useAuth } from "@/stores/auth";
-import auth from "@/services/auth";
+  import { useRouter } from 'vue-router'
+  import { useAuth } from '@/stores/auth'
+  import auth from '@/services/auth'
 
-const router = useRouter();
-const authStore = useAuth();
+  const router = useRouter()
+  const authStore = useAuth()
 
-const login = () => {
-  router.push("/auth/login");
-};
+  const login = () => {
+    router.push('/auth/login')
+  }
 
-const logout = () => {
-  authStore.logout();
-  router.push("/");
-};
+  const logout = () => {
+    authStore.logout()
+    router.push('/')
+  }
 </script>
 
 <template>
@@ -27,14 +27,13 @@ const logout = () => {
       <div class="w-50 pt-16 pl-2 ml-auto mr-0 d-flex ga-4">
         <v-btn
           v-if="!authStore.isLogged"
-          @click="login"
           color="primary"
           rounded="xl"
           size="large"
           text="ENTRAR"
           variant="flat"
-        >
-        </v-btn>
+          @click="login"
+        />
       </div>
     </section>
   </v-container>

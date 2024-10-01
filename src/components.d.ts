@@ -9,8 +9,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     AboutIntrodution: typeof import('./components/AboutIntrodution.vue')['default']
     AboutProgramation: typeof import('./components/AboutProgramation.vue')['default']
+    AddUserGroup: typeof import('./components/auth/AddUserGroup.vue')['default']
     BackButton: typeof import('./components/BackButton.vue')['default']
     BtnPrimary: typeof import('./components/BtnPrimary.vue')['default']
+    CreateGroup: typeof import('./components/auth/CreateGroup.vue')['default']
     EditionDatas: typeof import('./components/EditionDatas.vue')['default']
     EditionsView: typeof import('./components/EditionsView.vue')['default']
     EvaluationSection: typeof import('./components/EvaluationSection.vue')['default']
@@ -30,5 +32,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TitleH1: typeof import('./components/TitleH1.vue')['default']
+    UserList: typeof import('./components/auth/UserList.vue')['default']
   }
 }

@@ -1,4 +1,4 @@
-import { toast } from "vue3-toastify";
+import { toast } from 'vue3-toastify'
 
 /**
  * Displays a toast notification with specified options.
@@ -13,15 +13,15 @@ import { toast } from "vue3-toastify";
  * @example
  * showMessage('This is a success message', 'success', 3000, 'top-right', 'light', true);
  */
-async function showMessage(message: any, type: any, time: number, position: any, theme: any, bar: boolean ) {
+async function showMessage (message: any, type: any, time: number, position: any, theme: any, bar: boolean) {
   toast(message, {
-    "theme": theme || 'auto',
-    "type": type || 'default',
-    "position": position || 'top-right',
-    "pauseOnFocusLoss": false,
-    "autoClose": time,
-    "hideProgressBar": bar || false,
-    "dangerouslyHTMLString": true
+    theme: theme || 'auto',
+    type: type || 'default',
+    position: position || 'top-right',
+    pauseOnFocusLoss: false,
+    autoClose: time,
+    hideProgressBar: bar || false,
+    dangerouslyHTMLString: true,
   })
 }
 

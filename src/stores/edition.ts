@@ -32,6 +32,14 @@ export const useEdition = defineStore('edition', () => {
     const finalAdvisorDate = new Date(state.currentEdition?.final_advisor_date)
     return initialAdvisorDate <= currentDate && finalAdvisorDate >= currentDate
   })
+  const isOpenForGroup = computed(() => {
+    const currentDate = new Date()
+    const initialThemeDate = new Date(state.currentEdition?.initial_registration_theme_date)
+    const finalSubmissionDate = new Date(state.currentEdition?.final_submission_date)
+    console.log(initialThemeDate, currentDate, finalSubmissionDate)
+    console.log(initialThemeDate <= currentDate && finalSubmissionDate >= currentDate)
+    return initialThemeDate <= currentDate && finalSubmissionDate >= currentDate
+  })
 
   const setLoading = (loading: boolean) => {
     state.loading = loading
@@ -116,6 +124,7 @@ export const useEdition = defineStore('edition', () => {
     isOpenForWork,
     isOpenForRegister,
     isOpenForAprove,
+    isOpenForGroup,
     fetchEditions,
     fetchCurrentEdition,
     createEdition,

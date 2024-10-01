@@ -1,74 +1,74 @@
 <script setup>
-import { ref } from "vue";
-import { showMessage } from "@/utils/toastify";
-import { useRouter } from "vue-router";
-import { useAuth } from "@/stores/auth";
+  import { ref } from 'vue'
+  import { showMessage } from '@/utils/toastify'
+  import { useRouter } from 'vue-router'
+  import { useAuth } from '@/stores/auth'
 
-const router = useRouter();
-const authStore = useAuth();
+  const router = useRouter()
+  const authStore = useAuth()
 
-const password = ref("");
-const confirmPassword = ref("");
+  const password = ref('')
+  const confirmPassword = ref('')
 
-const validateAndConfirmPassword = () => {
-  if (password.value !== confirmPassword.value) {
-    showMessage(
-      "As senhas não coincidem",
-      "error",
-      1500,
-      "top-right",
-      "auto",
-      false
-    );
-    return false;
+  const validateAndConfirmPassword = () => {
+    if (password.value !== confirmPassword.value) {
+      showMessage(
+        'As senhas não coincidem',
+        'error',
+        1500,
+        'top-right',
+        'auto',
+        false
+      )
+      return false
+    }
+
+    if (password.value.length < 8 || !/\d/.test(password.value)) {
+      showMessage(
+        'A senha deve ter no mínimo 8 caracteres e conter letras e números',
+        'error',
+        1500,
+        'top-right',
+        'auto',
+        false
+      )
+      return false
+    }
+
+    return true
   }
 
-  if (password.value.length < 8 || !/\d/.test(password.value)) {
-    showMessage(
-      "A senha deve ter no mínimo 8 caracteres e conter letras e números",
-      "error",
-      1500,
-      "top-right",
-      "auto",
-      false
-    );
-    return false;
+  const resetPassword = async () => {
+    try {
+      if (!validateAndConfirmPassword()) return
+      await authStore.resetPassword(password.value)
+      showMessage(
+        'Senha resetada com sucesso!',
+        'success',
+        1500,
+        'top-right',
+        'auto',
+        false
+      )
+      router.push('/auth/login')
+    } catch (error) {
+      console.error(error)
+      showMessage(
+        'Falha ao resetar a senha',
+        'error',
+        1500,
+        'top-right',
+        'auto',
+        false
+      )
+    }
   }
-
-  return true;
-};
-
-const resetPassword = async () => {
-  try {
-    if (!validateAndConfirmPassword()) return;
-    await authStore.resetPassword(password.value);
-    showMessage(
-      "Senha resetada com sucesso!",
-      "success",
-      1500,
-      "top-right",
-      "auto",
-      false
-    );
-    router.push("/auth/login");
-  } catch (error) {
-    console.error(error);
-    showMessage(
-      "Falha ao resetar a senha",
-      "error",
-      1500,
-      "top-right",
-      "auto",
-      false
-    );
-  }
-};
 </script>
 
 <template>
   <v-container class="w-100 h-100 d-flex justify-center align-center">
     <v-row>
-      <v-col cols="12" md="6" class="mx-auto">
+      <v-col class="mx-auto" cols="12" md="6">
         <v-card>
           <v-card-title class="text-center">
             <h2 class="text-primary font-weight-bold text-h4">Nova Senha</h2>
