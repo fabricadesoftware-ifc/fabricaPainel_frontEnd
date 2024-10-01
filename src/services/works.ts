@@ -64,6 +64,15 @@ class WorkService {
       this.handleError(error, 'fetch')
     }
   }
+
+  async approveWork (verification_token: string) {
+    try {
+      const { data } = await api.get(`/accept-work/${verification_token}/`)
+      return data
+    } catch (error) {
+      this.handleError(error, 'approve')
+    }
+  }
 }
 
 export default new WorkService()

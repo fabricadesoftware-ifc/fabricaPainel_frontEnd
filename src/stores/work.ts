@@ -60,7 +60,6 @@ export const useWork = defineStore('work', () => {
   const sendWork = async (work: any) => {
     setError(null)
     try {
-      console.log(work)
       const newWork = await WorkService.sendWork({
         ...work,
         cross_cutting_theme: categoryStore.state.themes.find((t: { name: string }) => t.name === work.cross_cutting_theme).id,
@@ -127,6 +126,18 @@ export const useWork = defineStore('work', () => {
       setLoading(false)
     }
   }
+
+  const approveWork = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      await WorkService.approveWork(state.currentWork.verification_token)
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
   
   return {
     state,
@@ -140,5 +151,6 @@ export const useWork = defineStore('work', () => {
     currentWork,
     fetchUserWorks,
     userWorks,
+    approveWork,
   }
 })

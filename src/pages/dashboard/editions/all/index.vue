@@ -11,12 +11,14 @@
     router.push(`/dashboard/editions/view/${id}`)
   }
 
+
   const formatDate = computed(() => {
     return (dateTime: string) => {
       const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
       return new Date(dateTime).toLocaleDateString('pt-BR', options)
     }
   })
+
 
   onMounted(() => {
     fetchEditions()

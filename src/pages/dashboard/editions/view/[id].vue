@@ -7,6 +7,7 @@
 
   const router = useRoute()
   const id = ref(null)
+  const editionsRef = ref([])
 
   const formatDate = computed(() => {
     return (dateTime: any) => {
@@ -15,9 +16,19 @@
     }
   })
 
+  const setEditionRef = (index: number) => (el: HTMLElement) => {
+    editionsRef.value[index] = el
+  }
+
   onMounted(() => {
     fetchEditions()
     id.value = router.params?.id
+    if (editionsRef.value.length > 0) {
+    const firstCard = editionsRef.value[id.value - 1].$el;
+    if (firstCard && firstCard.scrollIntoView) {
+      firstCard.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
   })
 </script>
 
@@ -30,6 +41,7 @@
           rounded="xl"
           variant="outlined"
           v-for="(edition, index) in state.editions"
+          :ref="setEditionRef(index)"
           :key="index"
         >
           <div class="h-100 d-flex flex-column justify-space-between pa-10">

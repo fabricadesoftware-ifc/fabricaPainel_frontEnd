@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-  import { useCategory } from '@/stores/theme'
+  import { useCategory } from '@/stores/category'
 
   const categoryStore = useCategory()
   const theme1 = ref('')
