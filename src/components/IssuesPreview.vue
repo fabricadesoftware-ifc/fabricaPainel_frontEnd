@@ -98,19 +98,20 @@
               </v-col>
               <v-col class="pt-8">
                 <v-btn
-                  append-icon="mdi-arrow-right-thick"
-                  block
-                  class=""
-                  color="primary"
-                  text
-                >
-                  <div v-if="state.editions[model]?.is_open" @click="router.push('/panel')">
-                    Inscrever-se
-                  </div>
-                  <div v-else @click="router.push(`/dashboard/editions/view/${state.editions[model]?.id}`)">
-                    Ir para página da Edição
-                  </div>
-                </v-btn>
+                append-icon="mdi-arrow-right-thick"
+                block
+                class=""
+                color="primary"
+                text
+                @click="state.editions[model]?.is_open ? router.push('/panel') : router.push(`/dashboard/editions/view/${state.editions[model]?.id}`)"
+              >
+                <div v-if="state.editions[model]?.is_open">
+                  Inscrever-se
+                </div>
+                <div v-else>
+                  Ir para página da Edição
+                </div>
+              </v-btn>
               </v-col>
             </v-row>
           </v-container>

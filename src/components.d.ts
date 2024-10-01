@@ -20,7 +20,6 @@ declare module 'vue' {
     IssuesPreview: typeof import('./components/IssuesPreview.vue')['default']
     LayoutDashboard: typeof import('./components/LayoutDashboard.vue')['default']
     LayoutDefault: typeof import('./components/LayoutDefault.vue')['default']
-    LayoutMobileDashboard: typeof import('./components/LayoutMobileDashboard.vue')['default']
     LayoutPanel: typeof import('./components/LayoutPanel.vue')['default']
     LayoutSteps: typeof import('./components/LayoutSteps.vue')['default']
     MainBanner: typeof import('./components/MainBanner.vue')['default']

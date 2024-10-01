@@ -1,14 +1,19 @@
 <script setup lang="ts">
+  import { onMounted, ref } from 'vue'
   import { useAuth } from '@/stores/auth'
   import { useEdition } from '@/stores/edition'
   import { useWork } from '@/stores/work'
+  import { useAssessmentStore } from '@/stores/assessment'
   import { useRouter } from 'vue-router'
+  import jsPDF from 'jspdf'
+  import 'jspdf-autotable'
 
   const router = useRouter()
-  // eslint-disable-next-line camelcase
   const work_id = (router.currentRoute.value.params as { id: string }).id
   const workStore = useWork()
   const authStore = useAuth()
+  const assessmentStore = useAssessmentStore()
+
   const editionStore = useEdition()
   const panel = ref([
     'team',
@@ -18,17 +23,44 @@
   const feedbackRejec = ref('')
   const messageStudent = authStore.user.user_type === 'STUDENT' ? 'Seu trabalho foi aprovado. Parabéns!' : ''
   const dialogGrade = ref(false)
+  const assessment = ref([])
   const workGrade = ref(0)
+
+  const generatePDF = () => {
+    const doc = new jsPDF()
+
+    doc.text('Relatório de Notas', 10, 10)
+    doc.text(`Aluno: ${authStore.user?.name}`, 10, 20)
+
+    const columns = ['Aluno', 'Nota']
+    const rows = []
+
+    workStore.currentWork?.team.slice(14).split(', ').forEach((student, index) => {
+      const currentGrade = assessment.value.length > 0 ? assessment.value[index]?.grade : 0
+      rows.push([student, currentGrade])
+    })
+
+    doc.autoTable({
+      head: [columns],
+      body: rows,
+      startY: 30,
+    })
+
+    doc.save(`notas_${authStore.user?.name}.pdf`)
+  }
+
   const submitFeedback = async () => {
     await editionStore.submitFeedback(work_id, feedbackRejec.value)
   }
+
   const submitGrades = () => {
-    console.log('foi submitGrades: ', workGrade.value)
+    console.log('Submit grades: ', workGrade.value)
   }
 
-  onMounted(() => {
+  onMounted(async () => {
     workStore.getWork(work_id)
     editionStore.fetchCurrentEdition()
+    assessment.value = await assessmentStore.getAssessmentsByWorkId(work_id)
   })
 </script>
 
@@ -123,7 +155,6 @@
           <v-expansion-panel-text>
             <ul class="font-weight-bold">
               <p>
-                <!-- foi feito o slice por conta do "Team members: " que vem junto do backend -->
                 {{ workStore.currentWork?.team.slice(14,-1) }}
               </p>
             </ul>
@@ -221,6 +252,7 @@
       <v-row class="mt-8" justify="end" no-gutters>
         <v-col cols="12">
           <v-btn
+          v-if="authStore.user?.user_type != 'STUDENT'"
             block
             class="py-6"
             color="info"
@@ -228,6 +260,14 @@
             variant="flat"
             @click="dialogGrade = true"
           >Dar Nota</v-btn>
+          <v-btn v-else
+            block
+            class="py-6"
+            color="info"
+            rounded="xl"
+            variant="flat"
+            @click="generatePDF()"
+          >Ver nota</v-btn>
 
           <v-dialog v-model="dialogGrade" max-width="600px">
             <v-card>
