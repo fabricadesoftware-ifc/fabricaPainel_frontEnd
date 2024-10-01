@@ -21,7 +21,7 @@ const getPassword = async () => {
 </script>
 
 <template>
-  <v-container>
+  <v-container class="w-100 h-100 d-flex justify-center align-center">
     <v-row>
       <v-col cols="12" md="6" class="mx-auto">
         <v-card>
@@ -40,11 +40,12 @@ const getPassword = async () => {
               <v-text-field
                 v-model="email"
                 label="Email"
-                outlined
+                variant="outlined"
                 required
+                rounded="xl"
                 type="email"
               />
-              <v-btn block color="primary" @click="getPassword">
+              <v-btn block color="primary" class="py-6" rounded="xl" @click="getPassword">
                 Enviar E-mail
               </v-btn>
             </v-form>

@@ -22,7 +22,7 @@ const login = async () => {
 </script>
 
 <template>
-  <v-container>
+  <v-container class="w-100 h-100 d-flex justify-center align-center">
     <v-row>
       <v-col cols="12" md="6" class="mx-auto">
         <v-card>
@@ -34,22 +34,21 @@ const login = async () => {
               <v-text-field
                 v-model="email"
                 label="Email"
-                outlined
+                variant="outlined"
                 required
+                rounded="xl"
                 type="email"
               />
               <v-text-field
                 v-model="password"
                 label="Senha"
-                outlined
+                variant="outlined"
                 required
+                rounded="xl"
                 type="password"
               />
-              <v-btn block color="primary" @click="login"> Entrar </v-btn>
+              <v-btn block color="primary" class="py-6" @click="login" rounded="xl"> Entrar </v-btn>
             </v-form>
-
-            <!-- //login pela primeira vez redireciona para auth/signin abaixo -->
-
             <p class="text-center mt-4" style="font-size: 0.9rem">
               <router-link to="/auth/get-password" class="text-decoration-none text-primary"
                 >Primeira vez ou esqueceu a senha? Clique aqui</router-link

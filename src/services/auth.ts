@@ -68,6 +68,16 @@ class AuthService {
       this.handleError(error, 'refresh token')
     }
   }
+
+  async getUserTeam (id: string) {
+    try {
+      const { data } = await api.get(`team/?team_member_id=${id}`)
+      return data
+    } catch (error) {
+      this.handleError(error, 'get user team')
+    }
+  }
+
 }
 
 export default new AuthService()

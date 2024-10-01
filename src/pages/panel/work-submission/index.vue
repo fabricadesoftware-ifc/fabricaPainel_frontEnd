@@ -55,24 +55,13 @@
             variant="outlined"
           />
         </v-col>
-        <v-col cols="12">
-          <v-autocomplete
-            chips
-            clearable
-            :items="authStore.formattedStudents"
-            label="Selecione os integrantes da sua equipe"
-            multiple
-            rounded="xl"
-            variant="outlined"
-          />
-        </v-col>
       </v-row>
       <v-btn
         block
         class="py-6"
         color="primary"
         rounded="xl"
-        @click="workStore.sendWork(form)"
+        @click="sendWork"
       >
         Confirmar
       </v-btn>
@@ -92,13 +81,18 @@
   const authStore = useAuth()
   const workStore = useWork()
 
+  const sendWork = async() => {
+    form.team = authStore?.userTeam?.id
+    await workStore.sendWork(form)
+  }
+
   const form = reactive({
     title: '',
     abstract: '',
     field: [],
     evaluator: [],
     cross_cutting_theme: 0,
-    team: 2,
+    team: null,
     ods: [],
   })
 
@@ -108,5 +102,6 @@
     categoryStore.getOds()
     categoryStore.getField()
     authStore.getStudents()
+    authStore.getUserTeam()
   })
   </script>

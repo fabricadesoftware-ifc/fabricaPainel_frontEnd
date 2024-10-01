@@ -81,18 +81,20 @@ const resetPassword = async () => {
               <v-text-field
                 v-model="password"
                 label="Nova Senha"
-                outlined
+                variant="outlined"
+                rounded="xl"
                 required
                 type="password"
               />
               <v-text-field
                 v-model="confirmPassword"
                 label="Confirmar Senha"
-                outlined
+                variant="outlined"
+                rounded="xl"
                 required
                 type="password"
               />
-              <v-btn block color="primary" @click="resetPassword">
+              <v-btn block color="primary" class="py-6" rounded="xl" @click="resetPassword">
                 Enviar
               </v-btn>
             </v-form>
