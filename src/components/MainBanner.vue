@@ -6,7 +6,7 @@
     class?: string;
   }>()
 
-  const defaultContent = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
+  const defaultContent = "Este site foi criado para facilitar a submissão de trabalhos acadêmicos que integram ensino, pesquisa e extensão, promovendo a troca de conhecimentos entre estudantes, professores e a comunidade. Aqui, você poderá enviar seus projetos, colaborar com outras áreas e contribuir para o desenvolvimento científico e social. Participe e faça parte dessa iniciativa que valoriza o conhecimento e a inovação no nosso campus!"
   const defaultText = 'Painel de projetos oficial do IFC'
   const defaultClass = 'pt-16 border-0'
 

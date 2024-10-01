@@ -20,7 +20,8 @@ const logout = () => {
   <v-container class="w-lg-75" fluid>
     <section class="py-16 my-16">
       <TitleH1
-        content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
+        content="O sistema de avaliação do Painel de Integração da SEPE foi desenvolvido para garantir a imparcialidade e a qualidade das análises dos trabalhos submetidos. Após o envio dos projetos, os orientadores e avaliadores são escolhidos aleatoriamente, assegurando uma avaliação justa e diversificada. Os alunos têm a liberdade de escolher entre uma ampla variedade de temas, o que permite que suas pesquisas reflitam áreas de interesse e relevância acadêmica.
+        Ao término do período de avaliação, cada aluno poderá acessar a página de seu trabalho e emitir a nota final de todos os membros da equipe, garantindo transparência e reconhecimento do esforço coletivo. Esse processo visa promover o desenvolvimento acadêmico, a colaboração entre os alunos e a excelência na produção científica."
         text="Sistema de Avaliação"
       />
       <div class="w-50 pt-16 pl-2 ml-auto mr-0 d-flex ga-4">

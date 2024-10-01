@@ -4,7 +4,7 @@
       <div class=" text-center">
         <img alt="" height="64px" src="@/assets/footer_logos2.png">
         <p class="pt-8 text-grey">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Perspiciatis, deleniti, quisquam facilis sunt soluta saepe molestias non neque tenetur molestiae voluptate perferendis officiis eum?
+          Portal desenvolvido pela fábrica de software do Instituto Federal Catarinense - Campus Araqauri.
         </p>
       </div>
       <v-list class="d-flex flex-row justify-center bg-transparent mt-6 ga-8">

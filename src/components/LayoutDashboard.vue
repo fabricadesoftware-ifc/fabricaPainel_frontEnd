@@ -18,7 +18,7 @@
       <p
         class="px-2"
       >
-        Nome de usuário
+        {{ authStore.user.name }}
       </p>
       <v-btn
         class="rounded-xl justify-center"
