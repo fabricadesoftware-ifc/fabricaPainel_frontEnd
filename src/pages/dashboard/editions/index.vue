@@ -52,7 +52,7 @@
                 </p>
               </v-col>
               <v-col>
-                <img alt="" class="w-100 rounded-xl" :src="state.currentEdition?.banner || defaultBanner">
+                <img alt="" class="w-100 rounded-xl" :src="state.currentEdition?.banner.file || defaultBanner">
               </v-col>
             </v-row>
             <v-row>

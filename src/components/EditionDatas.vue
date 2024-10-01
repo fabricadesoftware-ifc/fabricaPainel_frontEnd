@@ -8,7 +8,6 @@
 
   onMounted(() => {
     editionStore.fetchCurrentEdition()
-    console.log(editionStore.currentEdition?.logo)
   })
 </script>
 
@@ -62,7 +61,7 @@
       </p>
     </v-col>
     <v-col>
-      <img :alt="editionStore.currentEdition?.logo" class="w-100 rounded-xl" :src="editionStore.currentEdition?.logo">
+      <img :alt="editionStore.currentEdition?.logo" class="w-100 rounded-xl" :src="editionStore.currentEdition?.banner.file" />
     </v-col>
   </v-row>
 </template>
