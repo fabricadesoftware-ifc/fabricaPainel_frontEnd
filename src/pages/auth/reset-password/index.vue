@@ -66,7 +66,7 @@ const resetPassword = async () => {
 </script>
 
 <template>
-  <v-container>
+  <v-container class="w-100 h-100 d-flex justify-center align-center">
     <v-row>
       <v-col cols="12" md="6" class="mx-auto">
         <v-card>
