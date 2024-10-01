@@ -245,6 +245,7 @@ const approveWork = async () => {
       >
         <v-col class="d-flex justify-end" cols="4">
           <v-btn
+            v-if="authStore.user?.user_type != 'STUDENT'"
             block
             class="py-6 text-white"
             color="orange"
@@ -279,6 +280,7 @@ const approveWork = async () => {
         </v-col>
         <v-col cols="2">
           <v-btn
+            v-if="authStore.user?.user_type != 'STUDENT'"
             block
             class="py-6"
             color="green"
