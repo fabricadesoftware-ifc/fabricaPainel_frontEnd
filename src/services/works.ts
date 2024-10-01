@@ -18,7 +18,6 @@ class WorkService {
   async getWork (id: string) {
     try {
       const { data } = await api.get(`/work/${id}/`)
-      console.log(data)
       return data
     } catch (error) {
       this.handleError(error, 'fetch')
@@ -49,6 +48,20 @@ class WorkService {
       return data
     } catch (error) {
       this.handleError(error, 'patch')
+    }
+  }
+
+  async getUserWorks (userType: string, userId: string) {
+    try {
+      if (userType === 'STUDENT') {
+        const { data } = await api.get(`/work/?team_member_id=${userId}`)
+        return data
+      } else if (userType === 'TEACHER') {
+        const { data } = await api.get(`/work/?advisor_id=${userId}`)
+        return data
+      }
+    } catch (error) {
+      this.handleError(error, 'fetch')
     }
   }
 }

@@ -115,7 +115,6 @@
   import { useScreen } from '@/composables/composables'
 
   const { isMobile } = useScreen()
-  console.log(isMobile.value)
   const router = useRouter()
   const layoutStore = uselayout()
   const authStore = useAuth()

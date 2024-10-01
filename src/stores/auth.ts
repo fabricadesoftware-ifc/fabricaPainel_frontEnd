@@ -75,9 +75,7 @@ export const useAuth = defineStore('user', () => {
       if (!state.resetPasswordToken) {
         return
       }
-      console.log(password, state.resetPasswordToken)
       const data = await authService.resetPassword(password, state.resetPasswordToken)
-      console.log(data)
       return data
     } catch (error) {
       console.error(error)
@@ -105,7 +103,6 @@ export const useAuth = defineStore('user', () => {
       state.refresh = refresh
       localStorage.setItem('token', access)
       localStorage.setItem('refresh', refresh)
-      console.log('Chegou aqui')
       state.user = await authService.getUser(decoded_token?.user_id)
     } catch (error) {
       console.error(error)

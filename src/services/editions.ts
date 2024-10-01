@@ -27,7 +27,6 @@ class EditionsService {
 
   async createEdition (editionData: IEdition) {
     try {
-      console.log('Creating edition', editionData)
       const { data } = await api.post('/edition/', editionData)
       return data
     } catch (error) {

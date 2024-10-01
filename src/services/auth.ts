@@ -26,9 +26,7 @@ class AuthService {
 
   async verifyToken (token: string) {
     try {
-      console.log('bixa')
       const { data } = await api.post('validate_password_token/', { token })
-      console.log(data + ' service')
       return data
     } catch (error) {
       this.handleError(error, 'verify token')
@@ -47,7 +45,6 @@ class AuthService {
   async getUser (id: string) {
     try {
       const { data } = await api.get(`users/${id}`)
-      console.log(data)
       return data
     } catch (error) {
       this.handleError(error, 'get user')

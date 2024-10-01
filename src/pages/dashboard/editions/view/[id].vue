@@ -73,7 +73,7 @@
                 </p>
               </v-col>
               <v-col>
-                <img alt="" class="w-100 rounded-xl" :src="edition.banner || defaultBanner">
+                <img alt="" class="w-100 rounded-xl" :src="edition.banner?.file || defaultBanner">
               </v-col>
             </v-row>
             <v-row>

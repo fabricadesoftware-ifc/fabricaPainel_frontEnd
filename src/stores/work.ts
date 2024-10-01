@@ -3,20 +3,25 @@ import { defineStore } from 'pinia'
 import WorkService from '@/services/works'
 import { useCategory } from '@/stores/category'
 import { useEdition } from '@/stores/edition'
+import { useAuth } from './auth'
 
 export const useWork = defineStore('work', () => {
   const categoryStore = useCategory()
   const editionStore = useEdition()
   const state = reactive({
     works: [] as any[],
+    userWorks: [] as any[],
     currentWork: null as any | null,
     myWorks: [] as any[],
     loading: false,
     error: null as string | null,
   })
 
+  const authStore = useAuth()
+
   const allWorks = computed(() => state.works)
   const currentWork = computed(() => state.currentWork)
+  const userWorks = computed(() => state.userWorks)
 
   const getWorkByCrossCuttingTheme = async (crossCuttingTheme: string) => {
     setLoading(true)
@@ -55,15 +60,6 @@ export const useWork = defineStore('work', () => {
   const sendWork = async (work: any) => {
     setError(null)
     try {
-      console.log({
-        ...work,
-        cross_cutting_theme: categoryStore.state.themes.find((t: { name: string }) => t.name === work.cross_cutting_theme).id,
-        ods: work.ods.map((odsItem: string) => categoryStore.state.ods.find((o: { name: string }) => o.name === odsItem).id),
-        field: work.field.map((fieldItem: string) => categoryStore.state.field.find((f: { name: string }) => f.name === fieldItem).id),
-        edition: editionStore.currentEdition?.id,
-        evaluator: [],
-        team: 7,
-      })
       const newWork = await WorkService.sendWork({
         ...work,
         cross_cutting_theme: categoryStore.state.themes.find((t: { name: string }) => t.name === work.cross_cutting_theme).id,
@@ -115,6 +111,22 @@ export const useWork = defineStore('work', () => {
       setLoading(false)
     }
   }
+
+  const fetchUserWorks = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const userType = authStore.user.user_type
+      const userId = authStore.user.id
+      const works = await WorkService.getUserWorks(userType, userId)
+      state.userWorks = works
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+  
   return {
     state,
     allWorks,
@@ -125,5 +137,7 @@ export const useWork = defineStore('work', () => {
     coverteData,
     getWork,
     currentWork,
+    fetchUserWorks,
+    userWorks,
   }
 })

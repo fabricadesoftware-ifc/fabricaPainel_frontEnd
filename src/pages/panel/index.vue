@@ -9,7 +9,7 @@
   const title = ref('')
 
   onMounted(() => {
-    workStore.fetchWorks()
+    workStore.fetchUserWorks()
     editionStore.fetchCurrentEdition()
     authStore.getUserInfo()
     title.value = authStore.user.user_type === 'STUDENT' ? 'Status do meu Trabalho' : 'Registros de Submissões'
@@ -40,7 +40,7 @@
           <v-sheet class="ml-auto mr-0 mt-0" min-height="65vh" rounded="xl">
             <div class="h-100 d-flex flex-column justify-space-between px-4">
               <EditionDatas />
-              <PaperAcceptanceTable :title="title" :works="workStore.allWorks" />
+              <PaperAcceptanceTable :title="title" :works="workStore.userWorks" />
             </div>
           </v-sheet>
         </v-col>
