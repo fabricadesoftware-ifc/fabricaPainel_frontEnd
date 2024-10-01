@@ -60,15 +60,6 @@ export const useWork = defineStore('work', () => {
   const sendWork = async (work: any) => {
     setError(null)
     try {
-      console.log({
-        ...work,
-        cross_cutting_theme: categoryStore.state.themes.find((t: { name: string }) => t.name === work.cross_cutting_theme).id,
-        ods: work.ods.map((odsItem: string) => categoryStore.state.ods.find((o: { name: string }) => o.name === odsItem).id),
-        field: work.field.map((fieldItem: string) => categoryStore.state.field.find((f: { name: string }) => f.name === fieldItem).id),
-        edition: editionStore.currentEdition?.id,
-        evaluator: [],
-        team: 7,
-      })
       const newWork = await WorkService.sendWork({
         ...work,
         cross_cutting_theme: categoryStore.state.themes.find((t: { name: string }) => t.name === work.cross_cutting_theme).id,
