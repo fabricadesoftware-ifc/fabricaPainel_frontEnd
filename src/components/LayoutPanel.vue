@@ -3,7 +3,9 @@
   import { uselayout } from '@/stores/app'
   import { useAuth } from '@/stores/auth'
   import { showMessage } from '@/utils/toastify'
+  import { useScreen } from '@/composables/composables'
 
+  const { isMobile } = useScreen()
   const router = useRouter()
   const layoutStore = uselayout()
   const authStore = useAuth()
@@ -24,7 +26,7 @@
 </script>
 <template>
   <div class="min-h-screen">
-    <v-app-bar class="py-4" flat>
+    <v-app-bar v-if="!isMobile" class="py-4" flat>
       <v-container class="mx-auto d-flex align-center justify-center">
         <img alt="" class="pr-8" src="@/assets/logo.png">
         <v-spacer />
@@ -48,6 +50,66 @@
           <p>{{ authStore.user.name }}</p>
           <v-icon class="ml-2" color="red">mdi-logout</v-icon>
         </v-btn>
+      </v-container>
+    </v-app-bar>
+    <v-app-bar v-else flat>
+      <v-container>
+        <v-row align="center" justify-space-around>
+          <v-col>
+            <img alt="" src="@/assets/logo.png">
+          </v-col>
+          <v-space />
+          <v-col class="d-flex justify-end">
+            <div><v-menu activator="parent">
+              <template #activator="{ on }">
+                <v-btn
+                  v-icon
+                  color="primary"
+                  rounded="xl"
+                  variant="flat"
+                  v-on="on"
+                >
+                  <v-icon>mdi-menu</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-for="link in layoutStore.navbar"
+                  :key="link.text"
+                  :color="link.value == layoutStore.currentPage ? 'primary' : ''"
+                  @click="router.push(link.value)"
+                >
+                  <v-list-item-title>{{ link.text }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu></div>
+            <div>
+              <v-btn
+                v-if="!authStore.isLogged"
+                class="d-flex ml-4"
+                color="primary"
+                rounded="xl"
+                variant="flat"
+                @click="login"
+              >
+                <p>ENTRAR</p>
+                <v-icon>mdi-login</v-icon>
+              </v-btn>
+
+              <v-btn
+                v-else
+                class="d-flex ml-4"
+                color="primary"
+                rounded="xl"
+                variant="flat"
+                @click="logout"
+              >
+                <p>{{ authStore.user.name }}</p>
+                <v-icon color="red">mdi-logout</v-icon>
+              </v-btn></div>
+
+          </v-col>
+        </v-row>
       </v-container>
     </v-app-bar>
     <v-main>
