@@ -3,13 +3,14 @@
     <v-btn
       class="mr-2 mb-2"
       color="primary"
-      disabled
+      :disabled="disabled != 'open'"
       rounded="xl"
       size="x-large"
       :text="props.text"
+      to="/panel"
       variant="flat"
     />
-    <p v-show="disabled" class="text-subtitle-2 text-disabled font-weight-regular pl-4 d-flex align-center">
+    <p v-if="disabled != 'open'" class="text-subtitle-2 text-disabled font-weight-regular pl-4 d-flex align-center">
       <v-icon aria-hidden="false" class="pr-2">
         mdi-account-cancel-outline
       </v-icon>

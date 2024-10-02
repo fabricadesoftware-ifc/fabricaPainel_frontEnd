@@ -3,7 +3,7 @@ import { useAuth } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: 'http://localhost:8000/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -12,8 +12,8 @@ const api = axios.create({
 
 api.interceptors.request.use(config => {
   // Lazy initialize useAuth inside the request
-  const authStore = useAuth();  // Only initialize here
-  const token = authStore?.token;
+  const authStore = useAuth() // Only initialize here
+  const token = authStore?.token
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }

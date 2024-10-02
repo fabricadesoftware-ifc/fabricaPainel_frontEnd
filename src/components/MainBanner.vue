@@ -6,8 +6,8 @@
     class?: string;
   }>()
 
-  const defaultContent = "Este site foi criado para facilitar a submissão de trabalhos acadêmicos que integram ensino, pesquisa e extensão, promovendo a troca de conhecimentos entre estudantes, professores e a comunidade. Aqui, você poderá enviar seus projetos, colaborar com outras áreas e contribuir para o desenvolvimento científico e social. Participe e faça parte dessa iniciativa que valoriza o conhecimento e a inovação no nosso campus!"
-  const defaultText = 'Painel de projetos oficial do IFC'
+  const defaultContent = 'Este site foi criado para facilitar a submissão de trabalhos acadêmicos que integram ensino, pesquisa e extensão, promovendo a troca de conhecimentos entre estudantes, professores e a comunidade. Aqui, você poderá enviar seus projetos, colaborar com outras áreas e contribuir para o desenvolvimento científico e social. Participe e faça parte dessa iniciativa que valoriza o conhecimento e a inovação no nosso campus!'
+  const defaultText = 'Painel de Integração - Campus Araquari'
   const defaultClass = 'pt-16 border-0'
 
   const content = props.content || defaultContent
@@ -25,10 +25,10 @@
           :text="text"
         />
         <BtnPrimary
-          v-if="btnvisible"
           class="mt-8"
-          disabled="Está sessão não está mais disponivel"
-          text="Edição 2023"
+          :disabled="!btnvisible ? 'Está sessão não está mais disponivel' : 'open'"
+          text="Acessar edição Atual"
+          to="/panel"
         />
       </div>
     </section>

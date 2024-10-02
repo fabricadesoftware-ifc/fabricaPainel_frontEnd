@@ -4,8 +4,9 @@ import { jwtDecode } from 'jwt-decode'
 import authService from '@/services/auth'
 import { useEdition } from './edition'
 import { showMessage } from '@/utils/toastify'
+import { useRoute } from 'vue-router'
 
-export const useAuth = defineStore("user", () => {
+export const useAuth = defineStore('user', () => {
   const state = reactive({
     isLogged: false,
     user: {
@@ -13,7 +14,7 @@ export const useAuth = defineStore("user", () => {
       name: '',
       email: '',
       user_type: '',
-      team: []
+      team: [],
     },
     students: [] as Array<{ id: string; name: string }>,
     token: '',
@@ -23,14 +24,15 @@ export const useAuth = defineStore("user", () => {
     userTeam: {},
   })
 
-  const editionStore = useEdition();
+  const editionStore = useEdition()
+  const router = useRoute()
 
-  const isLogged = computed(() => state.isLogged);
-  const user = computed(() => state.user);
-  const token = computed(() => state.token);
-  const refresh = computed(() => state.refresh);
-  const resetPasswordToken = computed(() => state.resetPasswordToken);
-  const uid = computed(() => state.user.id);
+  const isLogged = computed(() => state.isLogged)
+  const user = computed(() => state.user)
+  const token = computed(() => state.token)
+  const refresh = computed(() => state.refresh)
+  const resetPasswordToken = computed(() => state.resetPasswordToken)
+  const uid = computed(() => state.user.id)
   const formattedStudents = computed(() => {
     return state.students.map((student: { name: string }) => {
       return student.name
@@ -41,95 +43,95 @@ export const useAuth = defineStore("user", () => {
   const isOpenForRegister = computed(() => state.user.user_type === 'TEACHER' && editionStore.isOpenForWork)
   const isOpenForAprove = computed(() => editionStore.isOpenForAprove)
   const team = computed(() => state.team)
-  const userTeam = computed(() => state.userTeam);
+  const userTeam = computed(() => state.userTeam)
 
   const checkAuth = () => {
-    const token = localStorage.getItem("token");
-    const refresh = localStorage.getItem("refresh");
+    const token = localStorage.getItem('token')
+    const refresh = localStorage.getItem('refresh')
     if (token && refresh) {
-      state.isLogged = true;
-      state.token = token;
-      state.refresh = refresh;
-      refreshToken();
+      state.isLogged = true
+      state.token = token
+      state.refresh = refresh
+      refreshToken()
     }
-  };
+  }
 
   const refreshToken = async () => {
     try {
-      const { access } = await authService.refreshToken(state.refresh);
-      const decoded_token = jwtDecode(access);
-      state.token = access;
-      localStorage.setItem("token", access);
-      state.user = await authService.getUser(decoded_token?.user_id);
+      const { access } = await authService.refreshToken(state.refresh)
+      const decoded_token = jwtDecode(access)
+      state.token = access
+      localStorage.setItem('token', access)
+      state.user = await authService.getUser(decoded_token?.user_id)
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
-  };
+  }
 
   const getPassword = async (email: string) => {
     try {
-      const data = await authService.forgetPassword(email);
-      return data;
+      const data = await authService.forgetPassword(email)
+      return data
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
-  };
+  }
 
   const resetPassword = async (password: string) => {
     try {
       if (!state.resetPasswordToken) {
-        return;
+        return
       }
       const data = await authService.resetPassword(
         password,
         state.resetPasswordToken
-      );
-      return data;
+      )
+      return data
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
-  };
+  }
 
   const verifyToken = async (token: string) => {
     try {
-      await authService.verifyToken(token);
-      state.resetPasswordToken = token;
+      await authService.verifyToken(token)
+      state.resetPasswordToken = token
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
-  };
+  }
 
   const login = async (email: string, password: string) => {
     try {
-      const { access, refresh } = await authService.login(email, password);
+      const { access, refresh } = await authService.login(email, password)
       // eslint-disable-next-line camelcase
-      const decoded_token = jwtDecode(access);
-      state.isLogged = true;
-      state.token = access;
-      state.refresh = refresh;
-      localStorage.setItem("token", access);
-      localStorage.setItem("refresh", refresh);
-      state.user = await authService.getUser(decoded_token?.user_id);
+      const decoded_token = jwtDecode(access)
+      state.isLogged = true
+      state.token = access
+      state.refresh = refresh
+      localStorage.setItem('token', access)
+      localStorage.setItem('refresh', refresh)
+      state.user = await authService.getUser(decoded_token?.user_id)
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
-  };
+  }
 
   const logout = () => {
-    state.isLogged = false;
-    state.token = "";
-    state.refresh = "";
+    state.isLogged = false
+    state.token = ''
+    state.refresh = ''
     state.user = {
       id: '',
       name: '',
       email: '',
       user_type: '',
-      team: []
+      team: [],
     }
     localStorage.removeItem('token')
     localStorage.removeItem('refresh')
@@ -137,43 +139,43 @@ export const useAuth = defineStore("user", () => {
 
   const getStudents = async () => {
     try {
-      const data = await authService.getStudents();
-      state.students = data;
+      const data = await authService.getStudents()
+      state.students = data
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const getUserInfo = async () => {
     try {
-      const data = await authService.getUser(state.user.id);
-      state.user = data;
+      const data = await authService.getUser(state.user.id)
+      state.user = data
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const getUser = async (id: string) => {
     try {
-      const data = await authService.getUser(id);
-      return data;
+      const data = await authService.getUser(id)
+      return data
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
-  };
+  }
 
   const getUserTeam = async () => {
     try {
-      const data = await authService.getUserTeam(state.user.id);
+      const data = await authService.getUserTeam(state.user.id)
       console.log(data[0])
-      state.userTeam = data[0];
+      state.userTeam = data[0]
       console.log(`userTeam: ${state.userTeam?.id}`)
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
-  };
+  }
 
   const getTeam = async (id: string) => {
     try {
@@ -214,8 +216,7 @@ export const useAuth = defineStore("user", () => {
   const resendInvite = async (data: any) => {
     try {
       await authService.resendInvite(data)
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error)
       throw error
     }

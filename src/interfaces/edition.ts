@@ -1,6 +1,6 @@
 export interface IEdition {
     id?: string,
-    year: string,
+    year: number,
     theme: string,
     edition_name: string,
     initial_registration_theme_date: any,
@@ -13,8 +13,8 @@ export interface IEdition {
     final_registration_evaluator_date: any,
     initial_evaluators_date: any,
     final_evaluators_date: any,
-    workload: string,
-    banner: string | null,
+    workload: number,
+    banner: {file: string} | null,
     logo: string | null,
     is_open: boolean,
 }

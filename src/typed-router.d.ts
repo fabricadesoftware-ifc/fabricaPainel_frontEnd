@@ -34,7 +34,6 @@ declare module 'vue-router/auto-routes' {
     '/dashboard/paper/[id]': RouteRecordInfo<'/dashboard/paper/[id]', '/dashboard/paper/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/dashboard/register-evaluators/': RouteRecordInfo<'/dashboard/register-evaluators/', '/dashboard/register-evaluators', Record<never, never>, Record<never, never>>,
     '/editions/': RouteRecordInfo<'/editions/', '/editions', Record<never, never>, Record<never, never>>,
-    '/editions/all/': RouteRecordInfo<'/editions/all/', '/editions/all', Record<never, never>, Record<never, never>>,
     '/editions/view/[id]': RouteRecordInfo<'/editions/view/[id]', '/editions/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/panel/': RouteRecordInfo<'/panel/', '/panel', Record<never, never>, Record<never, never>>,
     '/panel/paper/[id]': RouteRecordInfo<'/panel/paper/[id]', '/panel/paper/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,

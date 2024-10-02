@@ -7,7 +7,7 @@
 
   const router = useRoute()
   const id = ref(null)
-  const editionsRef = ref([])
+  const edition = ref('Carregando...')
 
   const formatDate = computed(() => {
     return (dateTime: any) => {
@@ -16,71 +16,148 @@
     }
   })
 
-  const setEditionRef = (index: number) => (el: HTMLElement) => {
-    editionsRef.value[index] = el
-  }
-
   onMounted(() => {
-    fetchEditions()
-    id.value = router.params?.id
-    if (editionsRef.value.length > 0) {
-    const firstCard = editionsRef.value[id.value - 1].$el;
-    if (firstCard && firstCard.scrollIntoView) {
-      firstCard.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
+    fetchEditions().then(() => {
+      id.value = router.params?.id
+      edition.value = state.editions.find((ed: any) => ed.id === Number(id.value))
+    })
   })
 </script>
 
 <template>
   <LayoutDashboard>
     <v-container>
-      <template v-if="state.editions && state.editions.length > 0">
+      <template v-if="edition">
         <v-card
-          v-for="(edition, index) in state.editions"
-          :key="index"
           class="border-md w-100 mt-5"
           rounded="xl"
           variant="outlined"
-          :ref="setEditionRef(index)"
         >
           <div class="h-100 d-flex flex-column justify-space-between pa-10">
             <v-row>
               <v-col class="d-flex flex-column ga-4 justify-center" cols="6">
                 <p class="text-blue">
-                  {{ edition.theme }} <span class="text-grey"> - Carga Horária: {{ edition.workload }} horas</span>
+                  {{ edition.theme }}
+                  <span class="text-grey">
+                    - Carga Horária:
+                    {{ edition.workload }} horas</span>
                 </p>
                 <h2 class="text-primary font-weight-bold text-h4 pt-2">
-                  Edição {{ edition.id }} - {{ edition.year }}
+                  {{ edition.edition_name }} -
+                  {{ edition.year }}
                 </h2>
                 <p class="text-grey-darken-2">
-                  <span class="d-block">Data de Submissão:</span>
+                  <span class="d-block">Data de Registro de tema:</span>
                   <span class="text-black font-weight-bold">
-                    {{ formatDate(edition.initil_submission_date) }}
+                    {{
+                      formatDate(
+                        edition.initial_registration_theme_date
+                      )
+                    }}
                   </span>
                   até
                   <span class="text-black font-weight-bold">
-                    {{ formatDate(edition.final_submission_date) }}
+                    {{
+                      formatDate(
+                        edition.final_registration_theme_date
+                      )
+                    }}
                   </span>
                 </p>
                 <p class="text-grey-darken-2">
-                  <span class="d-block">Data de Orientação:</span>
-                  <span class="text-black font-weight-bold">
-                    {{ formatDate(edition.initial_advisor_date) }}
+                  <span class="d-block">Data de Registro de Avaliadores:</span>
+                  <span
+                    class="text-black
+                    font-weight-bold"
+                  >
+                    {{
+                      formatDate(
+                        edition.initial_registration_evaluator_date
+                      )
+                    }}
                   </span>
                   até
-                  <span class="text-black font-weight-bold">
-                    {{ formatDate(edition.final_advisor_date) }}
+                  <span
+                    class="text-black
+                    font-weight-bold"
+                  >
+                    {{
+                      formatDate(
+                        edition.final_registration_evaluator_date
+                      )
+                    }}
+                  </span>
+                </p>
+                <p class="text-grey-darken-2">
+                  <span class="d-block">Data de Submissão:</span>
+                  <span
+                    class="text-black
+                    font-weight-bold"
+                  >
+                    {{
+                      formatDate(
+                        edition.initial_submission_date
+                      )
+                    }}
+                  </span>
+                  até
+                  <span
+                    class="text-black
+                    font-weight-bold"
+                  >
+                    {{
+                      formatDate(
+                        edition.final_submission_date
+                      )
+                    }}
+                  </span>
+                </p>
+                <p class="text-grey-darken-2">
+                  <span class="d-block">Data de Orientadores:</span>
+                  <span
+                    class="text-black
+                    font-weight-bold"
+                  >
+                    {{
+                      formatDate(
+                        edition.initial_advisor_date
+                      )
+                    }}
+                  </span>
+                  até
+                  <span
+                    class="text-black
+                    font-weight-bold"
+                  >
+                    {{
+                      formatDate(
+                        edition.final_advisor_date
+                      )
+                    }}
                   </span>
                 </p>
                 <p class="text-grey-darken-2">
                   <span class="d-block">Data de Avaliadores:</span>
-                  <span class="text-black font-weight-bold">
-                    {{ formatDate(edition.initial_evaluators_date) }}
+                  <span
+                    class="text-black
+                    font-weight-bold"
+                  >
+                    {{
+                      formatDate(
+                        edition.initial_evaluators_date
+                      )
+                    }}
                   </span>
                   até
-                  <span class="text-black font-weight-bold">
-                    {{ formatDate(edition.final_evaluators_date) }}
+                  <span
+                    class="text-black
+                    font-weight-bold"
+                  >
+                    {{
+                      formatDate(
+                        edition.final_evaluators_date
+                      )
+                    }}
                   </span>
                 </p>
               </v-col>
@@ -95,22 +172,29 @@
                 </p>
               </v-col>
             </v-row>
-            <v-row>
-              <v-col>
-                <h1 class="text-h5 py-4">
-                  Registros de Submissões
-                </h1>
-                <!-- <RecivedTable /> -->
-              </v-col>
-            </v-row>
           </div>
         </v-card>
       </template>
-
       <template v-else>
-        <v-alert type="info">
-          Não há edições disponíveis no momento.
-        </v-alert>
+        <v-alert
+          color="error"
+          icon="mdi-alert"
+          outlined
+          rounded="lg"
+          text="Não foi possível carregar a edição"
+          variant="tonal"
+        />
+        <div class="d-flex justify-end">
+          <v-btn
+            class="mt-5 px-8"
+            color="error"
+            rounded="xl"
+            to="/dashboard/editions"
+            variant="flat"
+          >
+            Voltar
+          </v-btn>
+        </div>
       </template>
     </v-container>
   </LayoutDashboard>

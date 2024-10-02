@@ -205,9 +205,9 @@
 </template>
 
 <script setup lang="ts">
-  import { usePanel } from '@/stores/panel'
+  import { useEdition } from '@/stores/edition'
 
-  const panelStore = usePanel()
+  const editionStore = useEdition()
   const valid = ref(false)
 
   const form = ref({
@@ -231,7 +231,7 @@
   })
 
   const submitForm = () => {
-    panelStore.createEdition({
+    editionStore.createEdition({
       ...form.value,
       banner: null,
       logo: null,

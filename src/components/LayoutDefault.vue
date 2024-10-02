@@ -23,8 +23,7 @@
           variant="flat"
           @click="login"
         >
-          <p>ENTRAR</p>
-          <v-icon>mdi-login</v-icon>
+          <p>ENTRAR NO SISTEMA</p>
         </v-btn>
 
         <div v-else class="d-flex ga-2">
@@ -38,9 +37,15 @@
             <p>Meu Grupo</p>
           </v-btn>
 
-          <v-btn color="primary" rounded="xl" variant="flat" @click="logout">
+          <v-btn
+            v-else
+            color="primary"
+            rounded="xl"
+            to="/panel"
+            variant="flat"
+          >
             <p>{{ authStore.user.name }}</p>
-            <v-icon color="red">mdi-logout</v-icon>
+            <v-icon class="ml-2" color="white">mdi-account</v-icon>
           </v-btn>
         </div>
       </v-container>

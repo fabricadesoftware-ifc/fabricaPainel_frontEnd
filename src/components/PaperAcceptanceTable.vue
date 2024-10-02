@@ -4,33 +4,34 @@
   import { useWork } from '@/stores/work'
   import jsPDF from 'jspdf'
   import 'jspdf-autotable'
+  import { useAuth } from '@/stores/auth'
 
-const workStore = useWork();
-const search = ref("");
-const props = defineProps({
-  title: String,
-  works: Array,
-});
+  const authStore = useAuth()
+  const workStore = useWork()
+  const search = ref('')
+  const props = defineProps({
+    title: String,
+    works: Array,
+  })
 
-const getColor = (name) => {
-  if (name === 0) return "blue";
-  if (name === 1) return "green";
-  if (name === 3) return "red";
-  return "bg-gray";
-};
-
-const selectedStatus = ref([]);
-const selectedFields = ref([]);
-const selectedThemes = ref([]);
-const selectedDate = ref("");
-
-const status = () => {
-  const status_strings = [];
-  for (let i = 1; i <= 4; i++) {
-    status_strings.push(Status[i].replace(/_/g, " "));
+  const getColor = name => {
+    if (name === 0) return 'blue'
+    if (name === 1) return 'green'
+    if (name === 3) return 'red'
+    return 'bg-gray'
   }
-  return status_strings;
-};
+
+  const selectedStatus = ref([])
+  const selectedFields = ref([])
+  const selectedThemes = ref([])
+
+  const status = () => {
+    const statusString = []
+    for (let i = 1; i <= 4; i++) {
+      statusString.push(Status[i].replace(/_/g, ' '))
+    }
+    return statusString
+  }
 
   const worksHeaders = [
     { title: 'Status', key: 'status' },
@@ -42,6 +43,11 @@ const status = () => {
   ]
 
   const generatePDF = () => {
+    if (props.works.length === 0) {
+      alert('Não há trabalhos para gerar o PDF')
+      return
+    }
+    // eslint-disable-next-line new-cap
     const doc = new jsPDF()
 
     doc.text(props.title, 14, 20)
@@ -63,46 +69,42 @@ const status = () => {
 
     doc.save(`${props.title}.pdf`)
   }
-const works = computed(() => {
-  return props.works.filter((work) => {
-    // return selectedStatus.value.includes(Status[work.status].replace(/_/g, ' '))
-    if (
-      selectedStatus.value.length > 0 &&
-      !selectedStatus.value.includes(Status[work.status].replace(/_/g, " "))
-    )
-      return false;
-    if (
-      selectedFields.value.length > 0 &&
-      !work.field.some((field) => selectedFields.value.includes(field.name))
-    )
-      return false;
-    if (
-      selectedThemes.value.length > 0 &&
-      !selectedThemes.value.includes(work.cross_cutting_theme.name)
-    )
-      return false;
-    return true;
-  });
-});
+  const works = computed(() => {
+    return props.works.filter(work => {
+      // return selectedStatus.value.includes(Status[work.status].replace(/_/g, ' '))
+      if (
+        selectedStatus.value.length > 0 &&
+        !selectedStatus.value.includes(Status[work.status].replace(/_/g, ' '))
+      ) { return false }
+      if (
+        selectedFields.value.length > 0 &&
+        !work.field.some(field => selectedFields.value.includes(field.name))
+      ) { return false }
+      if (
+        selectedThemes.value.length > 0 &&
+        !selectedThemes.value.includes(work.cross_cutting_theme.name)
+      ) { return false }
+      return true
+    })
+  })
 
-const fields = computed(() => {
-  const fields = [];
-  props.works.forEach((work) => {
-    work.field.forEach((field) => {
-      if (!fields.includes(field.name)) fields.push(field.name);
-    });
-  });
-  return fields;
-});
+  const fields = computed(() => {
+    const fields = []
+    props.works.forEach(work => {
+      work.field.forEach(field => {
+        if (!fields.includes(field.name)) fields.push(field.name)
+      })
+    })
+    return fields
+  })
 
-const themes = computed(() => {
-  const themes = [];
-  props.works.forEach((work) => {
-    if (!themes.includes(work.cross_cutting_theme.name))
-      themes.push(work.cross_cutting_theme.name);
-  });
-  return themes;
-});
+  const themes = computed(() => {
+    const themes = []
+    props.works.forEach(work => {
+      if (!themes.includes(work.cross_cutting_theme.name)) { themes.push(work.cross_cutting_theme.name) }
+    })
+    return themes
+  })
 
 </script>
 
@@ -128,43 +130,43 @@ const themes = computed(() => {
         <!-- <v-select placeholder="Selecione o status" multiple v-model="selectedStatus" :items="status()"/>
          -->
         <v-select
+          v-model="selectedStatus"
           class="pa-2"
           clearable
           hide-details
+          :items="status()"
           label="Status"
+          max-width="33%"
           multiple
           placeholder="Selecione o status"
-          v-model="selectedStatus"
-          :items="status()"
           rounded="xl"
           variant="plain"
-          max-width="33%"
         />
         <v-select
+          v-model="selectedFields"
           class="pa-2"
           clearable
           hide-details
+          :items="fields"
           label="Área"
+          max-width="33%"
           multiple
           placeholder="Selecione a área"
-          v-model="selectedFields"
-          :items="fields"
           rounded="xl"
           variant="plain"
-          max-width="33%"
         />
         <v-select
+          v-model="selectedThemes"
           class="pa-2"
           clearable
           hide-details
+          :items="themes"
           label="Tema Transversal"
+          max-width="33%"
           multiple
           placeholder
-          v-model="selectedThemes"
-          :items="themes"
           rounded="xl"
           variant="plain"
-          max-width="33%"
         />
       </div>
 
@@ -216,8 +218,16 @@ const themes = computed(() => {
             </v-btn>
           </template>
         </v-data-table>
-        <!-- Botão para baixar o PDF -->
-        <v-btn @click="generatePDF">Baixar PDF</v-btn>
+        <v-btn
+          v-if="authStore.user.user_type === 'TEACHER'"
+          block
+          class="mt-4"
+          color="blue"
+          variant="outlined"
+          @click="generatePDF"
+        >
+          Baixar PDF
+        </v-btn>
       </div>
     </v-col>
   </v-row>

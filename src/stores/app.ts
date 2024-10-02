@@ -49,9 +49,6 @@ export const uselayout = defineStore(
               }, {
                 text: 'Sobre o Projeto',
                 value: '/about',
-              }, {
-                text: 'Todas as Edições',
-                value: '/dashboard/editions/all',
               },
             ],
             navbarDashboard: [

@@ -13,7 +13,7 @@
   const login = async () => {
     try {
       await authStore.login(email.value, password.value)
-      router.push('/')
+      router.push('/panel/')
     } catch (error) {
       showMessage('Credenciais inválidas', 'error', 1500, 'top-right', 'auto', false)
     }
@@ -34,20 +34,26 @@
               <v-text-field
                 v-model="email"
                 label="Email"
-                variant="outlined"
                 required
                 rounded="xl"
                 type="email"
+                variant="outlined"
               />
               <v-text-field
                 v-model="password"
                 label="Senha"
-                variant="outlined"
                 required
                 rounded="xl"
                 type="password"
+                variant="outlined"
               />
-              <v-btn block color="primary" class="py-6" @click="login" rounded="xl"> Entrar </v-btn>
+              <v-btn
+                block
+                class="py-6"
+                color="primary"
+                rounded="xl"
+                @click="login"
+              > Entrar </v-btn>
             </v-form>
             <p class="text-center mt-4" style="font-size: 0.9rem">
               <router-link
