@@ -36,7 +36,7 @@ class EditionsService {
 
   async updateEdition (editionId: string, editionData: IEdition) {
     try {
-      const { data } = await api.patch(`/edition/${editionId}/`, editionData)
+      const { data } = await api.put(`/edition/${editionId}/`, editionData)
       return data
     } catch (error) {
       this.handleError(error, 'update')

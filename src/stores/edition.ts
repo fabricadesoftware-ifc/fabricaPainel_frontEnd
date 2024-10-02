@@ -76,6 +76,7 @@ export const useEdition = defineStore('edition', () => {
   }
 
   const createEdition = async (editionData: IEdition) => {
+    console.log(editionData)
     setLoading(true)
     setError(null)
     try {
@@ -88,7 +89,7 @@ export const useEdition = defineStore('edition', () => {
     }
   }
 
-  const updateEdition = async (editionId: string, editionData: IEdition) => {
+  const updateEdition = async (editionId: any, editionData: IEdition) => {
     setLoading(true)
     setError(null)
     try {

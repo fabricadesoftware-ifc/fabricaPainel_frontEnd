@@ -5,15 +5,9 @@
 
   const dialog = ref(false)
   const valid = ref(false)
-  const {
-    state,
-    updateEdition,
-    fetchEditions,
-    fetchCurrentEdition,
-    currentEdition,
-  } = useEdition()
+  const editionStore = useEdition()
   const workStore = useWork()
-  const form = ref({ ...currentEdition })
+  const form = ref({ ...editionStore.currentEdition })
 
   const defaultBanner =
     'https://th.bing.com/th/id/OIP.MQJrIQeghQLdcs1uFBZHzwHaEp?rs=1&pid=ImgDetMain'
@@ -22,42 +16,48 @@
 
   const saveEdition = () => {
     if (form.value) {
-      updateEdition(state.editions[state.editions.length - 1].id, form.value)
+      editionStore.updateEdition(editionStore.currentEdition?.id, {
+        ...form.value,
+        year: Number(form.value.year),
+        workload: Number(form.value.workload),
+        banner: form.value.banner?.id,
+        logo: form.value.logo?.id,
+      })
       dialog.value = false
-      fetchCurrentEdition()
+      editionStore.fetchCurrentEdition()
     }
   }
 
   onMounted(() => {
-    fetchEditions()
-    fetchCurrentEdition()
+    editionStore.fetchEditions()
+    editionStore.fetchCurrentEdition()
   })
 </script>
 
 <template>
   <LayoutDashboard>
     <v-container>
-      <template v-if="state.currentEdition">
+      <template v-if="editionStore.currentEdition">
         <v-card class="border-md w-100" rounded="xl" variant="outlined">
           <div class="h-100 d-flex flex-column justify-space-between pa-10">
             <v-row>
               <v-col class="d-flex flex-column ga-4 justify-center" cols="6">
                 <p class="text-blue">
-                  {{ state.currentEdition?.theme }}
+                  {{ editionStore.currentEdition?.theme }}
                   <span class="text-grey">
                     - Carga Horária:
-                    {{ state.currentEdition?.workload }} horas</span>
+                    {{ editionStore.currentEdition?.workload }} horas</span>
                 </p>
                 <h2 class="text-primary font-weight-bold text-h4 pt-2">
-                  {{ state.currentEdition?.edition_name }} -
-                  {{ state.currentEdition?.year }}
+                  {{ editionStore.currentEdition?.edition_name }} -
+                  {{ editionStore.currentEdition?.year }}
                 </h2>
                 <p class="text-grey-darken-2">
                   <span class="d-block">Data de Registro de tema:</span>
                   <span class="text-black font-weight-bold">
                     {{
                       formatDate(
-                        state.currentEdition?.initial_registration_theme_date
+                        editionStore.currentEdition?.initial_registration_theme_date
                       )
                     }}
                   </span>
@@ -65,7 +65,7 @@
                   <span class="text-black font-weight-bold">
                     {{
                       formatDate(
-                        state.currentEdition?.final_registration_theme_date
+                        editionStore.currentEdition?.final_registration_theme_date
                       )
                     }}
                   </span>
@@ -78,7 +78,7 @@
                   >
                     {{
                       formatDate(
-                        state.currentEdition?.initial_registration_evaluator_date
+                        editionStore.currentEdition?.initial_registration_evaluator_date
                       )
                     }}
                   </span>
@@ -89,7 +89,7 @@
                   >
                     {{
                       formatDate(
-                        state.currentEdition?.final_registration_evaluator_date
+                        editionStore.currentEdition?.final_registration_evaluator_date
                       )
                     }}
                   </span>
@@ -102,7 +102,7 @@
                   >
                     {{
                       formatDate(
-                        state.currentEdition?.initial_submission_date
+                        editionStore.currentEdition?.initial_submission_date
                       )
                     }}
                   </span>
@@ -113,7 +113,7 @@
                   >
                     {{
                       formatDate(
-                        state.currentEdition?.final_submission_date
+                        editionStore.currentEdition?.final_submission_date
                       )
                     }}
                   </span>
@@ -126,7 +126,7 @@
                   >
                     {{
                       formatDate(
-                        state.currentEdition?.initial_advisor_date
+                        editionStore.currentEdition?.initial_advisor_date
                       )
                     }}
                   </span>
@@ -137,7 +137,7 @@
                   >
                     {{
                       formatDate(
-                        state.currentEdition?.final_advisor_date
+                        editionStore.currentEdition?.final_advisor_date
                       )
                     }}
                   </span>
@@ -150,7 +150,7 @@
                   >
                     {{
                       formatDate(
-                        state.currentEdition?.initial_evaluators_date
+                        editionStore.currentEdition?.initial_evaluators_date
                       )
                     }}
                   </span>
@@ -161,7 +161,7 @@
                   >
                     {{
                       formatDate(
-                        state.currentEdition?.final_evaluators_date
+                        editionStore.currentEdition?.final_evaluators_date
                       )
                     }}
                   </span>
@@ -171,7 +171,7 @@
                 <img
                   alt=""
                   class="w-100 rounded-xl"
-                  :src="state.currentEdition?.banner?.file ?? defaultBanner"
+                  :src="editionStore.currentEdition?.banner?.file ?? defaultBanner"
                 >
               </v-col>
             </v-row>

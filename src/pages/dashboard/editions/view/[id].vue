@@ -165,13 +165,6 @@
                 <img alt="" class="w-100 rounded-xl" :src="edition.banner?.file || defaultBanner">
               </v-col>
             </v-row>
-            <v-row>
-              <v-col>
-                <p class="text-grey">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae quo maxime mollitia illo provident ex minima tenetur voluptate aliquam omnis, tempora nesciunt qui fugit, reprehenderit perferendis asperiores expedita natus eum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus hic corrupti, minus nisi quibusdam sint quia quasi perferendis assumenda culpa? Quo reiciendis illo dolore aperiam quisquam, facere velit animi architecto?
-                </p>
-              </v-col>
-            </v-row>
           </div>
         </v-card>
       </template>

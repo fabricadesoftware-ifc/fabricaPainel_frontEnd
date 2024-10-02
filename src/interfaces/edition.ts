@@ -1,5 +1,5 @@
 export interface IEdition {
-    id?: string,
+    id?: string | undefined,
     year: number,
     theme: string,
     edition_name: string,

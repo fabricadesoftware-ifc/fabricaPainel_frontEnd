@@ -206,8 +206,10 @@
 
 <script setup lang="ts">
   import { useEdition } from '@/stores/edition'
+  import { useRouter } from 'vue-router'
 
   const editionStore = useEdition()
+  const router = useRouter()
   const valid = ref(false)
 
   const form = ref({
@@ -237,6 +239,8 @@
       logo: null,
       year: Number(form.value.year),
       workload: Number(form.value.workload),
+    }).then(() => {
+      router.push('/dashboard/editions')
     })
   }
 </script>
