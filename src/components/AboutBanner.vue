@@ -5,8 +5,12 @@
     <section class="mt-0 d-flex flex-column justify-center align-center pt-16 mt-16 mb-16">
       <div>
         <TitleH1
-          text="Sobre o Projeto"
+        text="Sobre o Projeto"
         />
+        <h2 class="text-h5 pb-3">Semana de Ensino, Pesquisa e Extensão</h2>
+        <p class="pb-8">
+          A Semana de Ensino, Pesquisa e Extensão é um evento central em nossa instituição, que atua na socialização do conhecimento e divulgação de pesquisas regionais e nacionais e conta com a participação de palestrantes convidados, comemorando brasileiros e estrangeiros, comutação de atividades, como congressos, turmas, pequenos cursos, bloggers, conforme a semana acadêmica de Medicina Veterinária, Informática, Licenciaturas e Painel de Integração de Conhecimentos.
+        </p>
         <h2 class="text-h5 pb-3">Excelência e Imparcialidade</h2>
         <p class="pb-8">
           O nosso sistema visa a excelência e imparcialidade na avaliação de trabalhos, o que permite ao sistema garantir uma avaliação diversificada e de alta qualidade. O uso do Painel de Integração da SEPE para a escolha aleatória de alunos orientadores e avaliadores, ajudam a garantir a diversidade nas avaliações. Os avaliados possuem ampla variedade de temas, uma socialização do seu interesse acadêmico. E por fim, no final do processo, todos os participantes podem ter acesso as avaliações de seu trabalho.
@@ -14,10 +18,6 @@
         <h2 class="text-h5 pb-3">Facilidade na Submissão de Trabalhos</h2>
         <p class="pb-8">
           Esse site foi criado para facilitar a submissão de trabalhos de ensino, pesquisa e extensão, que caracterize o desenvolvimento colaborativo entre as interações de estudantes, professores e comunidade. Submeta projetos, colabore em diversas áreas e contribua cada vez mais com a ciência e sociedade, dentro e fora do nosso campus.
-        </p>
-        <h2 class="text-h5 pb-3">Semana de Ensino, Pesquisa e Extensão</h2>
-        <p class="pb-8">
-          A Semana de Ensino, Pesquisa e Extensão é um evento central em nossa instituição, que atua na socialização do conhecimento e divulgação de pesquisas regionais e nacionais e conta com a participação de palestrantes convidados, comemorando brasileiros e estrangeiros, comutação de atividades, como congressos, turmas, pequenos cursos, bloggers, conforme a semana acadêmica de Medicina Veterinária, Informática, Licenciaturas e Painel de Integração de Conhecimentos.
         </p>
         <h2 class="text-h5 pb-3">Integração e Inovação</h2>
         <p class="pb-8">
@@ -28,7 +28,7 @@
         />
         <h2 class="text-h5 pb-3">Fabrica de Software</h2>
         <p class="pb-8">
-          O nosso sistema visa a excelência e imparcialidade na avaliação de trabalhos, o que permite ao sistema garantir uma avaliação diversificada e de alta qualidade. O uso do Painel de Integração da SEPE para a escolha aleatória de alunos orientadores e avaliadores, ajudam a garantir a diversidade nas avaliações. Os avaliados possuem ampla variedade de temas, uma socialização do seu interesse acadêmico. E por fim, no final do processo, todos os participantes podem ter acesso as avaliações de seu trabalho.
+          A Fábrica de Software é uma iniciativa que tem como objetivo aproximar os alunos do mercado de trabalho, proporcionando a eles a oportunidade de desenvolver soluções reais para iniciativas públicas e privadas, simulando o ambiente de grandes empresas de software. Ao longo de mais de 10 anos de atuação, a Fábrica tem se mostrado extremamente benéfica para os alunos do curso técnico em Informática e do ensino superior do Instituto Federal Catarinense - Campus Araquari. Mais de 200 alunos já passaram pelo projeto, adquirindo experiência prática e relevante para suas carreiras.
         </p>
 
         <h2 class="text-h5 pb-3">Equipe:</h2>
