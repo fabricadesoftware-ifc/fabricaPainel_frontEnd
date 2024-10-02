@@ -3,7 +3,9 @@
   import { uselayout } from '@/stores/app'
   import { useAuth } from '@/stores/auth'
   import { showMessage } from '@/utils/toastify'
+  import { useScreen } from '@/composables/composables'
 
+  const { isMobile } = useScreen()
   const router = useRouter()
   const layoutStore = uselayout()
   const authStore = useAuth()
