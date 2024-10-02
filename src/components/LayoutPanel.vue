@@ -28,7 +28,7 @@
   <div class="min-h-screen">
     <v-app-bar v-if="!isMobile" class="py-4" flat>
       <v-container class="mx-auto d-flex align-center justify-center">
-        <img alt="" class="pr-8" src="@/assets/logo.png">
+        <img alt="" class="pr-8 cursor-pointer" src="@/assets/logo.png" @click="$router.push('/')">
         <v-spacer />
         <v-btn
           v-if="!authStore.isLogged"

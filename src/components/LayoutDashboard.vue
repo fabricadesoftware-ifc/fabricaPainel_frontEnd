@@ -1,7 +1,7 @@
 <template>
   <v-app-bar v-if="!isMobile" class="py-4" flat flex>
     <v-container class="mx-auto d-flex align-center justify-center">
-      <img alt="" class="pr-8" src="@/assets/logo.png">
+      <img alt="" class="pr-8 cursor-pointer" src="@/assets/logo.png" @click="$router.push('/')">
       <v-btn
         v-for="link in layoutStore.navbarDashboard"
         :key="link.text"

@@ -36,18 +36,18 @@
           <li>
             Desenvolvedores Frontend:
             <strong><a href="https://github.com/mateus-lopes">Mateus Lopes Albano</a></strong>,
-            <a href="/">Kaun</a>,
-            <a href="https://github.com/jonatasperaza">Jonatas Silva Peraza</a>,
-            <a href="https://github.com/luansilva25">Luan Silva</a>
+            <strong><a href="https://github.com/Caussz">Cauã Vinícius Silva</a></strong>,
+            <strong><a href="https://github.com/jonatasperaza">Jonatas Silva Peraza</a></strong>,
+            <strong><a href="https://github.com/luansilva25">Luan Silva</a></strong>
           </li>
           <li>
             Desenvolvedores Backend:
             <strong><a href="https://github.com/LucasGabrielAntonete">Lucas Gabriel Antonete</a></strong>,
-            <a href="https://github.com/LucasGabrielAntonete">Rafinha</a>,
-            <a href="https://github.com/LucasGabrielAntonete">Cavalo</a>
+            <strong><a href="https://github.com/RafaelBochi">Rafael Bochi Barros</a></strong>,
+            <strong><a href="https://github.com/Hiansdt">Vinícius Nilo Hiansdt</a></strong>
           </li>
-          <li>Analista de Requisitos: <a href="/">Prof Fabio de Longo Moura</a></li>
-          <li>Orientadores do Projeto: Professores <a href="/">Fabio de Longo Moura</a> e <a href="/">Eduardo da Silva</a></li>
+          <li>Analista de Requisitos: <strong><a href="/">Prof. Fábio Longo de Moura</a></strong></li>
+          <li>Orientadores do Projeto: Professores <strong><a href="/">Fábio Longo de Moura</a></strong> e <strong><a href="/">Eduardo da Silva</a></strong></li>
         </ul>
 
       </div>

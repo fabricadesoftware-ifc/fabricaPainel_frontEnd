@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <v-app-bar v-if="!isMobile" class="py-4" flat>
       <v-container class="w-lg-75 d-flex align-center justify-center" fluid>
-        <img alt="" class="pr-8" src="@/assets/logo.png">
+        <img alt="" class="pr-8 cursor-pointer" src="@/assets/logo.png" @click="$router.push('/')">
         <v-btn
           v-for="link in layoutStore.navbar"
           :key="link.text"
