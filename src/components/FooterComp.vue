@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router';
       <div class=" text-center">
         <img alt="" height="64px" src="@/assets/footer_logos2.png">
         <p class="pt-8 text-grey">
-          Portal desenvolvido pela fábrica de software do Instituto Federal Catarinense - Campus Araqauri.
+          Portal desenvolvido pela fábrica de software do Instituto Federal Catarinense - Campus Araquari.
         </p>
       </div>
       <v-list class="d-flex flex-row justify-center bg-transparent mt-6 ga-8">
