@@ -165,9 +165,7 @@ const logout = () => {
   router.push("/");
 };
 
-onMounted(() => {
-  console.log(authStore.user.name);
-
-  layoutStore.getSettings();
-});
-</script>
+  onMounted(() => {
+    layoutStore.getSettings()
+  })
+  </script>

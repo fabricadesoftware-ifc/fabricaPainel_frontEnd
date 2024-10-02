@@ -18,9 +18,8 @@ class CategoriesService {
 
   async updateCrossCuttingThemes (theme: ICrossCuttingTheme, advisor: string) {
     try {
+      console.log(theme)
       const response = await api.patch(`/cross_cutting_theme/${theme.id}/`, {
-        id: theme.id,
-        name: theme.name,
         advisor: [
           ...theme.advisor,
           advisor,

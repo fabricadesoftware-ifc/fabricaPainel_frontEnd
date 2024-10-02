@@ -22,6 +22,7 @@ export const useAuth = defineStore('user', () => {
     resetPasswordToken: '',
     team: null,
     userTeam: {},
+    userThemes: [],
   })
 
   const editionStore = useEdition()
@@ -44,6 +45,7 @@ export const useAuth = defineStore('user', () => {
   const isOpenForAprove = computed(() => editionStore.isOpenForAprove)
   const team = computed(() => state.value.team)
   const userTeam = computed(() => state.value.userTeam)
+  const userThemes = computed(() => state.value.userThemes)
 
   const checkAuth = () => {
     const token = localStorage.getItem('token')
@@ -248,6 +250,16 @@ export const useAuth = defineStore('user', () => {
     }
   }
 
+  const getUserThemes = async () => {
+    try {
+      const data = await authService.getUserThemes(state.value.user.id);
+      state.value.userThemes = data;
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
   return {
     isLogged,
     user,
@@ -278,5 +290,7 @@ export const useAuth = defineStore('user', () => {
     resendInvite,
     userTeam,
     getUserTeam,
+    getUserThemes,
+    userThemes,
   }
 })

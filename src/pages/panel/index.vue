@@ -12,7 +12,8 @@
     workStore.fetchUserWorks()
     editionStore.fetchCurrentEdition()
     authStore.getUserInfo()
-    title.value = authStore.user.user_type === 'STUDENT' ? 'Status do meu Trabalho' : 'Registros de Submissões'
+    authStore.getUserThemes()
+    title.value = authStore.user.user_type === 'STUDENT' ? 'Status do meu Trabalho' : 'Registro de Submissões'
   })
 </script>
 
@@ -20,10 +21,10 @@
   <LayoutPanel>
     <v-container class="pt-0 mt-0">
       <InformativeAlert
-        v-if="authStore.isOpenForRegister"
+        v-if="authStore.isOpenForRegister && authStore.user.user_type === 'TEACHER' && authStore.userThemes.length === 0"
         button="Registrar-se nos temas transversais"
         color="info"
-        description="Está no periodo de registro de avaliadores, por favor, registre os avaliadores nos trabalhos recebidos. (Clique no botão ao lado)"
+        description="Avaliador, registre-se nos temas transversais para avaliar os trabalhos."
         :title="editionStore.teacherStudent"
         to="/panel/registration-of-topics"
       />

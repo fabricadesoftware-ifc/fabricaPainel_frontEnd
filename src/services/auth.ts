@@ -114,6 +114,15 @@ class AuthService {
       this.handleError(error, 'resend invite')
     }
   }
+
+  async getUserThemes (id: string) {
+    try {
+      const { data } = await api.get(`cross_cutting_theme/?advisor_id=${id}`)
+      return data
+    } catch (error) {
+      this.handleError(error, 'get user themes')
+    }
+  }
 }
 
 export default new AuthService()

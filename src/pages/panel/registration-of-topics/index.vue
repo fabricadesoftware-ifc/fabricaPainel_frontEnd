@@ -7,6 +7,7 @@
       label="Tema 1"
       rounded="xl"
       variant="outlined"
+      required
     />
     <v-autocomplete
       v-model="theme1"
@@ -15,6 +16,7 @@
       label="Tema 2"
       rounded="xl"
       variant="outlined"
+      required
     />
     <v-spacer />
     <v-btn
@@ -22,7 +24,7 @@
       class="py-6"
       color="primary"
       rounded="xl"
-      @click="categoryStore.saveCrossCuttingThemes([theme1, theme2])"
+      @click="saveThemes"
     >
       Confirmar
     </v-btn>
@@ -31,12 +33,21 @@
 
 <script setup>
   import { useCategory } from '@/stores/category'
+  import { showMessage } from '@/utils/toastify';
 
   const categoryStore = useCategory()
   const theme1 = ref('')
   const theme2 = ref('')
 
-  onMounted(() => {
-    categoryStore.getCrossCuttingThemes()
+  const saveThemes = async () => {
+    if (!theme1.value || !theme2.value) {
+      showMessage('Selecione ambos os temas desejados.', 'error', 3000, 'bottom-center', 'auto', true);
+      return
+    }
+    await categoryStore.saveCrossCuttingThemes([theme1.value, theme2.value])
+  }
+
+  onMounted(async () => {
+    await categoryStore.getCrossCuttingThemes()
   })
 </script>

@@ -12,7 +12,7 @@ export const useEdition = defineStore('edition', () => {
 
   const currentEdition = computed(() => state.currentEdition)
   const alertStudent = computed(() => 'A data de submissão é de ' + state.currentEdition?.initial_submission_date + ' até ' + state.currentEdition?.final_submission_date)
-  const teacherStudent = computed(() => 'Registro de Avaliadores (' + state.currentEdition?.initial_submission_date + ' até ' + state.currentEdition?.final_submission_date + ')')
+  const teacherStudent = computed(() => 'Registro de Avaliadores (' + state.currentEdition?.initial_registration_evaluator_date + ' até ' + state.currentEdition?.final_registration_evaluator_date + ')')
 
   const isOpenForWork = computed(() => {
     const currentDate = new Date()
