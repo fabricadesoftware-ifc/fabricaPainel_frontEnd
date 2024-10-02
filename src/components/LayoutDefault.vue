@@ -38,13 +38,13 @@
           </v-btn>
 
           <v-btn
-            color="primary"
+            color="red"
             rounded="xl"
+            variant="outlined"
             to="/panel"
-            variant="flat"
           >
             <p>{{ authStore.user?.name }}</p>
-            <v-icon class="ml-2" color="white">mdi-account</v-icon>
+            <v-icon class="ml-2" color="red">mdi-logout</v-icon>
           </v-btn>
         </div>
       </v-container>

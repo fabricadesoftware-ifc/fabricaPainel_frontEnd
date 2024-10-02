@@ -15,6 +15,7 @@ import { useRoute } from 'vue-router';
           link
           title="PÁGINA INICIAL"
           variant="plain"
+          @click="router.push('/')"
         />
         <v-list-item
           class="rounded-xl"
@@ -22,6 +23,7 @@ import { useRoute } from 'vue-router';
           link
           title="SOBRE O PROJETO"
           variant="plain"
+          @click="router.push('/about')"
         />
         <v-list-item
           class="rounded-xl"
@@ -29,6 +31,7 @@ import { useRoute } from 'vue-router';
           link
           title="TODAS AS EDIÇÕES"
           variant="plain"
+          @click="router.push('/dashboard/editions/all')"
         />
       </v-list>
       <v-divider class="mt-10 w-100" />
