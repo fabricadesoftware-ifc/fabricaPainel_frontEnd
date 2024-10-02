@@ -38,7 +38,9 @@
             <strong><a href="https://github.com/mateus-lopes" target="_blank">Mateus Lopes Albano</a></strong>,
             <strong><a href="https://github.com/Caussz" target="_blank">Cauã Vinícius Silva</a></strong>,
             <strong><a href="https://github.com/jonatasperaza" target="_blank">Jonatas Silva Peraza</a></strong>,
-            <strong><a href="https://github.com/luansilva25" target="_blank">Luan Silva</a></strong>
+            <strong><a href="https://github.com/luansilva25" target="_blank">Luan Silva</a></strong>,
+            <strong><a href="https://github.com/RafaelBochi" target="_blank">Rafael Bochi Barros</a></strong>,
+            <strong><a href="https://github.com/Hiansdt" target="_blank">Vinícius Nilo Hiansdt</a></strong>
           </li>
           <li>
             Desenvolvedores Backend:
