@@ -24,8 +24,8 @@
 
   const authStore = useAuth()
 
-  onMounted(() => {
-    authStore.checkAuth()
+  onMounted(async () => {
+    await authStore.checkAuth()
   })
 </script>
 

@@ -11,8 +11,7 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(config => {
-  // Lazy initialize useAuth inside the request
-  const authStore = useAuth() // Only initialize here
+  const authStore = useAuth()
   const token = authStore?.token
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
@@ -23,8 +22,7 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   response => response,
   error => {
-    // Lazy initialize useRouter inside the response interceptor
-    const router = useRouter() // Only initialize here
+    const router = useRouter()
 
     if (error.response?.status === 401) {
       router.push('/auth/login/')

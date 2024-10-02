@@ -47,14 +47,14 @@ export const useAuth = defineStore('user', () => {
   const userTeam = computed(() => state.value.userTeam)
   const userThemes = computed(() => state.value.userThemes)
 
-  const checkAuth = () => {
-    const token = localStorage.getItem('token')
-    const refresh = localStorage.getItem('refresh')
-    if (token && refresh) {
-      state.value.isLogged = true
-      state.value.token = token
-      state.value.refresh = refresh
-      refreshToken()
+  const checkAuth = async () => {
+    try {
+      if (refresh) {
+        state.value.isLogged = true
+        await refreshToken()
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
