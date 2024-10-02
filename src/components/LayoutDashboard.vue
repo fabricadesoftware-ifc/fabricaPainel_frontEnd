@@ -147,6 +147,7 @@
 
   const authStore = useAuth()
   const { isMobile } = useScreen()
+  console.log(isMobile)
 
   const router = useRouter()
   const layoutStore = uselayout()
