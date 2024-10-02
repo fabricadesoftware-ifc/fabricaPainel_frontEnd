@@ -1,13 +1,14 @@
-import { computed, reactive } from 'vue'
+import { computed } from 'vue'
 import { defineStore } from 'pinia'
 import { jwtDecode } from 'jwt-decode'
 import authService from '@/services/auth'
 import { useEdition } from './edition'
 import { showMessage } from '@/utils/toastify'
 import { useRoute } from 'vue-router'
+import {useStorage} from '@vueuse/core'
 
 export const useAuth = defineStore('user', () => {
-  const state = reactive({
+  const state = useStorage('state_user', {
     isLogged: false,
     user: {
       id: '',
@@ -27,43 +28,43 @@ export const useAuth = defineStore('user', () => {
   const editionStore = useEdition()
   const router = useRoute()
 
-  const isLogged = computed(() => state.isLogged)
-  const user = computed(() => state.user)
-  const token = computed(() => state.token)
-  const refresh = computed(() => state.refresh)
-  const resetPasswordToken = computed(() => state.resetPasswordToken)
-  const uid = computed(() => state.user.id)
+  const isLogged = computed(() => state.value.isLogged)
+  const user = computed(() => state.value.user)
+  const token = computed(() => state.value.token)
+  const refresh = computed(() => state.value.refresh)
+  const resetPasswordToken = computed(() => state.value.resetPasswordToken)
+  const uid = computed(() => state.value.user.id)
   const formattedStudents = computed(() => {
-    return state.students.map((student: { name: string }) => {
+    return state.value.students.map((student: { name: string }) => {
       return student.name
     })
   })
-  const students = computed(() => state.students)
-  const isOpenForWork = computed(() => state.user.user_type === 'STUDENT' && editionStore.isOpenForWork)
-  const isOpenForRegister = computed(() => state.user.user_type === 'TEACHER' && editionStore.isOpenForRegister)
-  const isOpenForEvaluation = computed(() => state.user.user_type === 'TEACHER' && editionStore.isOpenForEvaluation)
+  const students = computed(() => state.value.students)
+  const isOpenForWork = computed(() => state.value.user.user_type === 'STUDENT' && editionStore.isOpenForWork)
+  const isOpenForRegister = computed(() => state.value.user.user_type === 'TEACHER' && editionStore.isOpenForRegister)
+  const isOpenForEvaluation = computed(() => state.value.user.user_type === 'TEACHER' && editionStore.isOpenForEvaluation)
   const isOpenForAprove = computed(() => editionStore.isOpenForAprove)
-  const team = computed(() => state.team)
-  const userTeam = computed(() => state.userTeam)
+  const team = computed(() => state.value.team)
+  const userTeam = computed(() => state.value.userTeam)
 
   const checkAuth = () => {
     const token = localStorage.getItem('token')
     const refresh = localStorage.getItem('refresh')
     if (token && refresh) {
-      state.isLogged = true
-      state.token = token
-      state.refresh = refresh
+      state.value.isLogged = true
+      state.value.token = token
+      state.value.refresh = refresh
       refreshToken()
     }
   }
 
   const refreshToken = async () => {
     try {
-      const { access } = await authService.refreshToken(state.refresh)
+      const { access } = await authService.refreshToken(state.value.refresh)
       const decoded_token = jwtDecode(access)
-      state.token = access
+      state.value.token = access
       localStorage.setItem('token', access)
-      state.user = await authService.getUser(decoded_token?.user_id)
+      state.value.user = await authService.getUser(decoded_token?.user_id)
     } catch (error) {
       console.error(error)
       throw error
@@ -82,12 +83,12 @@ export const useAuth = defineStore('user', () => {
 
   const resetPassword = async (password: string) => {
     try {
-      if (!state.resetPasswordToken) {
+      if (!state.value.resetPasswordToken) {
         return
       }
       const data = await authService.resetPassword(
         password,
-        state.resetPasswordToken
+        state.value.resetPasswordToken
       )
       return data
     } catch (error) {
@@ -99,7 +100,7 @@ export const useAuth = defineStore('user', () => {
   const verifyToken = async (token: string) => {
     try {
       await authService.verifyToken(token)
-      state.resetPasswordToken = token
+      state.value.resetPasswordToken = token
     } catch (error) {
       console.error(error)
       throw error
@@ -111,12 +112,10 @@ export const useAuth = defineStore('user', () => {
       const { access, refresh } = await authService.login(email, password)
       // eslint-disable-next-line camelcase
       const decoded_token = jwtDecode(access)
-      state.isLogged = true
-      state.token = access
-      state.refresh = refresh
-      localStorage.setItem('token', access)
-      localStorage.setItem('refresh', refresh)
-      state.user = await authService.getUser(decoded_token?.user_id)
+      state.value.isLogged = true
+      state.value.token = access
+      state.value.refresh = refresh
+      state.value.user = await authService.getUser(decoded_token?.user_id)
     } catch (error) {
       console.error(error)
       throw error
@@ -124,24 +123,22 @@ export const useAuth = defineStore('user', () => {
   }
 
   const logout = () => {
-    state.isLogged = false
-    state.token = ''
-    state.refresh = ''
-    state.user = {
+    state.value.isLogged = false
+    state.value.token = ''
+    state.value.refresh = ''
+    state.value.user = {
       id: '',
       name: '',
       email: '',
       user_type: '',
       team: [],
     }
-    localStorage.removeItem('token')
-    localStorage.removeItem('refresh')
   }
 
   const getStudents = async () => {
     try {
       const data = await authService.getStudents()
-      state.students = data
+      state.value.students = data
     } catch (error) {
       console.error(error)
     }
@@ -149,8 +146,8 @@ export const useAuth = defineStore('user', () => {
 
   const getUserInfo = async () => {
     try {
-      const data = await authService.getUser(state.user.id)
-      state.user = data
+      const data = await authService.getUser(state.value.user.id)
+      state.value.user = data
     } catch (error) {
       console.error(error)
     }
@@ -168,10 +165,8 @@ export const useAuth = defineStore('user', () => {
 
   const getUserTeam = async () => {
     try {
-      const data = await authService.getUserTeam(state.user.id)
-      console.log(data[0])
-      state.userTeam = data[0]
-      console.log(`userTeam: ${state.userTeam?.id}`)
+      const data = await authService.getUserTeam(state.value.user.id)
+      state.value.userTeam = data[0]
     } catch (error) {
       console.error(error)
       throw error
@@ -181,7 +176,7 @@ export const useAuth = defineStore('user', () => {
   const getTeam = async (id: string) => {
     try {
       const data = await authService.getTeam(id)
-      state.team = data
+      state.value.team = data
     } catch (error) {
       console.error(error)
       throw error
@@ -191,7 +186,7 @@ export const useAuth = defineStore('user', () => {
   const leaveTeam = async (team: any) => {
     try {
       const data = await authService.updateTeam(team.id, team)
-      state.team = data
+      state.value.team = data
     } catch (error) {
       console.error(error)
       throw error
@@ -200,13 +195,13 @@ export const useAuth = defineStore('user', () => {
 
   const createTeam = async (team: any) => {
     const data = await authService.createTeam(team)
-    state.team = data
+    state.value.team = data
   }
 
   const updateTeam = async (team: any) => {
     try {
       const data = await authService.updateTeam(team.id, team)
-      state.team = data
+      state.value.team = data
     } catch (error: any) {
       console.log(error)
       showMessage(error.response.data.error, 'error', 3000, 'top-right', 'light', false)

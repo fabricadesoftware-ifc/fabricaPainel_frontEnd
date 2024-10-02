@@ -38,13 +38,12 @@
           </v-btn>
 
           <v-btn
-            v-else
             color="primary"
             rounded="xl"
             to="/panel"
             variant="flat"
           >
-            <p>{{ authStore.user.name }}</p>
+            <p>{{ authStore.user?.name }}</p>
             <v-icon class="ml-2" color="white">mdi-account</v-icon>
           </v-btn>
         </div>
@@ -151,6 +150,8 @@
   }
 
   onMounted(() => {
+    console.log(authStore.user.name);
+
     layoutStore.getSettings()
   })
   </script>
