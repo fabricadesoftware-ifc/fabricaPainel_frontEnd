@@ -50,7 +50,10 @@
         </div>
       </v-container>
     </v-app-bar>
-    <v-app-bar v-else flat>
+    <v-app-bar
+      v-else
+      flat
+    >
       <v-container>
         <v-row align="center" justify-space-around>
           <v-col>
@@ -110,7 +113,7 @@
         </v-row>
       </v-container>
     </v-app-bar>
-    <v-main>
+    <v-main :class="{'mt-15': isMobile}">
       <slot />
     </v-main>
     <FooterComp />
