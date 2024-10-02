@@ -40,9 +40,11 @@ import { useRoute } from 'vue-router';
           <div>
             <v-btn
               v-for="icon in icons"
-              :key="icon"
+              :key="icon.icon"
               class="mx-4"
-              :icon="icon"
+              :icon="icon.icon"
+              :href="icon.link"
+              target="_blank"
               variant="plain"
             />
           </div>
@@ -62,10 +64,14 @@ import { useRoute } from 'vue-router';
   import router from '@/router/index'
   const teste = router.currentRoute.value.path === '/about'
   const icons = [
-    'mdi-facebook',
-    'mdi-twitter',
-    'mdi-linkedin',
-    'mdi-instagram',
+    {
+      icon: 'mdi-linkedin',
+      link: 'https://www.linkedin.com/company/fabricadesoftware-ifc/'
+    },
+    {
+      icon: 'mdi-instagram',
+      link: 'https://www.instagram.com/fabricadesoftware.ifc/'
+    }
   ]
 
   </script>

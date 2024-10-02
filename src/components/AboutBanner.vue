@@ -35,19 +35,19 @@
         <ul>
           <li>
             Desenvolvedores Frontend:
-            <strong><a href="https://github.com/mateus-lopes">Mateus Lopes Albano</a></strong>,
-            <strong><a href="https://github.com/Caussz">Cauã Vinícius Silva</a></strong>,
-            <strong><a href="https://github.com/jonatasperaza">Jonatas Silva Peraza</a></strong>,
-            <strong><a href="https://github.com/luansilva25">Luan Silva</a></strong>
+            <strong><a href="https://github.com/mateus-lopes" target="_blank">Mateus Lopes Albano</a></strong>,
+            <strong><a href="https://github.com/Caussz" target="_blank">Cauã Vinícius Silva</a></strong>,
+            <strong><a href="https://github.com/jonatasperaza" target="_blank">Jonatas Silva Peraza</a></strong>,
+            <strong><a href="https://github.com/luansilva25" target="_blank">Luan Silva</a></strong>
           </li>
           <li>
             Desenvolvedores Backend:
-            <strong><a href="https://github.com/LucasGabrielAntonete">Lucas Gabriel Antonete</a></strong>,
-            <strong><a href="https://github.com/RafaelBochi">Rafael Bochi Barros</a></strong>,
-            <strong><a href="https://github.com/Hiansdt">Vinícius Nilo Hiansdt</a></strong>
+            <strong><a href="https://github.com/LucasGabrielAntonete" target="_blank">Lucas Gabriel Antonete</a></strong>,
+            <strong><a href="https://github.com/RafaelBochi" target="_blank">Rafael Bochi Barros</a></strong>,
+            <strong><a href="https://github.com/Hiansdt" target="_blank">Vinícius Nilo Hiansdt</a></strong>
           </li>
-          <li>Analista de Requisitos: <strong><a href="/">Prof. Fábio Longo de Moura</a></strong></li>
-          <li>Orientadores do Projeto: Professores <strong><a href="/">Fábio Longo de Moura</a></strong> e <strong><a href="/">Eduardo da Silva</a></strong></li>
+          <li>Analista de Requisitos: <strong><a href="https://github.com/eduardo-da-silva" target="_blank">Prof. Fábio Longo de Moura</a></strong></li>
+          <li>Orientadores do Projeto: Professores <strong><a href="https://github.com/ldmfabio" target="_blank">Fábio Longo de Moura</a></strong> e <strong><a href="/">Eduardo da Silva</a></strong></li>
         </ul>
 
       </div>
