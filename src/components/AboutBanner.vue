@@ -1,0 +1,63 @@
+<script lang="ts" setup>
+</script>
+<template>
+  <v-container class="w-lg-75" fluid>
+    <section class="mt-0 d-flex flex-column justify-center align-center pt-16 mt-16 mb-16">
+      <div>
+        <TitleH1
+          text="Sobre o Projeto"
+        />
+        <h2 class="text-h5 pb-3">Excelência e Imparcialidade</h2>
+        <p class="pb-8">
+          O nosso sistema visa a excelência e imparcialidade na avaliação de trabalhos, o que permite ao sistema garantir uma avaliação diversificada e de alta qualidade. O uso do Painel de Integração da SEPE para a escolha aleatória de alunos orientadores e avaliadores, ajudam a garantir a diversidade nas avaliações. Os avaliados possuem ampla variedade de temas, uma socialização do seu interesse acadêmico. E por fim, no final do processo, todos os participantes podem ter acesso as avaliações de seu trabalho.
+        </p>
+        <h2 class="text-h5 pb-3">Facilidade na Submissão de Trabalhos</h2>
+        <p class="pb-8">
+          Esse site foi criado para facilitar a submissão de trabalhos de ensino, pesquisa e extensão, que caracterize o desenvolvimento colaborativo entre as interações de estudantes, professores e comunidade. Submeta projetos, colabore em diversas áreas e contribua cada vez mais com a ciência e sociedade, dentro e fora do nosso campus.
+        </p>
+        <h2 class="text-h5 pb-3">Semana de Ensino, Pesquisa e Extensão</h2>
+        <p class="pb-8">
+          A Semana de Ensino, Pesquisa e Extensão é um evento central em nossa instituição, que atua na socialização do conhecimento e divulgação de pesquisas regionais e nacionais e conta com a participação de palestrantes convidados, comemorando brasileiros e estrangeiros, comutação de atividades, como congressos, turmas, pequenos cursos, bloggers, conforme a semana acadêmica de Medicina Veterinária, Informática, Licenciaturas e Painel de Integração de Conhecimentos.
+        </p>
+        <h2 class="text-h5 pb-3">Integração e Inovação</h2>
+        <p class="pb-8">
+          Já pessoas, a integração é uma parte central do nosso compromisso com a inovação, educação e desenvolvimento acadêmico. Junte-se a nós e faça parte desta iniciativa e de valorização do conhecimento.
+        </p>
+        <TitleH1
+          text="Equipe de Desenvolvimento"
+        />
+        <h2 class="text-h5 pb-3">Fabrica de Software</h2>
+        <p class="pb-8">
+          O nosso sistema visa a excelência e imparcialidade na avaliação de trabalhos, o que permite ao sistema garantir uma avaliação diversificada e de alta qualidade. O uso do Painel de Integração da SEPE para a escolha aleatória de alunos orientadores e avaliadores, ajudam a garantir a diversidade nas avaliações. Os avaliados possuem ampla variedade de temas, uma socialização do seu interesse acadêmico. E por fim, no final do processo, todos os participantes podem ter acesso as avaliações de seu trabalho.
+        </p>
+
+        <h2 class="text-h5 pb-3">Equipe:</h2>
+        <ul>
+          <li>
+            Desenvolvedores Frontend:
+            <strong><a href="https://github.com/mateus-lopes">Mateus Lopes Albano</a></strong>,
+            <a href="/">Kaun</a>,
+            <a href="https://github.com/jonatasperaza">Jonatas Silva Peraza</a>,
+            <a href="https://github.com/luansilva25">Luan Silva</a>
+          </li>
+          <li>
+            Desenvolvedores Backend:
+            <strong><a href="https://github.com/LucasGabrielAntonete">Lucas Gabriel Antonete</a></strong>,
+            <a href="https://github.com/LucasGabrielAntonete">Rafinha</a>,
+            <a href="https://github.com/LucasGabrielAntonete">Cavalo</a>
+          </li>
+          <li>Analista de Requisitos: <a href="/">Prof Fabio de Longo Moura</a></li>
+          <li>Orientadores do Projeto: Professores <a href="/">Fabio de Longo Moura</a> e <a href="/">Eduardo da Silva</a></li>
+        </ul>
+
+      </div>
+    </section>
+  </v-container>
+</template>
+
+<style scoped>
+a {
+    color: #267A7A;
+    text-decoration: underline;
+}
+</style>

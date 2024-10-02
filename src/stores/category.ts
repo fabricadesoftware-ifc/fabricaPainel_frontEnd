@@ -41,6 +41,7 @@ export const useCategory = defineStore('categories', () => {
     setLoading(true)
     setError(null)
     try {
+      console.log(selectThemes.map(selectTheme => CategoriesService.updateCrossCuttingThemes(state.themes.find(theme => theme.name === selectTheme), authStore.uid)))
       const responses = await Promise.all(
         selectThemes.map(selectTheme => CategoriesService.updateCrossCuttingThemes(state.themes.find(theme => theme.name === selectTheme), authStore.uid))
       )

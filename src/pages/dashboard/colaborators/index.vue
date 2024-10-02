@@ -1,5 +1,5 @@
 <template>
-  <LayoutDashboard>
+  <!-- <LayoutDashboard>
     <v-alert
       closable
       text="Busque por nome, matrícula, cargo, setor ou e-mail e encontre o servidor desejado."
@@ -10,7 +10,8 @@
       Servidores
     </h1>
     <PersonTable />
-  </LayoutDashboard>
+  </LayoutDashboard> -->
+  <IsDev />
 </template>
 
 <script lang="ts" setup>

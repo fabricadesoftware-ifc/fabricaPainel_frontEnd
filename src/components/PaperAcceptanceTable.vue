@@ -15,10 +15,10 @@
   })
 
   const getColor = name => {
-    if (name === 0) return 'blue'
-    if (name === 1) return 'green'
-    if (name === 3) return 'red'
-    return 'bg-gray'
+    if (name === 0) return ''
+    if (name === 1) return 'grey'
+    if (name === 3) return 'blue'
+    return 'green'
   }
 
   const selectedStatus = ref([])

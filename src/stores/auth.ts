@@ -40,7 +40,8 @@ export const useAuth = defineStore('user', () => {
   })
   const students = computed(() => state.students)
   const isOpenForWork = computed(() => state.user.user_type === 'STUDENT' && editionStore.isOpenForWork)
-  const isOpenForRegister = computed(() => state.user.user_type === 'TEACHER' && editionStore.isOpenForWork)
+  const isOpenForRegister = computed(() => state.user.user_type === 'TEACHER' && editionStore.isOpenForRegister)
+  const isOpenForEvaluation = computed(() => state.user.user_type === 'TEACHER' && editionStore.isOpenForEvaluation)
   const isOpenForAprove = computed(() => editionStore.isOpenForAprove)
   const team = computed(() => state.team)
   const userTeam = computed(() => state.userTeam)
@@ -233,6 +234,7 @@ export const useAuth = defineStore('user', () => {
     isOpenForWork,
     isOpenForRegister,
     isOpenForAprove,
+    isOpenForEvaluation,
     students,
     team,
     getStudents,

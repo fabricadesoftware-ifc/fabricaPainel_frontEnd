@@ -4,7 +4,7 @@
       v-model="theme2"
       clearable
       :items="categoryStore.crossCuttingThemes"
-      label="Autocomplete"
+      label="Tema 1"
       rounded="xl"
       variant="outlined"
     />
@@ -12,7 +12,7 @@
       v-model="theme1"
       clearable
       :items="categoryStore.crossCuttingThemes"
-      label="Autocomplete"
+      label="Tema 2"
       rounded="xl"
       variant="outlined"
     />

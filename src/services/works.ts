@@ -17,6 +17,7 @@ class WorkService {
 
   async getWork (id: string) {
     try {
+      console.log(id)
       const { data } = await api.get(`/work/${id}/`)
       return data
     } catch (error) {

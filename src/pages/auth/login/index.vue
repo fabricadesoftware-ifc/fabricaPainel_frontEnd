@@ -24,8 +24,8 @@
 <template>
   <v-container class="w-100 h-100 d-flex justify-center align-center">
     <v-row>
-      <v-col class="mx-auto" cols="12" md="6">
-        <v-card>
+      <v-col class="mx-auto" cols="10" md="6">
+        <v-card variant="text">
           <v-card-title class="text-center">
             <h2 class="text-primary font-weight-bold text-h4">Login</h2>
           </v-card-title>

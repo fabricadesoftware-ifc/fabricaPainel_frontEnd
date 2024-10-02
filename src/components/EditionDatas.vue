@@ -1,8 +1,11 @@
 <script setup>
   import { useEdition } from '@/stores/edition'
-  const editionStore = useEdition()
+  import { useScreen } from '@/composables/composables'
 
-  const formatDate = (date) => {
+  const editionStore = useEdition()
+  const { isMobile } = useScreen()
+
+  const formatDate = date => {
     return new Date(date).toLocaleDateString('pt-BR')
   }
 
@@ -13,7 +16,7 @@
 
 <template>
   <v-row>
-    <v-col class="d-flex flex-column ustify-center" cols="6">
+    <v-col class="d-flex flex-column ustify-center" cols="12" md="6">
       <h2 class="text-primary font-weight-bold text-h4">
         {{ editionStore.currentEdition?.edition_name }} - {{ editionStore.currentEdition?.year }}
         <div class="text-grey text-body-1 mt-2"> Carga Horária: {{ editionStore.currentEdition?.workload }} horas </div>
@@ -60,8 +63,8 @@
         </span>
       </p>
     </v-col>
-    <v-col>
-      <img :alt="editionStore.currentEdition?.logo" class="w-100 rounded-xl" :src="editionStore.currentEdition?.banner.file" />
+    <v-col v-if="!isMobile" cols="6">
+      <img :alt="editionStore.currentEdition?.logo" class="w-100 rounded-xl" :src="editionStore.currentEdition?.banner.file">
     </v-col>
   </v-row>
 </template>

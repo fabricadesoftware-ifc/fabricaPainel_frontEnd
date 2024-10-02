@@ -40,6 +40,12 @@ export const useEdition = defineStore('edition', () => {
     console.log(initialThemeDate <= currentDate && finalSubmissionDate >= currentDate)
     return initialThemeDate <= currentDate && finalSubmissionDate >= currentDate
   })
+  const isOpenForEvaluation = computed(() => {
+    const currentDate = new Date()
+    const initialEvaluationDate = new Date(state.currentEdition?.initial_evaluators_date)
+    const finalEvaluationDate = new Date(state.currentEdition?.final_evaluators_date)
+    return initialEvaluationDate <= currentDate && finalEvaluationDate >= currentDate
+  })
 
   const setLoading = (loading: boolean) => {
     state.loading = loading
@@ -126,6 +132,7 @@ export const useEdition = defineStore('edition', () => {
     isOpenForRegister,
     isOpenForAprove,
     isOpenForGroup,
+    isOpenForEvaluation,
     fetchEditions,
     fetchCurrentEdition,
     createEdition,

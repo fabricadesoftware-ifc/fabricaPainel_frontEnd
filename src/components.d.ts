@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AboutBanner: typeof import('./components/AboutBanner.vue')['default']
     AboutIntrodution: typeof import('./components/AboutIntrodution.vue')['default']
     AboutProgramation: typeof import('./components/AboutProgramation.vue')['default']
     AddUserGroup: typeof import('./components/auth/AddUserGroup.vue')['default']
@@ -19,6 +20,7 @@ declare module 'vue' {
     FooterComp: typeof import('./components/FooterComp.vue')['default']
     FooterComp2: typeof import('./components/FooterComp2.vue')['default']
     InformativeAlert: typeof import('./components/InformativeAlert.vue')['default']
+    IsDev: typeof import('./components/IsDev.vue')['default']
     IssuesPreview: typeof import('./components/IssuesPreview.vue')['default']
     LayoutDashboard: typeof import('./components/LayoutDashboard.vue')['default']
     LayoutDefault: typeof import('./components/LayoutDefault.vue')['default']

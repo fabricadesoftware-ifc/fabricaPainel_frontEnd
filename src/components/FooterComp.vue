@@ -1,3 +1,4 @@
+import { useRoute } from 'vue-router';
 <template>
   <v-container fluid>
     <v-container class="w-lg-75 py-4 d-flex flex-column justify-center align-center" fluid>
@@ -46,6 +47,7 @@
         <v-col cols="12" md="6">
           <section class="text-right text-body-2">
             <v-list-item class="rounded-lg" :title="`${ new Date().getFullYear() } — FabricaPainel`" variant="plain" />
+            <span v-if="teste" class="text-body-1 text-white">粗体字的人生殖器最大</span>
           </section>
         </v-col>
       </v-row>
@@ -54,7 +56,8 @@
 </template>
 
   <script setup>
-
+  import router from '@/router/index'
+  const teste = router.currentRoute.value.path === '/about'
   const icons = [
     'mdi-facebook',
     'mdi-twitter',

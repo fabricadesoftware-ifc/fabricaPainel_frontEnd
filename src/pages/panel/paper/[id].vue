@@ -7,7 +7,7 @@
   import { useRouter } from 'vue-router'
   import jsPDF from 'jspdf'
   import 'jspdf-autotable'
-  import { showMessage } from "@/utils/toastify";
+  import { showMessage } from '@/utils/toastify'
 
   const router = useRouter()
   const work_id = (router.currentRoute.value.params as { id: string }).id
@@ -64,13 +64,13 @@
     assessment.value = await assessmentStore.getAssessmentsByWorkId(work_id)
   })
 
-// eslint-disable-next-line camelcase
+  // eslint-disable-next-line camelcase
 
-const approveWork = async () => {
-  await workStore.approveWork();
-  await workStore.getWork(work_id);
-  showMessage("Trabalho aprovado com sucesso", "success", 2000, "top-right", "auto", true); 
-};
+  const approveWork = async () => {
+    await workStore.approveWork()
+    await workStore.getWork(work_id)
+    showMessage('Trabalho aprovado com sucesso', 'success', 2000, 'top-right', 'auto', true)
+  }
 </script>
 
 <template>
@@ -88,8 +88,8 @@ const approveWork = async () => {
         <InformativeAlert
           v-if="
             workStore.currentWork?.status === 3 &&
-            authStore.isOpenForAprove &&
-            authStore.user?.user_type === 'STUDENT'
+              authStore.isOpenForAprove &&
+              authStore.user?.user_type === 'STUDENT'
           "
           color="warning"
           title="Este Trabalho não cumpriu os requisitos mínimos, verifique seu email"
@@ -99,8 +99,8 @@ const approveWork = async () => {
         <InformativeAlert
           v-if="
             workStore.currentWork?.status === 3 &&
-            authStore.isOpenForAprove &&
-            authStore.user?.user_type === 'TEACHER'
+              authStore.isOpenForAprove &&
+              authStore.user?.user_type === 'TEACHER'
           "
           closable
           color="info"
@@ -111,7 +111,7 @@ const approveWork = async () => {
         <InformativeAlert
           v-if="
             workStore.currentWork?.verification_token !== null &&
-            !authStore.isOpenForAprove
+              !authStore.isOpenForAprove
           "
           color="error"
           title="Este Trabalho não foi Aprovado durante o período de Avaliação"
@@ -206,38 +206,37 @@ const approveWork = async () => {
           >
             Orientadores / Avaliadores
           </v-expansion-panel-title>
-          <v-expansion-panel-text
-            ><v-row>
-              <v-col cols="6">
-                <p>Orientador</p>
-                <v-chip class="mr-2 my-4" color="primary" outlined>
-                  {{ workStore.currentWork?.advisor.name }}
-                </v-chip>
-                <p>Co-Orientadores</p>
-                <v-chip class="mr-2 my-4" color="primary" outlined>
-                  {{ workStore.currentWork?.co_advisor?.name }}
-                </v-chip>
-              </v-col>
-              <v-col cols="6">
-                <p>Avaliadores</p>
-                <v-chip
-                  v-for="professor in workStore.currentWork?.evaluator"
-                  :key="professor.id"
-                  class="mr-2 my-4"
-                  color="primary"
-                  outlined
-                >
-                  {{ professor }}
-                </v-chip>
-              </v-col>
-            </v-row>
+          <v-expansion-panel-text><v-row>
+            <v-col cols="6">
+              <p>Orientador</p>
+              <v-chip class="mr-2 my-4" color="primary" outlined>
+                {{ workStore.currentWork?.advisor.name }}
+              </v-chip>
+              <p>Co-Orientadores</p>
+              <v-chip class="mr-2 my-4" color="primary" outlined>
+                {{ workStore.currentWork?.co_advisor?.name }}
+              </v-chip>
+            </v-col>
+            <v-col cols="6">
+              <p>Avaliadores</p>
+              <v-chip
+                v-for="professor in workStore.currentWork?.evaluator"
+                :key="professor.id"
+                class="mr-2 my-4"
+                color="primary"
+                outlined
+              >
+                {{ professor }}
+              </v-chip>
+            </v-col>
+          </v-row>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
       <v-row
         v-if="
           authStore.isOpenForAprove &&
-          workStore.currentWork?.verification_token !== null
+            workStore.currentWork?.verification_token !== null
         "
         class="mt-8 ga-2"
         justify="end"
@@ -252,8 +251,7 @@ const approveWork = async () => {
             rounded="xl"
             variant="flat"
             @click="dialogReject = true"
-            >Precisa de mudanças</v-btn
-          >
+          >Precisa de mudanças</v-btn>
 
           <v-dialog v-model="dialogReject" max-width="500px">
             <v-card>
@@ -268,12 +266,16 @@ const approveWork = async () => {
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="blue darken-1" text @click="dialogReject = false"
-                  >Cancelar</v-btn
-                >
-                <v-btn color="blue darken-1" text @click="submitFeedback()"
-                  >Enviar</v-btn
-                >
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="dialogReject = false"
+                >Cancelar</v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="submitFeedback()"
+                >Enviar</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -287,14 +289,13 @@ const approveWork = async () => {
             rounded="xl"
             variant="flat"
             @click="approveWork()"
-            >Aprovar</v-btn
-          >
+          >Aprovar</v-btn>
         </v-col>
       </v-row>
       <v-row class="mt-8" justify="end" no-gutters>
         <v-col cols="12">
           <v-btn
-          v-if="authStore.user?.user_type != 'STUDENT'"
+            v-if="authStore.isOpenForEvaluation"
             block
             class="py-6"
             color="info"
@@ -302,22 +303,22 @@ const approveWork = async () => {
             variant="flat"
             @click="dialogGrade = true"
           >Dar Nota</v-btn>
-          <v-btn v-else
+          <!-- <v-btn
+            v-if="assessment.length > 0"
             block
             class="py-6"
             color="info"
             rounded="xl"
             variant="flat"
             @click="generatePDF()"
-          >Ver nota</v-btn>
-
+          >Ver nota</v-btn> -->
           <v-dialog v-model="dialogGrade" max-width="600px">
             <v-card>
               <v-card-title class="headline font-weight-bold">
                 <span
                   v-if="
                     authStore.user.id === workStore.currentWork?.advisor.id ||
-                    authStore.user.id === workStore.currentWork?.co_advisor.id
+                      authStore.user.id === workStore.currentWork?.co_advisor.id
                   "
                 >
                   Notas dos Alunos
@@ -331,7 +332,7 @@ const approveWork = async () => {
                       v-if="
                         authStore.user.id ===
                           workStore.currentWork?.advisor.id ||
-                        authStore.user.id ===
+                          authStore.user.id ===
                           workStore.currentWork?.co_advisor.id
                       "
                       cols="12"
@@ -372,12 +373,16 @@ const approveWork = async () => {
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="blue darken-1" text @click="dialogGrade = false"
-                  >Cancelar</v-btn
-                >
-                <v-btn color="blue darken-1" text @click="submitGrades()"
-                  >Enviar</v-btn
-                >
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="dialogGrade = false"
+                >Cancelar</v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="submitGrades()"
+                >Enviar</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>

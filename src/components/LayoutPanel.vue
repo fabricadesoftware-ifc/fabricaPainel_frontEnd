@@ -54,35 +54,11 @@
     </v-app-bar>
     <v-app-bar v-else flat>
       <v-container>
-        <v-row align="center" justify-space-around>
-          <v-col>
+        <v-row align="center" class="pa-6 mt-4" justify-space-around>
+          <v-col cols="4" md="6">
             <img alt="" src="@/assets/logo.png">
           </v-col>
-          <v-space />
-          <v-col class="d-flex justify-end">
-            <div><v-menu activator="parent">
-              <template #activator="{ on }">
-                <v-btn
-                  v-icon
-                  color="primary"
-                  rounded="xl"
-                  variant="flat"
-                  v-on="on"
-                >
-                  <v-icon>mdi-menu</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-for="link in layoutStore.navbar"
-                  :key="link.text"
-                  :color="link.value == layoutStore.currentPage ? 'primary' : ''"
-                  @click="router.push(link.value)"
-                >
-                  <v-list-item-title>{{ link.text }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu></div>
+          <v-col class="d-flex justify-end" cols="8" md="6">
             <div>
               <v-btn
                 v-if="!authStore.isLogged"
@@ -98,16 +74,16 @@
 
               <v-btn
                 v-else
-                class="d-flex ml-4"
-                color="primary"
+                class="ml-2"
+                color="red"
                 rounded="xl"
-                variant="flat"
+                variant="outlined"
                 @click="logout"
               >
                 <p>{{ authStore.user.name }}</p>
-                <v-icon color="red">mdi-logout</v-icon>
-              </v-btn></div>
-
+                <v-icon class="ml-2" color="red">mdi-logout</v-icon>
+              </v-btn>
+            </div>
           </v-col>
         </v-row>
       </v-container>
@@ -115,15 +91,15 @@
     <v-main>
       <slot />
     </v-main>
-    <footer class="pt-16 pb-2">
+    <footer class="pt-16 pb-2 px-6">
       <v-container>
         <v-row>
-          <v-col class="d-flex justify-start align-center" cols="10">
+          <v-col class="d-flex justify-start align-center" cols="6" md="10">
             <a href="https://fabricadesoftware.ifc.edu.br/">
               <img class="h-8" src="@/assets/footer_logos.png">
             </a>
           </v-col>
-          <v-col class="d-flex justify-end align-center">
+          <v-col class="d-flex justify-end align-center" cols="6" md="2">
             <v-btn
               class="border border-primary"
               color="info"
