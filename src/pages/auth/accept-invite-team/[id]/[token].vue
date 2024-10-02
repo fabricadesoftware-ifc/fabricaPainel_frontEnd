@@ -25,6 +25,9 @@
       send.value = true
     } catch (error) {
       console.log(error)
+      if (error.status == 404) {
+        showMessage('Grupo não encontrado.', 'error', 3000, 'top-right', 'light', false)
+      }
     }
     loading.value = false
   }
@@ -52,7 +55,13 @@
 
   onMounted(async () => {
     loading.value = true
-    await authStore.getTeam(route.params.id)
+    try {
+      await authStore.getTeam(route.params.id)
+    } catch (error) {
+      console.log(error)
+      showMessage('Grupo não encontrado.', 'error', 3000, 'top-right', 'light', false)
+      loading.value = false
+    }
     loading.value = false
   })
 </script>

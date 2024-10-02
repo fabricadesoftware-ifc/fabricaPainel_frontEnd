@@ -3,7 +3,7 @@ import { useAuth } from "@/stores/auth";
 import { useEdition } from "@/stores/edition";
 import { showMessage } from "@/utils/toastify";
 
-const emits = defineEmits(["changeLoading"]);
+const emits = defineEmits(["create-team"]);
 
 const authStore = useAuth();
 const editionStore = useEdition();
@@ -17,32 +17,32 @@ const filteredStudents = computed(() => {
   });
 });
 
-async function createTeam() {
-  emits("changeLoading", true);
+function createTeam() {
+  if (selectedStudents.value.length < 4) {
+    showMessage("Você precisa de pelo menos 4 membros para criar um grupo", "error", 3000, "top-right", 'light', false);
+    return
+  }
   try {
-    const newTeam = {
-      team_members: selectedStudents.value.map((s) => s.id),
-      sender_id: authStore.user.id,
-    };
-    await authStore.createTeam(newTeam);
-    window.location.reload();
+    emits("create-team", selectedStudents.value);
+    selectedStudents.value = [authStore.user];
   } catch (error) {
     console.log(error);
-    showMessage(
-      error.response.data.error,
-      "error",
-      3000,
-      "top-right",
-      "light",
-      false
-    );
   }
-  emits("changeLoading", false);
+}
+
+function addStudent(student) {
+  if (selectedStudents.value.length >= 6) {
+    showMessage("Você pode adicionar no maximo 6 membros", "error", 3000, "top-right", 'light', false);
+    return
+  }
+  selectedStudents.value.push(student);
 }
 
 onMounted(async () => {
   await authStore.getStudents();
   await editionStore.fetchCurrentEdition();
+  console.log(authStore.user)
+  await authStore.getUserInfo()
 });
 </script>
 
@@ -71,7 +71,6 @@ onMounted(async () => {
         :items="filteredStudents"
         label="Pesquisar alunos"
         variant="outlined"
-        @update:model-value="selectedStudents.push(student)"
       >
         <template #item="{ item }">
           <v-hover>
@@ -82,7 +81,7 @@ onMounted(async () => {
                 :class="{ 'bg-grey-lighten-2': isHovering }"
                 :subtitle="item.raw.email"
                 :title="item.title"
-                @click="selectedStudents.push(item.raw)"
+                @click="addStudent(item.raw)"
               />
             </template>
           </v-hover>

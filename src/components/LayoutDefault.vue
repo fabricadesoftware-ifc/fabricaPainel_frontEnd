@@ -2,7 +2,12 @@
   <v-app id="inspire">
     <v-app-bar v-if="!isMobile" class="py-4" flat>
       <v-container class="w-lg-75 d-flex align-center justify-center" fluid>
-        <img alt="" class="pr-8 cursor-pointer" src="@/assets/logo.png" @click="$router.push('/')">
+        <img
+          alt=""
+          class="pr-8 cursor-pointer"
+          src="@/assets/logo.png"
+          @click="$router.push('/')"
+        />
         <v-btn
           v-for="link in layoutStore.navbar"
           :key="link.text"
@@ -42,47 +47,58 @@
             rounded="xl"
             variant="outlined"
             to="/panel"
+            @click="logout"
           >
-            <p>{{ authStore.user?.name }}</p>
-            <v-icon class="ml-2" color="red">mdi-logout</v-icon>
+            <p class="d-inline-block text-truncate" style="max-width: 100px">
+              {{ authStore.user.name }}
+            </p>
+            <v-icon color="red">mdi-logout</v-icon>
           </v-btn>
         </div>
       </v-container>
     </v-app-bar>
-    <v-app-bar
-      v-else
-      flat
-    >
+    <v-app-bar v-else flat>
       <v-container>
         <v-row align="center" justify-space-around>
           <v-col>
-            <img alt="" src="@/assets/logo.png">
+            <img alt="" src="@/assets/logo.png" />
           </v-col>
           <v-space />
           <v-col class="d-flex justify-end">
-            <div><v-menu activator="parent">
-              <template #activator="{ on }">
-                <v-btn
-                  v-icon
-                  color="primary"
-                  rounded="xl"
-                  variant="flat"
-                  v-on="on"
-                >
-                  <v-icon>mdi-menu</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-for="link in layoutStore.navbar"
-                  :key="link.text"
-                  :color="link.value == layoutStore.currentPage ? 'primary' : ''"
-                  @click="router.push(link.value)"
-                >
-                  <v-list-item-title>{{ link.text }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu></div>
+            <div>
+              <v-menu activator="parent">
+                <template #activator="{ on }">
+                  <v-btn
+                    v-icon
+                    color="primary"
+                    rounded="xl"
+                    variant="flat"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-menu</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                    v-for="link in layoutStore.navbar"
+                    :key="link.text"
+                    :color="
+                      link.value == layoutStore.currentPage ? 'primary' : ''
+                    "
+                    @click="router.push(link.value)"
+                  >
+                    <v-list-item-title>{{ link.text }}</v-list-item-title>
+                  </v-list-item>
+
+                  <v-list-item
+                    v-if="authStore.user.user_type == 'STUDENT'"
+                    @click="router.push('/auth/my-group')"
+                  >
+                    <v-list-item-title>Meu Grupo</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </div>
             <div>
               <v-btn
                 v-if="!authStore.isLogged"
@@ -106,13 +122,13 @@
               >
                 <p>{{ authStore.user.name }}</p>
                 <v-icon color="red">mdi-logout</v-icon>
-              </v-btn></div>
-
+              </v-btn>
+            </div>
           </v-col>
         </v-row>
       </v-container>
     </v-app-bar>
-    <v-main :class="{'mt-15': isMobile}">
+    <v-main :class="{ 'mt-15': isMobile }">
       <slot />
     </v-main>
     <FooterComp />
@@ -120,38 +136,38 @@
 </template>
 
 <script setup>
-  import { uselayout } from '@/stores/app'
-  import { onMounted } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { useAuth } from '@/stores/auth'
-  import { showMessage } from '@/utils/toastify'
-  import { useScreen } from '@/composables/composables'
+import { uselayout } from "@/stores/app";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useAuth } from "@/stores/auth";
+import { showMessage } from "@/utils/toastify";
+import { useScreen } from "@/composables/composables";
 
-  const { isMobile } = useScreen()
-  const router = useRouter()
-  const layoutStore = uselayout()
-  const authStore = useAuth()
+const { isMobile } = useScreen();
+const router = useRouter();
+const layoutStore = uselayout();
+const authStore = useAuth();
 
-  const login = () => {
-    router.push('/auth/login')
-  }
+const login = () => {
+  router.push("/auth/login");
+};
 
-  const logout = () => {
-    authStore.logout()
-    showMessage(
-      'Deslogado com sucesso',
-      'success',
-      1500,
-      'top-right',
-      'auto',
-      false
-    )
-    router.push('/')
-  }
+const logout = () => {
+  authStore.logout();
+  showMessage(
+    "Deslogado com sucesso",
+    "success",
+    1500,
+    "top-right",
+    "auto",
+    false
+  );
+  router.push("/");
+};
 
-  onMounted(() => {
-    console.log(authStore.user.name);
+onMounted(() => {
+  console.log(authStore.user.name);
 
-    layoutStore.getSettings()
-  })
-  </script>
+  layoutStore.getSettings();
+});
+</script>

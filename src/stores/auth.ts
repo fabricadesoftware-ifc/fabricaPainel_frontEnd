@@ -4,7 +4,6 @@ import { jwtDecode } from 'jwt-decode'
 import authService from '@/services/auth'
 import { useEdition } from './edition'
 import { showMessage } from '@/utils/toastify'
-import { useRoute } from 'vue-router'
 import {useStorage} from '@vueuse/core'
 
 export const useAuth = defineStore('user', () => {
@@ -15,18 +14,17 @@ export const useAuth = defineStore('user', () => {
       name: '',
       email: '',
       user_type: '',
-      team: [],
+      team: null
     },
     students: [] as Array<{ id: string; name: string }>,
     token: '',
     refresh: '',
     resetPasswordToken: '',
-    team: {},
+    team: null,
     userTeam: {},
   })
 
   const editionStore = useEdition()
-  const router = useRoute()
 
   const isLogged = computed(() => state.value.isLogged)
   const user = computed(() => state.value.user)
@@ -131,7 +129,7 @@ export const useAuth = defineStore('user', () => {
       name: '',
       email: '',
       user_type: '',
-      team: [],
+      team: null
     }
   }
 
@@ -185,23 +183,37 @@ export const useAuth = defineStore('user', () => {
 
   const leaveTeam = async (team: any) => {
     try {
-      const data = await authService.updateTeam(team.id, team)
-      state.value.team = data
+      await authService.updateTeam(team.id, team)
+      state.value.team = null
+      state.value.user.team = null
     } catch (error) {
       console.error(error)
+      showMessage(
+        "Erro ao sair do grupo.",
+        "error",
+        3000,
+        "top-right",
+        "light",
+        false
+      );
       throw error
     }
   }
 
   const createTeam = async (team: any) => {
-    const data = await authService.createTeam(team)
-    state.value.team = data
+    try {
+      const data = await authService.createTeam(team)
+      await getTeam(data.id)
+    } catch (error: any) {
+      showMessage(error.response.data.error, 'error', 3000, 'top-right', 'light', false)
+      throw error
+    }
   }
 
   const updateTeam = async (team: any) => {
     try {
-      const data = await authService.updateTeam(team.id, team)
-      state.value.team = data
+      await authService.updateTeam(team.id, team)
+      await getTeam(team.id)
     } catch (error: any) {
       console.log(error)
       showMessage(error.response.data.error, 'error', 3000, 'top-right', 'light', false)
@@ -212,8 +224,26 @@ export const useAuth = defineStore('user', () => {
   const resendInvite = async (data: any) => {
     try {
       await authService.resendInvite(data)
-    } catch (error) {
+      await getTeam(data.team_id)
+      showMessage(
+        "Convite reenviado.",
+        "success",
+        3000,
+        "top-right",
+        "light",
+        false
+      );
+    }
+    catch (error) {
       console.error(error)
+      showMessage(
+        "Erro ao reenviar convite.",
+        "error",
+        3000,
+        "top-right",
+        "light",
+        false
+      );
       throw error
     }
   }

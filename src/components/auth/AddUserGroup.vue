@@ -4,7 +4,7 @@ import { showMessage } from "@/utils/toastify";
 
 const authStore = useAuth();
 
-const emits = defineEmits(["update:loading"]);
+const emits = defineEmits(["add-members"]);
 
 const student = ref(null);
 const selectedStudents = ref([]);
@@ -21,28 +21,43 @@ const filteredStudents = computed(() => {
     ...user_pending_ids,
     ...selected_ids,
   ];
-  console.log(user_ids);
 
   return authStore.students.filter((s) => {
     return !user_ids.some((st) => st === s.id);
   });
 });
 
-async function addMembers() {
-  try {
-    const newTeam = {
-      new_members: selectedStudents.value.map((s) => s.id),
-      sender_id: authStore.user.id,
-      action: "add",
-      id: authStore.team.id,
-    };
-    await authStore.updateTeam(newTeam);
-    selectedStudents.value = [];
-    window.location.reload();
-  } catch (error) {
-    console.log(error);
-    showMessage("Erro ao adicionar membros.", "error", 3000, "top-right", "light", false);
+function addMembers() {
+  emits("add-members", selectedStudents.value);
+  selectedStudents.value = [];
+}
+
+function addStudent(student) {
+  const users_team_ids = authStore.team?.team_members?.map((tm) => tm.id) || [];
+  const user_reject_ids =
+    authStore.team?.reject_tokens?.map((tm) => tm.user.id) || [];
+  const user_pending_ids =
+    authStore.team?.tokens?.map((tm) => tm.user.id) || [];
+  const selected_ids = selectedStudents.value.map((s) => s.id) || [];
+  const user_ids = [
+    ...users_team_ids,
+    ...user_reject_ids,
+    ...user_pending_ids,
+    ...selected_ids,
+  ];
+
+  if (6 - user_ids.length < 1) {
+    showMessage(
+      "Você pode adicionar no máximo 6 membros",
+      "error",
+      3000,
+      "top-right",
+      "light",
+      false
+    );
+    return;
   }
+  selectedStudents.value.push(student);
 }
 
 onMounted(async () => {
@@ -74,7 +89,6 @@ onMounted(async () => {
           :items="filteredStudents"
           label="Pesquisar alunos"
           variant="outlined"
-          @update:model-value="selectedStudents.push(student)"
         >
           <template #item="{ item }">
             <v-hover>
@@ -85,7 +99,7 @@ onMounted(async () => {
                   :class="{ 'bg-grey-lighten-2': isHovering }"
                   :subtitle="item.raw.email"
                   :title="item.title"
-                  @click="selectedStudents.push(item.raw)"
+                  @click="addStudent(item.raw)"
                 />
               </template>
             </v-hover>

@@ -64,7 +64,7 @@
       </p>
     </v-col>
     <v-col v-if="!isMobile" cols="6">
-      <img :alt="editionStore.currentEdition?.logo" class="w-100 rounded-xl" :src="editionStore.currentEdition?.banner.file">
+      <img :alt="editionStore.currentEdition?.logo" class="w-100 rounded-xl" :src="editionStore.currentEdition?.banner?.file">
     </v-col>
   </v-row>
 </template>

@@ -7,6 +7,26 @@ const authStore = useAuth();
 const editionStore = useEdition();
 const loading = ref(false);
 
+const lengthMembers = computed(() => {
+  return authStore.team?.accept_tokens.length + authStore.team?.tokens.length + authStore.team?.reject_tokens.length;
+});
+
+async function createTeam(selectedStudents) {
+  loading.value = true;
+  try {
+    const newTeam = {
+      team_members: selectedStudents.map((s) => s.id),
+      sender_id: authStore.user.id,
+    };
+    await authStore.createTeam(newTeam);
+  } catch (error) {
+    console.log(error);
+    loading.value = false;
+    throw error;
+  }
+  loading.value = false;
+}
+
 async function leaveTeam() {
   loading.value = true;
   try {
@@ -17,11 +37,24 @@ async function leaveTeam() {
     };
 
     await authStore.leaveTeam(newTeam);
-
-    window.location.reload();
   } catch (error) {
     console.log(error);
-    showMessage("Erro ao sair do grupo.", "error", 3000, "top-right", "light", false);
+  }
+  loading.value = false;
+}
+
+async function addMembers(selectedStudents) {
+  loading.value = true;
+  try {
+    const newTeam = {
+      new_members: selectedStudents.map((s) => s.id),
+      sender_id: authStore.user.id,
+      action: "add",
+      id: authStore.team.id,
+    };
+    await authStore.updateTeam(newTeam);
+  } catch (error) {
+    console.log(error);
   }
   loading.value = false;
 }
@@ -34,10 +67,8 @@ async function resendInvite(token, userId) {
       team_id: authStore.team.id,
     };
     await authStore.resendInvite(newTeam);
-    showMessage("Convite reenviado.", "success", 3000, "top-right", "light", false);
   } catch (error) {
     console.log(error);
-    showMessage("Erro ao reenviar convite.", "error", 3000, "top-right", "light", false);
   }
 }
 
@@ -45,30 +76,35 @@ async function removeUser(user_id) {
   try {
     const data = {
       user_id: user_id,
-      action: 'remove',
+      action: "remove",
       id: authStore.team.id,
-    }
-    await authStore.updateTeam(data)
+    };
+    await authStore.updateTeam(data);
     if (authStore.user.team.length) {
-    await authStore.getTeam(authStore.user.team[0]);
+      await authStore.getTeam(authStore.user.team[0]);
     }
   } catch (error) {
     console.log(error);
-    showMessage("Erro ao remover usuário.", "error", 3000, "top-right", "light", false);
+    showMessage(
+      "Erro ao remover usuário.",
+      "error",
+      3000,
+      "top-right",
+      "light",
+      false
+    );
   }
-}
-
-async function addUser(user_id) {
-  console.log('safa')
 }
 
 onMounted(async () => {
   loading.value = true;
-  if (authStore.user.team.length) {
+  await authStore.getUserInfo();
+  console.log(authStore.user);
+  if (authStore.user?.team?.length) {
     await authStore.getTeam(authStore.user.team[0]);
   }
-  await authStore.getStudents()
-  await editionStore.fetchCurrentEdition()
+  await authStore.getStudents();
+  await editionStore.fetchCurrentEdition();
   loading.value = false;
 });
 </script>
@@ -87,7 +123,7 @@ onMounted(async () => {
     </v-avatar>
 
     <v-sheet
-      v-if="authStore.user.team.length > 0"
+      v-if="authStore.team"
       class="d-flex flex-column ga-2 pa-8 rounded-xl border"
       max-width="700px"
       min-width="400px"
@@ -95,14 +131,17 @@ onMounted(async () => {
     >
       <p class="text-h4">Meu grupo</p>
       <v-divider />
-
-      <add-user-group v-if="editionStore.isOpenForGroup"@update:loading="(value) => loading = value" />
+      <add-user-group
+        v-if="editionStore.isOpenForGroup && lengthMembers < 6"
+        @add-members="addMembers"
+      />
 
       <v-list class="bg-transparent d-flex flex-column ga-5">
         <user-list
-          v-for="{ user } in authStore.team.accept_tokens"
+          v-for="{ user } in authStore.team?.accept_tokens"
           :key="user.id"
           :user="user"
+          :my-user="user.id == authStore.user.id"
         >
           <template #status>
             <v-chip
@@ -175,7 +214,11 @@ onMounted(async () => {
         </user-list>
       </v-list>
 
-      <div class="w-100" style="max-width: 700px; min-width: 300px" v-if="editionStore.isOpenForGroup">
+      <div
+        class="w-100"
+        style="max-width: 700px; min-width: 300px"
+        v-if="editionStore.isOpenForGroup"
+      >
         <v-btn
           block
           class="rounded-lg"
@@ -188,6 +231,6 @@ onMounted(async () => {
       </div>
     </v-sheet>
 
-    <create-group v-else @change-loading="(value) => loading = value" />
+    <create-group v-else @create-team="createTeam" />
   </v-main>
 </template>
