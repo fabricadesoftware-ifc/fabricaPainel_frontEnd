@@ -38,7 +38,6 @@
       const token = authStore.team.tokens.find(
         t => t.token === route.params.token
       )
-      console.log(token)
       const team = {
         action: 'reject',
         token_id: token.id,

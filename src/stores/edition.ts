@@ -36,8 +36,6 @@ export const useEdition = defineStore('edition', () => {
     const currentDate = new Date()
     const initialThemeDate = new Date(state.currentEdition?.initial_registration_theme_date)
     const finalSubmissionDate = new Date(state.currentEdition?.final_submission_date)
-    console.log(initialThemeDate, currentDate, finalSubmissionDate)
-    console.log(initialThemeDate <= currentDate && finalSubmissionDate >= currentDate)
     return initialThemeDate <= currentDate && finalSubmissionDate >= currentDate
   })
   const isOpenForEvaluation = computed(() => {
@@ -82,7 +80,6 @@ export const useEdition = defineStore('edition', () => {
   }
 
   const createEdition = async (editionData: IEdition) => {
-    console.log(editionData)
     setLoading(true)
     setError(null)
     try {

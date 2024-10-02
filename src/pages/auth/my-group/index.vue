@@ -99,7 +99,6 @@ async function removeUser(user_id) {
 onMounted(async () => {
   loading.value = true;
   await authStore.getUserInfo();
-  console.log(authStore.user);
   if (authStore.user?.team?.length) {
     await authStore.getTeam(authStore.user.team[0]);
   }

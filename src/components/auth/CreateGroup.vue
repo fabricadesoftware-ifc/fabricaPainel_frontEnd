@@ -41,7 +41,6 @@ function addStudent(student) {
 onMounted(async () => {
   await authStore.getStudents();
   await editionStore.fetchCurrentEdition();
-  console.log(authStore.user)
   await authStore.getUserInfo()
 });
 </script>

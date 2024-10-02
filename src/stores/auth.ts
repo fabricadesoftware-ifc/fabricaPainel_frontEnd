@@ -217,7 +217,6 @@ export const useAuth = defineStore('user', () => {
       await authService.updateTeam(team.id, team)
       await getTeam(team.id)
     } catch (error: any) {
-      console.log(error)
       showMessage(error.response.data.error, 'error', 3000, 'top-right', 'light', false)
       throw error
     }
