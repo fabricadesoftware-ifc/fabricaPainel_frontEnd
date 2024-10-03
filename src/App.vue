@@ -21,8 +21,13 @@
 <script lang="ts" setup>
   import { onMounted } from 'vue'
   import { useAuth } from './stores/auth'
+  import { globalRouter } from "./plugins/globalRouter";
+  import { useRouter } from 'vue-router'
 
+  const router = useRouter()
   const authStore = useAuth()
+
+  globalRouter.router = router
 
   onMounted(async () => {
     await authStore.checkAuth()

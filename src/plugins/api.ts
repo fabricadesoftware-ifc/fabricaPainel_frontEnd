@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useAuth } from '@/stores/auth'
-import { useRouter } from 'vue-router'
+import { globalRouter } from "./globalRouter";
 
 const api = axios.create({
   baseURL: 'http://127.0.0.1:8000/api',
@@ -22,10 +22,8 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   response => response,
   error => {
-    const router = useRouter()
-
-    if (error.response?.status === 401) {
-      router.push('/auth/login/')
+    if (error.response?.status == 401) {
+      globalRouter.router?.push('/auth/login/')
     }
     return Promise.reject(error)
   }
