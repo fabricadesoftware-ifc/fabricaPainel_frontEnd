@@ -8,22 +8,31 @@ const emits = defineEmits(["add-members"]);
 
 const student = ref(null);
 const selectedStudents = ref([]);
-const filteredStudents = computed(() => {
-  const users_team_ids = authStore.team?.team_members?.map((tm) => tm.id) || [];
-  const user_reject_ids =
-    authStore.team?.reject_tokens?.map((tm) => tm.user.id) || [];
-  const user_pending_ids =
-    authStore.team?.tokens?.map((tm) => tm.user.id) || [];
-  const selected_ids = selectedStudents.value.map((s) => s.id) || [];
-  const user_ids = [
-    ...users_team_ids,
-    ...user_reject_ids,
-    ...user_pending_ids,
-    ...selected_ids,
-  ];
 
+const users = computed(() => {
+  const users_team = authStore.team?.team_members || [];
+  const user_reject =
+    authStore.team?.reject_tokens?.map((tm) => tm.user) || [];
+  const user_pending =
+    authStore.team?.tokens?.map((tm) => tm.user) || [];
+  const selected = selectedStudents.value || [];
+  console.log([
+    ...users_team,
+    ...user_reject,
+    ...user_pending,
+    ...selected,
+  ])
+  return [
+    ...users_team,
+    ...user_reject,
+    ...user_pending,
+    ...selected,
+  ];
+})
+
+const filteredStudents = computed(() => {
   return authStore.students.filter((s) => {
-    return !user_ids.some((st) => st === s.id);
+    return !users.value.map((u) => u.id).some((st) => st === s.id);
   });
 });
 
@@ -33,20 +42,7 @@ function addMembers() {
 }
 
 function addStudent(student) {
-  const users_team_ids = authStore.team?.team_members?.map((tm) => tm.id) || [];
-  const user_reject_ids =
-    authStore.team?.reject_tokens?.map((tm) => tm.user.id) || [];
-  const user_pending_ids =
-    authStore.team?.tokens?.map((tm) => tm.user.id) || [];
-  const selected_ids = selectedStudents.value.map((s) => s.id) || [];
-  const user_ids = [
-    ...users_team_ids,
-    ...user_reject_ids,
-    ...user_pending_ids,
-    ...selected_ids,
-  ];
-
-  if (6 - user_ids.length < 1) {
+  if (6 - users.value.length < 1) {
     showMessage(
       "Você pode adicionar no máximo 6 membros",
       "error",
@@ -58,6 +54,14 @@ function addStudent(student) {
     return;
   }
   selectedStudents.value.push(student);
+}
+
+function customFilter(item, queryText, itemText) {
+  const search = queryText.toLowerCase();
+  return (
+    String(item.name).toLowerCase().includes(search) ||
+    String(item.email).toLowerCase().includes(search)
+  );
 }
 
 onMounted(async () => {
@@ -80,31 +84,12 @@ onMounted(async () => {
 
         <v-divider class="my-4" />
 
-        <v-autocomplete
-          v-model="student"
-          density="comfortable"
-          hide-details="auto"
-          item-title="name"
-          item-value="id"
-          :items="filteredStudents"
-          label="Pesquisar alunos"
-          variant="outlined"
-        >
-          <template #item="{ item }">
-            <v-hover>
-              <template #default="{ props, isHovering }">
-                <v-list-item
-                  v-bind="props"
-                  class="pa-2 cursor-pointer"
-                  :class="{ 'bg-grey-lighten-2': isHovering }"
-                  :subtitle="item.raw.email"
-                  :title="item.title"
-                  @click="addStudent(item.raw)"
-                />
-              </template>
-            </v-hover>
-          </template>
-        </v-autocomplete>
+        <user-selected
+          label="Aluno"
+          user-type="STUDENT"
+          :selected-users="users"
+          @add-user="addStudent"
+        />
 
         <v-list class="w-100" style="height: 40vh">
           <v-list-item v-for="s in selectedStudents" :key="s.id" class="w-100">
@@ -146,7 +131,10 @@ onMounted(async () => {
           </v-list-item>
         </v-list>
 
-        <v-btn color="primary" @click="() => (addMembers(), isActive.value = false)">
+        <v-btn
+          color="primary"
+          @click="() => (addMembers(), (isActive.value = false))"
+        >
           Adicionar Membros
         </v-btn>
       </v-card>

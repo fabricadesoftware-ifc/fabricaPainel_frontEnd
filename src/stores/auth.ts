@@ -46,6 +46,7 @@ export const useAuth = defineStore('user', () => {
   const team = computed(() => state.value.team)
   const userTeam = computed(() => state.value.userTeam)
   const userThemes = computed(() => state.value.userThemes)
+  const focusedInput = ref(false)
 
   const checkAuth = async () => {
     try {
@@ -133,6 +134,8 @@ export const useAuth = defineStore('user', () => {
       user_type: '',
       team: null
     }
+    state.value.team = null
+    state.value.userTeam = {}
   }
 
   const getStudents = async () => {
@@ -259,6 +262,17 @@ export const useAuth = defineStore('user', () => {
     }
   }
 
+  const searchUsers = async (search: string, type: string) => {
+    try {
+      const data = await authService.searchUsers(search, type)
+      return data
+    }
+    catch (error) {
+      console.error(error)
+      return []
+    }
+  }
+
   return {
     isLogged,
     user,
@@ -291,5 +305,6 @@ export const useAuth = defineStore('user', () => {
     getUserTeam,
     getUserThemes,
     userThemes,
+    searchUsers,
   }
 })

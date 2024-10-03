@@ -123,6 +123,11 @@ class AuthService {
       this.handleError(error, 'get user themes')
     }
   }
+
+  async searchUsers (search: string, type: string) {
+    const { data } = await api.get(`users/?search=${search}&type=${type}`)
+    return data
+  }
 }
 
 export default new AuthService()

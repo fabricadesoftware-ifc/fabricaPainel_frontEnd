@@ -9,18 +9,18 @@ const authStore = useAuth();
 const editionStore = useEdition();
 
 const selectedStudents = ref([authStore.user]);
-const student = ref(null);
-
-const filteredStudents = computed(() => {
-  return authStore.students.filter((s) => {
-    return !selectedStudents.value.some((st) => st.id === s.id);
-  });
-});
 
 function createTeam() {
   if (selectedStudents.value.length < 4) {
-    showMessage("Você precisa de pelo menos 4 membros para criar um grupo", "error", 3000, "top-right", 'light', false);
-    return
+    showMessage(
+      "Você precisa de pelo menos 4 membros para criar um grupo",
+      "error",
+      3000,
+      "top-right",
+      "light",
+      false
+    );
+    return;
   }
   try {
     emits("create-team", selectedStudents.value);
@@ -32,8 +32,15 @@ function createTeam() {
 
 function addStudent(student) {
   if (selectedStudents.value.length >= 6) {
-    showMessage("Você pode adicionar no maximo 6 membros", "error", 3000, "top-right", 'light', false);
-    return
+    showMessage(
+      "Você pode adicionar no maximo 6 membros",
+      "error",
+      3000,
+      "top-right",
+      "light",
+      false
+    );
+    return;
   }
   selectedStudents.value.push(student);
 }
@@ -41,7 +48,7 @@ function addStudent(student) {
 onMounted(async () => {
   await authStore.getStudents();
   await editionStore.fetchCurrentEdition();
-  await authStore.getUserInfo()
+  await authStore.getUserInfo();
 });
 </script>
 
@@ -61,31 +68,13 @@ onMounted(async () => {
     <v-divider class="w-100" />
 
     <div class="w-50" style="max-width: 700px; min-width: 300px">
-      <v-autocomplete
-        v-model="student"
-        density="comfortable"
-        hide-details="auto"
-        item-title="name"
-        item-value="id"
-        :items="filteredStudents"
-        label="Pesquisar alunos"
-        variant="outlined"
-      >
-        <template #item="{ item }">
-          <v-hover>
-            <template #default="{ props, isHovering }">
-              <v-list-item
-                v-bind="props"
-                class="pa-2 cursor-pointer"
-                :class="{ 'bg-grey-lighten-2': isHovering }"
-                :subtitle="item.raw.email"
-                :title="item.title"
-                @click="addStudent(item.raw)"
-              />
-            </template>
-          </v-hover>
-        </template>
-      </v-autocomplete>
+      <user-selected
+        label="Aluno"
+        :max="6"
+        user-type="STUDENT"
+        :selected-users="selectedStudents"
+        @add-user="addStudent"
+      />
 
       <v-list class="w-100" style="height: 40vh">
         <v-list-item v-for="s in selectedStudents" :key="s.id" class="w-100">
@@ -136,8 +125,6 @@ onMounted(async () => {
   </v-sheet>
 
   <div v-else>
-    <p>
-      Você não pode criar um grupo agora. O periodo foi expirado.
-    </p>
+    <p>Você não pode criar um grupo agora. O periodo foi expirado.</p>
   </div>
 </template>
