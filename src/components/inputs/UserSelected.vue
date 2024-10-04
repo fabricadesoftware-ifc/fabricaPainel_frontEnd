@@ -3,17 +3,29 @@ import { useAuth } from "@/stores/auth";
 import { showMessage } from "@/utils/toastify";
 
 const authStore = useAuth();
-const props = defineProps(["label", "selectedUsers", "userType", "max"]);
+const props = defineProps([
+  "label",
+  "selectedUsers",
+  "userType",
+  "rounded",
+  "one",
+]);
 const emits = defineEmits(["addUser", "removeUser"]);
 
+const input = ref()
+const inputHeight = ref(0)
 const searchQuery = ref("");
 const filteredUsers = ref([]);
-const noDataMessage = ref(`Pesquise por um ${String(props.label).toLowerCase()}...`);
+const noDataMessage = ref(
+  `Pesquise por um ${String(props.label).toLowerCase()}...`
+);
 const focused = ref(false);
 
 function updateSearch(value) {
   if (value == "" || !value) {
-    noDataMessage.value = `Pesquise por um ${String(props.label).toLowerCase()}...`;
+    noDataMessage.value = `Pesquise por um ${String(
+      props.label
+    ).toLowerCase()}...`;
     filteredUsers.value = [];
   } else {
     noDataMessage.value = "Carregando...";
@@ -23,7 +35,9 @@ function updateSearch(value) {
 
 async function searchUsers(search) {
   if (search.length < 3 || typeof search != "string") {
-    noDataMessage.value = `Pesquise por um ${String(props.label).toLowerCase()}...`;
+    noDataMessage.value = `Pesquise por um ${String(
+      props.label
+    ).toLowerCase()}...`;
     filteredUsers.value = [];
   } else {
     try {
@@ -34,10 +48,10 @@ async function searchUsers(search) {
         return !props.selectedUsers.some((st) => st.id == s.id);
       });
 
-      console.log(filteredUsers.value)
-
       if (filteredUsers.value.length == 0) {
-        noDataMessage.value = `Nenhum ${String(props.label).toLowerCase()} encontrado`;
+        noDataMessage.value = `Nenhum ${String(
+          props.label
+        ).toLowerCase()} encontrado`;
       }
     } catch (error) {
       console.log(error);
@@ -57,9 +71,15 @@ const debouncedSearchUsers = debounce(searchUsers, 1000);
 
 function addUser(user) {
   emits("addUser", user);
-  searchQuery.value = "";
-  noDataMessage.value = `Pesquise por um ${String(props.label).toLowerCase()}...`;
-  searchUsers("");
+  if (props.one) {
+    searchQuery.value = user.name;
+  } else {
+    searchQuery.value = "";
+    noDataMessage.value = `Pesquise por um ${String(
+      props.label
+    ).toLowerCase()}...`;
+  }
+  searchUsers(searchQuery.value);
 }
 
 function removeUser(id) {
@@ -67,7 +87,11 @@ function removeUser(id) {
 }
 
 function blurInput() {
-  if (searchQuery.value.length > 0) {
+  if (searchQuery.value.length > 0 && !props.one) {
+    setTimeout(() => {
+      focused.value = false;
+    }, 500);
+  } else if (props.one) {
     setTimeout(() => {
       focused.value = false;
     }, 500);
@@ -76,26 +100,38 @@ function blurInput() {
   }
 }
 
+onMounted(() => {
+  inputHeight.value = input.value?.$el?.clientHeight || 0;
+});
+
+onUpdated(() => {
+  inputHeight.value = input.value?.$el?.clientHeight || 0;
+});
+
 watch(searchQuery, (newValue) => {
   debouncedSearchUsers(newValue);
 });
 </script>
 
 <template>
-  <div class="position-relative" @click.self="console.log('aaa')">
+  <div class="position-relative">
     <v-text-field
-      :label="props.label"
+      ref="input"
       v-model="searchQuery"
-      density="comfortable"
-      variant="outlined"
+      :label="props.label"
       :focused="focused"
+      :rounded="props.rounded || 'md'"
+      :density="props.density || 'default'"
+      variant="outlined"
+      hide-details="auto"
       @focus="focused = true"
       @blur="blurInput()"
     />
 
     <v-list
       class="d-flex flex-column ga-2 overflow-y-auto elevation-1 w-100"
-      style="max-height: 300px; position: absolute; top: 50px; z-index: 1"
+      style="max-height: 300px; position: absolute; z-index: 1"
+      :style="`top: ${inputHeight}px`"
       v-if="filteredUsers.length > 0 && focused"
     >
       <v-list-item v-for="user in filteredUsers" :key="user.id" class="w-100">
@@ -121,8 +157,9 @@ watch(searchQuery, (newValue) => {
     </v-list>
 
     <div
-      class="d-flex flex-column ga-2 overflow-y-auto text-center px-2 pb-2 elevation-1 w-100"
-      style="max-height: 300px; position: absolute; top: 50px; z-index: 1"
+      class="d-flex flex-column ga-2 overflow-y-auto text-center px-2 pb-2 elevation-1 w-100 bg-white"
+      style="max-height: 300px; position: absolute; z-index: 1"
+      :style="`top: ${inputHeight}px`"
       v-else-if="focused"
     >
       <v-divider></v-divider>

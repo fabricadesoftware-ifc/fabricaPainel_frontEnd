@@ -16,12 +16,6 @@ const users = computed(() => {
   const user_pending =
     authStore.team?.tokens?.map((tm) => tm.user) || [];
   const selected = selectedStudents.value || [];
-  console.log([
-    ...users_team,
-    ...user_reject,
-    ...user_pending,
-    ...selected,
-  ])
   return [
     ...users_team,
     ...user_reject,

@@ -29,7 +29,7 @@
         to="/panel/registration-of-topics"
       />
       <InformativeAlert
-        v-if="authStore.isOpenForWork"
+        v-if="authStore.isOpenForWork && authStore.user.user_type === 'STUDENT' && workStore.userWorks.length === 0"
         button="Enviar um trabalho"
         color="error"
         :description="editionStore.alertStudent"

@@ -46,7 +46,6 @@ export const useAuth = defineStore('user', () => {
   const team = computed(() => state.value.team)
   const userTeam = computed(() => state.value.userTeam)
   const userThemes = computed(() => state.value.userThemes)
-  const focusedInput = ref(false)
 
   const checkAuth = async () => {
     try {

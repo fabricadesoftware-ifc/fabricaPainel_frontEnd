@@ -54,10 +54,6 @@
     await editionStore.submitFeedback(work_id, feedbackRejec.value)
   }
 
-  const submitGrades = () => {
-    console.log('Submit grades: ', workGrade.value)
-  }
-
   onMounted(async () => {
     workStore.getWork(work_id)
     editionStore.fetchCurrentEdition()
