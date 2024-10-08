@@ -15,14 +15,23 @@ const content = props.content || defaultContent;
 const text = props.text || defaultText;
 const btnvisible = props.btnvisible;
 const classDivider = props.class || defaultClass;
+
+const screenWidth = ref(window.innerWidth);
+
+onMounted(() => {
+  window.addEventListener("resize", () => {
+    screenWidth.value = window.innerWidth;
+  });
+});
 </script>
 <template>
   <v-container class="w-lg-75" fluid>
     <v-divider :class="classDivider" />
-    <section class="h-screen mt-0 d-flex justify-center align-center">
+    <section class="mt-2 d-flex justify-center align-center" :class="{ 'h-screen': screenWidth > 500 }"
+      style="min-height: 400px">
       <div>
         <TitleH1 :content="content" :text="text" />
-        <BtnPrimary class="mt-8" :disabled="!btnvisible ? 'Está sessão não está mais disponível' : 'open'"
+        <BtnPrimary class="mt-8" :disabled="!btnvisible ? 'Está sessão não está mais disponivel' : 'open'"
           text="Acessar edição Atual" to="/panel" />
       </div>
     </section>

@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-h1 H1" :class="color">
+  <h1 class="text-h1 text-start text-wrap H1" style="word-break: break-word" :class="color">
     {{ props.text }}
   </h1>
   <p class="pt-8">

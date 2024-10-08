@@ -55,13 +55,13 @@ onMounted(async () => {
 <template>
   <v-sheet
     class="d-flex flex-column align-center py-10 ga-6 justify-center px-4 border rounded"
-    max-width="800px"
-    min-width="400px"
+    max-width="700px"
+    min-width="300px"
     rounded="xl"
-    width="50%"
+    width="90%"
     v-if="editionStore.isOpenForGroup"
   >
-    <p class="text-h5 text-uppercase font-weight-bold">
+    <p class="text-h5 text-uppercase font-weight-bold" style="word-break: break-word;">
       Crie seu grupo e convide seus colegas!
     </p>
 

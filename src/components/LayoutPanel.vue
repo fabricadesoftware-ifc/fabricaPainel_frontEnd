@@ -20,8 +20,13 @@
     router.push('/auth/login')
   }
 
+  const screenWidth = ref(0)
+
   onMounted(() => {
     layoutStore.getSettings()
+    window.addEventListener('resize', () => {
+      screenWidth.value = window.innerWidth
+    })
   })
 </script>
 <template>
@@ -40,25 +45,89 @@
           <p>Entrar</p>
           <v-icon>mdi-login</v-icon>
         </v-btn>
-        <v-btn
-          v-else
-          color="red"
-          rounded="xl"
-          variant="outlined"
-          @click="logout"
-        >
-          <p>{{ authStore.user.name }}</p>
-          <v-icon class="ml-2" color="red">mdi-logout</v-icon>
-        </v-btn>
+        <div v-else class="d-flex ga-2">
+          <v-btn
+            v-if="authStore.user.user_type == 'STUDENT'"
+            color="primary"
+            rounded="xl"
+            to="/auth/my-group"
+            variant="text"
+          >
+            <p>Meu Grupo</p>
+          </v-btn>
+
+          <v-btn
+            color="red"
+            rounded="xl"
+            variant="outlined"
+            to="/panel"
+            @click="logout"
+          >
+            <p class="d-inline-block text-truncate" style="max-width: 100px">
+              {{ authStore.user.name }}
+            </p>
+            <v-icon color="red">mdi-logout</v-icon>
+          </v-btn>
+        </div>
       </v-container>
     </v-app-bar>
     <v-app-bar v-else flat>
       <v-container>
         <v-row align="center" class="pa-6 mt-4" justify-space-around>
-          <v-col cols="4" md="6">
-            <img alt="" src="@/assets/logo.png">
+          <v-col v-if="screenWidth > 380" >
+            <img
+              v-if="screenWidth >= 450"
+              alt="Fabrica Painel"
+              src="@/assets/logo.png"
+              @click="$router.push('/')"
+              class="cursor-pointer"
+            />
+            <img
+              v-else
+              alt="Fabrica Painel"
+              src="@/assets/logo_mini.png"
+              @click="$router.push('/')"
+              class="cursor-pointer"
+            />
           </v-col>
-          <v-col class="d-flex justify-end" cols="8" md="6">
+          <v-col
+            class="d-flex justify-end"
+            style="max-width: 300px; width: 40%"
+          >
+            <div>
+              <v-menu activator="parent">
+                <template #activator="{ on }">
+                  <v-btn
+                    v-icon
+                    color="primary"
+                    rounded="xl"
+                    variant="flat"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-menu</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                    v-for="link in layoutStore.navbar"
+                    :key="link.text"
+                    :color="
+                      link.value == layoutStore.currentPage ? 'primary' : ''
+                    "
+                    @click="router.push(link.value)"
+                  >
+                    <v-list-item-title>{{ link.text }}</v-list-item-title>
+                  </v-list-item>
+
+                  <v-list-item
+                    v-if="authStore.user.user_type == 'STUDENT'"
+                    @click="router.push('/auth/my-group')"
+                  >
+                    <v-list-item-title>Meu Grupo</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </div>
             <div>
               <v-btn
                 v-if="!authStore.isLogged"
@@ -74,14 +143,19 @@
 
               <v-btn
                 v-else
-                class="ml-2"
-                color="red"
+                class="d-flex ml-4"
+                color="primary"
                 rounded="xl"
-                variant="outlined"
+                variant="flat"
                 @click="logout"
               >
-                <p>{{ authStore.user.name }}</p>
-                <v-icon class="ml-2" color="red">mdi-logout</v-icon>
+                <p
+                  class="d-inline-block text-truncate"
+                  style="max-width: 100px"
+                >
+                  {{ authStore.user.name }}
+                </p>
+                <v-icon color="red">mdi-logout</v-icon>
               </v-btn>
             </div>
           </v-col>
