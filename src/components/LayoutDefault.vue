@@ -49,7 +49,7 @@
             to="/panel"
             @click="logout"
           >
-            <p class="d-inline-block text-truncate" style="max-width: 100px">
+            <p class="d-inline-block text-truncate" style="max-width: 300px">
               {{ authStore.user.name }}
             </p>
             <v-icon color="red">mdi-logout</v-icon>
@@ -138,7 +138,7 @@
               >
                 <p
                   class="d-inline-block text-truncate"
-                  style="max-width: 100px"
+                  style="max-width: 300px"
                 >
                   {{ authStore.user.name }}
                 </p>

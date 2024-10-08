@@ -30,6 +30,16 @@ class CategoriesService {
     }
   }
 
+  async removeAdvisorCrossCuttingThemes (theme: ICrossCuttingTheme, advisor: string) {
+    try {
+      await api.patch(`/cross_cutting_theme/${theme.id}/`, {
+        advisor: theme.advisor.filter(adv => adv !== advisor)
+      })
+    } catch (error) {
+      this.handleError(error, 'delete')
+    }
+  }
+
   async getOds () {
     try {
       const response = await api.get('/ods/')

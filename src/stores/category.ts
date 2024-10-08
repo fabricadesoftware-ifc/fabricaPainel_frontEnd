@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { useAuth } from "./auth";
 import { useRouter } from "vue-router";
 import CategoriesService from "@/services/categories";
+import { ICrossCuttingTheme } from "@/interfaces/themes";
 
 export const useCategory = defineStore("categories", () => {
   const state = reactive({
@@ -85,6 +86,27 @@ export const useCategory = defineStore("categories", () => {
     }
   };
 
+  const removeAdvisorCrossCuttingThemes = async (themes: ICrossCuttingTheme[]) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const responses = await Promise.all(
+        themes.map(
+          async (theme) =>
+            await CategoriesService.removeAdvisorCrossCuttingThemes(
+              theme,
+              authStore.uid
+            )
+        )
+      );
+      return responses;
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     state,
     crossCuttingThemes,
@@ -94,5 +116,6 @@ export const useCategory = defineStore("categories", () => {
     getField,
     getCrossCuttingThemes,
     saveCrossCuttingThemes,
+    removeAdvisorCrossCuttingThemes,
   };
 });

@@ -6,13 +6,16 @@
 
   const router = useRouter()
   const authStore = useAuth()
+  const loading = ref(false)
 
   const email = ref('')
   const password = ref('')
 
   const login = async () => {
     try {
+      loading.value = true
       await authStore.login(email.value, password.value)
+      loading.value = false
       router.push('/panel/')
     } catch (error) {
       showMessage('Credenciais inválidas', 'error', 1500, 'top-right', 'auto', false)
@@ -22,7 +25,10 @@
 </script>
 
 <template>
-  <v-container class="w-100 h-100 d-flex justify-center align-center">
+  <div v-if="loading" class="d-flex align-center justify-center h-100 w-100">
+    <v-progress-circular indeterminate color="primary" size="64" />
+  </div>
+  <v-container class="w-100 h-100 d-flex justify-center align-center" v-else>
     <v-row>
       <v-col class="mx-auto" cols="10" md="6">
         <v-card variant="text">

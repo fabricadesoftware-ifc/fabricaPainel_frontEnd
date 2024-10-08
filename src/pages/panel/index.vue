@@ -41,6 +41,7 @@
           <v-sheet class="ml-auto mr-0 mt-0" min-height="65vh" rounded="xl">
             <div class="h-100 d-flex flex-column justify-space-between px-4">
               <EditionDatas />
+              <MyThemes />
               <PaperAcceptanceTable :title="title" :works="workStore.userWorks" />
             </div>
           </v-sheet>

@@ -56,12 +56,9 @@
             <TitleH1 color="text-primary" :text="state.editions[model]?.edition_name" />
             <v-row>
               <v-col cols="12" md="6">
-                <img alt="Banner da Edição" class="w-100 rounded-xl" :src="state.editions[model]?.banner">
+                <img alt="Banner da Edição" class="w-75 rounded-xl" src="../assets/painel.png">
               </v-col>
               <v-col class="text-grey text-start" cols="12" md="6">
-                <p class="pb-4 text-white">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam ipsum culpa fugiat itaque tempore maiores labore placeat cumque enim! Maxime expedita cupiditate nisi, minima laudantium commodi tenetur recusandae saepe eveniet.
-                </p>
                 <p class="pb-4 text-h6 ">
                   Carga Horária: <span class="text-white font-weight-bold"> {{ state.editions[model]?.workload }} horas</span>
                 </p>

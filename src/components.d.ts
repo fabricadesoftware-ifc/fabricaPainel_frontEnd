@@ -27,6 +27,7 @@ declare module 'vue' {
     LayoutPanel: typeof import('./components/LayoutPanel.vue')['default']
     LayoutSteps: typeof import('./components/LayoutSteps.vue')['default']
     MainBanner: typeof import('./components/MainBanner.vue')['default']
+    MyThemes: typeof import('./components/MyThemes.vue')['default']
     PaperAcceptanceTable: typeof import('./components/PaperAcceptanceTable.vue')['default']
     PersonTable: typeof import('./components/PersonTable.vue')['default']
     RangeComponent: typeof import('./components/rangeComponent.vue')['default']

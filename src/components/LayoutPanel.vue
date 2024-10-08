@@ -34,6 +34,16 @@ onMounted(() => {
     <v-app-bar v-if="!isMobile" class="py-4" flat>
       <v-container class="mx-auto d-flex align-center justify-center">
         <img alt="" class="pr-8 cursor-pointer" src="@/assets/logo.png" @click="$router.push('/')" />
+        <v-btn
+        v-for="link in layoutStore.navbar"
+        :key="link.text"
+        class="mr-1"
+        :color="link.value == layoutStore.currentPage ? 'primary' : ''"
+        rounded="xl"
+        :text="link.text"
+        :to="link.value"
+        variant="text"
+      />
         <v-spacer />
         <v-btn v-if="!authStore.isLogged" color="primary" rounded="xl" variant="flat" @click="login">
           <p>Entrar</p>
@@ -46,11 +56,13 @@ onMounted(() => {
           </v-btn>
 
           <v-btn color="red" rounded="xl" variant="outlined" to="/panel" @click="logout">
-            <p class="d-inline-block text-truncate" style="max-width: 100px">
+            <p class="d-inline-block text-truncate" style="max-width: 300px">
               {{ authStore.user.name }}
             </p>
             <v-icon color="red">mdi-logout</v-icon>
+            <v-tooltip activator="parent" location="bottom">Sair</v-tooltip>
           </v-btn>
+
         </div>
       </v-container>
     </v-app-bar>
@@ -92,7 +104,7 @@ onMounted(() => {
               </v-btn>
 
               <v-btn v-else class="d-flex ml-4" color="primary" rounded="xl" variant="flat" @click="logout">
-                <p class="d-inline-block text-truncate" style="max-width: 100px">
+                <p class="d-inline-block text-truncate" style="max-width: 300px">
                   {{ authStore.user.name }}
                 </p>
                 <v-icon color="red">mdi-logout</v-icon>
