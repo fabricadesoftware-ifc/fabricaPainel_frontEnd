@@ -22,7 +22,7 @@
 
 <template>
   <v-container class="w-100 h-100 d-flex justify-center align-center">
-    <v-row>
+    <v-row style="min-width: 300px;">
       <v-col class="mx-auto" cols="12" md="6">
         <v-card>
           <v-card-title class="text-center">

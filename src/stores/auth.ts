@@ -50,8 +50,8 @@ export const useAuth = defineStore('user', () => {
   const checkAuth = async () => {
     try {
       if (refresh) {
-        state.value.isLogged = true
         await refreshToken()
+        state.value.isLogged = true
       }
     } catch (error) {
       console.error(error)

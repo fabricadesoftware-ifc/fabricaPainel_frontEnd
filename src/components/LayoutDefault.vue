@@ -57,14 +57,30 @@
         </div>
       </v-container>
     </v-app-bar>
-    <v-app-bar v-else flat>
-      <v-container>
+    <v-app-bar class="py-4" v-else flat>
+      <v-container class="d-flex align-center justify-center">
         <v-row align="center" justify-space-around>
-          <v-col>
-            <img alt="" src="@/assets/logo.png" />
+          <v-col v-if="screenWidth > 380" >
+            <img
+              v-if="screenWidth >= 450"
+              alt="Fabrica Painel"
+              src="@/assets/logo.png"
+              @click="$router.push('/')"
+              class="cursor-pointer"
+            />
+            <img
+              v-else
+              alt="Fabrica Painel"
+              src="@/assets/logo_mini.png"
+              @click="$router.push('/')"
+              class="cursor-pointer"
+            />
           </v-col>
           <v-space />
-          <v-col class="d-flex justify-end">
+          <v-col
+            class="d-flex justify-end"
+            style="max-width: 300px; width: 40%"
+          >
             <div>
               <v-menu activator="parent">
                 <template #activator="{ on }">
@@ -120,7 +136,12 @@
                 variant="flat"
                 @click="logout"
               >
-                <p>{{ authStore.user.name }}</p>
+                <p
+                  class="d-inline-block text-truncate"
+                  style="max-width: 100px"
+                >
+                  {{ authStore.user.name }}
+                </p>
                 <v-icon color="red">mdi-logout</v-icon>
               </v-btn>
             </div>
@@ -165,7 +186,12 @@ const logout = () => {
   router.push("/");
 };
 
-  onMounted(() => {
-    layoutStore.getSettings()
-  })
-  </script>
+const screenWidth = ref(0);
+
+onMounted(() => {
+  layoutStore.getSettings();
+  window.addEventListener("resize", () => {
+    screenWidth.value = window.innerWidth;
+  });
+});
+</script>
