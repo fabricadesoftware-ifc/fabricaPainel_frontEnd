@@ -79,13 +79,11 @@ const resendToken = async () => {
             </v-form>
           </v-card-text>
 
-          <!-- reenviar email -->
-
           <p class="text-center mt-4" style="font-size: 0.9rem">
-            <router-link
-              to="/auth/get-password"
-              class="text-decoration-none text-primary"
-              >Não Recebeu o e-mail? Clique aqui para reenviar</router-link
+            <p
+              @click="resendToken"
+              class="text-decoration-none text-primary cursor-pointer"
+              >Não Recebeu o e-mail? Clique aqui para reenviar</p
             >
           </p>
         </v-card>

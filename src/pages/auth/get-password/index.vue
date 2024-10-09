@@ -11,10 +11,12 @@
 
   const getPassword = async () => {
     try {
-      await authStore.getPassword(email.value)
+      authStore.setTokenEmail(email.value)
+      await authStore.getPassword()
       router.push('/auth/token')
       showMessage('E-mail enviado com sucesso!', 'success', 1500, 'top-right', 'auto', false)
     } catch (error) {
+      console.error(error)
       showMessage('Falha no envio do e-mail, verifique o endereço e tente novamente', 'error', 1500, 'top-right', 'auto', false)
     }
   }

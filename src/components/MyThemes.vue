@@ -1,4 +1,5 @@
 <script setup>
+import auth from "@/services/auth";
 import { useAuth } from "@/stores/auth";
 
 const authStore = useAuth();
@@ -13,7 +14,7 @@ onMounted(async () => {
 
 <template>
   <v-row>
-    <v-col>
+    <v-col v-if="authStore.isLogged && authStore.user.user_type == 'TEACHER'">
       <h1 class="text-h5 py-4 font-weight-bold">Meus Temas</h1>
       <div v-if="themes.length > 0">
         <p>

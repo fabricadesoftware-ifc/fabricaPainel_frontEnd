@@ -117,13 +117,6 @@ const approveWork = async () => {
               </v-chip>
             </p>
             <p>
-              Objetivos de Desenvolvimento Sustentável:
-              <v-chip v-for="(value, key) in workStore.currentWork?.ods" :key="key" class="mr-2 my-2" color="green"
-                outlined>
-                {{ value.name }}
-              </v-chip>
-            </p>
-            <p>
               Tema Transversal:
               <v-chip class="mr-2 my-2" color="pink" outlined>
                 {{ workStore.currentWork?.cross_cutting_theme.name }}
@@ -141,7 +134,7 @@ const approveWork = async () => {
           <v-expansion-panel-text>
             <ul class="font-weight-bold">
               <p>
-                {{ workStore.currentWork?.team.slice(14, -1) }}
+                {{ workStore.currentWork?.team.slice(14) }}
               </p>
             </ul>
           </v-expansion-panel-text>

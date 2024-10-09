@@ -1,3 +1,55 @@
+<script setup>
+import LayoutSteps from "@/components/LayoutSteps.vue";
+import { useEdition } from "../../../stores/edition";
+import { useAuth } from "@/stores/auth";
+import { useCategory } from "@/stores/category";
+import { useWork } from "@/stores/work";
+import { useRouter } from "vue-router";
+
+const editionStore = useEdition();
+const categoryStore = useCategory();
+const authStore = useAuth();
+const workStore = useWork();
+const router = useRouter();
+
+const selectedCoAdvisor = ref();
+
+const sendWork = async () => {
+  try {
+    form.team = authStore?.userTeam?.id;
+    await workStore.sendWork(form);
+    router.push("/panel");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const form = reactive({
+  title: "",
+  abstract: "",
+  field: [],
+  evaluator: [],
+  cross_cutting_theme: null,
+  team: null,
+  advisor: null,
+  co_advisor: selectedCoAdvisor,
+});
+
+const inProgress = ref(false);
+
+const addUser = (user) => {
+  selectedCoAdvisor.value = user;
+};
+
+onMounted(() => {
+  editionStore.fetchCurrentEdition();
+  categoryStore.getCrossCuttingThemes();
+  categoryStore.getField();
+  authStore.getStudents();
+  authStore.getUserTeam();
+});
+</script>
+
 <template>
   <LayoutSteps size="w-md-33" title="Enviar um trabalho">
     <v-form>
@@ -13,7 +65,7 @@
             hide-details
           />
         </v-col>
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="12">
           <v-text-field
             v-model="form.title"
             label="Título"
@@ -22,17 +74,27 @@
             hide-details
           />
         </v-col>
-        <v-col cols="12" sm="6">
-          <v-autocomplete
-            v-model="form.ods"
-            chips
+        <v-col cols="12" sm="12">
+          <user-selected
+            v-if="!selectedCoAdvisor"
+            label="Co-orientador"
+            user-type="TEACHER"
+            rounded="xl"
+            class="mb-n5 mt-1"
+            :selected-users="[]"
+            @add-user="addUser"
+          />
+        </v-col>
+        <v-col cols="12" sm="12" class="d-flex align-center justify-center">
+          <v-text-field
+            v-if="selectedCoAdvisor"
+            v-model="selectedCoAdvisor.name"
+            label="Co-orientador"
             clearable
-            :items="categoryStore.ods"
-            label="ODS"
-            multiple
             rounded="xl"
             variant="outlined"
-            hide-details
+            class="mt-n5 mb-n5"
+            @click:clear="selectedCoAdvisor = null"
           />
         </v-col>
         <v-col cols="12" sm="12">
@@ -97,49 +159,3 @@
   </LayoutSteps>
 </template>
 
-<script setup>
-import LayoutSteps from "@/components/LayoutSteps.vue";
-import { useEdition } from "../../../stores/edition";
-import { useAuth } from "@/stores/auth";
-import { useCategory } from "@/stores/category";
-import { useWork } from "@/stores/work";
-import { useRouter } from "vue-router";
-
-const editionStore = useEdition();
-const categoryStore = useCategory();
-const authStore = useAuth();
-const workStore = useWork();
-const router = useRouter();
-
-const sendWork = async () => {
-  try {
-    form.team = authStore?.userTeam?.id;
-    await workStore.sendWork(form);
-    router.push("/panel");
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const form = reactive({
-  title: "",
-  abstract: "",
-  field: [],
-  evaluator: [],
-  cross_cutting_theme: null,
-  team: null,
-  ods: [],
-  advisor: null,
-});
-
-const inProgress = ref(false);
-
-onMounted(() => {
-  editionStore.fetchCurrentEdition();
-  categoryStore.getCrossCuttingThemes();
-  categoryStore.getOds();
-  categoryStore.getField();
-  authStore.getStudents();
-  authStore.getUserTeam();
-});
-</script>

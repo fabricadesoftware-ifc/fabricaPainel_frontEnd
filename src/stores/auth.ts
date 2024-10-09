@@ -16,6 +16,7 @@ export const useAuth = defineStore("user", () => {
       user_type: "",
       team: null,
     },
+    tokenEmail: "",
     students: [] as Array<{ id: string; name: string }>,
     token: "",
     refresh: "",
@@ -56,6 +57,10 @@ export const useAuth = defineStore("user", () => {
   const userTeam = computed(() => state.value.userTeam);
   const userThemes = computed(() => state.value.userThemes);
 
+  const setTokenEmail = (email: string) => {
+    state.value.tokenEmail = email;
+  }
+
   const checkAuth = async () => {
     try {
       if (refresh) {
@@ -81,9 +86,10 @@ export const useAuth = defineStore("user", () => {
     }
   };
 
-  const getPassword = async (email: string) => {
+  const getPassword = async () => {
     try {
-      const data = await authService.forgetPassword(email);
+      console.log(state.value?.tokenEmail);
+      const data = await authService.forgetPassword(state.value?.tokenEmail);
       return data;
     } catch (error) {
       console.error(error);
@@ -328,5 +334,6 @@ export const useAuth = defineStore("user", () => {
     getUserThemes,
     userThemes,
     searchUsers,
+    setTokenEmail,
   };
 });

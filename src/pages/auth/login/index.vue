@@ -18,6 +18,7 @@
       loading.value = false
       router.push('/panel/')
     } catch (error) {
+      loading.value = false
       showMessage('Credenciais inválidas', 'error', 1500, 'top-right', 'auto', false)
     }
   }

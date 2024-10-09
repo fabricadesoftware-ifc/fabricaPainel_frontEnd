@@ -36,7 +36,6 @@
   const worksHeaders = [
     { title: 'Status', key: 'status' },
     { title: 'Titulo do Trabalho', key: 'title' },
-    { title: 'ODS', key: 'ods' },
     { title: 'Área', key: 'field' },
     { title: 'Tema Transversal', key: 'cross_cutting_theme' },
     { title: 'Data de Submissão', key: 'initial_submission_work_date' },
@@ -55,7 +54,6 @@
     const tableData = props.works.map(work => [
       Status[work.status].replace(/_/g, ' '),
       work.title,
-      work.ods.map(ods => ods.name).join(', '),
       work.field.map(field => field.name).join(', '),
       work.cross_cutting_theme.name,
       workStore.coverteData(work.initial_submission_work_date),
@@ -126,9 +124,7 @@
         rounded="xl"
         variant="plain"
       />
-      <div class="filters d-flex align-center">
-        <!-- <v-select placeholder="Selecione o status" multiple v-model="selectedStatus" :items="status()"/>
-         -->
+      <div class="filters d-flex align-center" v-if="authStore.isLogged && authStore.user.user_type == 'TEACHER'">
         <v-select
           v-model="selectedStatus"
           class="pa-2"
@@ -203,9 +199,6 @@
           </template>
           <template #item.cross_cutting_theme="{ item }">
             {{ item.cross_cutting_theme.name }}
-          </template>
-          <template #item.ods="{ item }">
-            {{ item.ods.map((ods) => ods.name).join(", ") }}
           </template>
           <template #item.title="{ item }">
             <v-btn
