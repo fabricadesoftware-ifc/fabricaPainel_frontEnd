@@ -227,7 +227,7 @@ const approveWork = async () => {
                 <span v-else> Nota Final </span>
               </v-card-title>
               <v-card-text>
-                <v-form>
+                <v-form @submit.prevent="submitGrades">
                   <v-row>
                     <v-col v-if="
                       authStore.user.id === workStore.currentWork?.advisor.id ||

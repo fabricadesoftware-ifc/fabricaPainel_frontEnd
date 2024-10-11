@@ -10,6 +10,8 @@
   const password = ref('')
   const confirmPassword = ref('')
 
+  const loading = ref(false)
+
   const validateAndConfirmPassword = () => {
     if (password.value !== confirmPassword.value) {
       showMessage(
@@ -41,7 +43,9 @@
   const resetPassword = async () => {
     try {
       if (!validateAndConfirmPassword()) return
+      loading.value = true
       await authStore.resetPassword(password.value)
+      loading.value = false
       showMessage(
         'Senha resetada com sucesso!',
         'success',
@@ -52,6 +56,7 @@
       )
       router.push('/auth/login')
     } catch (error) {
+      loading.value = false
       console.error(error)
       showMessage(
         'Falha ao resetar a senha',
@@ -66,7 +71,10 @@
 </script>
 
 <template>
-  <v-container class="w-100 h-100 d-flex justify-center align-center">
+  <div v-if="loading" class="d-flex align-center justify-center h-100 w-100">
+    <v-progress-circular indeterminate color="primary" size="64" />
+  </div>
+  <v-container class="w-100 h-100 d-flex justify-center align-center" v-else>
     <v-row>
       <v-col class="mx-auto" cols="12" md="6">
         <v-card>
@@ -77,7 +85,7 @@
             <p>Insira a nova senha e confirme.</p>
           </v-card-subtitle>
           <v-card-text>
-            <v-form>
+            <v-form @submit.prevent="resetPassword" @keydown.enter="resetPassword">
               <v-text-field
                 v-model="password"
                 label="Nova Senha"

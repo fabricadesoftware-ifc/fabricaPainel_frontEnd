@@ -6,21 +6,27 @@
 
   const router = useRouter()
   const authStore = useAuth()
+  const loading = ref(false)
 
   const token = ref('')
 
   const getToken = async () => {
     try {
+      loading.value = true
       await authStore.verifyToken(token.value)
+      loading.value = false
       router.push('/auth/reset-password')
     } catch (error) {
+      loading.value = false
       showMessage('Token inválido', 'error', 1500, 'top-right', 'auto', false)
     }
   }
 
 const resendToken = async () => {
   try {
+    loading.value = true;
     await authStore.getPassword();
+    loading.value = false;
     showMessage(
       "E-mail reenviado com sucesso!",
       "success",
@@ -30,6 +36,7 @@ const resendToken = async () => {
       false
     );
   } catch (error) {
+    loading.value = false;
     showMessage(
       "Falha no reenvio do e-mail",
       "error",
@@ -43,14 +50,13 @@ const resendToken = async () => {
 </script>
 
 <template>
-  <!-- reenviar email e campo para token -->
-  <v-container class="w-100 h-100 d-flex justify-center align-center">
+  <div v-if="loading" class="d-flex align-center justify-center h-100 w-100">
+    <v-progress-circular indeterminate color="primary" size="64" />
+  </div>
+  <v-container class="w-100 h-100 d-flex justify-center align-center" v-else>
     <v-row>
       <v-col cols="12" md="6" class="mx-auto">
-        <!-- campo para inserir token enviado -->
-
         <v-card>
-          <!-- token -->
           <v-card-title class="text-center">
             <h2 class="text-primary font-weight-bold text-h4">Token</h2>
           </v-card-title>
@@ -58,7 +64,7 @@ const resendToken = async () => {
             <p>Insira o token enviado para o seu e-mail.</p>
           </v-card-subtitle>
           <v-card-text>
-            <v-form>
+            <v-form @submit.prevent="getToken">
               <v-text-field
                 v-model="token"
                 label="Token"

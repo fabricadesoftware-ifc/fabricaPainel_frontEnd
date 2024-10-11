@@ -6,16 +6,20 @@
 
   const router = useRouter()
   const authStore = useAuth()
+  const loading = ref(false)
 
   const email = ref('')
 
   const getPassword = async () => {
     try {
+      loading.value = true
       authStore.setTokenEmail(email.value)
       await authStore.getPassword()
+      loading.value = false
       router.push('/auth/token')
       showMessage('E-mail enviado com sucesso!', 'success', 1500, 'top-right', 'auto', false)
     } catch (error) {
+      loading.value = false
       console.error(error)
       showMessage('Falha no envio do e-mail, verifique o endereço e tente novamente', 'error', 1500, 'top-right', 'auto', false)
     }
@@ -23,7 +27,10 @@
 </script>
 
 <template>
-  <v-container class="w-100 h-100 d-flex justify-center align-center">
+  <div v-if="loading" class="d-flex align-center justify-center h-100 w-100">
+    <v-progress-circular indeterminate color="primary" size="64" />
+  </div>
+  <v-container class="w-100 h-100 d-flex justify-center align-center" v-else>
     <v-row style="min-width: 300px;">
       <v-col class="mx-auto" cols="12" md="6">
         <v-card>
@@ -38,7 +45,7 @@
             </p>
           </v-card-subtitle>
           <v-card-text>
-            <v-form>
+            <v-form @submit.prevent="getPassword">
               <v-text-field
                 v-model="email"
                 label="Email"

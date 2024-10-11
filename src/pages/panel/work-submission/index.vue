@@ -52,7 +52,7 @@ onMounted(() => {
 
 <template>
   <LayoutSteps size="w-md-33" title="Enviar um trabalho">
-    <v-form>
+    <v-form @submit.prevent="sendWork">
       <v-row>
         <v-col cols="12">
           <v-autocomplete

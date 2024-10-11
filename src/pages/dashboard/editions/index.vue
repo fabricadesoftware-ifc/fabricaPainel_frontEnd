@@ -142,7 +142,7 @@ onMounted(() => {
 
                 <v-card prepend-icon="mdi-application-edit" title="Editar Edição Atual">
                   <v-card-text class="px-10 py-4">
-                    <v-form v-model="valid">
+                    <v-form v-model="valid" @submit.prevent="saveEdition">
                       <v-text-field v-model="form.year" label="Ano" rounded="xl" type="number" variant="outlined" />
                       <v-text-field v-model="form.theme" label="Tema" rounded="xl" variant="outlined" />
                       <v-text-field v-model="form.edition_name" label="Nome da Edição" rounded="xl"

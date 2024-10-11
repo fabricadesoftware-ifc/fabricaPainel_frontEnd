@@ -37,7 +37,7 @@
             <h2 class="text-primary font-weight-bold text-h4">Login</h2>
           </v-card-title>
           <v-card-text>
-            <v-form>
+            <v-form @submit.prevent="login" @keydown.enter="login">
               <v-text-field
                 v-model="email"
                 label="Email"

@@ -88,7 +88,6 @@ export const useAuth = defineStore("user", () => {
 
   const getPassword = async () => {
     try {
-      console.log(state.value?.tokenEmail);
       const data = await authService.forgetPassword(state.value?.tokenEmail);
       return data;
     } catch (error) {
