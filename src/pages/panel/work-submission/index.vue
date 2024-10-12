@@ -14,6 +14,17 @@ const router = useRouter();
 
 const selectedCoAdvisor = ref();
 
+const validateUserHasWork = async () => {
+  try {
+    await workStore.fetchUserWorks();
+    if (workStore.userWorks.length > 0 || !authStore.isOpenForWork || authStore.user.user_type !== "STUDENT") {
+      router.push("/panel");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const sendWork = async () => {
   try {
     form.team = authStore?.userTeam?.id;
@@ -42,6 +53,7 @@ const addUser = (user) => {
 };
 
 onMounted(() => {
+  validateUserHasWork();
   editionStore.fetchCurrentEdition();
   categoryStore.getCrossCuttingThemes();
   categoryStore.getField();
