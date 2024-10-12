@@ -182,10 +182,10 @@ onMounted(async () => {
   await fetchAssessments();
   studentAssessments.value = await verifyGrades();
 
-  workStore.getWork(work_id);
-  editionStore.fetchCurrentEdition();
+  await workStore.getWork(work_id);
+  await editionStore.fetchCurrentEdition();
   assessment.value = await assessmentStore.getAssessmentsByWorkId(work_id);
-  getMembersTeam();
+  await getMembersTeam();
   for (let i = 0; i < workStore.currentWork?.team?.team_members.length; i++) {
     grades.value.push(0);
   }
