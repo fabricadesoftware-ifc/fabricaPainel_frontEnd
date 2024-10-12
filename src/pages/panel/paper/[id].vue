@@ -4,61 +4,112 @@ import { useAuth } from "@/stores/auth";
 import { useEdition } from "@/stores/edition";
 import { useWork } from "@/stores/work";
 import { useAssessmentStore } from "@/stores/assessment";
+import { useStudentAssessment } from '@/stores/studentAssessment';
 import { useRouter } from "vue-router";
-// import jsPDF from "jspdf";
+import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { showMessage } from "@/utils/toastify";
 
 const router = useRouter();
 const work_id = (router.currentRoute.value.params as { id: string }).id;
-const workStore = useWork();
-const authStore = useAuth();
-const assessmentStore = useAssessmentStore();
 
+const authStore = useAuth();
 const editionStore = useEdition();
+const workStore = useWork();
+const assessmentStore = useAssessmentStore();
+const { createAssessment, patchAssessment, fetchAssessments, state } = useStudentAssessment();
+
+const grades = ref<number[]>([]);
+const users = ref<string[]>([]);
 const panel = ref(["team", "abstract"]);
 const dialogReject = ref(false);
-const feedbackRejec = ref("");
-const messageStudent =
-  authStore.user.user_type === "STUDENT" ? "Seu trabalho foi aprovado. Parabéns!" : "";
 const dialogGrade = ref(false);
+const newGrades = ref(false);
+const feedbackRejec = ref("");
 const assessment = ref([]);
+const studentAssessments = ref([]);
 const workGrade = ref(0);
 
-// const generatePDF = () => {
-//   const doc = new jsPDF()
+const messageStudent = authStore.user.user_type === "STUDENT" ? "Seu trabalho foi aprovado. Parabéns!" : "";
 
-//   doc.text('Relatório de Notas', 10, 10)
-//   doc.text(`Aluno: ${authStore.user?.name}`, 10, 20)
+const verifyGrades = async () => {
+  return state.assessments.filter((assess) => assess.work === work_id);
+};
 
-//   const columns = ['Aluno', 'Nota']
-//   const rows = []
+ async function patchGradesStudents() {
+  await workStore.getWork(work_id);
+  const currentWork = workStore.currentWork
+  const teamMembersId = currentWork?.team?.team_members
+  console.log(currentWork);
 
-//   workStore.currentWork?.team.slice(14).split(', ').forEach((student, index) => {
-//     const currentGrade = assessment.value.length > 0 ? assessment.value[index]?.grade : 0
-//     rows.push([student, currentGrade])
-//   })
+  for (let index = 0; index < teamMembersId.length; index++) {
+    const newAssessment = {
+      work: work_id,
+      student: teamMembersId[index],
+      grade: grades.value[index],
+      date_time: new Date().toISOString()
+    }
 
-//   doc.autoTable({
-//     head: [columns],
-//     body: rows,
-//     startY: 30,
-//   })
+    await patchAssessment(studentAssessments.value[index], newAssessment)
+  }
+  dialogGrade.value = !dialogGrade.value
+  newGrades.value = false
+  showMessage('Notas editadas com sucesso', 'success', 3000, 'top-right')
+}
 
-//   doc.save(`notas_${authStore.user?.name}.pdf`)
-// }
+
+async function postGradesStudents() {
+  await workStore.getWork(work_id);
+  const currentWork = workStore.currentWork
+  const teamMembersId = currentWork?.team?.team_members
+  console.log(currentWork);
+
+  for (let index = 0; index < teamMembersId.length; index++) {
+    const newAssessment = {
+      work: work_id,
+      student: teamMembersId[index],
+      grade: grades.value[index],
+      date_time: new Date().toISOString()
+    }
+
+    const data = await createAssessment(newAssessment)
+    studentAssessments.value.push(data)
+  }
+  dialogGrade.value = !dialogGrade.value
+  newGrades.value = !newGrades.value
+  showMessage('Notas registradas com sucesso', 'success', 3000, 'top-right')
+}
+async function getMembersTeam() {
+  await workStore.getWork(work_id);
+  const currentWork = workStore.currentWork
+  const teamMembersId = currentWork?.team?.team_members
+  for (const member of teamMembersId) {
+    const user = await authStore.getUser(member)
+    users.value.push(user.name)
+  }
+}
+
+const generatePDF = async () => {
+  const doc = new jsPDF();
+
+  doc.text('Relatório de Notas', 10, 10);
+  doc.text(`Aluno: ${authStore.user?.name}`, 10, 20);
+
+  const columns = ['Aluno', 'Nota'];
+  const rows = [];
+
+  for (const student of studentAssessments.value) {
+    const currentStudent = await authStore.getUser(student.student);
+    rows.push([currentStudent.name, student.grade]);
+  }
+
+  doc.autoTable({ head: [columns], body: rows, startY: 30 });
+  doc.save(`notas_${authStore.user?.name}.pdf`);
+};
 
 const submitFeedback = async () => {
   await editionStore.submitFeedback(work_id, feedbackRejec.value);
 };
-
-onMounted(async () => {
-  workStore.getWork(work_id);
-  editionStore.fetchCurrentEdition();
-  assessment.value = await assessmentStore.getAssessmentsByWorkId(work_id);
-});
-
-// eslint-disable-next-line camelcase
 
 const approveWork = async () => {
   await workStore.approveWork();
@@ -72,6 +123,19 @@ const approveWork = async () => {
     true
   );
 };
+
+onMounted(async () => {
+  await fetchAssessments()
+  studentAssessments.value = await verifyGrades()
+
+  workStore.getWork(work_id);
+  editionStore.fetchCurrentEdition();
+  assessment.value = await assessmentStore.getAssessmentsByWorkId(work_id);
+  getMembersTeam()
+  for (let i = 0; i < workStore.currentWork?.team?.team_members.length; i++) {
+    grades.value.push(0)
+  }
+});
 </script>
 
 <template>
@@ -133,8 +197,8 @@ const approveWork = async () => {
           </v-expansion-panel-title>
           <v-expansion-panel-text>
             <ul class="font-weight-bold">
-              <p>
-                {{ workStore.currentWork?.team.slice(14) }}
+              <p v-for="(user, index) in users" :key="index">
+                {{ user }}
               </p>
             </ul>
           </v-expansion-panel-text>
@@ -200,21 +264,15 @@ const approveWork = async () => {
         <v-col cols="2">
           <v-btn v-if="authStore.user?.user_type != 'STUDENT'" block class="py-6" color="green" rounded="xl"
             variant="flat" @click="approveWork()">Aprovar</v-btn>
+            <v-btn v-else block class="py-6" color="green" rounded="xl"
+            variant="flat" @click="generatePDF()">Ver Nota</v-btn>
         </v-col>
       </v-row>
       <v-row class="mt-8" justify="end" no-gutters>
         <v-col cols="12">
           <v-btn v-if="authStore.isOpenForEvaluation" block class="py-6" color="info" rounded="xl" variant="flat"
-            @click="dialogGrade = true">Dar Nota</v-btn>
-          <!-- <v-btn
-            v-if="assessment.length > 0"
-            block
-            class="py-6"
-            color="info"
-            rounded="xl"
-            variant="flat"
-            @click="generatePDF()"
-          >Ver nota</v-btn> -->
+            @click="dialogGrade = !dialogGrade">{{ studentAssessments.length ? 'Editar nota' : 'Dar nota'}}</v-btn>
+
           <v-dialog v-model="dialogGrade" max-width="600px">
             <v-card>
               <v-card-title class="headline font-weight-bold">
@@ -227,20 +285,18 @@ const approveWork = async () => {
                 <span v-else> Nota Final </span>
               </v-card-title>
               <v-card-text>
-                <v-form @submit.prevent="submitGrades">
+                <v-form>
                   <v-row>
                     <v-col v-if="
                       authStore.user.id === workStore.currentWork?.advisor.id ||
                       authStore.user.id === workStore.currentWork?.co_advisor.id
                     " cols="12">
-                      <v-row v-for="(student, index) in workStore.currentWork?.team
-                        .slice(14)
-                        .split(', ')" :key="index" no-gutters>
+                      <v-row v-for="(student, index) in users" :key="index" no-gutters>
                         <v-col cols="8">
                           <p>{{ student }}</p>
                         </v-col>
                         <v-col cols="4">
-                          <v-text-field label="Nota" max="10" min="0" type="number" variant="outlined" />
+                          <v-text-field label="Nota" max="10" min="0" type="number" variant="outlined" v-model="grades[index]"/>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -255,7 +311,7 @@ const approveWork = async () => {
                 <v-spacer />
                 <v-btn color="blue darken-1" @click="dialogGrade = false">Cancelar</v-btn>
                 <!-- @vue-ignore -->
-                <v-btn color="blue darken-1" @click="submitGrades()">Enviar</v-btn>
+                <v-btn color="blue darken-1" @click="studentAssessments.length ? patchGradesStudents() : postGradesStudents()">Enviar</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>

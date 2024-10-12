@@ -50,6 +50,7 @@ export const useStudentAssessment = defineStore('studentAssessment', () => {
     try {
       const newAssessment = await StudentAssessmentService.createAssessment(assessment)
       state.assessments.push(newAssessment)
+      return newAssessment
     } catch (error: any) {
       setError(error.message)
     } finally {

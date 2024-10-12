@@ -8,7 +8,7 @@ class StudentAssessmentService {
 
   async getAssessments () {
     try {
-      const { data } = await api.get('/student-assessment/')
+      const { data } = await api.get('student-assessments/')
       return data
     } catch (error) {
       this.handleError(error, 'fetch')
@@ -17,7 +17,7 @@ class StudentAssessmentService {
 
   async getAssessment (id: string) {
     try {
-      const { data } = await api.get(`/student-assessment/${id}/`)
+      const { data } = await api.get(`student-assessments/${id}/`)
       return data
     } catch (error) {
       this.handleError(error, 'fetch')
@@ -26,7 +26,7 @@ class StudentAssessmentService {
 
   async createAssessment (assessment: any) {
     try {
-      const { data } = await api.post('/student-assessment/', assessment)
+      const { data } = await api.post('student-assessments/', assessment)
       return data
     } catch (error) {
       this.handleError(error, 'create')
@@ -35,7 +35,7 @@ class StudentAssessmentService {
 
   async updateAssessment (id: string, assessment: any) {
     try {
-      const { data } = await api.put(`/student-assessment/${id}/`, assessment)
+      const { data } = await api.put(`student-assessments/${id}/`, assessment)
       return data
     } catch (error) {
       this.handleError(error, 'update')
@@ -44,7 +44,7 @@ class StudentAssessmentService {
 
   async patchAssessment (id: string, partialData: any) {
     try {
-      const { data } = await api.patch(`/student-assessment/${id}/`, partialData)
+      const { data } = await api.patch(`student-assessments/${id}/`, partialData)
       return data
     } catch (error) {
       this.handleError(error, 'patch')
@@ -53,7 +53,7 @@ class StudentAssessmentService {
 
   async deleteAssessment (id: string) {
     try {
-      await api.delete(`/student-assessment/${id}/`)
+      await api.delete(`student-assessments/${id}/`)
     } catch (error) {
       this.handleError(error, 'delete')
     }
