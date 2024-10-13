@@ -27,7 +27,7 @@ onMounted(() => {
 <template>
   <v-container class="w-lg-75" fluid>
     <v-divider :class="classDivider" />
-    <section class="mt-2 d-flex justify-center align-center" :class="{ 'h-screen': screenWidth > 500 }"
+    <section class="mt-2 d-flex justify-center align-center"
       style="min-height: 400px">
       <div>
         <TitleH1 :content="content" :text="text" />

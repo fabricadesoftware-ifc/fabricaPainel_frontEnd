@@ -59,14 +59,14 @@
     </v-app-bar>
     <v-app-bar class="py-4" v-else flat>
       <v-container class="d-flex align-center justify-center">
-        <v-row align="center" justify-space-around>
+        <v-row align="center">
           <v-col v-if="screenWidth > 520">
             <img v-if="screenWidth >= 520" alt="Fabrica Painel" src="@/assets/logo.png" @click="$router.push('/')"
               class="cursor-pointer" />
             <img v-else alt="Fabrica Painel" src="@/assets/logo_mini.png" @click="$router.push('/')"
               class="cursor-pointer" />
           </v-col>
-          <v-col class="d-flex justify-end ml-5" :class="{'justify-items-start': screenWidth > 580}" style=" width: 35%">
+          <v-col class="d-flex ml-5 justify-end" :class="{'ml-0 pl-0': screenWidth < 580}" style=" width: 35%">
             <div>
               <v-menu activator="parent">
                 <!-- @vue-ignore -->
@@ -95,7 +95,7 @@
               </v-btn>
 
               <v-btn v-else class="d-flex ml-4"  color="primary" rounded="xl" variant="flat" @click="logout">
-                <p class="d-inline-block text-truncate mr-2" style="max-width: 310px" v-if="screenWidth > 380">
+                <p class="d-inline-block text-truncate mr-2" style="max-width: 310px" v-if="screenWidth > 360">
                   {{ authStore.user.name }}
                 </p>
                 <v-icon color="red">mdi-logout</v-icon>
@@ -105,7 +105,7 @@
         </v-row>
       </v-container>
     </v-app-bar>
-    <v-main :class="{ 'mt-15': screenWidth < 615, 'pt-3' : screenWidth < 500 }">
+    <v-main :class="{ 'mt-6': screenWidth < 615}">
       <slot />
     </v-main>
     <FooterComp />
