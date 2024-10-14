@@ -6,7 +6,9 @@ import { useAssessmentStore } from "@/stores/assessment";
 import { useStudentAssessment } from "@/stores/studentAssessment";
 import { useRouter } from "vue-router";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
+
+autoTable(jsPDF.API, {});
 import { showMessage } from "@/utils/toastify";
 
 const router = useRouter();
@@ -27,7 +29,7 @@ const feedbackRejec = ref("");
 const dialogGrade = ref(false);
 const newGrades = ref(false);
 const assessment = ref([]);
-const studentAssessments = ref([]);
+const studentAssessments = ref<any[]>([]);
 const workGrade = ref(0);
 
 const messageStudent =
@@ -94,18 +96,18 @@ async function getMembersTeam() {
 const generatePDF = async () => {
   const doc = new jsPDF();
 
+  const columns = ["Aluno", "Nota"];
+  const rows: (string | number)[][] = [];
+  autoTable(doc, { head: [columns], body: rows, startY: 30 });
+
   doc.text("Relatório de Notas", 10, 10);
   doc.text(`Aluno: ${authStore.user?.name}`, 10, 20);
-
-  const columns = ["Aluno", "Nota"];
-  const rows = [];
 
   for (const student of studentAssessments.value) {
     const currentStudent = await authStore.getUser(student.student);
     rows.push([currentStudent.name, student.grade]);
   }
 
-  doc.autoTable({ head: [columns], body: rows, startY: 30 });
   doc.save(`notas_${authStore.user?.name}.pdf`);
 };
 const work = ref({
