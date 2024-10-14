@@ -8,7 +8,6 @@ import { useRouter } from "vue-router";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-autoTable(jsPDF.API, {});
 import { showMessage } from "@/utils/toastify";
 
 const router = useRouter();
