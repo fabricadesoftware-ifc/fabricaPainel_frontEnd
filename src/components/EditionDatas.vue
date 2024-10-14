@@ -28,13 +28,6 @@
         </v-chip>
       </h2>
       <p class="text-grey-darken-2 mt-6">
-        <span class="">Divulgação do Regimento e das Orientações Gerais: </span>
-        <span class="text-black font-weight-bold">
-          ?? até
-          ??
-        </span>
-      </p>
-      <p class="text-grey-darken-2 mt-6">
         <span class="">Inscrição dos(as) docentes em dois temas transversais: </span>
         <span class="text-black font-weight-bold">
           {{ formatDate(editionStore.currentEdition?.initial_registration_theme_date) }} até
@@ -67,13 +60,6 @@
         <span class="text-black font-weight-bold">
           {{ formatDate(editionStore.currentEdition?.initial_evaluators_date) }} até
           {{ formatDate(editionStore.currentEdition?.final_evaluators_date) }}
-        </span>
-      </p>
-      <p class="text-grey-darken-2 mt-4">
-        <span class="">Divulgação das equipes inscritas, área temática, resumo, Orientador(a) e Colaborador(a): </span>
-        <span class="text-black font-weight-bold">
-          ?? até
-          ??
         </span>
       </p>
     </v-col>
