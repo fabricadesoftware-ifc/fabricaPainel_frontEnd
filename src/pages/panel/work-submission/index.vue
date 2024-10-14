@@ -67,6 +67,35 @@ onMounted(() => {
     <v-form @submit.prevent="sendWork">
       <v-row>
         <v-col cols="12">
+          <v-checkbox
+            :class="!inProgress ? 'pb-8' : ''"
+            label="Esta em andamento"
+            v-model="inProgress"
+            color="primary"
+            hide-details
+            density="compact"
+            @update:model-value="
+              (value) => {
+                inProgress = value;
+                if (!value) form.advisor = null;
+              }
+            "
+          />
+        </v-col>
+        <v-expand-transition class="pb-8">
+          <v-col cols="12" v-show="inProgress">
+            <user-selected
+              :selected-users="[]"
+              :one="true"
+              label="Orientador"
+              user-type="TEACHER"
+              rounded="xl"
+              density="default"
+              @add-user="(user) => (form.advisor = user.id)"
+            />
+          </v-col>
+        </v-expand-transition>
+        <v-col cols="12">
           <v-autocomplete
             v-model="form.cross_cutting_theme"
             clearable
@@ -134,35 +163,6 @@ onMounted(() => {
             hide-details
           />
         </v-col>
-        <v-col cols="12">
-          <v-checkbox
-            :class="!inProgress ? 'pb-8' : ''"
-            label="Esta em andamento"
-            v-model="inProgress"
-            color="primary"
-            hide-details
-            density="compact"
-            @update:model-value="
-              (value) => {
-                inProgress = value;
-                if (!value) form.advisor = null;
-              }
-            "
-          />
-        </v-col>
-        <v-expand-transition class="pb-8">
-          <v-col cols="12" v-show="inProgress">
-            <user-selected
-              :selected-users="[]"
-              :one="true"
-              label="Orientador"
-              user-type="TEACHER"
-              rounded="xl"
-              density="default"
-              @add-user="(user) => (form.advisor = user.id)"
-            />
-          </v-col>
-        </v-expand-transition>
       </v-row>
       <v-btn block class="py-6" color="primary" rounded="xl" @click="sendWork">
         Confirmar
