@@ -5,6 +5,7 @@ import { useAuth } from "@/stores/auth";
 import { useCategory } from "@/stores/category";
 import { useWork } from "@/stores/work";
 import { useRouter } from "vue-router";
+import { showMessage } from "@/utils/toastify";
 
 const editionStore = useEdition();
 const categoryStore = useCategory();
@@ -27,9 +28,15 @@ const validateUserHasWork = async () => {
 
 const sendWork = async () => {
   try {
-    form.team = authStore?.userTeam?.id;
-    await workStore.sendWork(form);
-    router.push("/panel");
+    if (form.title || form.abstract || form.co_advisor || form.cross_cutting_theme) {
+      form.team = authStore?.userTeam?.id;
+      await workStore.sendWork(form);
+      router.push("/panel");
+    } else {
+      console.log('aaa');
+
+      showMessage('Preencha todos os campos corretamente.', 'error', 3000)
+    }
   } catch (error) {
     console.error(error);
   }
@@ -104,6 +111,7 @@ onMounted(() => {
             rounded="xl"
             variant="outlined"
             hide-details
+            required
           />
         </v-col>
         <v-col cols="12" sm="12">
@@ -113,6 +121,7 @@ onMounted(() => {
             rounded="xl"
             variant="outlined"
             hide-details
+            required
           />
         </v-col>
         <v-col cols="12" sm="12">
@@ -124,6 +133,7 @@ onMounted(() => {
             class="mb-n5 mt-1"
             :selected-users="[]"
             @add-user="addUser"
+            required
           />
         </v-col>
         <v-col cols="12" sm="12" class="d-flex align-center justify-center">
@@ -135,6 +145,7 @@ onMounted(() => {
             rounded="xl"
             variant="outlined"
             class="mt-n5 mb-n5"
+            required
             @click:clear="selectedCoAdvisor = null"
           />
         </v-col>
@@ -148,6 +159,7 @@ onMounted(() => {
             multiple
             rounded="xl"
             variant="outlined"
+            required
             hide-details
           />
         </v-col>
@@ -160,11 +172,12 @@ onMounted(() => {
             rounded="xl"
             rows="1"
             variant="outlined"
+            required
             hide-details
           />
         </v-col>
       </v-row>
-      <v-btn block class="py-6" color="primary" rounded="xl" @click="sendWork">
+      <v-btn type="submit" block class="py-6" color="primary" rounded="xl">
         Confirmar
       </v-btn>
     </v-form>
