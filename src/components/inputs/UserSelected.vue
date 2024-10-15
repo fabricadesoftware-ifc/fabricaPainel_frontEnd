@@ -125,7 +125,6 @@ watch(searchQuery, (newValue) => {
       variant="outlined"
       hide-details="auto"
       required
-      :rules="[v => !!v || 'Adicione um colaborador']"
       @focus="focused = true"
       @blur="blurInput()"
     />

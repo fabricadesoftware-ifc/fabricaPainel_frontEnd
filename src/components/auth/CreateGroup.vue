@@ -11,9 +11,9 @@ const editionStore = useEdition();
 const selectedStudents = ref([authStore.user]);
 
 function createTeam() {
-  if (selectedStudents.value.length < 4) {
+  if (selectedStudents.value.length < 3) {
     showMessage(
-      "Você precisa de pelo menos 4 membros para criar um grupo",
+      "Você precisa de pelo menos 3 membros para criar um grupo",
       "error",
       3000,
       "top-right",
