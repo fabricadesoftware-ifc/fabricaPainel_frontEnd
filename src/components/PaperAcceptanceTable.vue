@@ -38,7 +38,6 @@ const worksHeaders = [
   { title: "Titulo do Trabalho", key: "title" },
   { title: "Área", key: "field" },
   { title: "Tema Transversal", key: "cross_cutting_theme" },
-  { title: "Data de Submissão", key: "initial_submission_work_date" },
   { title: "Orientador", key: "advisor.name" },
   { title: "Coorientador", key: "co_advisor.name" },
 ];
