@@ -137,7 +137,7 @@ onMounted(async () => {
 
       <v-list class="bg-transparent d-flex flex-column ga-5">
         <user-list
-          v-for="{ user } in authStore.team?.accept_tokens"
+          v-for="user in authStore.team?.team_members"
           :key="user.id"
           :user="user"
           :my-user="user.id == authStore.user.id"
