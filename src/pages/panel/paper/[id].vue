@@ -115,7 +115,22 @@ const work = ref({
 });
 
 const submitFeedback = async () => {
-  await editionStore.submitFeedback(work_id, feedbackRejec.value);
+  try {
+    await editionStore.submitFeedback(work_id, feedbackRejec.value);
+    feedbackRejec.value = "";
+    dialogReject.value = false;
+  }
+  catch (error) {
+    console.log(error)
+    showMessage(
+      "Erro ao enviar feedback",
+      "error",
+      2000,
+      "top-right",
+      "auto",
+      false
+    );
+  }
 };
 
 const validateWordNumber = (max: number, value: string) => {

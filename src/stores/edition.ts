@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import EditionsService from '@/services/editions'
 import { IEdition } from '@/interfaces/edition'
+import { showMessage } from '@/utils/toastify'
 
 export const useEdition = defineStore('edition', () => {
   const state = reactive({
@@ -113,8 +114,10 @@ export const useEdition = defineStore('edition', () => {
     setError(null)
     try {
       await EditionsService.submitFeedback(editionId, feedback)
+      showMessage('Feedback enviado com sucesso', 'success', 3000, 'top-right', 'light', false)
     } catch (error: any) {
       setError(error.message)
+      throw error
     } finally {
       setLoading(false)
     }
