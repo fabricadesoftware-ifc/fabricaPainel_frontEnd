@@ -475,7 +475,7 @@ onMounted(async () => {
         </v-col>
         <v-col cols="2">
           <v-btn
-            v-if="authStore.user?.user_type != 'STUDENT'"
+            v-if="authStore.user?.user_type != 'STUDENT' && authStore.user.id == workStore.currentWork?.advisor.id"
             block
             class="py-6"
             color="green"

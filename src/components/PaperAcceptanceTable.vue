@@ -89,6 +89,9 @@ const works = computed(() => {
     ) {
       return false;
     }
+    if (work?.co_advisor?.id !== authStore.user.id && work?.advisor?.id !== authStore.user.id) {
+      return false;
+    }
     return true;
   });
 });
