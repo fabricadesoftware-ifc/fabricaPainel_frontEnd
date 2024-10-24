@@ -206,6 +206,14 @@ onMounted(async () => {
     grades.value.push(0);
   }
 });
+const screenWidth = ref(0);
+
+onMounted(() => {
+  window.addEventListener("resize", () => {
+    screenWidth.value = window.innerWidth;
+  });
+  screenWidth.value = window.innerWidth;
+});
 </script>
 
 <template>
@@ -476,8 +484,8 @@ onMounted(async () => {
         <v-col cols="2">
           <v-btn
             v-if="authStore.user?.user_type != 'STUDENT' && authStore.user.id == workStore.currentWork?.advisor.id"
-            block
-            class="py-6"
+            :block="screenWidth > 600"
+            :class="screenWidth > 600 ? 'py-6' : 'pl-12'"
             color="green"
             rounded="xl"
             variant="flat"
@@ -486,14 +494,15 @@ onMounted(async () => {
           >
           <v-btn
             v-else
-            block
-            class="py-6"
+            :block="screenWidth > 600"
+            :class="screenWidth > 600 ? 'py-6' : 'px-12 ml-n10'"
             color="green"
             rounded="xl"
             variant="flat"
             @click="generatePDF()"
             >Ver Nota</v-btn
           >
+          
         </v-col>
       </v-row>
       <v-row class="mt-8" justify="end" no-gutters>

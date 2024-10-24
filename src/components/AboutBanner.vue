@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 </script>
 <template>
-  <v-container width="70%" min-width="300px" fluid>
+  <v-container class="w-lg-75 d-flex align-center justify-center" min-width="300px" fluid>
     <section class="d-flex flex-column justify-center align-center pt-8 mb-6">
       <div class="px-0 text-justify text-wrap" style="width: 100%;">
         <TitleH1
@@ -48,7 +48,7 @@
             <strong><a href="https://github.com/RafaelBochi" target="_blank">Rafael Bochi Barros,</a></strong>
             <strong><a href="https://github.com/Hiansdt" target="_blank">Vinícius Nilo Hiansdt,</a></strong>
           </li>
-          <li>Analista de Requisitos: <strong><a href="https://github.com/eduardo-da-silva" target="_blank">Prof. Fábio Longo de Moura</a></strong></li>
+          <li>Analista de Requisitos: <strong><a href="https://github.com/ldmfabio" target="_blank">Prof. Fábio Longo de Moura</a></strong></li>
           <li>Orientadores do Projeto: Professores <strong><a href="https://github.com/ldmfabio" target="_blank">Fábio Longo de Moura</a></strong> e <strong><a href="/">Eduardo da Silva</a></strong></li>
         </ul>
       </div>
