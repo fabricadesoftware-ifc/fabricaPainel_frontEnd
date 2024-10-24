@@ -52,14 +52,14 @@
         <span class="">Submissão do resumo final para divulgação no PI 2024: </span>
         <span class="text-black font-weight-bold">
           {{ formatDate(editionStore.currentEdition?.initial_registration_evaluator_date) }} até
-          {{ formatDate(editionStore.currentEdition?.final_registration_evaluator_date) }}
+          01/11/2024
         </span>
       </p>
       <p class="text-grey-darken-2 mt-4">
         <span class="">Período de apresentação dos trabalhos: </span>
         <span class="text-black font-weight-bold">
-          {{ formatDate(editionStore.currentEdition?.initial_evaluators_date) }} até
-          {{ formatDate(editionStore.currentEdition?.final_evaluators_date) }}
+          07/11/2024 até
+          08/11/2024
         </span>
       </p>
     </v-col>

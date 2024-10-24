@@ -18,6 +18,5 @@ export interface IWork {
 export enum Status {
     Pendente = 1,
     Aprovado = 2,
-    Cancelado = 3,
-    Pendente_Com_Alteracoes = 4,
+    Pendente_Com_Alteracoes = 3,
 }
