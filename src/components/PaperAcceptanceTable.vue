@@ -27,7 +27,7 @@ const selectedThemes = ref([]);
 
 const status = () => {
   const statusString = [];
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 3; i++) {
     statusString.push(Status[i].replace(/_/g, " "));
   }
   return statusString;
@@ -89,7 +89,7 @@ const works = computed(() => {
     ) {
       return false;
     }
-    if (authStore.user.user_type == "TEACHER" && (work?.co_advisor?.id !== authStore.user.id && work?.advisor?.id !== authStore.user.id)) {
+  if (authStore.user.user_type == "TEACHER" && (work?.co_advisor?.id !== authStore.user.id && work?.advisor?.id !== authStore.user.id)) {
       return false;
     }
     return true;
