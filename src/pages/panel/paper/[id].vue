@@ -9,7 +9,6 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
 import { showMessage } from "@/utils/toastify";
-import auth from "@/services/auth";
 
 const router = useRouter();
 const work_id = (router.currentRoute.value.params as { id: string }).id;
@@ -249,7 +248,7 @@ onMounted(async () => {
 
   if (assessments.value.length > 0) {
     console.log(`bbb`,assessments.value);
-    workAssessment.value = assessments.value.find((assessment) => assessment.evaluator === evaluatorId.value);
+    workAssessment.value = assessments.value.find((assessment: any) => assessment?.evaluator === evaluatorId.value);
     workGrade.value = workAssessment.value.grade;
     newGrade.value = workGrade.value
   } else {
