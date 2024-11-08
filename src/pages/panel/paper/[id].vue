@@ -442,16 +442,14 @@ const screenWidth = ref(0);
       </v-row>
       <v-row class="mt-8" justify="end" no-gutters>
         <v-col cols="12">
-          <v-btn v-if="authStore.isOpenForEvaluation" block class="py-6" color="info" rounded="xl" variant="flat"
+          <v-btn v-if="authStore.isOpenForEvaluation && workStore.currentWork?.co_advisor?.id !== authStore.user.id" block class="py-6" color="info" rounded="xl" variant="flat"
             @click="dialogGrade = !dialogGrade">{{ studentAssessments.length ? "Editar nota" : "Dar nota" }}</v-btn>
 
           <v-dialog v-model="dialogGrade" max-width="600px">
             <v-card>
               <v-card-title class="headline font-weight-bold">
                 <span v-if="
-                  authStore.user.id === workStore.currentWork?.advisor?.id ||
-                  authStore.user.id === workStore.currentWork?.co_advisor?.id
-                ">
+                  authStore.user.id === workStore.currentWork?.advisor?.id                ">
                   Notas dos Alunos
                 </span>
                 <span v-else> Nota Final </span>
@@ -461,9 +459,7 @@ const screenWidth = ref(0);
                   <v-row>
                     <v-col v-if="
                       authStore.user.id ===
-                      workStore.currentWork?.advisor?.id ||
-                      authStore.user.id ===
-                      workStore.currentWork?.co_advisor?.id
+                      workStore.currentWork?.advisor?.id
                     " cols="12">
                       <v-row v-for="(student, index) in users" :key="index" no-gutters>
                         <v-col cols="8">
