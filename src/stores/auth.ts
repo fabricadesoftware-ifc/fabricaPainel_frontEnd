@@ -300,6 +300,16 @@ export const useAuth = defineStore("user", () => {
     }
   };
 
+  const getEvaluatorByUserId = async(userId: string) => {
+    try {
+      const data = await authService.getEvaluatorByUserId(userId);
+      return data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
   return {
     isLogged,
     user,
@@ -334,5 +344,6 @@ export const useAuth = defineStore("user", () => {
     userThemes,
     searchUsers,
     setTokenEmail,
+    getEvaluatorByUserId,
   };
 });

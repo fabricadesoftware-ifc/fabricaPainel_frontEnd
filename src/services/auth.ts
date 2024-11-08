@@ -128,6 +128,11 @@ class AuthService {
     const { data } = await api.get(`users/?search=${search}&type=${type}`)
     return data
   }
+
+  async getEvaluatorByUserId (userId: string) {
+    const { data } = await api.get(`evaluators/?user_id=${userId}`)
+    return data
+  }
 }
 
 export default new AuthService()

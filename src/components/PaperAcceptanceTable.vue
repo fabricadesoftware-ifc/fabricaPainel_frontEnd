@@ -40,6 +40,7 @@ const worksHeaders = [
   { title: "Tema Transversal", key: "cross_cutting_theme" },
   { title: "Orientador", key: "advisor.name" },
   { title: "Coorientador", key: "co_advisor.name" },
+  { title: "Avaliador(es)", key: "evaluator"}
 ];
 
 const generatePDF = () => {
@@ -68,9 +69,19 @@ const generatePDF = () => {
 
   doc.save(`${props.title}.pdf`);
 };
+
+const isWorkEvaluator = (work) => {
+  if (work.evaluator.length === 0) {
+    return false;
+  }
+  const amItheWorkEvaluator = work.evaluator.filter((evaluator) => evaluator.user.id === authStore.user.id);
+  if (amItheWorkEvaluator.length > 0) {
+    return true;
+  }
+}
+
 const works = computed(() => {
   return props.works.filter((work) => {
-    // return selectedStatus.value.includes(Status[work.status].replace(/_/g, ' '))
     if (
       selectedStatus.value.length > 0 &&
       !selectedStatus.value.includes(Status[work.status].replace(/_/g, " "))
@@ -89,7 +100,7 @@ const works = computed(() => {
     ) {
       return false;
     }
-  if (authStore.user.user_type == "TEACHER" && (work?.co_advisor?.id !== authStore.user.id && work?.advisor?.id !== authStore.user.id)) {
+    if (authStore.user.user_type == "TEACHER" && (work?.co_advisor?.id !== authStore.user.id && work?.advisor?.id !== authStore.user.id && !isWorkEvaluator(work))) {
       return false;
     }
     return true;
@@ -115,6 +126,7 @@ const themes = computed(() => {
   });
   return themes;
 });
+
 </script>
 
 <template>
@@ -162,6 +174,11 @@ const themes = computed(() => {
             <v-btn class="pa-0 hover" color="primary" :to="'/panel/paper/:id'.replace(':id', item.id)" variant="text">
               {{ item.title }}
             </v-btn>
+          </template>
+          <template #item.evaluator="{ item }">
+            <p>
+              {{ item.evaluator.map((evaluator) => evaluator.user.name).join(", ") }}
+            </p>
           </template>
         </v-data-table>
         <v-btn v-if="authStore.user.user_type === 'TEACHER'" block class="mt-4" color="blue" variant="outlined"

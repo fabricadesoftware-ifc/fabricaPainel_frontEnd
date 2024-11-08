@@ -33,8 +33,6 @@ const sendWork = async () => {
       await workStore.sendWork(form);
       router.push("/panel");
     } else {
-      console.log('aaa');
-
       showMessage('Preencha todos os campos corretamente.', 'error', 3000)
     }
   } catch (error) {
@@ -183,4 +181,3 @@ onMounted(() => {
     </v-form>
   </LayoutSteps>
 </template>
-

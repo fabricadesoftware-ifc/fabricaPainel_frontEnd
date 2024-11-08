@@ -49,6 +49,7 @@ export const useWork = defineStore('work', () => {
     setError(null)
     try {
       const works = await WorkService.getWorks()
+      console.log(works)
       state.works = works
     } catch (error: any) {
       setError(error.message)
@@ -139,7 +140,7 @@ export const useWork = defineStore('work', () => {
       setLoading(false)
     }
   }
-  
+
   return {
     state,
     allWorks,
