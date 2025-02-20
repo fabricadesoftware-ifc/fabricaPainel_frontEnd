@@ -40,4 +40,4 @@ Este portal foi desenvolvido pela [Fábrica de Software](https://github.com/fabr
 
 ---
 
-2024 — FabricaPainel
+2025 — FabricaPainel
