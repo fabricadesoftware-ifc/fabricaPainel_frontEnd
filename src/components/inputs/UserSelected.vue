@@ -1,7 +1,6 @@
 <script setup>
 import { useAuth } from "@/stores/auth";
 import { showMessage } from "@/utils/toastify";
-
 const authStore = useAuth();
 const props = defineProps([
   "label",
@@ -34,6 +33,7 @@ function updateSearch(value) {
 }
 
 async function searchUsers(search) {
+  console.log(search)
   if (search.length < 3 || typeof search != "string") {
     noDataMessage.value = `Pesquise por um ${String(
       props.label
@@ -45,7 +45,7 @@ async function searchUsers(search) {
       const data = await authStore.searchUsers(search, props.userType);
 
       filteredUsers.value = data.filter((s) => {
-        return !props.selectedUsers.some((st) => st.id == s.id);
+        return !props.selectedUsers?.some((st) => st.id == s.id);
       });
 
       if (filteredUsers.value.length == 0) {
@@ -118,15 +118,17 @@ watch(searchQuery, (newValue) => {
     <v-text-field
       ref="input"
       v-model="searchQuery"
-      :label="props.label"
       :focused="focused"
-      :rounded="props.rounded || 'md'"
+      :rounded="props.rounded || 'xl'"
       :density="props.density || 'default'"
       variant="outlined"
       hide-details="auto"
       required
       @focus="focused = true"
       @blur="blurInput()"
+      class="bg-grey-lighten-3  border-none outline-0"
+      append-inner-icon="mdi-magnify"
+      
     />
 
     <v-list

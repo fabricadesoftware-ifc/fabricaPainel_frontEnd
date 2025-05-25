@@ -57,6 +57,15 @@ class CategoriesService {
       this.handleError(error, 'get')
     }
   }
+
+  async FilterField(name: string){
+    try {
+      const response = await api.get(`/field/?name=${name}`)
+      return response.data
+    } catch (error) {
+      this.handleError(error, 'get')
+    }
+  }
 }
 
 export default new CategoriesService()

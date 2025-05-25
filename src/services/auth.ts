@@ -51,6 +51,15 @@ class AuthService {
     }
   }
 
+  async GetMe(){
+     try {
+      const { data } = await api.get(`users/me/`)
+      return data
+    } catch (error) {
+      this.handleError(error, 'get user')
+    }
+  }
+
   async getStudents () {
     try {
       const { data } = await api.get('users/?type=STUDENT')
@@ -125,7 +134,7 @@ class AuthService {
   }
 
   async searchUsers (search: string, type: string) {
-    const { data } = await api.get(`users/?search=${search}&type=${type}`)
+    const { data } = await api.get(`users/?name=${search}&type=${type}`)
     return data
   }
 
