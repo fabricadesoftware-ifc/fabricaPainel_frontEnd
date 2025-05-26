@@ -10,30 +10,32 @@ import 'vuetify/styles'
 
 // Composables
 import { createVuetify } from 'vuetify'
+import { pt } from 'vuetify/locale'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   locale: {
-    locale: 'pt_BR',
+    locale: "pt",
+    messages: { pt },
   },
   date: {
     locale: {
-      pt_BR: 'pt-BR',
+      pt_BR: "pt-BR",
     },
   },
   theme: {
-    defaultTheme: 'light',
+    defaultTheme: "light",
     themes: {
       light: {
         colors: {
-          primary: '#267A7A',
+          primary: "#267A7A",
         },
       },
       dark: {
         colors: {
-          primary: '#267A7A',
+          primary: "#267A7A",
         },
       },
     },
   },
-})
+});

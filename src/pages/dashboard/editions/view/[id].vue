@@ -53,27 +53,15 @@ onMounted(() => {
                   {{ edition.year }}
                 </h2>
                 <p class="text-grey-darken-2">
-                  <span class="d-block">Data de Registro de tema:</span>
+                  <span class="d-block">Data do evento:</span>
                   <span class="text-black font-weight-bold">
                     <!-- @vue-ignore -->
-                    {{ formatDate(edition.initial_registration_theme_date) }}
+                    {{ formatDate(edition.event_date) }}
                   </span>
                   até
                   <span class="text-black font-weight-bold">
                     <!-- @vue-ignore -->
-                    {{ formatDate(edition.final_registration_theme_date) }}
-                  </span>
-                </p>
-                <p class="text-grey-darken-2">
-                  <span class="d-block">Data de Registro de Avaliadores:</span>
-                  <span class="text-black font-weight-bold">
-                    <!-- @vue-ignore -->
-                    {{ formatDate(edition.initial_registration_evaluator_date) }}
-                  </span>
-                  até
-                  <span class="text-black font-weight-bold">
-                    <!-- @vue-ignore -->
-                    {{ formatDate(edition.final_registration_evaluator_date) }}
+                    {{ formatDate(edition.final_event_date) }}
                   </span>
                 </p>
                 <p class="text-grey-darken-2">
@@ -92,12 +80,12 @@ onMounted(() => {
                   <span class="d-block">Data de Orientadores:</span>
                   <span class="text-black font-weight-bold">
                     <!-- @vue-ignore -->
-                    {{ formatDate(edition.initial_advisor_date) }}
+                    {{ formatDate(edition.initial_advisor_acceptance) }}
                   </span>
                   até
                   <span class="text-black font-weight-bold">
                     <!-- @vue-ignore -->
-                    {{ formatDate(edition.final_advisor_date) }}
+                    {{ formatDate(edition.final_advisor_acceptance) }}
                   </span>
                 </p>
                 <p class="text-grey-darken-2">

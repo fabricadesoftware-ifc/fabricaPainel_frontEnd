@@ -222,6 +222,7 @@ export const useAuth = defineStore("user", () => {
 
   const createTeam = async (team: any) => {
     try {
+      console.log(team)
       const data = await authService.createTeam(team);
       await getTeam(data.id);
     } catch (error: any) {

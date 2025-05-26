@@ -64,11 +64,11 @@ onMounted(() => {
               <p class="text-grey-darken-2">
                 <span class="d-block">Data de Orientação:</span>
                 <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.initial_advisor_date) }}
+                  {{ formatDate(edition.initial_advisor_acceptance) }}
                 </span>
                 até
                 <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.final_advisor_date) }}
+                  {{ formatDate(edition.final_advisor_acceptance) }}
                 </span>
               </p>
             </v-col>

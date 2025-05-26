@@ -124,7 +124,7 @@
           <!-- Initial Advisor Date -->
           <v-col cols="12" md="6">
             <v-text-field
-              v-model="form.initial_advisor_date"
+              v-model="form.initial_advisor_acceptance"
               label="Data de Início de Orientação"
               required
               rounded="xl"
@@ -135,7 +135,7 @@
           <!-- Final Advisor Date -->
           <v-col cols="12" md="6">
             <v-text-field
-              v-model="form.final_advisor_date"
+              v-model="form.final_advisor_acceptance"
               label="Data de Fim de Orientação"
               required
               rounded="xl"
@@ -220,8 +220,8 @@
     final_registration_theme_date: '',
     initial_submission_date: '',
     final_submission_date: '',
-    initial_advisor_date: '',
-    final_advisor_date: '',
+    initial_advisor_acceptance: '',
+    final_advisor_acceptance: '',
     initial_registration_evaluator_date: '',
     final_registration_evaluator_date: '',
     initial_evaluators_date: '',

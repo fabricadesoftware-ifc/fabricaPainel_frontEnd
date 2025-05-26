@@ -25,11 +25,11 @@
             <p class="text-grey-darken-2">
               <span class="d-block">Data de Orientação:</span>
               <span class="text-black font-weight-bold">
-                {{ formatDate(edition.initial_advisor_date) }}
+                {{ formatDate(edition.initial_advisor_acceptance) }}
               </span>
               até
               <span class="text-black font-weight-bold">
-                {{ formatDate(edition.final_advisor_date) }}
+                {{ formatDate(edition.final_advisor_acceptance) }}
               </span>
             </p>
             <p class="text-grey-darken-2">
@@ -69,6 +69,8 @@
 import { useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
 
+const defaultBanner = require("@/assets/painel.png");
+
 const router = useRoute();
 const id = ref<any>();
 
@@ -78,8 +80,8 @@ const edition = {
   edition_name: "Tech Innovators",
   initil_submission_date: "2024-01-15T09:00:00",
   final_submission_date: "2024-03-01T23:59:59",
-  initial_advisor_date: "2024-03-05T09:00:00",
-  final_advisor_date: "2024-04-15T23:59:59",
+  initial_advisor_acceptance: "2024-03-05T09:00:00",
+  final_advisor_acceptance: "2024-04-15T23:59:59",
   initial_evaluators_date: "2024-04-20T09:00:00",
   final_evaluators_date: "2024-05-10T23:59:59",
   workload: 120,

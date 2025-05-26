@@ -27,32 +27,32 @@
           {{ editionStore.currentEdition?.theme }}
         </v-chip>
       </h2>
-      <p class="text-grey-darken-2 mt-6">
-        <span class="">Inscrição dos(as) docentes em dois temas transversais: </span>
+      <p class="text-grey-darken-2 mt-4">
+        <span class="">Data do evento: </span>
         <span class="text-black font-weight-bold">
-          {{ formatDate(editionStore.currentEdition?.initial_registration_theme_date) }} até
-          {{ formatDate(editionStore.currentEdition?.final_registration_theme_date) }}
+          {{ formatDate(editionStore.currentEdition?.event_date) }} até
+          {{ formatDate(editionStore.currentEdition?.final_event_date) }}
         </span>
       </p>
       <p class="text-grey-darken-2 mt-4">
-        <span class="">Inscrição da equipe em uma área temática e cadastro do resumo preliminar: </span>
+        <span class="">Data de submissão: </span>
         <span class="text-black font-weight-bold">
           {{ formatDate(editionStore.currentEdition?.initial_submission_date) }} até
           {{ formatDate(editionStore.currentEdition?.final_submission_date) }}
         </span>
       </p>
       <p class="text-grey-darken-2 mt-4">
-        <span class="">Sorteio do orientador(a) para a equipe inscrita na área temática: </span>
+        <span class="">Data dos orientadores: </span>
         <span class="text-black font-weight-bold">
-          {{ formatDate(editionStore.currentEdition?.initial_advisor_date) }} até
-          {{ formatDate(editionStore.currentEdition?.final_advisor_date) }}
+          {{ formatDate(editionStore.currentEdition?.initial_advisor_acceptance) }} até
+          {{ formatDate(editionStore.currentEdition?.final_advisor_acceptance) }}
         </span>
       </p>
       <p class="text-grey-darken-2 mt-4">
-        <span class="">Submissão do resumo final para divulgação no PI 2024: </span>
+        <span class="">Data dos avaliadores: </span>
         <span class="text-black font-weight-bold">
-          {{ formatDate(editionStore.currentEdition?.initial_registration_evaluator_date) }} até
-          01/11/2024
+          {{ formatDate(editionStore.currentEdition?.initial_evaluators_date) }} até
+          {{ formatDate(editionStore.currentEdition?.final_evaluators_date) }}
         </span>
       </p>
       <p class="text-grey-darken-2 mt-4">
@@ -63,8 +63,8 @@
         </span>
       </p>
     </v-col>
-    <v-col v-if="!isMobile" cols="6">
+    <!-- <v-col v-if="!isMobile" cols="6">
       <img :alt="editionStore.currentEdition?.logo" class="w-100 rounded-xl" :src="editionStore.currentEdition?.banner?.file">
-    </v-col>
+    </v-col> smt lopes -->
   </v-row>
 </template>

@@ -81,7 +81,7 @@ onMounted(() => {
               <v-menu activator="parent">
                 <!-- @vue-ignore -->
                 <template #activator="{ on }">
-                  <v-btn v-icon color="primary" rounded="xl" variant="flat" v-on="on">
+                  <v-btn color="primary" rounded="xl" variant="flat" v-on="on">
                     <v-icon>mdi-menu</v-icon>
                   </v-btn>
                 </template>

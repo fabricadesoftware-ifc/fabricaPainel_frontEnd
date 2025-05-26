@@ -7,10 +7,10 @@ const dialog = ref(false);
 const valid = ref(false);
 const editionStore = useEdition();
 const workStore = useWork();
-const form = ref({ ...editionStore.currentEdition });
+const form = ref({ ...editionStore?.currentEdition });
+console.log(form?.value);
 
-const defaultBanner =
-  "https://th.bing.com/th/id/OIP.MQJrIQeghQLdcs1uFBZHzwHaEp?rs=1&pid=ImgDetMain";
+const defaultBanner = require("@/assets/painel.png");
 
 const formatDate = (date: string) => new Date(date).toLocaleDateString();
 
@@ -56,39 +56,13 @@ onMounted(() => {
                   {{ editionStore.currentEdition?.year }}
                 </h2>
                 <p class="text-grey-darken-2">
-                  <span class="d-block">Data de Registro de tema:</span>
+                  <span class="d-block">Data do evento:</span>
                   <span class="text-black font-weight-bold">
-                    {{
-                      formatDate(
-                        editionStore.currentEdition?.initial_registration_theme_date
-                      )
-                    }}
+                    {{ formatDate(editionStore.currentEdition?.event_date) }}
                   </span>
                   até
                   <span class="text-black font-weight-bold">
-                    {{
-                      formatDate(
-                        editionStore.currentEdition?.final_registration_theme_date
-                      )
-                    }}
-                  </span>
-                </p>
-                <p class="text-grey-darken-2">
-                  <span class="d-block">Data de Registro de Avaliadores:</span>
-                  <span class="text-black font-weight-bold">
-                    {{
-                      formatDate(
-                        editionStore.currentEdition?.initial_registration_evaluator_date
-                      )
-                    }}
-                  </span>
-                  até
-                  <span class="text-black font-weight-bold">
-                    {{
-                      formatDate(
-                        editionStore.currentEdition?.final_registration_evaluator_date
-                      )
-                    }}
+                    {{ formatDate(editionStore.currentEdition?.final_event_date) }}
                   </span>
                 </p>
                 <p class="text-grey-darken-2">
@@ -104,11 +78,11 @@ onMounted(() => {
                 <p class="text-grey-darken-2">
                   <span class="d-block">Data de Orientadores:</span>
                   <span class="text-black font-weight-bold">
-                    {{ formatDate(editionStore.currentEdition?.initial_advisor_date) }}
+                    {{ formatDate(editionStore.currentEdition?.initial_advisor_acceptance) }}
                   </span>
                   até
                   <span class="text-black font-weight-bold">
-                    {{ formatDate(editionStore.currentEdition?.final_advisor_date) }}
+                    {{ formatDate(editionStore.currentEdition?.final_advisor_acceptance) }}
                   </span>
                 </p>
                 <p class="text-grey-darken-2">
@@ -151,9 +125,9 @@ onMounted(() => {
                         rounded="xl" type="date" variant="outlined" />
                       <v-text-field v-model="form.final_submission_date" label="Data Final de Submissão" rounded="xl"
                         type="date" variant="outlined" />
-                      <v-text-field v-model="form.initial_advisor_date" label="Data Inicial de Orientadores"
+                      <v-text-field v-model="form.initial_advisor_acceptance" label="Data Inicial de Orientadores"
                         rounded="xl" type="date" variant="outlined" />
-                      <v-text-field v-model="form.final_advisor_date" label="Data Final de Orientadores" rounded="xl"
+                      <v-text-field v-model="form.final_advisor_acceptance" label="Data Final de Orientadores" rounded="xl"
                         type="date" variant="outlined" />
                       <v-text-field v-model="form.initial_evaluators_date" label="Data Inicial de Avaliadores"
                         rounded="xl" type="date" variant="outlined" />

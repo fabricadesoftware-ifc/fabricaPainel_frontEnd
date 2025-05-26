@@ -1,20 +1,33 @@
 export interface IEdition {
-    id?: string | undefined,
-    year: number,
-    theme: string,
-    edition_name: string,
-    initial_registration_theme_date: any,
-    final_registration_theme_date: any,
-    initial_submission_date: any,
-    final_submission_date: any,
-    initial_advisor_date: any,
-    final_advisor_date: any,
-    initial_registration_evaluator_date: any,
-    final_registration_evaluator_date: any,
-    initial_evaluators_date: any,
-    final_evaluators_date: any,
-    workload: number,
-    banner: {file: string} | null,
-    logo: string | null,
-    is_open: boolean,
+  id?: string | undefined;
+  year: number;
+  theme: string;
+  edition_name: string;
+  event_date: string | Date | null;
+  final_event_date: string | Date | null;
+  initial_submission_date: string | Date | null;
+  final_submission_date: string | Date | null;
+  initial_second_submission_date: string | Date | null;
+  final_second_submission_date: string | Date | null;
+  initial_advisor_acceptance: string | Date | null;
+  final_advisor_acceptance: string | Date | null;
+  initial_second_advisor_date: string | Date | null;
+  final_second_advisor_date: string | Date | null;
+  initial_evaluators_date: string | Date | null;
+  final_evaluators_date: string | Date | null;
+  members_min: number;
+  members_max: number;
+  collaborators_min: number;
+  collaborators_max: number;
+  subjects_min: number;
+  subjects_max: number;
+  evaluators_count: number;
+  works_per_evaluator_max: number;
+  works_per_collaborator_max: number;
+  works_per_advisor_max: number;
+  words_per_work_max: number;
+  workload: number;
+  banner: { file: string } | null;
+  logo: string | null;
+  is_open: boolean;
 }

@@ -75,11 +75,11 @@
                 <p class="py-2">
                   Data de Submissão:
                   <span class="text-white font-weight-bold">
-                    {{ date.format(state.editions[model]?.initial_advisor_date, "keyboardDate") }}
+                    {{ date.format(state.editions[model]?.initial_advisor_acceptance, "keyboardDate") }}
                   </span>
                   até
                   <span class="text-white font-weight-bold">
-                    {{ date.format(state.editions[model]?.final_advisor_date, "keyboardDate") }}
+                    {{ date.format(state.editions[model]?.final_advisor_acceptance, "keyboardDate") }}
                   </span>
                 </p>
                 <p>
