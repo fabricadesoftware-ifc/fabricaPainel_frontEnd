@@ -23,13 +23,13 @@ const props = defineProps({
 })
 
 const fetchStudents = async (e) => {
-    if(e.target.value.length > 3){
-        userFiltered.value = await AuthStore.searchUsers(search.value, 'STUDENT')   
+    if (e.target.value.length > 3) {
+        userFiltered.value = await AuthStore.searchUsers(search.value, 'STUDENT')
     }
 }
 const AddUser = async (selectedStudent) => {
     if (selectedStudent) {
-        const student = userFiltered.value.find(stu => stu.name === selectedStudent)
+        const student = userFiltered.value.find(stu => stu.registration === selectedStudent)
         const userExists = props.team.some(stu => stu.email === student.email)
         console.log(userExists, student)
         if (student?.team.length === 0 || !userExists) {
@@ -53,7 +53,7 @@ const AddUser = async (selectedStudent) => {
     }
 }
 
-function removeUser(email){
+function removeUser(email) {
     WorkStore.RemoveUsersInWork(email)
 }
 
@@ -73,19 +73,21 @@ onMounted(() => {
         WorkStore.WorkStorage?.team?.push(AuthStore.user)
         localStorage.setItem('executed', 'true')
     }
-})  
+})
 </script>
 <template>
     <div style="width: 70%; " class="pa-2 h-100">
-        <VAutocomplete rounded="xl" ref="autocompleteRef" @update:model-value="AddUser"
-            @input="fetchStudents" placeholder="Pesquise pelo estudante" bg-color="grey-lighten-3" variant="solo"
+        <VAutocomplete rounded="xl" ref="autocompleteRef" @update:model-value="AddUser" @input="fetchStudents"
+            placeholder="Pesquise pelo estudante" bg-color="grey-lighten-3" variant="solo"
             append-inner-icon="mdi-magnify" menu-icon="" :no-data-text="noDataMessage"
-            :items="userFiltered?.map(s => s.name) || []" :disabled="WorkStore.WorkStorage.team?.length === 7" :hint="WorkStore.WorkStorage.team?.length === 7 ? 'Barra de pesquisa desabilitada, limite máximo atingido' : ''">
+            :items="userFiltered?.map(s => s.registration) || []" :disabled="WorkStore.WorkStorage.team?.length === 7"
+            :hint="WorkStore.WorkStorage.team?.length === 7 ? 'Barra de pesquisa desabilitada, limite máximo atingido' : ''">
         </VAutocomplete>
         <div class="d-flex ga-2 ">
             <p style="font-size: 12px;">* Limite máximo de estudantes: 7</p>
             <p style="font-size: 12px;">* Limite minimo de estudantes: 3</p>
         </div>
-        <StepContainer title="Sua Equipe" no_arr_msg="Não há equipe" :step_array="WorkStore.WorkStorage.team" :is_subject="false" :me="props.me" @RemoveUser="removeUser" :min="3"/>
+        <StepContainer title="Sua Equipe" no_arr_msg="Não há equipe" :step_array="WorkStore.WorkStorage.team"
+            :is_subject="false" :me="props.me" @RemoveUser="removeUser" :min="3" />
     </div>
 </template>
