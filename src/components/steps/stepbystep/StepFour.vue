@@ -6,24 +6,25 @@ import InformativeAlert from '../../InformativeAlert.vue';
 import StepContainer from '../../inputs/StepContainer.vue'
 import { showMessage } from '@/utils/toastify';
 import { useAuth } from '@/stores/auth';
+import UserSelected from '@/components/inputs/TeacherSelected.vue';
 const AuthStore = useAuth()
 const WorkStore = useWork()
-const search = ref('')
-const autocompleteRef = ref(null)
-const userFiltered = ref([])
 
-const fetchStudents = async (e) => {
-    if(e.target.value.length > 3){
-        userFiltered.value = await AuthStore.searchUsers(search.value, 'TEACHER')   
+
+const hintInput = computed(() => {
+    if(WorkStore.WorkStorage.co_advisor.length === 5){
+        return 'limite máximo atingido'
     }
-}
+    return ''
+})
+
+
 const AddUser = async (selectedColaborator) => {
     if (selectedColaborator) {
-        const colaborator = userFiltered.value.find(col => col.name === selectedColaborator)
-        const userExists = WorkStore.WorkStorage.co_advisor.some(stu => stu.email === colaborator.email)
-        const isYourAdvisor = WorkStore.WorkStorage.advisor[0].email === colaborator.email
+        const userExists = WorkStore.WorkStorage.co_advisor.some(stu => stu.email === selectedColaborator.email)
+        const isYourAdvisor = WorkStore.WorkStorage.advisor[0].email === selectedColaborator.email
         if (!userExists && !isYourAdvisor){
-            WorkStore.WorkStorage.co_advisor.push(colaborator)
+            WorkStore.WorkStorage.co_advisor.push(selectedColaborator)
         }
         else {
             showMessage(
@@ -35,11 +36,6 @@ const AddUser = async (selectedColaborator) => {
                 false
             );
         }
-
-        setTimeout(async () => {
-            await nextTick()
-            autocompleteRef.value?.reset()
-        }, 300)
     }
 }
 
@@ -48,24 +44,11 @@ function removeUser(email){
     WorkStore.WorkStorage.co_advisor.splice(teacherI, 1)
 }
 
-function debounce(fn, delay) {
-    let timeout;
-    return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => fn(...args), delay);
-    };
-}
-
-const SearchStudents = debounce(fetchStudents, 1000)
 </script>
 <template>
     <div style="width: 70%; " class="pa-2 h-100">
-        <VAutocomplete rounded="xl" ref="autocompleteRef" @update:model-value="AddUser"
-            @input="fetchStudents" placeholder="Pesquise por Colaborador" bg-color="grey-lighten-3" variant="solo"
-            append-inner-icon="mdi-magnify" menu-icon="" :no-data-text="noDataMessage"
-            :items="userFiltered?.map(s => s.name) || []" :disabled="WorkStore.WorkStorage.co_advisor.length === 5" :hint="WorkStore.WorkStorage.co_advisor.length === 5 ? 'Barra de pesquisa desabilitada, limite máximo atingido' : ''">
-        </VAutocomplete>
-        <div class="d-flex ga-2 ">
+        <UserSelected :disabled="WorkStore.WorkStorage.advisor.length === 5" :hint="hintInput" error_msg="colaborador não encontrado" placeholder="pesquise pelo colaborador" label="pesquise pelo colaborador" user-type="TEACHER" @addUser="AddUser" @removeUser="removeUser"/>
+        <div class="d-flex ga-2 mt-5">
             <p style="font-size: 12px;">* Limite máximo de colaboradores: 5</p>
             <p style="font-size: 12px;">* Limite minimo de colaboradores: 1</p>
         </div>

@@ -8,6 +8,10 @@ const props = defineProps([
   "userType",
   "rounded",
   "one",
+  'placeholder',
+  'error_msg',
+  'hint',
+  'disabled'
 ]);
 const emits = defineEmits(["addUser", "removeUser"]);
 
@@ -16,7 +20,7 @@ const inputHeight = ref(0)
 const searchQuery = ref("");
 const filteredUsers = ref([]);
 const noDataMessage = ref(
-  `Pesquise por um ${String(props.label).toLowerCase()}...`
+  `${String(props.label).toLowerCase()}...`
 );
 const focused = ref(false);
 
@@ -42,16 +46,14 @@ async function searchUsers(search) {
   } else {
     try {
       noDataMessage.value = "Carregando...";
-      const data = await authStore.searchUsers(search, props.userType);
+      const data = await authStore.searchTeacher(search, props.userType);
 
       filteredUsers.value = data.filter((s) => {
         return !props.selectedUsers?.some((st) => st.id == s.id);
       });
 
       if (filteredUsers.value.length == 0) {
-        noDataMessage.value = `Nenhum ${String(
-          props.label
-        ).toLowerCase()} encontrado`;
+        noDataMessage.value = props.error_msg
       }
     } catch (error) {
       console.log(error);
@@ -121,14 +123,17 @@ watch(searchQuery, (newValue) => {
       :focused="focused"
       :rounded="props.rounded || 'xl'"
       :density="props.density || 'default'"
-      variant="outlined"
+      variant="none"
       hide-details="auto"
+      bg-color="grey-lighten-3"
       required
       @focus="focused = true"
       @blur="blurInput()"
-      class="bg-grey-lighten-3  border-none outline-0"
       append-inner-icon="mdi-magnify"
-      
+      :placeholder="placeholder"
+      :disabled="disabled"
+      :hint="hint"
+      persistent-hint
     />
 
     <v-list

@@ -133,8 +133,13 @@ class AuthService {
     }
   }
 
-  async searchUsers (search: string, type: string) {
-    const { data } = await api.get(`users/?name=${search}&type=${type}`)
+  async searchUsers (search: string, type: string) { 
+    const { data } = await api.get(`users/?registration=${search}&type=${type}`);
+    return data;
+  }
+  
+  async searchTeacher(search: string, type:string){
+    const {data} = await api.get(`users/?name=${search}&type=${type}`)
     return data
   }
 

@@ -8,6 +8,7 @@ const CategoryStore = useCategory()
 const WorkStore = useWork()
 const userFiltered = ref([])
 const ThemeItems = ref([])
+const autocompleteRef = ref(null)
 
 function selectedTheme(value){
     const theme = ThemeItems.value.find(t => t.name === value)
@@ -20,6 +21,10 @@ const AddUser = async (selectedsubject) => {
         const findISub = userFiltered.value.findIndex(sub => sub.name === selectedsubject)
         userFiltered.value.splice(findISub, 1)
         WorkStore.WorkStorage.field.push(subject)
+        setTimeout(async () => {
+            await nextTick()
+            autocompleteRef.value?.reset()
+        }, 300)
     }
 }
 
@@ -42,11 +47,11 @@ onMounted(async () => {
 </script>
 <template>
     <div style="width: 70%; " class="pa-2 h-100">
-        <VAutocomplete rounded="xl"  @update:model-value="AddUser"  placeholder="Selecione a matéria" bg-color="grey-lighten-3" variant="solo"
+        <VAutocomplete rounded="xl"  @update:model-value="AddUser"  placeholder="Selecione a matéria" bg-color="grey-lighten-3"  variant="none"
             no-data-text="todas as matérias foram selecionadas"
-            :items="userFiltered?.map(s => s.name)">
+            :items="userFiltered?.map(s => s.name)" ref="autocompleteRef">
         </VAutocomplete>
-        <div class="d-flex ga-2 ">
+        <div class="d-flex ga-2">
             <p style="font-size: 12px;">* Limite minimo de matérias: 3</p>
         </div>
         <StepContainer :painel_height="300" title="As matérias integradas no seu projeto" no_arr_msg="você ainda não selecionou as matérias" :step_array="WorkStore.WorkStorage.field" :is_subject="true" :min="3" @excludeSub="RemoveSubject"/>
