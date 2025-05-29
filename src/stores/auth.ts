@@ -306,6 +306,17 @@ export const useAuth = defineStore("user", () => {
     }
   };
 
+  const searchTeacher = async (search: string, type: string) => {
+    try {
+      const data = await authService.searchTeacher(search, type);
+      console.log(data, type)
+      return data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  };
+
   const getEvaluatorByUserId = async(userId: string) => {
     try {
       const data = await authService.getEvaluatorByUserId(userId);
@@ -351,6 +362,7 @@ export const useAuth = defineStore("user", () => {
     searchUsers,
     setTokenEmail,
     getEvaluatorByUserId,
-    GetMe
+    GetMe,
+    searchTeacher
   };
 });

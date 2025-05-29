@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { CardUser, StepDialog, StepFive, StepFour, StepThree, StepTwo, StepsAction, StepbyStepHeader, StepOne, StepsHeader} from '@/components/index'
+import { CardUser, StepDialog, StepFive, StepFour, StepThree, StepTwo, StepsAction, StepbyStepHeader, StepOne, StepsHeader } from '@/components/index'
 import { useAuth } from '@/stores/auth'
 import { useWork } from '@/stores/work'
 import { steps } from '@/utils/steps'
@@ -9,40 +9,40 @@ const workStore = useWork()
 const actualstep = ref(0)
 const open_dialog = ref(false)
 
-const  ReturnValidatedtoDisabledBtn = computed(() =>{
-  if(actualstep.value === 0){
+const ReturnValidatedtoDisabledBtn = computed(() => {
+  if (actualstep.value === 0) {
     return workStore.WorkStorage.team?.length < 3
   }
-  if(actualstep.value === 1){
+  if (actualstep.value === 1) {
     return workStore.WorkStorage.field?.length < 3 && !workStore.WorkStorage.cross_cutting_theme
   }
-  if(actualstep.value === 2){
+  if (actualstep.value === 2) {
     return workStore.WorkStorage.advisor?.length === 0
   }
-  if(actualstep.value === 3){
+  if (actualstep.value === 3) {
     return workStore.WorkStorage.co_advisor?.length === 0
   }
   return false
 })
 
-async function DialogActive(type){
-  if(type == 'Sim'){
+async function DialogActive(type) {
+  if (type == 'Sim') {
     workStore.WorkStorage.integrated_project = true
   }
-  else if(type == 'Confirmar'){
-    // await workStore.sendWork()
-    open_dialog.value = !open_dialog
+  else if (type == 'Confirmar') {
+    await workStore.sendWork()
+    NextStep()
   }
   open_dialog.value = !open_dialog
 }
 
 function NextStep() {
-  if(actualstep.value <= 3){
+  if (actualstep.value <= 3) {
     steps.value[actualstep.value].complete = true
     steps.value[actualstep.value].is_actual = false
     steps.value[actualstep.value + 1].is_actual = true
   }
-  else if(actualstep.value === 4){
+  else if (actualstep.value === 4) {
     steps.value[actualstep.value].complete = true
     steps.value[actualstep.value].is_actual = false
   }
@@ -51,42 +51,56 @@ function NextStep() {
 }
 
 function PrevStep() {
-  steps.value[actualstep.value].is_actual = false
-  steps.value[actualstep.value - 1].is_actual = true
+  if(actualstep.value === 5){
+    steps.value[actualstep.value - 1].is_actual = true
+  }
+  else{
+    steps.value[actualstep.value].is_actual = false
+    steps.value[actualstep.value - 1].is_actual = true
+  }
   actualstep.value--
   localStorage.setItem('actualstep', actualstep.value)
 }
 
 onMounted(() => {
   const useractualstep = Number(localStorage.getItem('actualstep'))
-  if(useractualstep){
-      if (useractualstep === 0) open_dialog.value = true
-      for(let i = 0; i < useractualstep; i++){
-        steps.value[i].complete = true
-      }
-      actualstep.value = useractualstep
+  if (actualstep.value === 0) {
+    open_dialog.value = true
+  }
+  if (useractualstep) {
+    for (let i = 0; i < useractualstep; i++) {
+      steps.value[i].complete = true
+    }
+    actualstep.value = useractualstep
   }
   AuthStore.GetMe()
+  console.log(actualstep.value)
 })
 </script>
 <template>
   <div style="height: 100vh;">
-    <VStepper v-model="actualstep"  mobile class="d-flex h-100">
-      <StepbyStepHeader :steps="steps" :actualstep="actualstep"/>
+    <VStepper v-model="actualstep" mobile class="d-flex h-100">
+      <StepbyStepHeader :steps="steps" :actualstep="actualstep" />
       <VStepperWindow class="w-100 h-100">
         <StepsHeader :user="AuthStore.user" />
         <VContainer class="d-flex justify-center flex-column align-center h-100">
-          <StepOne  :me="AuthStore?.user" :team="workStore?.team" v-if="actualstep === 0"/>
-          <StepTwo v-if="actualstep === 1"/>
-          <StepThree v-if="actualstep === 2"/>
+          <StepOne :me="AuthStore?.user" :team="workStore?.team" v-if="actualstep === 0" />
+          <StepTwo v-if="actualstep === 1" />
+          <StepThree v-if="actualstep === 2" />
           <StepFour v-if="actualstep === 3" />
-          <StepFive v-if="actualstep === 4"/>
-          <FinalStep :form_work="workStore.WorkStorage" v-if="actualstep === 5" @submitPropose="open_dialog = !open_dialog"/>
-          <SuccessStep v-if="actualstep === 6"/>
+          <StepFive v-if="actualstep === 4" />
+          <FinalStep :form_work="workStore.WorkStorage" v-if="actualstep === 5"
+            @submitPropose="open_dialog = !open_dialog" />
+          <SuccessStep v-if="actualstep === 6" />
         </VContainer>
-        <StepsAction :actualstep="actualstep" :disabledBtn="ReturnValidatedtoDisabledBtn" @PrevStep="PrevStep" @NextStep="NextStep" v-if="actualstep !== 5 && actualstep !== 6"/>
+        <StepsAction :actualstep="actualstep" :disabledBtn="ReturnValidatedtoDisabledBtn" @PrevStep="PrevStep"
+          @NextStep="NextStep" v-if="actualstep !== 6" />
       </VStepperWindow>
     </VStepper>
-    <StepDialog :btn_cancel_text="steps[0].is_actual ? 'Não' : 'Cancelar'" :btn_confirm_text="steps[0].is_actual ? 'Sim' : 'Confirmar'" :title="steps[0].is_actual ? 'Este trabalho origina de um projeto integrador?' : 'Tens a certeza que deseja submeter uma proposta?'" :description="steps[0].is_actual ? 'Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes.' : 'Após confirmar sua proposta entra na lista de espera de confirmação e entrará em análise assim que possível.'" v-model="open_dialog" @confirmation="DialogActive"/>
-  </div> 
+    <StepDialog :btn_cancel_text="actualstep === 0 ? 'Não' : 'Cancelar'"
+      :btn_confirm_text="actualstep === 0 ? 'Sim' : 'Confirmar'"
+      :title="actualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
+      :description="actualstep === 0 ? '<p>Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes</p>.' : '<p>Após submeter o trabalho um email será enviado para os <b>colaboradores</b> e para o <b>orientador</b> do seu projeto</p>'"
+      v-model="open_dialog" @confirmation="DialogActive" />
+  </div>
 </template>

@@ -9,6 +9,7 @@ import { useStorage } from '@vueuse/core'
 export const useWork = defineStore('work', () => {
   const categoryStore = useCategory()
   const editionStore = useEdition()
+  const authStore = useAuth()
   const state = reactive({
     works: [] as any[],
     userWorks: [] as any[],
@@ -17,8 +18,6 @@ export const useWork = defineStore('work', () => {
     loading: false,
     error: null as string | null,
   })
-
-  const authStore = useAuth()
 
   const WorkStorage = useStorage('workstorage', {
       title: '',
@@ -71,14 +70,26 @@ export const useWork = defineStore('work', () => {
     }
   }
 
-  const sendWork = async (work: any) => {
+  const sendWork = async () => {
     setError(null)
     try {
+      const work = WorkStorage.value.team.map(stu => stu.id)
+      const newteam = await authStore.createTeam({team_members: work, edition: editionStore.state.currentEdition?.id})
+      authStore.team
+      
       const newWork = await WorkService.sendWork({
-        ...WorkStorage.value,
+        title: 'teste',
+        abstract: WorkStorage.value.abstract,
+        fields: WorkStorage.value.field.map(f => f.id),
+        advisor: WorkStorage.value.advisor[0].id,
+        cross_cutting_theme: WorkStorage.value.cross_cutting_theme.id,
+        co_advisor: WorkStorage.value.co_advisor.map(co => co.id),
+        integrated_project: false,
+        team: authStore.team?.id,
         edition: editionStore.currentEdition?.id,
       })
       state.works.push(newWork)
+      console.log(editionStore.state)
     } catch (error: any) {
       console.error(error)
       setError(error.message)
@@ -130,6 +141,7 @@ export const useWork = defineStore('work', () => {
       const userId = authStore.user.id
       const works = await WorkService.getUserWorks(userType, userId)
       state.userWorks = works
+      console.log(state.userWorks)
     } catch (error: any) {
       setError(error.message)
     } finally {

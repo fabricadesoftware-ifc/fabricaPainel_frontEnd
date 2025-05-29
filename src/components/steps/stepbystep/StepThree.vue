@@ -6,46 +6,43 @@ import InformativeAlert from '../../InformativeAlert.vue';
 import StepContainer from '../../inputs/StepContainer.vue'
 import { showMessage } from '@/utils/toastify';
 import { useAuth } from '@/stores/auth';
+import TeacherSelected from '@/components/inputs/TeacherSelected.vue';
 const AuthStore = useAuth()
 const WorkStore = useWork()
-const search = ref('')
-const autocompleteRef = ref(null)
-const userFiltered = ref([])
 
-const fetchStudents = async (e) => {
-    if(e.target.value.length > 3){
-        userFiltered.value = await AuthStore.searchUsers(search.value, 'TEACHER')   
+const hintInput = computed(() => {
+    if(WorkStore.WorkStorage.advisor.length === 1){
+        return 'limite máximo atingido'
     }
-}
-const AddUser = async (selectedAdvisor) => {
+    return ''
+})
+
+const AddUser = (selectedAdvisor) => {
     if (selectedAdvisor) {
-        const advisor = userFiltered.value.find(stu => stu.name === selectedAdvisor)
-        WorkStore.WorkStorage.advisor.push(advisor)
+        const findadvisor = WorkStore.WorkStorage.co_advisor.find(s => s.email === selectedAdvisor.email )
+
+        if(!findadvisor){
+            WorkStore.WorkStorage.advisor.push(selectedAdvisor)
+        }
+        else{
+            showMessage(
+                'esse orientador é seu colaborador',
+                "error",
+                1500,
+                "top-right",
+                "auto",
+                false)
+        }
     }
 }
-
 function removeUser(){
     WorkStore.WorkStorage.advisor = []
 }
-
-function debounce(fn, delay) {
-    let timeout;
-    return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => fn(...args), delay);
-    };
-}
-
-const SearchStudents = debounce(fetchStudents, 1000)
 </script>
 <template>
     <div style="width: 70%; " class="pa-2 h-100">
-        <VAutocomplete rounded="xl" ref="autocompleteRef" @update:model-value="AddUser"
-            @input="fetchStudents" placeholder="Pesquise por Orientador" bg-color="grey-lighten-3" variant="solo"
-            append-inner-icon="mdi-magnify" menu-icon="" :no-data-text="noDataMessage"
-            :items="userFiltered?.map(s => s.name) || []" :disabled="WorkStore.WorkStorage.advisor.length === 1" :hint="WorkStore.WorkStorage.advisor.length === 1 ? 'Barra de pesquisa desabilitada, limite máximo atingido' : ''">
-        </VAutocomplete>
-        <div class="d-flex ga-2 ">
+        <TeacherSelected  :disabled="WorkStore.WorkStorage.advisor.length === 1" :hint="hintInput" error_msg="orientador não encontrado" placeholder="pesquise pelo orientador" label="pesquise pelo professor" userType="TEACHER" @addUser="AddUser" @removeUser="removeUser"/>
+        <div class="d-flex ga-2 mt-2">
             <p style="font-size: 12px;">* Limite máximo de orientadores: 1</p>
             <p style="font-size: 12px;">* Limite minimo de orientadores: 1</p>
         </div>
