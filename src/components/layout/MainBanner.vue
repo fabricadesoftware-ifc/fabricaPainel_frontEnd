@@ -29,7 +29,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <v-container class="w-lg-75" fluid>
+  <v-container class="w-lg-75"  fluid>
     <v-divider :class="classDivider" />
     <section class="mt-2 d-flex justify-center align-center"
       style="min-height: 400px">

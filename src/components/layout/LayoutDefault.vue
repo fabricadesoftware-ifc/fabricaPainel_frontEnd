@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire">
+  <v-app id="inspire" >
     <v-app-bar v-if="!isMobile" class="py-4" flat>
       <v-container class="w-lg-75 d-flex align-center justify-center" fluid>
         <img
@@ -31,7 +31,7 @@
           <p>ENTRAR NO SISTEMA</p>
         </v-btn>
 
-        <div v-else class="d-flex ga-2">
+        <div v-if="authStore.isLogged && router.fullpath != '/'" class="d-flex ga-2">
 
           <v-btn
             color="red"
@@ -46,6 +46,19 @@
             <v-icon color="red">mdi-logout</v-icon>
           </v-btn>
         </div>
+
+        <RouterLink to="/panel" v-if="authStore.isLogged && router.fullpath == '/'" class="d-flex ga-2">
+          <v-btn
+          class="d-flex"
+          color="primary"
+          rounded="xl"
+          variant="flat"
+        >
+          <p>ACESSAR PLATAFORMA</p>
+        </v-btn>
+  
+        </RouterLink>
+
       </v-container>
     </v-app-bar>
     <v-app-bar class="py-4" v-else flat>
@@ -120,6 +133,7 @@ import { useRouter } from "vue-router";
 import { useAuth } from "@/stores/auth";
 import { showMessage } from "@/utils/toastify";
 import { useScreen } from "@/composables/composables";
+import { RouterLink } from "vue-router";
 
 const { isMobile } = useScreen();
 const router = useRouter();

@@ -59,6 +59,7 @@ declare module 'vue' {
     TeacherSelected: typeof import('./components/inputs/TeacherSelected.vue')['default']
     TitleH1: typeof import('./components/globals/TitleH1.vue')['default']
     UserList: typeof import('./components/auth/UserList.vue')['default']
+    UserMenu: typeof import('./components/global/UserMenu.vue')['default']
     UserSelected: typeof import('./components/inputs/UserSelected.vue')['default']
     WorkHeader: typeof import('./components/work/WorkHeader.vue')['default']
   }
