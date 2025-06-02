@@ -31,6 +31,19 @@ export const useCategory = defineStore("categories", () => {
     try {
       const response = await CategoriesService.getCrossCuttingThemes();
       state.themes = response;
+      return response
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterFields = async (name: string) => {
+    try {
+      const response = await CategoriesService.FilterField(name)
+      state.themes = response;
+      console.log(state.themes)
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -79,6 +92,7 @@ export const useCategory = defineStore("categories", () => {
     try {
       const response = await CategoriesService.getField();
       state.field = response;
+      return response
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -117,5 +131,6 @@ export const useCategory = defineStore("categories", () => {
     getCrossCuttingThemes,
     saveCrossCuttingThemes,
     removeAdvisorCrossCuttingThemes,
+    filterFields
   };
 });

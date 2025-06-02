@@ -181,6 +181,11 @@ export const useAuth = defineStore("user", () => {
     }
   };
 
+  const GetMe = async () => {
+      state.value.user = await authService.GetMe()
+      console.log(state.value.user)
+  }
+
   const getUserTeam = async () => {
     try {
       const data = await authService.getUserTeam(state.value.user.id);
@@ -293,6 +298,18 @@ export const useAuth = defineStore("user", () => {
   const searchUsers = async (search: string, type: string) => {
     try {
       const data = await authService.searchUsers(search, type);
+      console.log(data, type)
+      return data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  };
+
+  const searchTeacher = async (search: string, type: string) => {
+    try {
+      const data = await authService.searchTeacher(search, type);
+      console.log(data, type)
       return data;
     } catch (error) {
       console.error(error);
@@ -345,5 +362,7 @@ export const useAuth = defineStore("user", () => {
     searchUsers,
     setTokenEmail,
     getEvaluatorByUserId,
+    GetMe,
+    searchTeacher
   };
 });

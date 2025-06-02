@@ -14,7 +14,6 @@ export const uselayout = defineStore(
 
     const router = useRouter()
     const currentPage: ComputedRef<string> = computed(() => router.currentRoute.value.path)
-
     const state = useStorage('layout', initialState)
     const loading = computed(() => state.value.loading)
     const drawer = computed(() => state.value.drawer)

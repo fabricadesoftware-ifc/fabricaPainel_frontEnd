@@ -4,10 +4,12 @@ import WorkService from '@/services/works'
 import { useCategory } from '@/stores/category'
 import { useEdition } from '@/stores/edition'
 import { useAuth } from './auth'
+import { useStorage } from '@vueuse/core'
 
 export const useWork = defineStore('work', () => {
   const categoryStore = useCategory()
   const editionStore = useEdition()
+  const authStore = useAuth()
   const state = reactive({
     works: [] as any[],
     userWorks: [] as any[],
@@ -17,8 +19,18 @@ export const useWork = defineStore('work', () => {
     error: null as string | null,
   })
 
-  const authStore = useAuth()
+  const WorkStorage = useStorage('workstorage', {
+      title: '',
+      abstract: '',
+      field: [],
+      advisor: [],
+      cross_cutting_theme: {},
+      team: [],
+      co_advisor: [],
+      integrated_project: false
+  })
 
+  const team = computed(() => WorkStorage.value.team )
   const allWorks = computed(() => state.works)
   const currentWork = computed(() => state.currentWork)
   const userWorks = computed(() => state.userWorks)
@@ -58,19 +70,26 @@ export const useWork = defineStore('work', () => {
     }
   }
 
-  const sendWork = async (work: any) => {
+  const sendWork = async () => {
     setError(null)
     try {
+      const work = WorkStorage.value.team.map(stu => stu.id)
+      const newteam = await authStore.createTeam({team_members: work, edition: editionStore.state.currentEdition?.id})
+      authStore.team
+      
       const newWork = await WorkService.sendWork({
-        ...work,
-        cross_cutting_theme: categoryStore.state.themes.find((t: { name: string }) => t.name === work.cross_cutting_theme).id,
-        field: work.field.map((fieldItem: string) => categoryStore.state.field.find((f: { name: string }) => f.name === fieldItem).id),
+        title: 'teste',
+        abstract: WorkStorage.value.abstract,
+        fields: WorkStorage.value.field.map(f => f.id),
+        advisor: WorkStorage.value.advisor[0].id,
+        cross_cutting_theme: WorkStorage.value.cross_cutting_theme.id,
+        co_advisor: WorkStorage.value.co_advisor.map(co => co.id),
+        integrated_project: false,
+        team: authStore.team?.id,
         edition: editionStore.currentEdition?.id,
-        evaluator: [],
-        team: work.team,
-        co_advisor: work.co_advisor.id,
       })
       state.works.push(newWork)
+      console.log(editionStore.state)
     } catch (error: any) {
       console.error(error)
       setError(error.message)
@@ -122,6 +141,7 @@ export const useWork = defineStore('work', () => {
       const userId = authStore.user.id
       const works = await WorkService.getUserWorks(userType, userId)
       state.userWorks = works
+      console.log(state.userWorks)
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -141,6 +161,10 @@ export const useWork = defineStore('work', () => {
     }
   }
 
+  const RemoveUsersInWork = (email: string) => {
+      const user = WorkStorage.value.team.findIndex(stu => stu?.email === email)
+      WorkStorage.value.team.splice(user, 1)
+  }
   return {
     state,
     allWorks,
@@ -154,5 +178,8 @@ export const useWork = defineStore('work', () => {
     fetchUserWorks,
     userWorks,
     approveWork,
+    WorkStorage,
+    RemoveUsersInWork,
+    team
   }
 })

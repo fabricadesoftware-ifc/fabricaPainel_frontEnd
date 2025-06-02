@@ -1,0 +1,51 @@
+<script setup>
+import { ref, computed, nextTick,onMounted } from 'vue';
+import { useWork } from '@/stores/work';
+import CardUser from '../layout/CardUser.vue';
+import InformativeAlert from '../../InformativeAlert.vue';
+import StepContainer from '../../inputs/StepContainer.vue'
+import { showMessage } from '@/utils/toastify';
+import { useAuth } from '@/stores/auth';
+import TeacherSelected from '@/components/inputs/TeacherSelected.vue';
+const AuthStore = useAuth()
+const WorkStore = useWork()
+
+const hintInput = computed(() => {
+    if(WorkStore.WorkStorage.advisor.length === 1){
+        return 'limite máximo atingido'
+    }
+    return ''
+})
+
+const AddUser = (selectedAdvisor) => {
+    if (selectedAdvisor) {
+        const findadvisor = WorkStore.WorkStorage.co_advisor.find(s => s.email === selectedAdvisor.email )
+
+        if(!findadvisor){
+            WorkStore.WorkStorage.advisor.push(selectedAdvisor)
+        }
+        else{
+            showMessage(
+                'esse orientador é seu colaborador',
+                "error",
+                1500,
+                "top-right",
+                "auto",
+                false)
+        }
+    }
+}
+function removeUser(){
+    WorkStore.WorkStorage.advisor = []
+}
+</script>
+<template>
+    <div style="width: 70%; " class="pa-2 h-100">
+        <TeacherSelected  :disabled="WorkStore.WorkStorage.advisor.length === 1" :hint="hintInput" error_msg="orientador não encontrado" placeholder="pesquise pelo orientador" label="pesquise pelo professor" userType="TEACHER" @addUser="AddUser" @removeUser="removeUser"/>
+        <div class="d-flex ga-2 mt-2">
+            <p style="font-size: 12px;">* Limite máximo de orientadores: 1</p>
+            <p style="font-size: 12px;">* Limite minimo de orientadores: 1</p>
+        </div>
+        <StepContainer title="Orientador do seu projeto" :step_array="WorkStore.WorkStorage.advisor" :is_subject="false" @RemoveUser="removeUser" :min="1"/>
+    </div>
+</template>

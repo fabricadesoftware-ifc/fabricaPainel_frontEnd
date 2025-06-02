@@ -1,183 +1,106 @@
 <script setup>
-import LayoutSteps from "@/components/LayoutSteps.vue";
-import { useEdition } from "../../../stores/edition";
-import { useAuth } from "@/stores/auth";
-import { useCategory } from "@/stores/category";
-import { useWork } from "@/stores/work";
-import { useRouter } from "vue-router";
-import { showMessage } from "@/utils/toastify";
+import { ref } from 'vue'
+import { CardUser, StepDialog, StepFive, StepFour, StepThree, StepTwo, StepsAction, StepbyStepHeader, StepOne, StepsHeader } from '@/components/index'
+import { useAuth } from '@/stores/auth'
+import { useWork } from '@/stores/work'
+import { steps } from '@/utils/steps'
+const AuthStore = useAuth()
+const workStore = useWork()
+const actualstep = ref(0)
+const open_dialog = ref(false)
 
-const editionStore = useEdition();
-const categoryStore = useCategory();
-const authStore = useAuth();
-const workStore = useWork();
-const router = useRouter();
-
-const selectedCoAdvisor = ref();
-
-const validateUserHasWork = async () => {
-  try {
-    await workStore.fetchUserWorks();
-    if (workStore.userWorks.length > 0 || !authStore.isOpenForWork || authStore.user.user_type !== "STUDENT") {
-      router.push("/panel");
-    }
-  } catch (error) {
-    console.error(error);
+const ReturnValidatedtoDisabledBtn = computed(() => {
+  if (actualstep.value === 0) {
+    return workStore.WorkStorage.team?.length < 3
   }
-};
-
-const sendWork = async () => {
-  try {
-    if (form.title || form.abstract || form.co_advisor || form.cross_cutting_theme) {
-      form.team = authStore?.userTeam?.id;
-      await workStore.sendWork(form);
-      router.push("/panel");
-    } else {
-      showMessage('Preencha todos os campos corretamente.', 'error', 3000)
-    }
-  } catch (error) {
-    console.error(error);
+  if (actualstep.value === 1) {
+    return workStore.WorkStorage.field?.length < 3 && !workStore.WorkStorage.cross_cutting_theme
   }
-};
+  if (actualstep.value === 2) {
+    return workStore.WorkStorage.advisor?.length === 0
+  }
+  if (actualstep.value === 3) {
+    return workStore.WorkStorage.co_advisor?.length === 0
+  }
+  return false
+})
 
-const form = reactive({
-  title: "",
-  abstract: "",
-  field: [],
-  evaluator: [],
-  cross_cutting_theme: null,
-  team: null,
-  advisor: null,
-  co_advisor: selectedCoAdvisor,
-});
+async function DialogActive(type) {
+  if (type == 'Sim') {
+    workStore.WorkStorage.integrated_project = true
+  }
+  else if (type == 'Confirmar') {
+    await workStore.sendWork()
+    NextStep()
+  }
+  open_dialog.value = !open_dialog
+}
 
-const inProgress = ref(false);
+function NextStep() {
+  if (actualstep.value <= 3) {
+    steps.value[actualstep.value].complete = true
+    steps.value[actualstep.value].is_actual = false
+    steps.value[actualstep.value + 1].is_actual = true
+  }
+  else if (actualstep.value === 4) {
+    steps.value[actualstep.value].complete = true
+    steps.value[actualstep.value].is_actual = false
+  }
+  actualstep.value++
+  localStorage.setItem('actualstep', actualstep.value)
+}
 
-const addUser = (user) => {
-  selectedCoAdvisor.value = user;
-};
+function PrevStep() {
+  if(actualstep.value === 5){
+    steps.value[actualstep.value - 1].is_actual = true
+  }
+  else{
+    steps.value[actualstep.value].is_actual = false
+    steps.value[actualstep.value - 1].is_actual = true
+  }
+  actualstep.value--
+  localStorage.setItem('actualstep', actualstep.value)
+}
 
 onMounted(() => {
-  validateUserHasWork();
-  editionStore.fetchCurrentEdition();
-  categoryStore.getCrossCuttingThemes();
-  categoryStore.getField();
-  authStore.getStudents();
-  authStore.getUserTeam();
-});
+  const useractualstep = Number(localStorage.getItem('actualstep'))
+  if (actualstep.value === 0) {
+    open_dialog.value = true
+  }
+  if (useractualstep) {
+    for (let i = 0; i < useractualstep; i++) {
+      steps.value[i].complete = true
+    }
+    actualstep.value = useractualstep
+  }
+  AuthStore.GetMe()
+  console.log(actualstep.value)
+})
 </script>
-
 <template>
-  <LayoutSteps size="w-md-33" title="Enviar um trabalho">
-    <v-form @submit.prevent="sendWork">
-      <v-row>
-        <v-col cols="12">
-          <v-checkbox
-            :class="!inProgress ? 'pb-8' : ''"
-            label="Esta em andamento"
-            v-model="inProgress"
-            color="primary"
-            hide-details
-            density="compact"
-            @update:model-value="
-              (value) => {
-                inProgress = value;
-                if (!value) form.advisor = null;
-              }
-            "
-          />
-        </v-col>
-        <v-expand-transition class="pb-8">
-          <v-col cols="12" v-show="inProgress">
-            <user-selected
-              :selected-users="[]"
-              :one="true"
-              label="Orientador"
-              user-type="TEACHER"
-              rounded="xl"
-              density="default"
-              @add-user="(user) => (form.advisor = user.id)"
-            />
-          </v-col>
-        </v-expand-transition>
-        <v-col cols="12">
-          <v-autocomplete
-            v-model="form.cross_cutting_theme"
-            clearable
-            :items="categoryStore.crossCuttingThemes"
-            label="Temas Transversais"
-            rounded="xl"
-            variant="outlined"
-            hide-details
-            required
-          />
-        </v-col>
-        <v-col cols="12" sm="12">
-          <v-text-field
-            v-model="form.title"
-            label="Título"
-            rounded="xl"
-            variant="outlined"
-            hide-details
-            required
-          />
-        </v-col>
-        <v-col cols="12" sm="12">
-          <user-selected
-            v-if="!selectedCoAdvisor"
-            label="Co-orientador"
-            user-type="TEACHER"
-            rounded="xl"
-            class="mb-n5 mt-1"
-            :selected-users="[]"
-            @add-user="addUser"
-            required
-          />
-        </v-col>
-        <v-col cols="12" sm="12" class="d-flex align-center justify-center">
-          <v-text-field
-            v-if="selectedCoAdvisor"
-            v-model="selectedCoAdvisor.name"
-            label="Co-orientador"
-            clearable
-            rounded="xl"
-            variant="outlined"
-            class="mt-n5 mb-n5"
-            required
-            @click:clear="selectedCoAdvisor = null"
-          />
-        </v-col>
-        <v-col cols="12" sm="12">
-          <v-autocomplete
-            v-model="form.field"
-            chips
-            clearable
-            :items="categoryStore.field"
-            label="Áreas de Conhecimento"
-            multiple
-            rounded="xl"
-            variant="outlined"
-            required
-            hide-details
-          />
-        </v-col>
-        <v-col cols="12">
-          <v-textarea
-            v-model="form.abstract"
-            auto-grow
-            counter
-            label="Resumo do Projeto"
-            rounded="xl"
-            rows="1"
-            variant="outlined"
-            required
-            hide-details
-          />
-        </v-col>
-      </v-row>
-      <v-btn type="submit" block class="py-6" color="primary" rounded="xl">
-        Confirmar
-      </v-btn>
-    </v-form>
-  </LayoutSteps>
+  <div style="height: 100vh;">
+    <VStepper v-model="actualstep" mobile class="d-flex h-100">
+      <StepbyStepHeader :steps="steps" :actualstep="actualstep" />
+      <VStepperWindow class="w-100 h-100">
+        <StepsHeader :user="AuthStore.user" />
+        <VContainer class="d-flex justify-center flex-column align-center h-100">
+          <StepOne :me="AuthStore?.user" :team="workStore?.team" v-if="actualstep === 0" />
+          <StepTwo v-if="actualstep === 1" />
+          <StepThree v-if="actualstep === 2" />
+          <StepFour v-if="actualstep === 3" />
+          <StepFive v-if="actualstep === 4" />
+          <FinalStep :form_work="workStore.WorkStorage" v-if="actualstep === 5"
+            @submitPropose="open_dialog = !open_dialog" />
+          <SuccessStep v-if="actualstep === 6" />
+        </VContainer>
+        <StepsAction :actualstep="actualstep" :disabledBtn="ReturnValidatedtoDisabledBtn" @PrevStep="PrevStep"
+          @NextStep="NextStep" v-if="actualstep !== 6" />
+      </VStepperWindow>
+    </VStepper>
+    <StepDialog :btn_cancel_text="actualstep === 0 ? 'Não' : 'Cancelar'"
+      :btn_confirm_text="actualstep === 0 ? 'Sim' : 'Confirmar'"
+      :title="actualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
+      :description="actualstep === 0 ? '<p>Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes</p>.' : '<p>Após submeter o trabalho um email será enviado para os <b>colaboradores</b> e para o <b>orientador</b> do seu projeto</p>'"
+      v-model="open_dialog" @confirmation="DialogActive" />
+  </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <h1 :class="[ color, 'text-start text-wrap ', screenWidth > 950 ? 'H2 text-h2' : 'text-h4 font-normal' ]" style="word-break: break-word">
+  <h1 :class="[ color, 'text-start font-weight-bold text-wrap', screenWidth > 950 ? 'H2 text-h2' : 'text-h4 font-normal' ]" style="word-break: break-word">
     {{ props.text }}
     <br>
     {{ props.subtext }}

@@ -9,11 +9,16 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
 import { showMessage } from '@/utils/toastify'
+import { useWork } from '@/stores/work'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: setupLayouts(routes),
 })
+
+const WorkStore = useWork()
+
+const year = new Date().getFullYear()
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
 router.onError((err, to) => {
