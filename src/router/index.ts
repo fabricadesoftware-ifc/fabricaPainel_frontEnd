@@ -16,10 +16,6 @@ const router = createRouter({
   routes: setupLayouts(routes),
 })
 
-const WorkStore = useWork()
-
-const year = new Date().getFullYear()
-
 // Workaround for https://github.com/vitejs/vite/issues/11804
 router.onError((err, to) => {
   if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
