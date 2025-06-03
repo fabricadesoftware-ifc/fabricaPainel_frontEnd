@@ -1,3 +1,4 @@
+
 <template>
   <v-range-slider :max="anos.max" :min="anos.min" :model-value="data" show-ticks="always" :step="1" strict
     thumb-label="always" tick-size="4" @update:model-value="updateData">
