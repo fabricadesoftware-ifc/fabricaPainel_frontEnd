@@ -1,42 +1,83 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useWork } from '@/stores/work';
+import { useAuth } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+const router = useRouter()
+const work_id = (router.currentRoute.value.params as { id: string }).id;
+
+const authStore = useAuth()
 const workStore = useWork()
 
 onMounted(async()=> {
-    await workStore.fetchUserWorks()
-    console.log(workStore.allWorks)
+    await workStore.getWork(work_id)
+    console.log(workStore.currentWork)
 })
+
+const resolveStatus = (status:number) => {
+    switch (status) {
+        case 1: {
+            return {
+                text: 'Pendente',
+                color: 'yellow-darken-2'
+            }
+        }
+        case 2: {
+            return {
+                text: 'Aprovado',
+                color: 'green-darken-2'
+            }
+        }
+        case 3: {
+            return {
+                text: 'Necessita de Mudanças',
+                color: 'indigo-darken-2'
+            }
+        }
+        case 4: {
+            return {
+                text: 'Cancelado',
+                color: 'red-darken-2'
+            }
+        }
+    }
+} 
+
+const orderByUserId = (members: Array<any>, user_id: number | string) => {
+  return members.sort((a, b) => {
+    if (a.id === user_id) return -1
+    if (b.id === user_id) return 1
+    return 0
+  })
+}
 </script>
 <template>
      <LayoutPanel>
-    <v-container class="w-100">
+    <v-container class="w-100" v-if="workStore.currentWork">
         <div class="d-flex flex-column ga-10">
        
-            <WorkHeader />
+            <WorkHeader :grade="workStore.currentWork.feedback" :status_content="resolveStatus(workStore.currentWork.status)?.text" :status_color="resolveStatus(workStore.currentWork.status)?.color" :title="workStore.currentWork.title" />
       
 
         <div class="d-flex flex-column ga-3">
             <h2 class="opacity-70 " style="font-weight: 700; font-size: 20px;">Proposta de Integração</h2>
-            <p style="font-size: 16px;">Este projeto é uma aplicação web desenvolvida para monitorar, em tempo real, a fila do refeitório do campus do IFC Araquari. Utilizando Vue.js no frontend e Django com Django REST Framework no backend, a plataforma permite que usuários acompanhem o tempo estimado de espera e a quantidade de pessoas na fila. Além disso, um painel analítico foi construído com Streamlit para visualização de dados históricos e padrões de uso. O sistema tem como público-alvo estudantes e servidores do campus, auxiliando no melhor planejamento dos horários de refeição.</p>
+            <p style="font-size: 16px;">{{ workStore.currentWork.abstract }}</p>
         </div>
 
-       <SubjectsSession />
+       <SubjectsSession :subjects="workStore.currentWork.field" :cross_cutting_theme="workStore.currentWork.cross_cutting_theme" />
 
         <MembersContainer>
-          <MembersCard />
+          <MembersCard v-for="(student, index) in orderByUserId(workStore.currentWork.team.team_members, authStore.user.id)" :member="student" :user_id="authStore.user.id" :key="index" />
         </MembersContainer>
 
-        <!-- <div>
-            <p class="opacity-70 mt-10" style="font-weight: 700; font-size: 20px;">Orientador do Trabalho:</p>
-            
-        </div>
+        <MembersContainer title="Orientador do Trabalho" attribute="Status do Aceite/Rejeite">
+          <MembersCard :member="workStore.currentWork.advisor" />
+        </MembersContainer>
 
-        <div>
-            <p class="opacity-70 mt-10" style="font-weight: 700; font-size: 20px;">Colaborador do Trabalho:</p>
-            
-        </div> -->
         </div> 
+    </v-container>
+    <v-container v-else>
+        <p>Carregando Submissão de Proposta</p>
     </v-container>
     </LayoutPanel>
 </template>
