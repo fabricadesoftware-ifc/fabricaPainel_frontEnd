@@ -1,12 +1,8 @@
 <script setup>
 import { ref, computed, nextTick } from 'vue';
 import { useWork } from '@/stores/work';
-import CardUser from '../layout/CardUser.vue';
-import InformativeAlert from '../../InformativeAlert.vue';
-import StepContainer from '../../inputs/StepContainer.vue'
 import { showMessage } from '@/utils/toastify';
 import { useAuth } from '@/stores/auth';
-import UserSelected from '@/components/inputs/TeacherSelected.vue';
 const AuthStore = useAuth()
 const WorkStore = useWork()
 

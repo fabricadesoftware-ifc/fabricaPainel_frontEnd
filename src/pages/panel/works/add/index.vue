@@ -1,9 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import { CardUser, StepDialog, StepFive, StepFour, StepThree, StepTwo, StepsAction, StepbyStepHeader, StepOne, StepsHeader } from '@/components/index'
 import { useAuth } from '@/stores/auth'
 import { useWork } from '@/stores/work'
-import { steps } from '@/utils/steps'
+import { steps } from '@/utils/steps/works'
 const AuthStore = useAuth()
 const workStore = useWork()
 const actualstep = ref(0)

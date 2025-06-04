@@ -1,13 +1,14 @@
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
 import WorkService from '@/services/works'
-import { useCategory } from '@/stores/category'
 import { useEdition } from '@/stores/edition'
 import { useAuth } from './auth'
 import { useStorage } from '@vueuse/core'
+import { ICrossCuttingTheme } from '@/interfaces/themes'
+import { IWorkStorage } from '@/interfaces/work'
+
 
 export const useWork = defineStore('work', () => {
-  const categoryStore = useCategory()
   const editionStore = useEdition()
   const authStore = useAuth()
   const state = reactive({
@@ -19,12 +20,12 @@ export const useWork = defineStore('work', () => {
     error: null as string | null,
   })
 
-  const WorkStorage = useStorage('workstorage', {
+  const WorkStorage = useStorage<IWorkStorage>('workstorage', {
       title: '',
       abstract: '',
       field: [],
       advisor: [],
-      cross_cutting_theme: {},
+      cross_cutting_theme: {} as ICrossCuttingTheme,
       team: [],
       co_advisor: [],
       integrated_project: false
@@ -73,19 +74,17 @@ export const useWork = defineStore('work', () => {
   const sendWork = async () => {
     setError(null)
     try {
-      const work = WorkStorage.value.team.map(stu => stu.id)
-      const newteam = await authStore.createTeam({team_members: work, edition: editionStore.state.currentEdition?.id})
       authStore.team
-      
+
       const newWork = await WorkService.sendWork({
-        title: 'teste',
+        title: WorkStorage.value.title || 'teste',
         abstract: WorkStorage.value.abstract,
         fields: WorkStorage.value.field.map(f => f.id),
-        advisor: WorkStorage.value.advisor[0].id,
-        cross_cutting_theme: WorkStorage.value.cross_cutting_theme.id,
+        advisor: WorkStorage.value.advisor[0]?.id,
+        cross_cutting_theme: WorkStorage.value.cross_cutting_theme?.id,
         co_advisor: WorkStorage.value.co_advisor.map(co => co.id),
-        integrated_project: false,
-        team: authStore.team?.id,
+        integrated_project: WorkStorage.value.integrated_project,
+        team: (authStore.team as any)?.id,
         edition: editionStore.currentEdition?.id,
       })
       state.works.push(newWork)

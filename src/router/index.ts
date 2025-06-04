@@ -9,7 +9,6 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
 import { showMessage } from '@/utils/toastify'
-import { useWork } from '@/stores/work'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,9 +28,8 @@ router.onError((err, to) => {
     console.error(err)
   }
 })
-
 const routesBloqued = ['/auth/accept-invite-team/:id/:token', "/auth/get-password/", "/auth/my-group/", "/dashboard/colaborators/", "/dashboard/editions/view/:id", "/dashboard/paper/:id", "/dashboard/register-evaluators/", "/panel/", "/panel/paper/:id", "/panel/registration-of-topics/", "/panel/work-submission/"]
-const is_authenticated = JSON.parse(localStorage.getItem("state_user"))
+const is_authenticated = JSON.parse(localStorage.getItem("state_user") || '{"isLogged": false}')
 
 router.beforeEach((to, from, next) => {
   if(routesBloqued.includes(to.path) && !is_authenticated.isLogged){
