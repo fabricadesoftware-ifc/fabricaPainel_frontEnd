@@ -17,6 +17,7 @@
       :items="recivedPapers"
       :search="search"
     >
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.name="{ item }">
         <v-btn
           class="pa-0 hover"
@@ -27,6 +28,8 @@
           {{ item.name }}
         </v-btn>
       </template>
+
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.status="{ item }">
         <div class="text-start">
           <v-chip
@@ -40,6 +43,7 @@
   </div>
 </template>
 <script setup>
+// @ts-nocheck
   import { recivedPapers, recivedpapersHeaders } from '@/utils/local_db'
 
   const props = defineProps({

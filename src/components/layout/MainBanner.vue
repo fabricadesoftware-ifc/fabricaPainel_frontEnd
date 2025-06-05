@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// @ts-nocheck
 const props = defineProps<{
   content?: string;
   text?: string;

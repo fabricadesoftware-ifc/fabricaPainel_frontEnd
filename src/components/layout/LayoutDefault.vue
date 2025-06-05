@@ -32,15 +32,6 @@
         </v-btn>
 
         <div v-else class="d-flex ga-2">
-          <v-btn
-            v-if="authStore.user.user_type == 'STUDENT'"
-            color="primary"
-            rounded="xl"
-            to="/auth/my-group"
-            variant="text"
-          >
-            <p>Meu Grupo</p>
-          </v-btn>
 
           <v-btn
             color="red"
@@ -79,10 +70,6 @@
                   <v-list-item v-for="link in layoutStore.navbar" :key="link.text"
                     :color="link.value == layoutStore.currentPage ? 'primary' : ''" @click="router.push(link.value)">
                     <v-list-item-title>{{ link.text }}</v-list-item-title>
-                  </v-list-item>
-
-                  <v-list-item v-if="authStore.user.user_type == 'STUDENT'" @click="router.push('/auth/my-group')">
-                    <v-list-item-title>Meu Grupo</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
