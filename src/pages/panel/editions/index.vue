@@ -1,5 +1,7 @@
 <script lang="ts" setup>
+// @ts-ignore
 import { computed, onMounted } from "vue";
+// @ts-ignore
 import { useRouter } from "vue-router";
 import { useEdition } from "@/stores/edition";
 

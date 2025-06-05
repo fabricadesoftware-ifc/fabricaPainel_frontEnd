@@ -60,7 +60,7 @@ export const uselayout = defineStore(
                     value: '/panel/editions',
                   }, {
                     text: 'Anteriores',
-                    value: '/panel/editions/all',
+                    value: '/panel/editions',
                   },
                 ],
                 actions: [
