@@ -6,7 +6,7 @@ import { useAuth } from './auth'
 import { useStorage } from '@vueuse/core'
 import { ICrossCuttingTheme } from '@/interfaces/themes'
 import { IWorkStorage } from '@/interfaces/work'
-
+import { showMessage } from '@/utils/toastify'
 
 export const useWork = defineStore('work', () => {
   const editionStore = useEdition()
@@ -168,6 +168,8 @@ export const useWork = defineStore('work', () => {
   const removeWork = async (id: string | number, token: string) => {
     try {
     await WorkService.cancelWork(id, token)
+    showMessage('Proposta Cancelada com Sucesso', 'success', 2000, 'top-right', 'light', false)
+
     } catch (error: any) {
       setError(error.message)
     } finally {

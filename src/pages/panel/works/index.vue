@@ -2,6 +2,7 @@
 import { useWork } from '@/stores/work';
 import router from '@/router';
 
+
 import { useEdition } from '@/stores/edition';
 import { useAuth } from '@/stores/auth';
 
@@ -43,6 +44,7 @@ const is_submit = computed(() => {
 onMounted(async () => {
   await workStore.fetchUserWorks()
   await EditionStore.fetchCurrentEdition()
+
 })
 </script>
 

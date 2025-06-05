@@ -57,11 +57,13 @@ export const userCase = reactive<{
   color: string
   icon: string,
   function: Function | null,
+
 }>({
   text: '',
   color: '',
   icon: '',
   function: null,
+
 })
 
 type StoreWithRemoveWork = {
@@ -78,11 +80,19 @@ export const validate_user_function = (user_function: string) => {
     userCase.text = 'Atribuir Nota'
     userCase.color = '#1F8BDD'
     userCase.icon = '$ratingFull'
-    userCase.function = null
+
+    if (user_function == 'EVALUATOR') {
+      userCase.function = null  
+    } else {
+      userCase.function = null
+    }
+    
   } else {
     userCase.text = 'Cancelar Submissão'
     userCase.color = '#EC3223'
     userCase.icon = '$delete'
     userCase.function = removeWork
+  
+    
   }
 }

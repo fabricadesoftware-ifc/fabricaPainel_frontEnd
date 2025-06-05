@@ -45,6 +45,7 @@ router.beforeEach((to, from, next) => {
       return next('/auth/login')
     }, 1500)
   }
+
   next()
 })
 

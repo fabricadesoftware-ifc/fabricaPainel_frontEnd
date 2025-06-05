@@ -25,13 +25,34 @@ onMounted(async()=> {
     await editions.getOpenEdition()
 })
 
+//
+const confirmation = ref(false)
+const  confirmsAction = (confirm:String) => {
+    if (confirm == 'Confirmar') {
+    if (authStore.user.is_advisor) {
+        console.log('advisor give grade')
+    } else if (authStore.user.is_evaluator) {
+        console.log('evaluator give grade')
+    } else {
+       userCase?.function && userCase.function(workStore.currentWork?.id, workStore, authStore.refresh)
+       router.push('/panel/works')
+    }
+    } else {
+        confirmation.value = false
+    }
+}
 </script>
 <template>
      <LayoutPanel>
     <v-container class="w-100" v-if="workStore.currentWork">
         <div class="d-flex flex-column ga-10">
-       
-            <WorkHeader @buttonAction="userCase?.function && userCase.function(workStore.currentWork?.id, workStore, authStore.refresh)" :student_able_to_cancel="datesValidation.student_able_to_canel" :advisor_able_to_give_grade="datesValidation.advisor_able_to_give_grade" :evaluator_able_to_give_grade="datesValidation.evaluator_able_to_give_grade" :user_function="resolveUserFunction(authStore.user?.is_advisor, authStore.user?.is_evaluator, authStore.user?.is_collaborator)" :grade="workStore.currentWork.feedback" :status_content="resolveStatus(workStore.currentWork.status)?.text" :status_color="resolveStatus(workStore.currentWork.status)?.color" :title="workStore.currentWork.title" />
+        <StepDialog :btn_cancel_text="'Cancelar'"
+      :btn_confirm_text="'Confirmar'"
+      :title="'Tens a certeza que deseja cancelar esta proposta?'"
+      :description="'Ao cancelar a proposta seu time será excluido e você terá até o tempo final da segunda submissão para submeter outro trabalho.'"
+
+      v-model="confirmation" @confirmation="confirmsAction" />
+            <WorkHeader @buttonAction="confirmation = !confirmation" :student_able_to_cancel="datesValidation.student_able_to_canel" :advisor_able_to_give_grade="datesValidation.advisor_able_to_give_grade" :evaluator_able_to_give_grade="datesValidation.evaluator_able_to_give_grade" :user_function="resolveUserFunction(authStore.user?.is_advisor, authStore.user?.is_evaluator, authStore.user?.is_collaborator)" :grade="workStore.currentWork.feedback" :status_content="resolveStatus(workStore.currentWork.status)?.text" :status_color="resolveStatus(workStore.currentWork.status)?.color" :title="workStore.currentWork.title" />
       
 
         <div class="d-flex flex-column ga-3">
