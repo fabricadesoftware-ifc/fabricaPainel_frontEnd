@@ -17,6 +17,9 @@ const teamMembers = [
       { name: 'Cauã Vinícius Silva', github: 'Caussz' },
       { name: 'Jonatas Silva Peraza', github: 'jonatasperaza' },
       { name: 'Luan Silva', github: 'luansilva25' },
+      { name: 'Gabriel Lucas De Miranda', github: 'Gabz047' },
+      { name: 'Vinicius Gabryel Pereira', github: 'Vinyzada' },
+      { name: 'Matheus Miguel Michalski', github: 'matheusmichalski' },
       { name: 'Rafael Bochi Barros', github: 'RafaelBochi' },
       { name: 'Vinícius Nilo Hiansdt', github: 'Hiansdt' },
     ]
@@ -27,6 +30,8 @@ const teamMembers = [
       { name: 'Lucas Gabriel Antonete', github: 'LucasGabrielAntonete' },
       { name: 'Rafael Bochi Barros', github: 'RafaelBochi' },
       { name: 'Vinícius Nilo Hiansdt', github: 'Hiansdt' },
+      { name: 'Jonatas Silva Peraza', github: 'jonatasperaza' },
+      { name: 'Joao Victor Silva De Souza', github: 'Jaotarzan '}
     ]
   }
 ]
@@ -40,7 +45,7 @@ const features = [
   },
   {
     title: 'Avaliação Imparcial',
-    description: 'Sistema de avaliação aleatória garantindo transparência e qualidade.',
+    description: 'Sistema de avaliação consistente e transparente, garantindo a qualidade dos trabalhos.',
     icon: 'mdi-shield-check',
     color: 'success'
   },
@@ -130,7 +135,7 @@ const features = [
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <p class="text-body-1 pa-4">
-                  Nosso sistema visa a excelência e imparcialidade na avaliação de trabalhos, garantindo uma avaliação diversificada e de alta qualidade. O uso do Painel de Integração da SEPE para a escolha aleatória de orientadores e avaliadores assegura a diversidade nas avaliações. Os participantes têm acesso a uma ampla variedade de temas, promovendo a socialização de seus interesses acadêmicos.
+                  Nosso sistema visa a excelência e imparcialidade na avaliação de trabalhos, garantindo uma avaliação diversificada e de alta qualidade. O uso do Painel de Integração da SEPE para a escolha de orientadores e avaliadores assegura a diversidade nas avaliações. Os participantes têm acesso a uma ampla variedade de temas, promovendo a socialização de seus interesses acadêmicos.
                 </p>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -233,9 +238,17 @@ const features = [
                     <v-icon start icon="mdi-github"></v-icon>
                     Prof. Fábio Longo de Moura
                   </v-chip>
-                  <v-chip color="secondary" href="https://github.com/eduardo-da-silva">
-                    <v-icon start icon="mdi-account"></v-icon>
+                  <v-chip color="secondary" href="https://github.com/eduardo-da-silva" target="_blank">
+                    <v-icon start icon="mdi-github"></v-icon>
                     Prof. Eduardo da Silva
+                  </v-chip>
+                  <v-chip color="secondary" href="https://github.com/gabriel04alves" target="_blank">
+                    <v-icon start icon="mdi-github"></v-icon>
+                    Gabriel Alves
+                  </v-chip>
+                  <v-chip color="secondary" href="https://github.com/mariaeduardanichelle" target="_blank">
+                    <v-icon start icon="mdi-github"></v-icon>
+                    Maria Eduarda Ninchelle
                   </v-chip>
                 </div>
               </v-col>
