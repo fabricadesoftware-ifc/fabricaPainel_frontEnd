@@ -3,40 +3,56 @@
 import { onMounted, ref } from 'vue';
 import { useWork } from '@/stores/work';
 import { useAuth } from '@/stores/auth';
+import { useEdition } from '@/stores/edition';
 import { useRouter } from 'vue-router';
-import { orderByUserId, resolveStatus } from '@/utils/works';
+import { orderByUserId, resolveStatus, resolveUserFunction, userCase } from '@/utils/works';
+import editions from '@/services/editions';
 const router = useRouter()
 const work_id = (router.currentRoute.value.params as { id: string }).id;
-
 const authStore = useAuth()
 const workStore = useWork()
+const editionStore = useEdition()
+const date = new Date()
+
+const datesValidation = reactive({
+    student_able_to_canel: (date < new Date(editionStore.currentEdition?.final_second_submission_date ?? '2100-01-01')),
+    advisor_able_to_give_grade: (date < new Date(editionStore.currentEdition?.final_second_advisor_date ?? '2100-01-01')),
+    evaluator_able_to_give_grade: (date < new Date(editionStore.currentEdition?.final_evaluators_date ?? '2100-01-01'))
+})
 
 onMounted(async()=> {
     await workStore.getWork(work_id)
-    console.log(workStore.currentWork)
-    console.log(authStore.user)
+    await editions.getOpenEdition()
 })
 
-const resolveUserFunction = (advisor:any, evaluator:any, collaborator:any ) => {
-
-    if (advisor) {
-        return 'ADVISOR'
-    } else if (evaluator) {
-        return 'EVALUATOR'
-    } else if (collaborator) {
-        return 'COLLABORATOR'
+//
+const confirmation = ref(false)
+const  confirmsAction = (confirm:String) => {
+    if (confirm == 'Confirmar') {
+    if (authStore.user.is_advisor) {
+        console.log('advisor give grade')
+    } else if (authStore.user.is_evaluator) {
+        console.log('evaluator give grade')
     } else {
-        return 'STUDENT'
+       userCase?.function && userCase.function(workStore.currentWork?.id, workStore, authStore.refresh)
+       router.push('/panel/works')
+    }
+    } else {
+        confirmation.value = false
     }
 }
-
 </script>
 <template>
      <LayoutPanel>
     <v-container class="w-100" v-if="workStore.currentWork">
         <div class="d-flex flex-column ga-10">
-       
-            <WorkHeader :user_function="resolveUserFunction(authStore.user?.is_advisor, authStore.user?.is_evaluator, authStore.user?.is_collaborator)" :grade="workStore.currentWork.feedback" :status_content="resolveStatus(workStore.currentWork.status)?.text" :status_color="resolveStatus(workStore.currentWork.status)?.color" :title="workStore.currentWork.title" />
+        <StepDialog :btn_cancel_text="'Cancelar'"
+      :btn_confirm_text="'Confirmar'"
+      :title="'Tens a certeza que deseja cancelar esta proposta?'"
+      :description="'Ao cancelar a proposta seu time será excluido e você terá até o tempo final da segunda submissão para submeter outro trabalho.'"
+
+      v-model="confirmation" @confirmation="confirmsAction" />
+            <WorkHeader @buttonAction="confirmation = !confirmation" :student_able_to_cancel="datesValidation.student_able_to_canel" :advisor_able_to_give_grade="datesValidation.advisor_able_to_give_grade" :evaluator_able_to_give_grade="datesValidation.evaluator_able_to_give_grade" :user_function="resolveUserFunction(authStore.user?.is_advisor, authStore.user?.is_evaluator, authStore.user?.is_collaborator)" :grade="workStore.currentWork.feedback" :status_content="resolveStatus(workStore.currentWork.status)?.text" :status_color="resolveStatus(workStore.currentWork.status)?.color" :title="workStore.currentWork.title" />
       
 
         <div class="d-flex flex-column ga-3">
