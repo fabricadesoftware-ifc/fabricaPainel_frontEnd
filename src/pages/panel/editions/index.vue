@@ -1,5 +1,7 @@
 <script lang="ts" setup>
+// @ts-ignore
 import { computed, onMounted } from "vue";
+// @ts-ignore
 import { useRouter } from "vue-router";
 import { useEdition } from "@/stores/edition";
 
@@ -8,7 +10,7 @@ const router = useRouter();
 
 // Corrigido para usar o 'id' em vez de 'edition_name'
 const selectCard = (id: number) => {
-  router.push(`/dashboard/editions/view/${id}`);
+  router.push(`/panel/editions/view/${id}`);
 };
 
 const formatDate = computed(() => {

@@ -125,7 +125,7 @@ onMounted(() => {
         <v-alert color="error" icon="mdi-alert" outlined rounded="lg" text="Não foi possível carregar a edição"
           variant="tonal" />
         <div class="d-flex justify-end">
-          <v-btn class="mt-5 px-8" color="error" rounded="xl" to="/dashboard/editions" variant="flat">
+          <v-btn class="mt-5 px-8" color="error" rounded="xl" to="/panel/editions" variant="flat">
             Voltar
           </v-btn>
         </div>
