@@ -7,7 +7,7 @@
       rounded="xl"
       size="x-large"
       :text="props.text"
-      to="/panel"
+      to="/panel/works/"
       variant="flat"
     />
     <p v-if="disabled != 'open'" class="text-subtitle-2 text-disabled font-weight-regular pl-4 d-flex align-center">

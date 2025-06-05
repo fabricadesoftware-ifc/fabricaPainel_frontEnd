@@ -28,9 +28,8 @@ router.onError((err, to) => {
     console.error(err)
   }
 })
-
-const routesBloqued = ['/auth/accept-invite-team/:id/:token', "/auth/get-password/", "/auth/my-group/", "/dashboard/colaborators/", "/dashboard/editions/view/:id", "/dashboard/paper/:id", "/dashboard/register-evaluators/", "/panel/", "/panel/paper/:id", "/panel/registration-of-topics/", "/panel/work-submission/"]
-const is_authenticated = JSON.parse(localStorage.getItem("state_user"))
+const routesBloqued = ['/auth/accept-invite-team/:id/:token', "/auth/get-password/", "/dashboard/colaborators/", "/dashboard/editions/view/:id", "/dashboard/paper/:id", "/dashboard/register-evaluators/", "/panel/", "/panel/paper/:id", "/panel/registration-of-topics/", "/panel/work-submission/"]
+const is_authenticated = JSON.parse(localStorage.getItem("state_user") || '{"isLogged": false}')
 
 router.beforeEach((to, from, next) => {
   if(routesBloqued.includes(to.path) && !is_authenticated.isLogged){

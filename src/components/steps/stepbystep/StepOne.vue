@@ -1,11 +1,7 @@
 <script setup>
 import { useWork } from '@/stores/work';
-import CardUser from '../layout/CardUser.vue';
-import InformativeAlert from '../../InformativeAlert.vue';
-import StepContainer from '../../inputs/StepContainer.vue'
 import { showMessage } from '@/utils/toastify';
 import { useAuth } from '@/stores/auth';
-import StudentSelected from '@/components/inputs/StudentSelected.vue';
 const AuthStore = useAuth()
 const WorkStore = useWork()
 const autocompleteRef = ref(null)
@@ -50,7 +46,7 @@ const AddUser = async (selectedStudent) => {
                 "auto",
                 false
             );
-            }       
+            }
         }
         else {
             showMessage(

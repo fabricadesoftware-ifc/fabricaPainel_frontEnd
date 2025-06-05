@@ -1,20 +1,23 @@
 <script setup>
 import { ref } from 'vue'
-import { CardUser, StepDialog, StepFive, StepFour, StepThree, StepTwo, StepsAction, StepbyStepHeader, StepOne, StepsHeader } from '@/components/index'
 import { useAuth } from '@/stores/auth'
 import { useWork } from '@/stores/work'
-import { steps } from '@/utils/steps'
+import { steps } from '@/utils/steps/works'
 const AuthStore = useAuth()
 const workStore = useWork()
 const actualstep = ref(0)
 const open_dialog = ref(false)
+const useractualstep = Number(localStorage.getItem('actualstep'))
 
 const ReturnValidatedtoDisabledBtn = computed(() => {
   if (actualstep.value === 0) {
     return workStore.WorkStorage.team?.length < 3
   }
-  if (actualstep.value === 1) {
-    return workStore.WorkStorage.field?.length < 3 && !workStore.WorkStorage.cross_cutting_theme
+  if(actualstep.value === 1){
+    const fieldOk = (workStore.WorkStorage.field || []).length >= 3
+    const themeOk = Object.keys(workStore.WorkStorage.cross_cutting_theme || {}).length > 0
+
+    return !(fieldOk && themeOk)
   }
   if (actualstep.value === 2) {
     return workStore.WorkStorage.advisor?.length === 0
@@ -63,8 +66,7 @@ function PrevStep() {
 }
 
 onMounted(() => {
-  const useractualstep = Number(localStorage.getItem('actualstep'))
-  if (actualstep.value === 0) {
+  if (useractualstep === 0 || useractualstep === 6) {
     open_dialog.value = true
   }
   if (useractualstep) {
@@ -73,8 +75,7 @@ onMounted(() => {
     }
     actualstep.value = useractualstep
   }
-  AuthStore.GetMe()
-  console.log(actualstep.value)
+
 })
 </script>
 <template>
@@ -84,7 +85,9 @@ onMounted(() => {
       <VStepperWindow class="w-100 h-100">
         <StepsHeader :user="AuthStore.user" />
         <VContainer class="d-flex justify-center flex-column align-center h-100">
-          <StepOne :me="AuthStore?.user" :team="workStore?.team" v-if="actualstep === 0" />
+
+          <StepOne :me="AuthStore.user" :team="workStore?.team" v-if="actualstep === 0" />
+
           <StepTwo v-if="actualstep === 1" />
           <StepThree v-if="actualstep === 2" />
           <StepFour v-if="actualstep === 3" />
@@ -97,10 +100,12 @@ onMounted(() => {
           @NextStep="NextStep" v-if="actualstep !== 6" />
       </VStepperWindow>
     </VStepper>
-    <StepDialog :btn_cancel_text="actualstep === 0 ? 'Não' : 'Cancelar'"
-      :btn_confirm_text="actualstep === 0 ? 'Sim' : 'Confirmar'"
-      :title="actualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
-      :description="actualstep === 0 ? '<p>Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes</p>.' : '<p>Após submeter o trabalho um email será enviado para os <b>colaboradores</b> e para o <b>orientador</b> do seu projeto</p>'"
+
+    <StepDialog :btn_cancel_text="useractualstep === 0 ? 'Não' : 'Cancelar'"
+      :btn_confirm_text="useractualstep === 0 ? 'Sim' : 'Confirmar'"
+      :title="useractualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
+      :description="useractualstep === 0 ? '<p>Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes</p>.' : '<p>Após submeter o trabalho um email será enviado para os <b>colaboradores</b> e para o <b>orientador</b> do seu projeto</p>'"
+
       v-model="open_dialog" @confirmation="DialogActive" />
   </div>
 </template>

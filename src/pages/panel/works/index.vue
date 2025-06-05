@@ -1,11 +1,12 @@
 <script  setup>
   import { useWork } from '@/stores/work';
   import router from '@/router';
-  import { ref } from 'vue';
-  import CardSubmission from '@/components/steps/panel/CardSubmission.vue';
+
   import { useEdition } from '@/stores/edition';
+  import { useAuth } from '@/stores/auth';
   const workStore = useWork()
   const EditionStore = useEdition()
+  const UserStore = useAuth()
 
   const year = new Date().getFullYear()
 

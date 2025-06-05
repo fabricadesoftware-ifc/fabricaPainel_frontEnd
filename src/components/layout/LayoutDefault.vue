@@ -32,15 +32,6 @@
         </v-btn>
 
         <div v-else class="d-flex ga-2">
-          <v-btn
-            v-if="authStore.user.user_type == 'STUDENT'"
-            color="primary"
-            rounded="xl"
-            to="/auth/my-group"
-            variant="text"
-          >
-            <p>Meu Grupo</p>
-          </v-btn>
 
           <v-btn
             color="red"
@@ -71,7 +62,7 @@
               <v-menu activator="parent">
                 <!-- @vue-ignore -->
                 <template #activator="{ on }">
-                  <v-btn v-icon color="primary" rounded="xl" variant="flat" v-on="on">
+                  <v-btn color="primary" rounded="xl" variant="flat" v-on="on">
                     <v-icon>mdi-menu</v-icon>
                   </v-btn>
                 </template>
@@ -79,10 +70,6 @@
                   <v-list-item v-for="link in layoutStore.navbar" :key="link.text"
                     :color="link.value == layoutStore.currentPage ? 'primary' : ''" @click="router.push(link.value)">
                     <v-list-item-title>{{ link.text }}</v-list-item-title>
-                  </v-list-item>
-
-                  <v-list-item v-if="authStore.user.user_type == 'STUDENT'" @click="router.push('/auth/my-group')">
-                    <v-list-item-title>Meu Grupo</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -108,7 +95,21 @@
     <v-main :class="{ 'mt-6': screenWidth < 615}">
       <slot />
     </v-main>
-    <FooterComp />
+    <footer class="pt-16 pb-2 px-6">
+      <v-container>
+        <v-row>
+          <v-col class="d-flex justify-start align-center" cols="6" md="10">
+            <a href="https://fabricadesoftware.ifc.edu.br/">
+              <img class="h-8" src="@/assets/footer_logos.png" />
+            </a>
+          </v-col>
+          <v-col class="d-flex justify-end align-center" cols="6" md="2">
+            <v-btn class="border border-primary" color="info" icon="mdi-help" rounded="xl" size="small" to="/"
+              variant="tonal" />
+          </v-col>
+        </v-row>
+      </v-container>
+    </footer>
   </v-app>
 </template>
 

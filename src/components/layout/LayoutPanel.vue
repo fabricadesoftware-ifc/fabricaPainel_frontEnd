@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// @ts-nocheck
 import { useRouter } from "vue-router";
 import { uselayout } from "@/stores/app";
 import { useAuth } from "@/stores/auth";
@@ -51,10 +52,7 @@ onMounted(() => {
           <v-icon>mdi-login</v-icon>
         </v-btn>
         <div v-else class="d-flex ga-2">
-          <v-btn v-if="authStore.user.user_type == 'STUDENT'" color="primary" rounded="xl" to="/auth/my-group"
-            variant="text">
-            <p>Meu Grupo</p>
-          </v-btn>
+
 
           <v-btn color="red" rounded="xl" variant="outlined" to="/panel" @click="logout">
             <p class="d-inline-block text-truncate" style="max-width: 300px">
@@ -81,7 +79,7 @@ onMounted(() => {
               <v-menu activator="parent">
                 <!-- @vue-ignore -->
                 <template #activator="{ on }">
-                  <v-btn v-icon color="primary" rounded="xl" variant="flat" v-on="on">
+                  <v-btn color="primary" rounded="xl" variant="flat" v-on="on">
                     <v-icon>mdi-menu</v-icon>
                   </v-btn>
                 </template>
@@ -91,9 +89,6 @@ onMounted(() => {
                     <v-list-item-title>{{ link.text }}</v-list-item-title>
                   </v-list-item>
 
-                  <v-list-item v-if="authStore.user.user_type == 'STUDENT'" @click="router.push('/auth/my-group')">
-                    <v-list-item-title>Meu Grupo</v-list-item-title>
-                  </v-list-item>
                 </v-list>
               </v-menu>
             </div>

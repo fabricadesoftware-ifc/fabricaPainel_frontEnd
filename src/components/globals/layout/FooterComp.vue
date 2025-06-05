@@ -1,4 +1,3 @@
-import { useRoute } from 'vue-router';
 <template>
   <v-container fluid>
     <v-container class="py-4 d-flex flex-column justify-center align-center" fluid>

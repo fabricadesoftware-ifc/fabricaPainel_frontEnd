@@ -1,12 +1,7 @@
 <script setup>
-import { ref, computed, nextTick } from 'vue';
 import { useWork } from '@/stores/work';
-import CardUser from '../layout/CardUser.vue';
-import InformativeAlert from '../../InformativeAlert.vue';
-import StepContainer from '../../inputs/StepContainer.vue'
 import { showMessage } from '@/utils/toastify';
 import { useAuth } from '@/stores/auth';
-import UserSelected from '@/components/inputs/TeacherSelected.vue';
 const AuthStore = useAuth()
 const WorkStore = useWork()
 
@@ -47,7 +42,7 @@ function removeUser(email){
 </script>
 <template>
     <div style="width: 70%; " class="pa-2 h-100">
-        <UserSelected :disabled="WorkStore.WorkStorage.advisor.length === 5" :hint="hintInput" error_msg="colaborador não encontrado" placeholder="pesquise pelo colaborador" label="pesquise pelo colaborador" user-type="TEACHER" @addUser="AddUser" @removeUser="removeUser"/>
+        <TeacherSelected :disabled="WorkStore.WorkStorage.advisor.length === 5" :hint="hintInput" error_msg="colaborador não encontrado" placeholder="pesquise pelo colaborador" label="pesquise pelo colaborador" user-type="TEACHER" @addUser="AddUser" @removeUser="removeUser"/>
         <div class="d-flex ga-2 mt-5">
             <p style="font-size: 12px;">* Limite máximo de colaboradores: 5</p>
             <p style="font-size: 12px;">* Limite minimo de colaboradores: 1</p>
