@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { reactive, onMounted } from "vue";
 import { useAuth } from "@/stores/auth";
-import { returnUserData } from "@/utils/userMenu";
-
+import { usersData } from "@/utils/userMenu";
+import { useRouter } from "vue-router"
 const authStore = useAuth()
-
+const router = useRouter()
 const username = ref('')
 
 
@@ -33,12 +33,12 @@ onMounted(()=> {
     </template>
 
     <v-list class="cursor-pointer">
-      <v-list-item class="d-flex flex-row align-center justify-center"
-        v-for="(item, index) in returnUserData(authStore)"
+      <v-list-item @click="router.push(item.link)" class="d-flex flex-row align-center justify-center"
+        v-for="(item, index) in usersData"
         :key="index"
         :value="index"
       >
-        <v-list-item-title>
+        <v-list-item-title >
           {{ item.name }}
         </v-list-item-title>
       </v-list-item>

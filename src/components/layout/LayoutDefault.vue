@@ -31,23 +31,8 @@
           <p>ENTRAR NO SISTEMA</p>
         </v-btn>
 
-        <div v-if="authStore.isLogged && router.fullpath != '/'" class="d-flex ga-2">
 
-          <v-btn
-            color="red"
-            rounded="xl"
-            variant="outlined"
-            to="/panel"
-            @click="logout"
-          >
-            <p class="d-inline-block text-truncate" style="max-width: 300px">
-              {{ authStore.user.name }}
-            </p>
-            <v-icon color="red">mdi-logout</v-icon>
-          </v-btn>
-        </div>
-
-        <RouterLink to="/panel" v-if="authStore.isLogged && router.fullpath == '/'" class="d-flex ga-2">
+        <RouterLink to="/panel/works" v-else class="d-flex ga-2">
           <v-btn
           class="d-flex"
           color="primary"
