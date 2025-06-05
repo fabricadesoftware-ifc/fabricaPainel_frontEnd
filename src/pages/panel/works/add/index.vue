@@ -1,8 +1,5 @@
 <script setup>
-<<<<<<< HEAD
-=======
 import { ref } from 'vue'
->>>>>>> 70bde0b441165e088e0bd750a955ddc75198ff65
 import { useAuth } from '@/stores/auth'
 import { useWork } from '@/stores/work'
 import { steps } from '@/utils/steps/works'
@@ -78,6 +75,7 @@ onMounted(() => {
     }
     actualstep.value = useractualstep
   }
+
 })
 </script>
 <template>
@@ -87,7 +85,9 @@ onMounted(() => {
       <VStepperWindow class="w-100 h-100">
         <StepsHeader :user="AuthStore.user" />
         <VContainer class="d-flex justify-center flex-column align-center h-100">
+
           <StepOne :me="AuthStore.user" :team="workStore?.team" v-if="actualstep === 0" />
+
           <StepTwo v-if="actualstep === 1" />
           <StepThree v-if="actualstep === 2" />
           <StepFour v-if="actualstep === 3" />
@@ -100,10 +100,12 @@ onMounted(() => {
           @NextStep="NextStep" v-if="actualstep !== 6" />
       </VStepperWindow>
     </VStepper>
+
     <StepDialog :btn_cancel_text="useractualstep === 0 ? 'Não' : 'Cancelar'"
       :btn_confirm_text="useractualstep === 0 ? 'Sim' : 'Confirmar'"
       :title="useractualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
       :description="useractualstep === 0 ? '<p>Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes</p>.' : '<p>Após submeter o trabalho um email será enviado para os <b>colaboradores</b> e para o <b>orientador</b> do seu projeto</p>'"
+
       v-model="open_dialog" @confirmation="DialogActive" />
   </div>
 </template>
