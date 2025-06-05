@@ -8,7 +8,7 @@
       <router-link to="/">
         INSTITUCIONAL
       </router-link>
-      <router-link to="/dashboard/editions">
+      <router-link to="/panel/editions">
         DASHBOARD
       </router-link>
       <router-link to="/panel">

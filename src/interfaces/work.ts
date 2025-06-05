@@ -46,6 +46,6 @@ export interface IWorkStorage {
   advisor: IAdvisor[]
   cross_cutting_theme: ICrossCuttingTheme
   team: ITeamMember[]
-  co_advisor: IAdvisor[]
+  collaborators: IAdvisor[]
   integrated_project: boolean
 }

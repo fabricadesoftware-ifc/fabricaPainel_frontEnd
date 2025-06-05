@@ -123,7 +123,7 @@ watch(searchQuery, (newValue) => {
       :focused="focused"
       :rounded="props.rounded || 'xl'"
       :density="props.density || 'default'"
-      variant="none"
+      variant="solo"
       hide-details="auto"
       bg-color="grey-lighten-3"
       required

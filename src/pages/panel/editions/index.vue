@@ -8,7 +8,7 @@ const router = useRouter();
 
 // Corrigido para usar o 'id' em vez de 'edition_name'
 const selectCard = (id: number) => {
-  router.push(`/dashboard/editions/view/${id}`);
+  router.push(`/panel/editions/view/${id}`);
 };
 
 const formatDate = computed(() => {

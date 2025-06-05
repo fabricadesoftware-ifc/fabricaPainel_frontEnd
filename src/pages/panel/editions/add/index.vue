@@ -240,7 +240,7 @@
       year: Number(form.value.year),
       workload: Number(form.value.workload),
     }).then(() => {
-      router.push('/dashboard/editions')
+      router.push('/panel/editions')
     })
   }
 </script>
