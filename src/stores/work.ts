@@ -164,6 +164,17 @@ export const useWork = defineStore('work', () => {
       const user = WorkStorage.value.team.findIndex(stu => stu?.email === email)
       WorkStorage.value.team.splice(user, 1)
   }
+
+  const removeWork = async (id: string | number, token: string) => {
+    try {
+    await WorkService.cancelWork(id, token)
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+
+  }
   return {
     state,
     allWorks,
@@ -179,6 +190,7 @@ export const useWork = defineStore('work', () => {
     approveWork,
     WorkStorage,
     RemoveUsersInWork,
+    removeWork,
     team
   }
 })

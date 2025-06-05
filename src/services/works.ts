@@ -81,6 +81,15 @@ class WorkService {
       this.handleError(error, "approve");
     }
   }
+
+  async cancelWork(id:String | Number, token: string) {
+    try {
+      const {data} = await api.delete(`/work/${id}/`)
+      return data
+    } catch (error) {
+      this.handleError(error, "remove work")
+    }
+  }
 }
 
 export default new WorkService();

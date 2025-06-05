@@ -1,5 +1,9 @@
  <script lang="ts" setup>
+import { userCase, validate_user_function } from '@/utils/works'
 
+const emits = defineEmits([
+    'buttonAction'
+])
 const props = defineProps({
     title: {
         type: String,
@@ -19,35 +23,33 @@ const props = defineProps({
     user_function: {
         type: String,
         default: ''
+    },
+    student_able_to_cancel: {
+        type: Boolean,
+    },
+    advisor_able_to_give_grade: {
+        type: Boolean,
+    },
+    evaluator_able_to_give_grade: {
+        type: Boolean,
     }
+    
 })
 
-
-
-const userCase = reactive<{
-  text: string
-  color: string
-  icon: string
-}>({
-  text: '',
-  color: '',
-  icon: ''
-})
-
-const validate_user_function = (user_function: string) => {
-  if (user_function === 'EVALUATOR' || user_function === 'ADVISOR') {
-    userCase.text = 'Atribuir Nota'
-    userCase.color = '#1F8BDD'
-    userCase.icon = '$ratingFull'
-  } else {
-    userCase.text = 'Cancelar Submissão'
-    userCase.color = '#EC3223'
-    userCase.icon = '$delete'
-  }
+const showButtonBasedOnUserAndDate = (user_function:String) => {
+    switch (user_function) {
+        case 'STUDENT':
+            return props.student_able_to_cancel
+        case 'ADVISOR': 
+            return props.advisor_able_to_give_grade
+        case 'EVALUATOR': 
+            return props.evaluator_able_to_give_grade
+    }
 }
 
 onMounted(()=> {
     validate_user_function(props.user_function)
+    console.log(showButtonBasedOnUserAndDate(props.user_function))
 })
 
 </script>
@@ -62,7 +64,7 @@ onMounted(()=> {
     <v-chip :color="props.status_color" style="width: 150px; display: flex; justify-content: center; align-items: center; font-size: 17px;">{{ props.status_content }}</v-chip>
     </div>
 
-    <v-btn v-if="props.user_function != 'COLLABORATOR'" :prepend-icon="userCase.icon" variant="text" size="small" :style="`color: ${userCase.color} `">
+    <v-btn @click="emits('buttonAction')" v-if="showButtonBasedOnUserAndDate(props.user_function)" :prepend-icon="userCase.icon" variant="text" size="small" :style="`color: ${userCase.color}; brightness: 50%; `">
         <p style="font-size: 15px; font-weight: 600;">{{
             userCase.text  
 }}</p>

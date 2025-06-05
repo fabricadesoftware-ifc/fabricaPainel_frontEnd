@@ -1,3 +1,5 @@
+import { useRouter } from "vue-router"
+const router = useRouter()
 export const orderByUserId = (members: Array<any>, user_id: number | string) => {
   return members.sort((a, b) => {
     if (a.id === user_id) return -1
@@ -34,3 +36,53 @@ export const resolveStatus = (status:number) => {
         }
     }
 } 
+
+export const resolveUserFunction = (advisor:any, evaluator:any, collaborator:any ) => {
+
+    if (advisor) {
+        return 'ADVISOR'
+    } else if (evaluator) {
+        return 'EVALUATOR'
+    } else if (collaborator) {
+        return 'COLLABORATOR'
+    } else {
+        return 'STUDENT'
+    }
+}
+
+// Work Header Functions and Constants
+
+export const userCase = reactive<{
+  text: string
+  color: string
+  icon: string,
+  function: Function | null,
+}>({
+  text: '',
+  color: '',
+  icon: '',
+  function: null,
+})
+
+type StoreWithRemoveWork = {
+  removeWork: (id: String, token: String) => Promise<any>
+}
+
+export const removeWork = async (id: String, store: StoreWithRemoveWork, token: String) => {
+    console.log(store)
+  await store.removeWork(id, token)
+}
+
+export const validate_user_function = (user_function: string) => {
+  if (user_function === 'EVALUATOR' || user_function === 'ADVISOR') {
+    userCase.text = 'Atribuir Nota'
+    userCase.color = '#1F8BDD'
+    userCase.icon = '$ratingFull'
+    userCase.function = null
+  } else {
+    userCase.text = 'Cancelar Submissão'
+    userCase.color = '#EC3223'
+    userCase.icon = '$delete'
+    userCase.function = removeWork
+  }
+}
