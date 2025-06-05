@@ -47,22 +47,9 @@ onMounted(() => {
         variant="text"
       />
         <v-spacer />
-        <v-btn v-if="!authStore.isLogged" color="primary" rounded="xl" variant="flat" @click="login">
-          <p>Entrar</p>
-          <v-icon>mdi-login</v-icon>
-        </v-btn>
-        <div v-else class="d-flex ga-2">
+        
+        <UserMenu />
 
-
-          <v-btn color="red" rounded="xl" variant="outlined" to="/panel" @click="logout">
-            <p class="d-inline-block text-truncate" style="max-width: 300px">
-              {{ authStore.user.name }}
-            </p>
-            <v-icon color="red">mdi-logout</v-icon>
-            <v-tooltip activator="parent" location="bottom">Sair</v-tooltip>
-          </v-btn>
-
-        </div>
       </v-container>
     </v-app-bar>
     <v-app-bar v-else flat>

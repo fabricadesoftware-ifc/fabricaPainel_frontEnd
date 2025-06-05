@@ -5,6 +5,7 @@ import authService from "@/services/auth";
 import { useEdition } from "./edition";
 import { showMessage } from "@/utils/toastify";
 import { useStorage } from "@vueuse/core";
+import router from "@/router";
 
 export const useAuth = defineStore("user", () => {
   const state = useStorage("state_user", {
@@ -14,6 +15,10 @@ export const useAuth = defineStore("user", () => {
       name: "",
       email: "",
       user_type: "",
+      is_advisor: "",
+      is_collaborator: "",
+      is_management: "",
+      is_evaluator: "",
       team: null,
       is_advisor: null,
       is_evaluator: null,
@@ -150,6 +155,10 @@ export const useAuth = defineStore("user", () => {
       name: "",
       email: "",
       user_type: "",
+      is_advisor: "",
+      is_collaborator: "",
+      is_management: "",
+      is_evaluator: "",
       team: null,
       is_advisor: null,
       is_evaluator: null,
@@ -157,6 +166,7 @@ export const useAuth = defineStore("user", () => {
     };
     state.value.team = null;
     state.value.userTeam = {};
+    router.push('/')
   };
 
   const getStudents = async () => {
