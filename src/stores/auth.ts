@@ -15,6 +15,9 @@ export const useAuth = defineStore("user", () => {
       email: "",
       user_type: "",
       team: null,
+      is_advisor: null,
+      is_evaluator: null,
+      is_collaborator: null,
     },
     tokenEmail: "",
     students: [] as Array<{ id: string; name: string }>,
@@ -148,6 +151,9 @@ export const useAuth = defineStore("user", () => {
       email: "",
       user_type: "",
       team: null,
+      is_advisor: null,
+      is_evaluator: null,
+      is_collaborator: null,
     };
     state.value.team = null;
     state.value.userTeam = {};
