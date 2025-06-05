@@ -4,7 +4,7 @@ import router from '@/router';
 </script>
 <template>
     <div class="position-absolute bottom-0 mb-16" > 
-        <VBtn rounded="pill" size="40" elevation="0" class="me-10 w-100 bg-blue" @click="router.push('/panel/')"><VIcon icon="mdi-arrow-left"></VIcon>voltar</VBtn>
+        <VBtn rounded="pill" size="40" elevation="0" class="me-10 w-100 bg-blue" @click="router.push('/panel/works/')"><VIcon icon="mdi-arrow-left"></VIcon>voltar</VBtn>
     </div>
     <div>
         <div class="d-flex flex-column mb-10 align-center">

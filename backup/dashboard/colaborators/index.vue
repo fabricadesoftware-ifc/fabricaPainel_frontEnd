@@ -11,7 +11,7 @@
     </h1>
     <PersonTable />
   </LayoutDashboard> -->
-  <IsDev />
+  <IsDevV />
 </template>
 
 <script lang="ts" setup>

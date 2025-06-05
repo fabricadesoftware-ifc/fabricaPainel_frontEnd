@@ -11,7 +11,7 @@ onMounted(() => {
   <LayoutDefault>
     <!-- @vue-ignore -->
     <MainBanner btnvisible :class="'p-0 border-0'" />
-    <IssuesPreviewV />
-    <EvaluationSectionV />
+    <IssuesPreview />
+    <EvaluationSection />
   </LayoutDefault>
 </template>

@@ -35,7 +35,7 @@ onMounted(() => {
       <div>
         <TitleH1 :content="content" :text="text" :subtext="subtext" />
         <BtnPrimary class="mt-8" :disabled="!btnvisible ? 'Está sessão não está mais disponivel' : 'open'"
-          text="Acessar edição Atual" to="/panel" />
+          text="Acessar edição Atual" to="/panel/works/" />
       </div>
     </section>
   </v-container>
