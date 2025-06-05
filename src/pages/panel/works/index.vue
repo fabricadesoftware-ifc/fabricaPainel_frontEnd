@@ -14,7 +14,8 @@
     if(workStore.userWorks[0]?.edition?.year === year ){
       return {
         work: workStore.userWorks[0].edition.final_submission_date,
-        status: workStore.userWorks[0].status
+        status: workStore.userWorks[0].status,
+        id: workStore.userWorks[0].id
       }
     }
     return ''
@@ -40,7 +41,7 @@
   onMounted( async () => {
     await workStore.fetchUserWorks()
     await EditionStore.fetchCurrentEdition()
-    console.log(workStore.userWorks[0])
+   
   })
 </script>
 <template>
@@ -51,7 +52,7 @@
         <VChip :class="is_submit ? 'bg-green' : 'bg-red'">{{ is_submit ? 'trabalho submetido' : 'trabalho ainda não submetido' }}</VChip>
       </div>
       <div class="d-flex pa-10 flex-column w-100 justify-space-between align-center">
-        <CardSubmission :actual_title="EditionStore.currentEdition.theme" :work="SubmissionVerify?.work" :work_status="SubmissionVerify?.status"/>
+        <CardSubmission :actual_title="EditionStore.currentEdition.theme" :work_id="SubmissionVerify?.id" :work="SubmissionVerify?.work" :work_status="SubmissionVerify?.status"/>
       </div>
       <div class="d-flex justify-space-between align-center text-h6">
         <h1 class="font-weight-bold" style="font-size: 30px;">Edições anteriores</h1>

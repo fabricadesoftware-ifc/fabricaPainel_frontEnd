@@ -1,4 +1,4 @@
-<script setup>
+\<script setup>
 const props = defineProps({
     actual_title: {
         type: String,
@@ -12,6 +12,9 @@ const props = defineProps({
     },
     work_status: {
         type: Number
+    },
+    work_id: {
+        type: String
     }
 })
 
@@ -33,7 +36,7 @@ import router from '@/router';
                         <VCardSubtitle>{{ work }}</VCardSubtitle>
                         <V-Chip :color="work_status === 1 || work_status === 3 ? 'yellow' :  work_status === 2 ? 'green' : 'red'">{{ work_status === 1 ? 'Pendente' : work_status === 2 ? 'Aprovado' : work_status === 3 ? 'Pendente com alterações' : 'Cancelado' }}</V-Chip>
                     </div>
-                    <div class="d-flex justify-center align-center text-blue ga-2 cursor-pointer">
+                    <div @click="router.push(`/panel/works/view/${work_id}`)" class="d-flex justify-center align-center text-blue ga-2 cursor-pointer">
                         <VIcon icon="mdi-open-in-new"></VIcon>
                         <p>Ver Submissão</p>
                     </div>
@@ -43,7 +46,7 @@ import router from '@/router';
         <div v-else>
             <div class="d-flex align-center  ga-5 w-100">
                 <h1 class="text-h5 font-weight-bold" style="font-size: 30px;">{{ actual_title }}</h1>
-                <VChip class="bg-blue d-flex justify-center align-center" pill style="width: 120px;">Em aberto
+                        <VChip class="bg-blue d-flex justify-center align-center" pill style="width: 120px;">Em aberto
                 </VChip>
             </div>
             <div class="pa-10 d-flex flex-column justify-center ga-2 align-center cursor-pointer"
