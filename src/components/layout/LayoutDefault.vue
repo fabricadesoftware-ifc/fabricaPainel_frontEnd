@@ -62,7 +62,7 @@
               <v-menu activator="parent">
                 <!-- @vue-ignore -->
                 <template #activator="{ on }">
-                  <v-btn v-icon color="primary" rounded="xl" variant="flat" v-on="on">
+                  <v-btn color="primary" rounded="xl" variant="flat" v-on="on">
                     <v-icon>mdi-menu</v-icon>
                   </v-btn>
                 </template>
@@ -95,7 +95,21 @@
     <v-main :class="{ 'mt-6': screenWidth < 615}">
       <slot />
     </v-main>
-    <FooterComp />
+    <footer class="pt-16 pb-2 px-6">
+      <v-container>
+        <v-row>
+          <v-col class="d-flex justify-start align-center" cols="6" md="10">
+            <a href="https://fabricadesoftware.ifc.edu.br/">
+              <img class="h-8" src="@/assets/footer_logos.png" />
+            </a>
+          </v-col>
+          <v-col class="d-flex justify-end align-center" cols="6" md="2">
+            <v-btn class="border border-primary" color="info" icon="mdi-help" rounded="xl" size="small" to="/"
+              variant="tonal" />
+          </v-col>
+        </v-row>
+      </v-container>
+    </footer>
   </v-app>
 </template>
 

@@ -75,22 +75,27 @@
           </v-sheet>
         </v-col>
       </v-row>
-      <footer class="pt-16 pb-2">
+      <footer class="pt-16 pb-2 px-6">
+      <v-container>
         <v-row>
-          <v-col class="d-flex justify-start align-center" cols="10">
-            <img class="h-8" src="@/assets/footer_logos.png" />
+          <v-col class="d-flex justify-start align-center" cols="6" md="10">
+            <a href="https://fabricadesoftware.ifc.edu.br/">
+              <img class="h-8" src="@/assets/footer_logos.png" />
+            </a>
           </v-col>
-          <v-col class="d-flex justify-end align-center">
+          <v-col class="d-flex justify-end align-center" cols="6" md="2">
             <v-btn class="border border-primary" color="info" icon="mdi-help" rounded="xl" size="small" to="/"
               variant="tonal" />
           </v-col>
         </v-row>
-      </footer>
+      </v-container>
+    </footer>
     </v-container>
   </v-main>
 </template>
 
 <script lang="ts" setup>
+// @ts-ignore
 import { useRouter } from "vue-router";
 import { uselayout } from "@/stores/app";
 import { useAuth } from "@/stores/auth";
