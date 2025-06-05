@@ -14,7 +14,7 @@ const hintInput = computed(() => {
 
 const AddUser = (selectedAdvisor) => {
     if (selectedAdvisor) {
-        const findadvisor = WorkStore.WorkStorage.co_advisor.find(s => s.email === selectedAdvisor.email )
+        const findadvisor = WorkStore.WorkStorage.collaborators.find(s => s.email === selectedAdvisor.email )
 
         if(!findadvisor){
             WorkStore.WorkStorage.advisor.push(selectedAdvisor)
@@ -41,6 +41,6 @@ function removeUser(){
             <p style="font-size: 12px;">* Limite máximo de orientadores: 1</p>
             <p style="font-size: 12px;">* Limite minimo de orientadores: 1</p>
         </div>
-        <StepContainer title="Orientador do seu projeto" :step_array="WorkStore.WorkStorage.advisor" :is_subject="false" @RemoveUser="removeUser" :min="1"/>
+        <StepContainer title="Orientador do seu projeto" :step_array="WorkStore.WorkStorage.advisor" :is_subject="false" @RemoveUser="removeUser" :min="1" no_arr_msg="Nenhum orientador selecionado"/>
     </div>
 </template>

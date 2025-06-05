@@ -2,19 +2,21 @@
 import { ref } from 'vue'
 import { useAuth } from '@/stores/auth'
 import { useWork } from '@/stores/work'
+import { useEdition } from '@/stores/edition'
 import { steps } from '@/utils/steps/works'
 const AuthStore = useAuth()
 const workStore = useWork()
+const editionStore = useEdition()
 const actualstep = ref(0)
 const open_dialog = ref(false)
 const useractualstep = Number(localStorage.getItem('actualstep'))
 
 const ReturnValidatedtoDisabledBtn = computed(() => {
   if (actualstep.value === 0) {
-    return workStore.WorkStorage.team?.length < 3
+    return workStore.WorkStorage.team?.length < (editionStore.currentEdition?.members_min || 3)
   }
   if(actualstep.value === 1){
-    const fieldOk = (workStore.WorkStorage.field || []).length >= 3
+    const fieldOk = (workStore.WorkStorage.field || []).length >= (editionStore.currentEdition?.subjects_min || 3)
     const themeOk = Object.keys(workStore.WorkStorage.cross_cutting_theme || {}).length > 0
 
     return !(fieldOk && themeOk)
@@ -23,7 +25,7 @@ const ReturnValidatedtoDisabledBtn = computed(() => {
     return workStore.WorkStorage.advisor?.length === 0
   }
   if (actualstep.value === 3) {
-    return workStore.WorkStorage.co_advisor?.length === 0
+    return workStore.WorkStorage.collaborators?.length === 0
   }
   return false
 })
@@ -66,16 +68,33 @@ function PrevStep() {
 }
 
 onMounted(() => {
-  if (useractualstep === 0 || useractualstep === 6) {
+  // Primeiro, verificar se precisa abrir o dialog baseado no localStorage
+  // antes de modificar o actualstep
+  const shouldShowIntegratedProjectDialog = useractualstep === 0
+
+  // Verificar se o usuário já tem uma equipe e pular para o próximo step
+  if (AuthStore.user.team && AuthStore.user.team.length > 0 && actualstep.value === 0) {
+    // Marcar o step 0 como completo e ir para o step 1
+    steps.value[0].complete = true
+    steps.value[0].is_actual = false
+    steps.value[1].is_actual = true
+    actualstep.value = 1
+    localStorage.setItem('actualstep', '1')
+  }
+
+  // Só mostrar o dialog se for primeira vez (useractualstep === 0) E não tiver equipe existente
+  // ou se for o step final (useractualstep === 6)
+  if ((shouldShowIntegratedProjectDialog && actualstep.value === 0) || useractualstep === 6) {
     open_dialog.value = true
   }
-  if (useractualstep) {
+
+  // Restaurar progresso do usuário se existir
+  if (useractualstep && useractualstep > 0) {
     for (let i = 0; i < useractualstep; i++) {
       steps.value[i].complete = true
     }
     actualstep.value = useractualstep
   }
-
 })
 </script>
 <template>
@@ -101,11 +120,13 @@ onMounted(() => {
       </VStepperWindow>
     </VStepper>
 
-    <StepDialog :btn_cancel_text="useractualstep === 0 ? 'Não' : 'Cancelar'"
-      :btn_confirm_text="useractualstep === 0 ? 'Sim' : 'Confirmar'"
-      :title="useractualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
-      :description="useractualstep === 0 ? '<p>Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes</p>.' : '<p>Após submeter o trabalho um email será enviado para os <b>colaboradores</b> e para o <b>orientador</b> do seu projeto</p>'"
-
-      v-model="open_dialog" @confirmation="DialogActive" />
+    <StepDialog
+      :btn_cancel_text="actualstep === 0 ? 'Não' : 'Cancelar'"
+      :btn_confirm_text="actualstep === 0 ? 'Sim' : 'Confirmar'"
+      :title="actualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
+      :description="actualstep === 0 ? 'Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes' : 'Após submeter o trabalho um email será enviado para os <b>colaboradores</b> e para o <b>orientador</b> do seu projeto'"
+      v-model="open_dialog"
+      @confirmation="DialogActive"
+    />
   </div>
 </template>

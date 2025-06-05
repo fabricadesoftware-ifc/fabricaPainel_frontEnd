@@ -5,6 +5,7 @@
             required: true
         }
     })
+    defineEmits(['submitPropose'])
 </script>
 <template>
 <div class="d-flex flex-column align-center ga-7">

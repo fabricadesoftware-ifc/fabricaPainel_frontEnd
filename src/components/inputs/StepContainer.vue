@@ -28,10 +28,9 @@
         },
         painel_height: {
             type: Number,
-            required: true,
             default: 420,
         }
-    }) 
+    })
 </script>
 <template>
     <div class="mt-7 " :style="{height: painel_height + 'px'}">

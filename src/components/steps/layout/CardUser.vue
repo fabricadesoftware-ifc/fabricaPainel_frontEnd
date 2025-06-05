@@ -1,12 +1,12 @@
-<script setup> 
+<script setup>
     const props = defineProps({
         name: {
             type: String,
-            required: true,
+            default: ''
         },
         email: {
             type: String,
-            required: true,
+            default: ''
         },
         me: {
             type: Object,

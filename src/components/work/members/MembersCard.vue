@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// @ts-ignore
 const props = defineProps({
     member: {
         type: Object,
@@ -6,12 +7,13 @@ const props = defineProps({
     },
     user_id: {
         type: [Number, String, null],
+        default: null
     },
 })
 </script>
 <template>
       <div class="d-flex justify-space-between">
-          
+
                 <div>
                     <div class="d-flex align-center ga-10">
                         <p style=" font-size: 18px;">{{ props.member.name }}</p>
@@ -22,6 +24,6 @@ const props = defineProps({
                 </div>
                       <v-chip class="d-flex justify-center align-center" color="yellow-darken-2" label style="width: 150px;">Nota não Atribuída</v-chip>
 
-               
+
         </div>
 </template>

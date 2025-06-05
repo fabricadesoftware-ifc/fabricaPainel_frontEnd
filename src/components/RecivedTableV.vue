@@ -22,7 +22,7 @@
         <v-btn
           class="pa-0 hover"
           color="primary"
-          :to="props.dashboard ? '/dashboard/paper/:id'.replace(':id', item.id) : '/panel/evaluation/paper/:id'.replace(':id', item.id)"
+          :to="props.dashboard ? '/panel/paper/:id'.replace(':id', item.id) : '/panel/evaluation/paper/:id'.replace(':id', item.id)"
           variant="text"
         >
           {{ item.name }}

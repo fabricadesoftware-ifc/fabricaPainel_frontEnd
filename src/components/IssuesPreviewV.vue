@@ -100,7 +100,7 @@
                 class=""
                 color="primary"
                 text
-                @click="state.editions[model]?.is_open ? router.push('/panel') : router.push(`/dashboard/editions/view/${state.editions[model]?.id}`)"
+                @click="state.editions[model]?.is_open ? router.push('/panel') : router.push(`/panel/editions/view/${state.editions[model]?.id}`)"
               >
                 <div v-if="state.editions[model]?.is_open">
                   Inscrever-se
