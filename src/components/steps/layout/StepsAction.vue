@@ -5,7 +5,7 @@
             required: true
         },
         disabledBtn: {
-            type: [Object, Boolean],
+            type: Boolean,
             required: true
         }
     })

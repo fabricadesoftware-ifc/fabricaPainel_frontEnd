@@ -1,9 +1,6 @@
 <script setup>
-import { ref } from 'vue';
 import { useCategory } from '@/stores/category';
 import { useWork } from '@/stores/work';
-import CardUser from '../layout/CardUser.vue';
-import StepContainer from '../../inputs/StepContainer.vue'
 const CategoryStore = useCategory()
 const WorkStore = useWork()
 const userFiltered = ref([])

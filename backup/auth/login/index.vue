@@ -16,13 +16,12 @@
       loading.value = true
       await authStore.login(email.value, password.value)
       loading.value = false
-      router.push('/panel/')
+      router.push('/')
     } catch (error) {
       loading.value = false
       showMessage('Credenciais inválidas', 'error', 1500, 'top-right', 'auto', false)
     }
   }
-
 </script>
 
 <template>

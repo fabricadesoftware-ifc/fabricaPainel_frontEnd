@@ -50,7 +50,7 @@ import router from '@/router';
                 >
                 <p class="font-weight-bold" style="font-size: 20px;">Você ainda não possui nenhum trabalho
                     submetido</p>
-                <div class="d-flex justify-center align-center ga-2" @click="router.push('/panel/work-submission/')">
+                <div class="d-flex justify-center align-center ga-2" @click="router.push('/panel/works/add/')">
                     <VBtn class="bg-blue" rounded="pill" flat size="25">
                         <VIcon icon="mdi-plus" size="25"></VIcon>
                     </VBtn>
