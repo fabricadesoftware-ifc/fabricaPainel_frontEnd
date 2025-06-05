@@ -9,7 +9,7 @@ import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import { pt } from 'vuetify/locale'
 // Composables
-import { createVuetify } from 'vuetify'
+import { createVuetify } from "vuetify";
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -19,24 +19,29 @@ export default createVuetify({
   },
   date: {
     locale: {
-      pt_BR: 'pt-BR',
+      pt_BR: "pt-BR",
     },
   },
   theme: {
-    defaultTheme: 'light',
+    defaultTheme: "light",
     themes: {
       light: {
         colors: {
-          primary: '#267A7A',
+          primary: "#1F8BDD",
         },
       },
 
       dark: {
         colors: {
-          primary: '#267A7A',
+          primary: "#267A7A",
         },
       },
 
     },
   },
-})
+  defaults: {
+    global: {
+      style: "text-transform: none;",
+    },
+  },
+});
