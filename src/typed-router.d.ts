@@ -26,6 +26,7 @@ declare module 'vue-router/auto-routes' {
     '/auth/my-group/': RouteRecordInfo<'/auth/my-group/', '/auth/my-group', Record<never, never>, Record<never, never>>,
     '/auth/reset-password/': RouteRecordInfo<'/auth/reset-password/', '/auth/reset-password', Record<never, never>, Record<never, never>>,
     '/auth/token/': RouteRecordInfo<'/auth/token/', '/auth/token', Record<never, never>, Record<never, never>>,
+    '/dashboard/': RouteRecordInfo<'/dashboard/', '/dashboard', Record<never, never>, Record<never, never>>,
     '/dashboard/colaborators/': RouteRecordInfo<'/dashboard/colaborators/', '/dashboard/colaborators', Record<never, never>, Record<never, never>>,
     '/dashboard/editions/': RouteRecordInfo<'/dashboard/editions/', '/dashboard/editions', Record<never, never>, Record<never, never>>,
     '/dashboard/editions/add/': RouteRecordInfo<'/dashboard/editions/add/', '/dashboard/editions/add', Record<never, never>, Record<never, never>>,
