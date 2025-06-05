@@ -31,18 +31,16 @@
           <p>ENTRAR NO SISTEMA</p>
         </v-btn>
 
-
-        <RouterLink to="/panel/works" v-else class="d-flex ga-2">
-          <v-btn
+        <v-btn
+          v-else
           class="d-flex"
           color="primary"
           rounded="xl"
           variant="flat"
+          to="/panel/works"
         >
           <p>ACESSAR PLATAFORMA</p>
         </v-btn>
-  
-        </RouterLink>
 
       </v-container>
     </v-app-bar>
