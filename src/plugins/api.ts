@@ -3,8 +3,7 @@ import { useAuth } from "@/stores/auth";
 import { globalRouter } from "./globalRouter";
 
 const api = axios.create({
-  baseURL: "https://painel-api.fexcompany.me/api/",
-  //baseURL: 'http://localhost:8000/api',
+  baseURL: 'http://localhost:8000/api',
   headers: {
     "Content-Type": "application/json",
   },

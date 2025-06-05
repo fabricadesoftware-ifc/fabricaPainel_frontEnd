@@ -2,56 +2,57 @@ import { defineStore } from 'pinia'
 import EditionsService from '@/services/editions'
 import { IEdition } from '@/interfaces/edition'
 import { showMessage } from '@/utils/toastify'
+import { useStorage } from '@vueuse/core'
 
 export const useEdition = defineStore('edition', () => {
-  const state = reactive({
+  const state = useStorage('editionstorage', {
     currentEdition: null as IEdition | null,
     editions: [] as IEdition[],
     loading: false,
     error: null as string | null,
   })
 
-  const currentEdition = computed(() => state.currentEdition)
-  const alertStudent = computed(() => 'A data de submissão é de ' + state.currentEdition?.initial_submission_date + ' até ' + state.currentEdition?.final_submission_date)
-  const teacherStudent = computed(() => 'Registro de Avaliadores (' + state.currentEdition?.initial_registration_evaluator_date + ' até ' + state.currentEdition?.final_registration_evaluator_date + ')')
+  const currentEdition = computed(() => state.value.currentEdition)
+  const alertStudent = computed(() => 'A data de submissão é de ' + state.value.currentEdition?.initial_submission_date + ' até ' + state.value.currentEdition?.final_submission_date)
+  const teacherStudent = computed(() => 'Registro de Avaliadores (' + state.value.currentEdition?.initial_registration_evaluator_date + ' até ' + state.value.currentEdition?.final_registration_evaluator_date + ')')
 
   const isOpenForWork = computed(() => {
     const currentDate = new Date()
-    const initialSubmissionDate = new Date(state.currentEdition?.initial_submission_date)
-    const finalSubmissionDate = new Date(state.currentEdition?.final_submission_date)
+    const initialSubmissionDate = new Date(state.value.currentEdition?.initial_submission_date)
+    const finalSubmissionDate = new Date(state.value.currentEdition?.final_submission_date)
     return initialSubmissionDate <= currentDate && finalSubmissionDate >= currentDate
   })
   const isOpenForRegister = computed(() => {
     const currentDate = new Date()
-    const initialSubmissionDate = new Date(state.currentEdition?.initial_registration_theme_date)
-    const finalSubmissionDate = new Date(state.currentEdition?.final_registration_theme_date)
+    const initialSubmissionDate = new Date(state.value.currentEdition?.initial_registration_theme_date)
+    const finalSubmissionDate = new Date(state.value.currentEdition?.final_registration_theme_date)
     return initialSubmissionDate <= currentDate && finalSubmissionDate >= currentDate
   })
   const isOpenForAprove = computed(() => {
     const currentDate = new Date()
-    const initialAdvisorDate = new Date(state.currentEdition?.initial_advisor_date)
-    const finalAdvisorDate = new Date(state.currentEdition?.final_advisor_date)
+    const initialAdvisorDate = new Date(state.value.currentEdition?.initial_advisor_date)
+    const finalAdvisorDate = new Date(state.value.currentEdition?.final_advisor_date)
     return initialAdvisorDate <= currentDate && finalAdvisorDate >= currentDate
   })
   const isOpenForGroup = computed(() => {
     const currentDate = new Date()
-    const initialThemeDate = new Date(state.currentEdition?.initial_registration_theme_date)
-    const finalSubmissionDate = new Date(state.currentEdition?.final_submission_date)
+    const initialThemeDate = new Date(state.value.currentEdition?.initial_registration_theme_date)
+    const finalSubmissionDate = new Date(state.value.currentEdition?.final_submission_date)
     return initialThemeDate <= currentDate && finalSubmissionDate >= currentDate
   })
   const isOpenForEvaluation = computed(() => {
     const currentDate = new Date()
-    const initialEvaluationDate = new Date(state.currentEdition?.initial_evaluators_date)
-    const finalEvaluationDate = new Date(state.currentEdition?.final_evaluators_date)
+    const initialEvaluationDate = new Date(state.value.currentEdition?.initial_evaluators_date)
+    const finalEvaluationDate = new Date(state.value.currentEdition?.final_evaluators_date)
     return initialEvaluationDate <= currentDate && finalEvaluationDate >= currentDate
   })
 
   const setLoading = (loading: boolean) => {
-    state.loading = loading
+    state.value.loading = loading
   }
 
   const setError = (message: string | null) => {
-    state.error = message
+    state.value.error = message
   }
 
   const fetchEditions = async () => {
@@ -59,7 +60,8 @@ export const useEdition = defineStore('edition', () => {
     setError(null)
     try {
       const editions = await EditionsService.getEditions()
-      state.editions = editions
+      state.value.editions = editions
+      console.log(editions)
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -72,7 +74,8 @@ export const useEdition = defineStore('edition', () => {
     setError(null)
     try {
       const edition = await EditionsService.getOpenEdition()
-      state.currentEdition = edition
+      state.value.currentEdition = edition
+      console.log(edition)
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -85,7 +88,7 @@ export const useEdition = defineStore('edition', () => {
     setError(null)
     try {
       const newEdition = await EditionsService.createEdition(editionData)
-      state.editions.push(newEdition)
+      state.value.editions.push(newEdition)
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -98,9 +101,9 @@ export const useEdition = defineStore('edition', () => {
     setError(null)
     try {
       const updatedEdition = await EditionsService.updateEdition(editionId, editionData)
-      const index = state.editions.findIndex((edition : any) => edition.id === editionId)
+      const index = state.value.editions.findIndex((edition : any) => edition.id === editionId)
       if (index !== -1) {
-        state.editions[index] = updatedEdition
+        state.value.editions[index] = updatedEdition
       }
     } catch (error: any) {
       setError(error.message)

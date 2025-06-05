@@ -142,4 +142,5 @@ onMounted(() => {
       </v-img>
     </v-parallax>
   </body>
+
 </template>

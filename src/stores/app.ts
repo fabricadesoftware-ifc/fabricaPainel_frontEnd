@@ -14,7 +14,6 @@ export const uselayout = defineStore(
 
     const router = useRouter()
     const currentPage: ComputedRef<string> = computed(() => router.currentRoute.value.path)
-
     const state = useStorage('layout', initialState)
     const loading = computed(() => state.value.loading)
     const drawer = computed(() => state.value.drawer)
@@ -54,29 +53,29 @@ export const uselayout = defineStore(
             navbarDashboard: [
               {
                 text: 'Edições',
-                value: '/dashboard/editions',
+                value: '/panel/editions',
                 links: [
                   {
                     text: 'Atual',
-                    value: '/dashboard/editions',
+                    value: '/panel/editions',
                   }, {
                     text: 'Anteriores',
-                    value: '/dashboard/editions/all',
+                    value: '/panel/editions',
                   },
                 ],
                 actions: [
                   {
                     text: 'Nova Edição',
-                    value: '/dashboard/editions/add',
+                    value: '/panel/editions/add',
                   },
                 ],
               }, {
                 text: 'Servidores',
-                value: '/dashboard/colaborators',
+                value: '/panel/colaborators',
                 links: [
                   {
                     text: 'Permissões',
-                    value: '/dashboard/colaborators',
+                    value: '/panel/colaborators',
                   },
                 ],
                 actions: [],

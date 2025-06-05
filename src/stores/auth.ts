@@ -5,6 +5,7 @@ import authService from "@/services/auth";
 import { useEdition } from "./edition";
 import { showMessage } from "@/utils/toastify";
 import { useStorage } from "@vueuse/core";
+import router from "@/router";
 
 export const useAuth = defineStore("user", () => {
   const state = useStorage("state_user", {
@@ -14,7 +15,14 @@ export const useAuth = defineStore("user", () => {
       name: "",
       email: "",
       user_type: "",
+      is_advisor: "",
+      is_collaborator: "",
+      is_management: "",
+      is_evaluator: "",
       team: null,
+      is_advisor: null,
+      is_evaluator: null,
+      is_collaborator: null,
     },
     tokenEmail: "",
     students: [] as Array<{ id: string; name: string }>,
@@ -147,10 +155,18 @@ export const useAuth = defineStore("user", () => {
       name: "",
       email: "",
       user_type: "",
+      is_advisor: "",
+      is_collaborator: "",
+      is_management: "",
+      is_evaluator: "",
       team: null,
+      is_advisor: null,
+      is_evaluator: null,
+      is_collaborator: null,
     };
     state.value.team = null;
     state.value.userTeam = {};
+    router.push('/')
   };
 
   const getStudents = async () => {
@@ -180,6 +196,11 @@ export const useAuth = defineStore("user", () => {
       throw error;
     }
   };
+
+  const GetMe = async () => {
+      state.value.user = await authService.GetMe()
+      console.log(state.value.user)
+  }
 
   const getUserTeam = async () => {
     try {
@@ -293,6 +314,18 @@ export const useAuth = defineStore("user", () => {
   const searchUsers = async (search: string, type: string) => {
     try {
       const data = await authService.searchUsers(search, type);
+      console.log(data, type)
+      return data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  };
+
+  const searchTeacher = async (search: string, type: string) => {
+    try {
+      const data = await authService.searchTeacher(search, type);
+      console.log(data, type)
       return data;
     } catch (error) {
       console.error(error);
@@ -345,5 +378,7 @@ export const useAuth = defineStore("user", () => {
     searchUsers,
     setTokenEmail,
     getEvaluatorByUserId,
+    GetMe,
+    searchTeacher
   };
 });
