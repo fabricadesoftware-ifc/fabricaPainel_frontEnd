@@ -35,6 +35,8 @@ function showinfo(){
   seemore.value = !seemore.value
   textButton.value = seemore.value ? 'Fechar' : 'Ver Mais'
 }
+const defaultBanner =
+  "https://th.bing.com/th/id/OIP.MQJrIQeghQLdcs1uFBZHzwHaEp?rs=1&pid=ImgDetMain"; //reitrar
 </script>
 
 <template>
@@ -92,7 +94,7 @@ function showinfo(){
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">
                   <span class="text-primary font-weight-bold">INFORMAÇÕES</span>
                   <VChip class="bg-blue d-flex justify-center align-center" pill style="width: 120px; height: 30px;">Todos</VChip>
-                </div> 
+                </div>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Nome:</span>
                   <span>{{ edition.edition_name }}</span>
@@ -108,7 +110,7 @@ function showinfo(){
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">
                   <span class="text-primary font-weight-bold">PRAZOS E DATAS</span>
                   <VChip class="bg-blue d-flex justify-center align-center" pill style="width: 120px; height: 30px;">Todos</VChip>
-                </div> 
+                </div>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data do Final do Evento:</span>
                   <span>{{ formatDate(edition.final_event_date) }}</span>
@@ -140,7 +142,7 @@ function showinfo(){
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">
                   <span class="text-primary font-weight-bold">LIMITES POR PROJETO</span>
                   <VChip class="bg-red d-flex justify-center align-center" pill style="width: 120px; height: 30px;">Alunos</VChip>
-                </div> 
+                </div>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite Mínimo de Membros na Equipe</span>
                   <span>{{ edition.members_min }}</span>
@@ -176,7 +178,7 @@ function showinfo(){
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">
                   <span class="text-primary font-weight-bold">LIMITES DE CARGO</span>
                   <VChip class="bg-green d-flex justify-center align-center" pill style="width: 120px; height: 30px;">Professor</VChip>
-                </div> 
+                </div>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite de Projetos por Avaliador</span>
                   <span>{{ edition.works_per_evaluator_max }}</span>
