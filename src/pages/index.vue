@@ -33,8 +33,7 @@ onMounted(() => {
                 width="250px"
                 height="60px"
                 color="primary"
-                to="/auth/login
-        "
+                to="/panel/works"
                 >Acessar Plataforma</v-btn
               >
             </div>

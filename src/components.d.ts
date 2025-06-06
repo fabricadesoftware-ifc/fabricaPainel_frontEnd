@@ -17,6 +17,7 @@ declare module 'vue' {
     CardUser: typeof import('./components/steps/layout/CardUser.vue')['default']
     Components: typeof import('./components/index.vue')['default']
     CreateGroup: typeof import('./components/auth/CreateGroup.vue')['default']
+    CreateWork: typeof import('./components/work/CreateWork.vue')['default']
     EditionDatas: typeof import('./components/editions/EditionDatas.vue')['default']
     EditionsView: typeof import('./components/editions/EditionsView.vue')['default']
     EvaluationSectionV: typeof import('./components/EvaluationSectionV.vue')['default']

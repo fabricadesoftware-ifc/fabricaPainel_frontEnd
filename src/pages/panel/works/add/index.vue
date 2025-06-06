@@ -73,14 +73,14 @@ onMounted(() => {
   const shouldShowIntegratedProjectDialog = useractualstep === 0
 
   // Verificar se o usuário já tem uma equipe e pular para o próximo step
-  if (AuthStore.user.team && AuthStore.user.team.length > 0 && actualstep.value === 0) {
-    // Marcar o step 0 como completo e ir para o step 1
-    steps.value[0].complete = true
-    steps.value[0].is_actual = false
-    steps.value[1].is_actual = true
-    actualstep.value = 1
-    localStorage.setItem('actualstep', '1')
-  }
+  // if (AuthStore.user.team && AuthStore.user.team.length > 0 && actualstep.value === 0) {
+  //   // Marcar o step 0 como completo e ir para o step 1
+  //   steps.value[0].complete = true
+  //   steps.value[0].is_actual = false
+  //   steps.value[1].is_actual = true
+  //   actualstep.value = 1
+  //   localStorage.setItem('actualstep', '1')
+  // }
 
   // Só mostrar o dialog se for primeira vez (useractualstep === 0) E não tiver equipe existente
   // ou se for o step final (useractualstep === 6)

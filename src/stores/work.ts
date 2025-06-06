@@ -200,15 +200,15 @@ export const useWork = defineStore('work', () => {
     }
   }
 
-  const fetchUserWorks = async () => {
+  const fetchUserWorks = async (user_type: String,id: Number) => {
     setLoading(true)
     setError(null)
     try {
-      const userType = authStore.user.user_type
-      const userId = authStore.user.id
-      const works = await WorkService.getUserWorks(userType, userId)
+     
+      const works = await WorkService.getUserWorks(user_type, id)
       state.userWorks = works
       console.log(state.userWorks)
+      return works
     } catch (error: any) {
       setError(error.message)
     } finally {
