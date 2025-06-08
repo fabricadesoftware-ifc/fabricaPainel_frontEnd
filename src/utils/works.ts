@@ -91,8 +91,6 @@ export const validate_user_function = (user_function: string) => {
     userCase.text = 'Cancelar Submissão'
     userCase.color = '#EC3223'
     userCase.icon = '$delete'
-    userCase.function = removeWork
-  
-    
+    userCase.function = removeWork  
   }
 }

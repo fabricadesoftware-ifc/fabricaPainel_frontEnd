@@ -16,6 +16,11 @@ const props = defineProps({
     team: {
         type: Array,
         required: true
+    },
+    isproject_integrated: {
+        type: Boolean,
+        required: true,
+        default: true
     }
 })
 
@@ -33,7 +38,7 @@ const verifyUserWorks = async (user) => {
 
 const hintInput = computed(() => {
     const maxMembers = editionStore.currentEdition?.members_max || 7
-    if(WorkStore.WorkStorage.team.length === maxMembers){
+    if (WorkStore.WorkStorage.team.length === maxMembers) {
         return 'limite máximo atingido'
     }
     return ''
@@ -52,19 +57,35 @@ const AddUser = async (selectedStudent) => {
             console.log('user esta em equipe', team)
             console.log(team)
             const notRepeatUser = props.team.some(stu => stu.registration === Number(selectedStudent.user))
-            if(!team && !notRepeatUser){
+            if(!props.isproject_integrated && !team && !notRepeatUser){
                 WorkStore.WorkStorage.team.push(searchUsers[0])
                 console.log(searchUsers)
             }
-            else{
+            else if (props.isproject_integrated && !team && !notRepeatUser) {
+                const studentisInClassmate = props.me.user_classes[0].class_name === searchUsers[0].user_classes[0].class_name
+                if (studentisInClassmate) {
+                    WorkStore.WorkStorage.team.push(searchUsers[0])
+                }
+                else {
+                    showMessage(
+                        `Este Estudante Não pertence a sua turma`,
+                        "error",
+                        1500,
+                        "top-right",
+                        "auto",
+                        false
+                    );
+                }
+            }
+            else {
                 showMessage(
-                `Este usuario já se encontra em uma equipe`,
-                "error",
-                1500,
-                "top-right",
-                "auto",
-                false
-            );
+                    `Este estudante já se encontra em uma equipe`,
+                    "error",
+                    1500,
+                    "top-right",
+                    "auto",
+                    false
+                );
             }
         }
         else {
@@ -78,7 +99,6 @@ const AddUser = async (selectedStudent) => {
             );
         }
     }
-
     console.log(WorkStore.WorkStorage.team)
 }
 
@@ -124,16 +144,23 @@ onMounted(async () => {
             WorkStore.WorkStorage.team.push(AuthStore.user)
         }
     }
+    console.log(props.me, props.isproject_integrated)
 })
 </script>
 <template>
     <div style="width: 70%;" class="pa-2 h-100">
-        <StudentSelected rounded="xl" :disabled="WorkStore.WorkStorage.team.length === (editionStore.currentEdition?.members_max || 7)" :hint="hintInput" error_msg="estudante não encontrado" placeholder="pesquise por um estudante" label="pesquise pela matricula do estudante" user-type="STUDENT" @addUser="AddUser" />
+        <StudentSelected rounded="xl"
+            :disabled="WorkStore.WorkStorage.team.length === (editionStore.currentEdition?.members_max || 7)"
+            :hint="hintInput" error_msg="estudante não encontrado" placeholder="pesquise por um estudante"
+            label="pesquise pela matricula do estudante" user-type="STUDENT" @addUser="AddUser" />
         <div class="d-flex ga-2 mt-5">
-            <p style="font-size: 12px;">* Limite máximo de estudantes: {{ editionStore.currentEdition?.members_max || 7 }}</p>
-            <p style="font-size: 12px;">* Limite minimo de estudantes: {{ editionStore.currentEdition?.members_min || 3 }}</p>
+            <p style="font-size: 12px;">* Limite máximo de estudantes: {{ editionStore.currentEdition?.members_max || 7
+                }}</p>
+            <p style="font-size: 12px;">* Limite minimo de estudantes: {{ editionStore.currentEdition?.members_min || 3
+                }}</p>
         </div>
         <StepContainer title="Sua Equipe" no_arr_msg="Não há equipe" :step_array="WorkStore.WorkStorage.team"
-            :is_subject="false" :me="props.me" @RemoveUser="removeUser" :min="editionStore.currentEdition?.members_min || 3" />
+            :is_subject="false" :me="props.me" @RemoveUser="removeUser"
+            :min="editionStore.currentEdition?.members_min || 3" />
     </div>
 </template>
