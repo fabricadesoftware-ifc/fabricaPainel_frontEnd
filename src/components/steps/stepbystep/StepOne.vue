@@ -51,34 +51,18 @@ const AddUser = async (selectedStudent) => {
     if (selectedStudent) {
         const searchUsers = await AuthStore.searchUsers(selectedStudent.user, selectedStudent.user_type)
 
-
+        console.log(props.isproject_integrated)
         if(searchUsers.length !== 0){
             const team = (await verifyUserWorks(searchUsers[0]))
             console.log('user esta em equipe', team)
             console.log(team)
             const notRepeatUser = props.team.some(stu => stu.registration === Number(selectedStudent.user))
-            if(!props.isproject_integrated && !team && !notRepeatUser){
+            if (!props.isproject_integrated) {
+            if(!team && !notRepeatUser){
                 WorkStore.WorkStorage.team.push(searchUsers[0])
                 console.log(searchUsers)
-            }
-            else if (props.isproject_integrated && !team && !notRepeatUser) {
-                const studentisInClassmate = props.me.user_classes[0].class_name === searchUsers[0].user_classes[0].class_name
-                if (studentisInClassmate) {
-                    WorkStore.WorkStorage.team.push(searchUsers[0])
-                }
-                else {
-                    showMessage(
-                        `Este Estudante Não pertence a sua turma`,
-                        "error",
-                        1500,
-                        "top-right",
-                        "auto",
-                        false
-                    );
-                }
-            }
-            else {
-                showMessage(
+            } else {
+                 showMessage(
                     `Este estudante já se encontra em uma equipe`,
                     "error",
                     1500,
@@ -87,6 +71,32 @@ const AddUser = async (selectedStudent) => {
                     false
                 );
             }
+            } else {
+                const studentisInClassmate = props.me.user_classes[0].class_name === searchUsers[0].user_classes[0].class_name
+                if (studentisInClassmate && !team && !notRepeatUser) {
+                    WorkStore.WorkStorage.team.push(searchUsers[0])
+                }
+                else if (!studentisInClassmate) {
+                    showMessage(
+                        `Este Estudante Não pertence a sua turma`,
+                        "error",
+                        1500,
+                        "top-right",
+                        "auto",
+                        false
+                    );
+                } else if (studentisInClassmate && team || notRepeatUser) {
+                showMessage(
+                    `Este estudante já se encontra em uma equipe`,
+                    "error",
+                    1500,
+                    "top-right",
+                    "auto",
+                    false
+                );
+                }
+            }
+           
         }
         else {
             showMessage(

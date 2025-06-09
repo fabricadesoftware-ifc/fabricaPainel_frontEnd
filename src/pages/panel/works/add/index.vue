@@ -31,9 +31,12 @@ const ReturnValidatedtoDisabledBtn = computed(() => {
 })
 
 async function DialogActive(type) {
+
   if (type == 'Sim') {
     workStore.WorkStorage.integrated_project = true
     console.log(workStore.WorkStorage)
+  } else if (type == 'Não') {
+    workStore.WorkStorage.integrated_project = false
   }
   else if (type == 'Confirmar') {
     await workStore.sendWork()
@@ -106,7 +109,7 @@ onMounted(() => {
         <StepsHeader :user="AuthStore.user" />
         <VContainer class="d-flex justify-center flex-column align-center h-100">
 
-          <StepOne :me="AuthStore.user" :team="workStore?.team" :isproject_integrated="WorkStore?.WorkStorage?.integrated_project" v-if="actualstep === 0" />
+          <StepOne :me="AuthStore.user" :team="workStore?.team" :isproject_integrated="workStore?.WorkStorage?.integrated_project" v-if="actualstep === 0" />
 
           <StepTwo v-if="actualstep === 1" />
           <StepThree v-if="actualstep === 2" />

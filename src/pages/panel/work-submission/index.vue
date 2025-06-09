@@ -26,9 +26,12 @@ const ReturnValidatedtoDisabledBtn = computed(() => {
 })
 
 async function DialogActive(type) {
+  console.log('tipo dessa porra', type)
   if (type == 'Sim') {
     workStore.WorkStorage.integrated_project = true
     console.log(workStore.work)
+  } else if (type == 'Não') {
+     workStore.WorkStorage.integrated_project = false
   }
   else if (type == 'Confirmar') {
     await workStore.sendWork()
