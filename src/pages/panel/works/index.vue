@@ -13,19 +13,6 @@ const UserStore = useAuth()
 const year = new Date().getFullYear()
 
 const SubmissionVerify = computed(() => {
-  
-  // const work = workStore.userWorks[0]
-  // if (!work || !work.edition) return null;
-
-  // if (work.edition.year === year) {
-  //   return {
-  //     work: work.edition.final_submission_date,
-  //     status: work.status,
-  //     id: work.id
-  //   }
-  // }
-  // return null;
-
   const works = workStore.userWorks
   if (!works) return null
   else {
@@ -42,12 +29,9 @@ const verifySubmitWork = computed(() => {
   if (!Array.isArray(works) || works.length === 0) return []
   if (works.length === 0) return []
 
-  // if (works[0]?.edition?.year !== year) {
-  //   return works
-  // } else {
-  //   return works.slice(1)
-  // }
   return works.filter((s) => s.edition.year !== year )
+
+ 
 })
 
 const is_submit = computed(() => {
@@ -56,7 +40,7 @@ const is_submit = computed(() => {
 })
 
 onMounted(async () => {
-  await workStore.fetchUserWorks(UserStore.user.user_type, UserStore.user.id)
+ await workStore.fetchUserWorks(UserStore.user.user_type, UserStore.user.id)
   await EditionStore.fetchCurrentEdition()
 })
 </script>
@@ -83,12 +67,10 @@ onMounted(async () => {
           :work="work.edition.final_submission_date"
           :work_status="work.status"
         />
-         <CreateWork :date="new Date() < new Date(EditionStore?.currentEdition?.final_second_submission_date)" :edition_title="EditionStore?.currentEdition?.edition_name" v-else />
-         
       </div>
 
       <div class="d-flex justify-space-between align-center text-h6">
-        <h1 class="font-weight-bold" style="font-size: 30px;">Submissões anteriores</h1>
+        <h1 class="font-weight-bold" style="font-size: 30px;">Edições anteriores</h1>
       </div>
 
       <div>
@@ -96,7 +78,7 @@ onMounted(async () => {
           <CardSubmission
             v-for="(works, index) in verifySubmitWork"
             :key="works.id"
-            :work="works"
+            :work="works.edition.final_submission_date"
             :work_status="2"
             :edition_title="index == 0 ? works.edition.edition_name : ''"
           />
