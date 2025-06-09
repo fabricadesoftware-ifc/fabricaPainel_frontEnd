@@ -19,6 +19,18 @@ const props = defineProps({
     }
 })
 
+const verifyUserWorks = async (user) => {
+    const result = await WorkStore.fetchUserWorks(user.user_type, user.id)
+    console.log('Trabalhos encontrados:', result)
+
+    return result.some(work => 
+    [1, 2, 3].includes(work.status) &&
+    work.edition?.year === new Date().getFullYear(),
+    
+)
+
+}
+
 const hintInput = computed(() => {
     const maxMembers = editionStore.currentEdition?.members_max || 7
     if(WorkStore.WorkStorage.team.length === maxMembers){
@@ -29,15 +41,17 @@ const hintInput = computed(() => {
 
 
 
+
 const AddUser = async (selectedStudent) => {
-    console.log(selectedStudent)
     if (selectedStudent) {
         const searchUsers = await AuthStore.searchUsers(selectedStudent.user, selectedStudent.user_type)
-        console.log(searchUsers)
+
+
         if(searchUsers.length !== 0){
-            const team = searchUsers[0]?.team.length > 0
+            const team = (await verifyUserWorks(searchUsers[0]))
+            console.log('user esta em equipe', team)
+            console.log(team)
             const notRepeatUser = props.team.some(stu => stu.registration === Number(selectedStudent.user))
-            console.log(team, notRepeatUser, props.team)
             if(!team && !notRepeatUser){
                 WorkStore.WorkStorage.team.push(searchUsers[0])
                 console.log(searchUsers)
@@ -81,7 +95,7 @@ onMounted(async () => {
             const teamMembers = []
             for (const teamId of AuthStore.user.team) {
                 // Se teamId for um objeto, usar diretamente
-                if (typeof teamId === 'object') {
+                if (typeof teamId === Object) {
                     teamMembers.push(teamId)
                 } else {
                     // Se for um ID, buscar o usuário

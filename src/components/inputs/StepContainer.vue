@@ -31,6 +31,7 @@
             default: 420,
         }
     })
+
 </script>
 <template>
     <div class="mt-7 " :style="{height: painel_height + 'px'}">
@@ -42,7 +43,7 @@
                         {{ step_array?.length < min ? 'limite minimo não atingido'
                             : 'limite minimo atingido' }}</VChip>
                 </div>
-                <div class="d-flex flex-column pa-2 h-75 overflow-y-auto">
+                <div class="d-flex flex-column mt-5 pa-2 h-75 overflow-y-auto">
                     <VCardSubtitle v-if="step_array?.length === 0">
                        {{ no_arr_msg }}
                     </VCardSubtitle>

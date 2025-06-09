@@ -14,11 +14,13 @@ const year = new Date().getFullYear()
 
 const SubmissionVerify = computed(() => {
   const work = workStore.userWorks[0]
-  if (!work || !work.edition) return null;
-
+  if (!work || !work.edition) {
+    return null;
+  }
+    
   if (work.edition.year === year) {
     return {
-      work: work.edition.final_submission_date,
+      work: work,
       status: work.status,
       id: work.id
     }
@@ -28,6 +30,7 @@ const SubmissionVerify = computed(() => {
 
 const verifySubmitWork = computed(() => {
   const works = workStore.userWorks
+  if (!Array.isArray(works) || works.length === 0) return []
   if (works.length === 0) return []
 
   if (works[0]?.edition?.year !== year) {
@@ -38,11 +41,12 @@ const verifySubmitWork = computed(() => {
 })
 
 const is_submit = computed(() => {
-  return workStore.userWorks[0]?.edition?.year === year
+  const works = workStore.userWorks
+  return Array.isArray(works) && works[0]?.edition?.year === year
 })
 
 onMounted(async () => {
-  await workStore.fetchUserWorks()
+  await workStore.fetchUserWorks(UserStore.user.user_type, UserStore.user.id)
   await EditionStore.fetchCurrentEdition()
 
 })
@@ -63,13 +67,15 @@ onMounted(async () => {
           v-if="SubmissionVerify"
           :actual_title="EditionStore.currentEdition.theme"
           :work_id="SubmissionVerify.id"
-          :work="SubmissionVerify.work"
+          :work="SubmissionVerify?.work"
           :work_status="SubmissionVerify.status"
         />
+         <CreateWork :date="new Date() < new Date(EditionStore?.currentEdition?.final_second_submission_date)" :edition_title="EditionStore?.currentEdition?.edition_name" v-else />
+         
       </div>
 
       <div class="d-flex justify-space-between align-center text-h6">
-        <h1 class="font-weight-bold" style="font-size: 30px;">Edições anteriores</h1>
+        <h1 class="font-weight-bold" style="font-size: 30px;">Submissões anteriores</h1>
       </div>
 
       <div>
@@ -77,9 +83,10 @@ onMounted(async () => {
           <CardSubmission
             v-for="works in verifySubmitWork"
             :key="works.id"
-            :work="works.edition.final_submission_date"
+            :work="works"
             :work_status="2"
-            :edition_title="works.edition.theme"
+            :edition_title="works.edition.edition_name"
+            :work_id="works.id"
           />
         </div>
         <div class="pa-5" v-else>
