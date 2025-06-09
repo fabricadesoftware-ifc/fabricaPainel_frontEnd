@@ -4,9 +4,6 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 
 const props = defineProps({
-    edition_title:{
-        type: String,
-    },
     date: {
         type: Boolean,
         default: true
@@ -15,11 +12,6 @@ const props = defineProps({
 </script>
 <template>
     <div class="w-100">
-            <div class="d-flex align-center  ga-5 w-100">
-                <h1 class="text-h5 font-weight-bold" style="font-size: 30px;">{{ props.edition_title }}</h1>
-                        <VChip class="bg-blue d-flex justify-center align-center" pill style="width: 120px;">Em aberto
-                </VChip>
-            </div>
             <div v-if="props.date" class="pa-10 d-flex flex-column justify-center ga-2 align-center cursor-pointer"
                 >
                 <p class="font-weight-bold" style="font-size: 20px;">Você ainda não possui nenhum trabalho

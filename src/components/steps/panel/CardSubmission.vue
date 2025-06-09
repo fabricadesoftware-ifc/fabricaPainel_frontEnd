@@ -15,18 +15,19 @@ const props = defineProps({
     },
     work_id: {
         type: String
-    }
-})
-
-onMounted(() => {
-    console.log(props)
+    },
+ 
 })
 
 import router from '@/router';
+
+onMounted(()=> {
+    console.log(props.work)
+})
 </script>
 <template>
     <div class="w-100">
-        <div class="d-flex justify-center flex-column ga-5 pa-10" v-if="work">
+        <div class="d-flex justify-center flex-column ga-5" >
             <h1 class="text-h5 font-weight-bold" style="font-size: 30px;">{{ edition_title }}</h1>
             <div class="d-flex justify-center align-center">
                 <VCard class="d-flex align-center pa-5 justify-space-between w-100" rounded="lg" elevation="0"
@@ -41,24 +42,6 @@ import router from '@/router';
                         <p>Ver Submissão</p>
                     </div>
                 </VCard>
-            </div>
-        </div>
-        <div v-else>
-            <div class="d-flex align-center  ga-5 w-100">
-                <h1 class="text-h5 font-weight-bold" style="font-size: 30px;">{{ actual_title }}</h1>
-                        <VChip class="bg-blue d-flex justify-center align-center" pill style="width: 120px;">Em aberto
-                </VChip>
-            </div>
-            <div class="pa-10 d-flex flex-column justify-center ga-2 align-center cursor-pointer"
-                >
-                <p class="font-weight-bold" style="font-size: 20px;">Você ainda não possui nenhum trabalho
-                    submetido</p>
-                <div class="d-flex justify-center align-center ga-2" @click="router.push('/panel/works/add/')">
-                    <VBtn class="bg-blue" rounded="pill" flat size="25">
-                        <VIcon icon="mdi-plus" size="25"></VIcon>
-                    </VBtn>
-                    <p class="text-blue font-weight-medium" style="font-size: 20px;">submeta uma proposta</p>
-                </div>
             </div>
         </div>
     </div>
