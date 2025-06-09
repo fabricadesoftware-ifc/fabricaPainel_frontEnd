@@ -1,27 +1,27 @@
 <script setup>
-  import { ref } from 'vue'
-  import { showMessage } from '@/utils/toastify'
-  import { useRouter } from 'vue-router'
-  import { useAuth } from '@/stores/auth'
+import { ref } from 'vue'
+import { showMessage } from '@/utils/toastify'
+import { useRouter } from 'vue-router'
+import { useAuth } from '@/stores/auth'
 
-  const router = useRouter()
-  const authStore = useAuth()
-  const loading = ref(false)
+const router = useRouter()
+const authStore = useAuth()
+const loading = ref(false)
 
-  const email = ref('')
-  const password = ref('')
+const email = ref('')
+const password = ref('')
 
-  const login = async () => {
-    try {
-      loading.value = true
-      await authStore.login(email.value, password.value)
-      loading.value = false
-      router.push('/panel/')
-    } catch (error) {
-      loading.value = false
-      showMessage('Credenciais inválidas', 'error', 1500, 'top-right', 'auto', false)
-    }
+const login = async () => {
+  try {
+    loading.value = true
+    await authStore.login(email.value, password.value)
+    loading.value = false
+    router.push('/panel/works')
+  } catch (error) {
+    loading.value = false
+    showMessage('Credenciais inválidas', 'error', 1500, 'top-right', 'auto', false)
   }
+}
 
 </script>
 
@@ -38,35 +38,13 @@
           </v-card-title>
           <v-card-text>
             <v-form @submit.prevent="login" @keydown.enter="login">
-              <v-text-field
-                v-model="email"
-                label="Email"
-                required
-                rounded="xl"
-                type="email"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="password"
-                label="Senha"
-                required
-                rounded="xl"
-                type="password"
-                variant="outlined"
-              />
-              <v-btn
-                block
-                class="py-6"
-                color="primary"
-                rounded="xl"
-                @click="login"
-              > Entrar </v-btn>
+              <v-text-field v-model="email" label="Email" required rounded="xl" type="email" variant="outlined" />
+              <v-text-field v-model="password" label="Senha" required rounded="xl" type="password" variant="outlined" />
+              <v-btn block class="py-6" color="primary" rounded="xl" @click="login"> Entrar </v-btn>
             </v-form>
             <p class="text-center mt-4" style="font-size: 0.9rem">
-              <router-link
-                class="text-decoration-none text-primary"
-                to="/auth/get-password"
-              >Primeira vez ou esqueceu a senha? Clique aqui</router-link>
+              <router-link class="text-decoration-none text-primary" to="/auth/get-password">Primeira vez ou esqueceu a
+                senha? Clique aqui</router-link>
             </p>
           </v-card-text>
         </v-card>
