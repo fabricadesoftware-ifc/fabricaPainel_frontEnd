@@ -36,7 +36,7 @@ const verifySubmitWork = computed(() => {
 
 const is_submit = computed(() => {
   const works = workStore.userWorks
-  return Array.isArray(works) && works[0]?.edition?.year === year
+  return Array.isArray(works) && works.some((s)=> s?.edition?.year === year && s.status != 4)
 })
 
 onMounted(async () => {
