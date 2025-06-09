@@ -13,28 +13,40 @@ const UserStore = useAuth()
 const year = new Date().getFullYear()
 
 const SubmissionVerify = computed(() => {
-  const work = workStore.userWorks[0]
-  if (!work || !work.edition) return null;
+  
+  // const work = workStore.userWorks[0]
+  // if (!work || !work.edition) return null;
 
-  if (work.edition.year === year) {
-    return {
-      work: work.edition.final_submission_date,
-      status: work.status,
-      id: work.id
-    }
+  // if (work.edition.year === year) {
+  //   return {
+  //     work: work.edition.final_submission_date,
+  //     status: work.status,
+  //     id: work.id
+  //   }
+  // }
+  // return null;
+
+  const works = workStore.userWorks
+  if (!works) return null
+  else {
+    return works.filter((s)=> s.edition.year == year).sort((a, b) => {
+    if (a.status != 4) return -1
+    if (b.id === 4) return 1
+    return 0
+  })
   }
-  return null;
 })
 
 const verifySubmitWork = computed(() => {
   const works = workStore.userWorks
   if (works.length === 0) return []
 
-  if (works[0]?.edition?.year !== year) {
-    return works
-  } else {
-    return works.slice(1)
-  }
+  // if (works[0]?.edition?.year !== year) {
+  //   return works
+  // } else {
+  //   return works.slice(1)
+  // }
+  return works.filter((s) => s.edition.year !== year )
 })
 
 const is_submit = computed(() => {
@@ -44,7 +56,6 @@ const is_submit = computed(() => {
 onMounted(async () => {
   await workStore.fetchUserWorks()
   await EditionStore.fetchCurrentEdition()
-
 })
 </script>
 
@@ -58,13 +69,17 @@ onMounted(async () => {
         </VChip>
       </div>
 
-      <div class="d-flex pa-10 flex-column w-100 justify-space-between align-center">
-        <CardSubmission
+      <div>
+        <div class="d-flex align-center mt-10 mb-10  ga-5 w-100">
+                <h1 class="text-h5 font-weight-bold" style="font-size: 30px;">{{ EditionStore.currentEdition.edition_name }}</h1>
+                        <VChip class="bg-blue d-flex justify-center align-center" pill style="width: 120px;">Em aberto
+                </VChip>
+        </div>
+        <CardSubmission v-for="(work, index) in SubmissionVerify" :key="index" 
           v-if="SubmissionVerify"
-          :actual_title="EditionStore.currentEdition.theme"
-          :work_id="SubmissionVerify.id"
-          :work="SubmissionVerify.work"
-          :work_status="SubmissionVerify.status"
+          :work_id="work.id"
+          :work="work.edition.final_submission_date"
+          :work_status="work.status"
         />
       </div>
 
@@ -75,11 +90,11 @@ onMounted(async () => {
       <div>
         <div v-if="verifySubmitWork.length > 0">
           <CardSubmission
-            v-for="works in verifySubmitWork"
+            v-for="(works, index) in verifySubmitWork"
             :key="works.id"
             :work="works.edition.final_submission_date"
             :work_status="2"
-            :edition_title="works.edition.theme"
+            :edition_title="index == 0 ? works.edition.edition_name : ''"
           />
         </div>
         <div class="pa-5" v-else>
