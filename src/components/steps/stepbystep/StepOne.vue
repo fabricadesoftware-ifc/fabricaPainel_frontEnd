@@ -3,6 +3,7 @@ import { useWork } from '@/stores/work';
 import { showMessage } from '@/utils/toastify';
 import { useAuth } from '@/stores/auth';
 import { useEdition } from '@/stores/edition';
+import { loadTeamMembers, AddUser } from '@/utils/user';
 const AuthStore = useAuth()
 const WorkStore = useWork()
 const editionStore = useEdition()
@@ -36,6 +37,10 @@ const verifyUserWorks = async (user) => {
 
 }
 
+const verifyUserClass = (user) => {
+    return user.user_classes.some((s) => s.year == new Date().getFullYear())
+}
+
 const hintInput = computed(() => {
     const maxMembers = editionStore.currentEdition?.members_max || 7
     if (WorkStore.WorkStorage.team.length === maxMembers) {
@@ -44,72 +49,17 @@ const hintInput = computed(() => {
     return ''
 })
 
-
-
-
-const AddUser = async (selectedStudent) => {
-    if (selectedStudent) {
-        const searchUsers = await AuthStore.searchUsers(selectedStudent.user, selectedStudent.user_type)
-
-        console.log(props.isproject_integrated)
-        if(searchUsers.length !== 0){
-            const team = (await verifyUserWorks(searchUsers[0]))
-            console.log('user esta em equipe', team)
-            console.log(team)
-            const notRepeatUser = props.team.some(stu => stu.registration === Number(selectedStudent.user))
-            if (!props.isproject_integrated) {
-            if(!team && !notRepeatUser){
-                WorkStore.WorkStorage.team.push(searchUsers[0])
-                console.log(searchUsers)
-            } else {
-                 showMessage(
-                    `Este estudante já se encontra em uma equipe`,
-                    "error",
-                    1500,
-                    "top-right",
-                    "auto",
-                    false
-                );
-            }
-            } else {
-                const studentisInClassmate = props.me.user_classes[0].class_name === searchUsers[0].user_classes[0].class_name
-                if (studentisInClassmate && !team && !notRepeatUser) {
-                    WorkStore.WorkStorage.team.push(searchUsers[0])
-                }
-                else if (!studentisInClassmate) {
-                    showMessage(
-                        `Este Estudante Não pertence a sua turma`,
-                        "error",
-                        1500,
-                        "top-right",
-                        "auto",
-                        false
-                    );
-                } else if (studentisInClassmate && team || notRepeatUser) {
-                showMessage(
-                    `Este estudante já se encontra em uma equipe`,
-                    "error",
-                    1500,
-                    "top-right",
-                    "auto",
-                    false
-                );
-                }
-            }
-           
-        }
-        else {
-            showMessage(
-                `Estudante não encontrado`,
-                "error",
-                1500,
-                "top-right",
-                "auto",
-                false
-            );
-        }
-    }
-    console.log(WorkStore.WorkStorage.team)
+const handleAddUser = async (selectedStudent) => {
+  await AddUser({
+    selectedStudent: selectedStudent,
+    searchUsersFn: AuthStore.searchUsers,
+    verifyUserClassFn: verifyUserClass,
+    verifyUserWorksFn: verifyUserWorks,
+    team: WorkStore.WorkStorage.team,
+    isProjectIntegrated: props.isproject_integrated,
+    me: props.me,
+    pushToTeam: (user) => WorkStore.WorkStorage.team.push(user)
+  })
 }
 
 function removeUser(email) {
@@ -117,44 +67,14 @@ function removeUser(email) {
 }
 
 onMounted(async () => {
-    // Verificar se o usuário já tem um grupo e carregar a equipe
-    if (AuthStore.user.team && AuthStore.user.team.length > 0) {
-        // Se já tem equipe, buscar os dados completos dos membros da equipe
-        try {
-            // Para cada ID de membro da equipe, buscar os dados completos
-            const teamMembers = []
-            for (const teamId of AuthStore.user.team) {
-                // Se teamId for um objeto, usar diretamente
-                if (typeof teamId === Object) {
-                    teamMembers.push(teamId)
-                } else {
-                    // Se for um ID, buscar o usuário
-                    const userData = await AuthStore.searchUsers(teamId.toString(), 'STUDENT')
-                    if (userData && userData.length > 0) {
-                        teamMembers.push(userData[0])
-                    }
-                }
-            }
-            // Adicionar o usuário atual se não estiver na lista
-            const currentUserInTeam = teamMembers.find(member => member.id === AuthStore.user.id)
-            if (!currentUserInTeam) {
-                teamMembers.push(AuthStore.user)
-            }
-            WorkStore.WorkStorage.team = teamMembers
-        } catch (error) {
-            console.error('Erro ao carregar membros da equipe:', error)
-            // Fallback: adicionar apenas o usuário atual
-            WorkStore.WorkStorage.team = [AuthStore.user]
-        }
-    } else {
-        // Se não tem equipe, adicionar apenas o usuário atual
-        // Verificar se o usuário atual já está na equipe para evitar duplicação
-        const currentUserInTeam = WorkStore.WorkStorage.team.find(member => member.id === AuthStore.user.id)
-        if (!currentUserInTeam) {
-            WorkStore.WorkStorage.team.push(AuthStore.user)
-        }
-    }
-    console.log(props.me, props.isproject_integrated)
+    const team = await loadTeamMembers({
+      currentUser: AuthStore.user,
+      teamIds: AuthStore.user.team,
+      currentTeam: WorkStore.WorkStorage.team,
+      searchUserFn: AuthStore.searchUsers,  
+    })
+
+    WorkStore.WorkStorage.team = team
 })
 </script>
 <template>
@@ -162,7 +82,7 @@ onMounted(async () => {
         <StudentSelected rounded="xl"
             :disabled="WorkStore.WorkStorage.team.length === (editionStore.currentEdition?.members_max || 7)"
             :hint="hintInput" error_msg="estudante não encontrado" placeholder="pesquise por um estudante"
-            label="pesquise pela matricula do estudante" user-type="STUDENT" @addUser="AddUser" />
+            label="pesquise pela matricula do estudante" user-type="STUDENT" @addUser="handleAddUser" />
         <div class="d-flex ga-2 mt-5">
             <p style="font-size: 12px;">* Limite máximo de estudantes: {{ editionStore.currentEdition?.members_max || 7
                 }}</p>
