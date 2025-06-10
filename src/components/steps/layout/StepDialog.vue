@@ -26,7 +26,7 @@
         </VCardTitle>
         <VCardText class="pa-5" style="font-size: 18px;">{{ props.description }}</VCardText>
         <VCardActions class="w-100 d-flex  justify-end">
-          <VBtn class="font-weight-bold" @click="$emit('confirmation')">{{ btn_cancel_text }}</VBtn>
+          <VBtn class="font-weight-bold" @click="$emit('confirmation', props.btn_cancel_text)">{{ btn_cancel_text }}</VBtn>
           <VBtn class="bg-blue rounded-xl" style="width: 150px;" @click="$emit('confirmation', btn_confirm_text)">{{ btn_confirm_text }}</VBtn>
         </VCardActions>
       </VCard>
