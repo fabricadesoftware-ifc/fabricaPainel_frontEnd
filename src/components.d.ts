@@ -53,6 +53,7 @@ declare module 'vue' {
     StudentSelected: typeof import('./components/inputs/StudentSelected.vue')['default']
     SubjectsSession: typeof import('./components/work/SubjectsSession.vue')['default']
     SuccessStep: typeof import('./components/steps/layout/SuccessStep.vue')['default']
+    TeacherContainer: typeof import('./components/work/members/TeacherContainer.vue')['default']
     TeacherSelected: typeof import('./components/inputs/TeacherSelected.vue')['default']
     TitleH1: typeof import('./components/globals/TitleH1.vue')['default']
     UserList: typeof import('./components/auth/UserList.vue')['default']

@@ -30,15 +30,24 @@ export const resolveStatus = (status:number) => {
         }
         case 4: {
             return {
-                text: 'Cancelado',
+                text: 'Rejeitado',
                 color: 'red-darken-2'
             }
         }
     }
 } 
 
-export const resolveUserFunction = (advisor:any, evaluator:any, collaborator:any ) => {
+type User = {id: Number | String}
+type Advisor = { id: Number | String }
 
+type Work = { advisor: Advisor, work_collaborator: Array<any>, evaluator: Array<any> }
+//@ts-ignore
+export const resolveUserFunction = (work:Work, user) => {
+  console.log(work)
+    const advisor = work.advisor == user.id
+    const evaluator = work.evaluator.some((s) => s.user.id == user.id)
+    const collaborator = work.work_collaborator.some((s) => s.collaborator.id == user.id)
+    
     if (advisor) {
         return 'ADVISOR'
     } else if (evaluator) {
@@ -76,6 +85,7 @@ export const removeWork = async (id: String, store: StoreWithRemoveWork, token: 
 }
 
 export const validate_user_function = (user_function: string) => {
+  console.log(user_function)
   if (user_function === 'EVALUATOR' || user_function === 'ADVISOR') {
     userCase.text = 'Atribuir Nota'
     userCase.color = '#1F8BDD'

@@ -9,6 +9,14 @@ const props = defineProps({
         type: [Number, String, null],
         default: null
     },
+    member_id: {
+        type: [Number,String],
+        default: null
+    }
+})
+
+onMounted(()=> {
+    console.log(props.member_id)
 })
 </script>
 <template>
@@ -17,7 +25,7 @@ const props = defineProps({
                 <div>
                     <div class="d-flex align-center ga-10">
                         <p style=" font-size: 18px;">{{ props.member.name }}</p>
-                        <v-chip v-if="user_id == member.id" color="blue-darken-2 d-flex justify-center align-center" style="width: 60px; height: 25px; font-size: 13px;">Você</v-chip>
+                        <v-chip v-if="props.user_id == props.member_id" color="blue-darken-2 d-flex justify-center align-center" style="width: 60px; height: 25px; font-size: 13px;">Você</v-chip>
 
                     </div>
                     <p class="opacity-60" style="font-size: 15px;">{{ props.member.email }}</p>

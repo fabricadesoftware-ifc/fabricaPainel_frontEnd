@@ -13,7 +13,10 @@ export const useWork = defineStore('work', () => {
   const authStore = useAuth()
   const state = reactive({
     works: [] as any[],
-    userWorks: [] as any[],
+    userWorks: [] as any[], 
+    advisorWorks: [] as any[],
+    collaboratorWorks: [] as any[],
+    evaluatorWorks: [] as any[],
     currentWork: null as any | null,
     myWorks: [] as any[],
     loading: false,
@@ -35,6 +38,9 @@ export const useWork = defineStore('work', () => {
   const allWorks = computed(() => state.works)
   const currentWork = computed(() => state.currentWork)
   const userWorks = computed(() => state.userWorks)
+  const advisorWorks = computed(()=> state.advisorWorks)
+  const collaboratorWorks = computed(()=> state.collaboratorWorks)
+  const evaluatorWorks = computed(()=> state.evaluatorWorks)
 
   const getWorkByCrossCuttingTheme = async (crossCuttingTheme: string) => {
     setLoading(true)
@@ -204,9 +210,14 @@ export const useWork = defineStore('work', () => {
     setLoading(true)
     setError(null)
     try {
-     
       const works = await WorkService.getUserWorks(user_type, id)
-      state.userWorks = works
+      if (user_type == 'STUDENT') state.userWorks = works
+      else {
+        state.advisorWorks = works.advisor
+        state.collaboratorWorks = works.collaborator
+        state.evaluatorWorks = works.evaluator
+        
+      }
       console.log(state.userWorks)
       return works
     } catch (error: any) {
@@ -257,6 +268,9 @@ export const useWork = defineStore('work', () => {
     currentWork,
     fetchUserWorks,
     userWorks,
+    advisorWorks,
+    collaboratorWorks,
+    evaluatorWorks,
     approveWork,
     WorkStorage,
     RemoveUsersInWork,

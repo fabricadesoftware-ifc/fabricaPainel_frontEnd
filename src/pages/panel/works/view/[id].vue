@@ -20,22 +20,30 @@ const datesValidation = reactive({
     evaluator_able_to_give_grade: (date < new Date(editionStore.currentEdition?.final_evaluators_date ?? '2100-01-01'))
 })
 
+const tokenExpired = authStore.isTokenExpired()
+
 onMounted(async()=> {
     await workStore.getWork(work_id)
     await editions.getOpenEdition()
+
+    console.log(workStore.currentWork)
 })
 
 //
 const confirmation = ref(false)
-const  confirmsAction = (confirm:String) => {
+const confirmsAction = (confirm:String) => {
     if (confirm == 'Confirmar') {
     if (authStore.user.is_advisor) {
         console.log('advisor give grade')
     } else if (authStore.user.is_evaluator) {
         console.log('evaluator give grade')
     } else {
-       userCase?.function && userCase.function(workStore.currentWork?.id, workStore, authStore.refresh)
+      
+        
+        if (!tokenExpired) {
+       userCase?.function && userCase.function(workStore.currentWork?.id, workStore, authStore.token)
        router.push('/panel/works')
+        }
     }
     } else {
         confirmation.value = false
@@ -43,8 +51,9 @@ const  confirmsAction = (confirm:String) => {
 }
 </script>
 <template>
-     <LayoutPanel>
-    <v-container class="w-100" v-if="workStore.currentWork">
+      
+     <LayoutPanel v-if="workStore.currentWork">
+    <v-container class="w-100" >
         <div class="d-flex flex-column ga-10">
         <StepDialog :btn_cancel_text="'Cancelar'"
       :btn_confirm_text="'Confirmar'"
@@ -52,7 +61,8 @@ const  confirmsAction = (confirm:String) => {
       :description="'Ao cancelar a proposta seu time será excluido e você terá até o tempo final da segunda submissão para submeter outro trabalho.'"
 
       v-model="confirmation" @confirmation="confirmsAction" />
-            <WorkHeader @buttonAction="confirmation = !confirmation" :student_able_to_cancel="datesValidation.student_able_to_canel" :advisor_able_to_give_grade="datesValidation.advisor_able_to_give_grade" :evaluator_able_to_give_grade="datesValidation.evaluator_able_to_give_grade" :user_function="resolveUserFunction(authStore.user?.is_advisor, authStore.user?.is_evaluator, authStore.user?.is_collaborator)" :grade="workStore.currentWork.feedback" :status_content="resolveStatus(workStore.currentWork.status)?.text" :status_color="resolveStatus(workStore.currentWork.status)?.color" :title="workStore.currentWork.title" />
+
+            <WorkHeader @buttonAction="confirmation = !confirmation" :student_able_to_cancel="datesValidation.student_able_to_canel" :advisor_able_to_give_grade="datesValidation.advisor_able_to_give_grade" :evaluator_able_to_give_grade="datesValidation.evaluator_able_to_give_grade" :user_function="resolveUserFunction(workStore.currentWork, authStore.user)" :grade="workStore.currentWork.feedback" :status_content="resolveStatus(workStore.currentWork.status)?.text" :status_color="resolveStatus(workStore.currentWork.status)?.color" :title="workStore.currentWork.title" />
       
 
         <div class="d-flex flex-column ga-3">
@@ -63,17 +73,22 @@ const  confirmsAction = (confirm:String) => {
        <SubjectsSession :subjects="workStore.currentWork.field" :cross_cutting_theme="workStore.currentWork.cross_cutting_theme" />
 
         <MembersContainer>
-          <MembersCard v-for="(student, index) in orderByUserId(workStore.currentWork.team.team_members, authStore.user.id)" :member="student" :user_id="authStore.user.id" :key="index" />
+          <MembersCard v-for="(student, index) in orderByUserId(workStore.currentWork.team.team_members, authStore.user.id)" :member_id="student.id" :member="student" :user_id="authStore.user.id" :key="index" />
         </MembersContainer>
 
         <MembersContainer title="Orientador do Trabalho" attribute="Status do Aceite/Rejeite">
-          <MembersCard :member="workStore.currentWork.advisor" />
+          <MembersCard :member="workStore.currentWork.advisor" :member_id="workStore.currentWork.advisor.id" :user_id="authStore.user.id" />
+        </MembersContainer>
+
+        <MembersContainer title="Colaboradores do Trabalho" attribute="Status do Aceite/Rejeite">
+          <MembersCard v-for="(collaborator, index) in workStore.currentWork.work_collaborator" :member="collaborator.collaborator" :member_id="collaborator.collaborator.id" :user_id="authStore.user.id" :key="index" />
         </MembersContainer>
 
         </div> 
     </v-container>
-    <v-container v-else>
-        <p>Carregando Submissão de Proposta</p>
-    </v-container>
+   
     </LayoutPanel>
+     <div v-else class="d-flex align-center justify-center h-100 w-100">
+    <v-progress-circular indeterminate color="primary" size="64" />
+  </div>
 </template>

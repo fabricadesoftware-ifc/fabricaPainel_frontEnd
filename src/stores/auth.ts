@@ -80,6 +80,41 @@ export const useAuth = defineStore("user", () => {
     }
   };
 
+  function expireSession() {
+    logout()
+    router.push('/auth/login')
+     setTimeout(()=>{
+      showMessage('Sua sessão expirou, faça login novamente', 'error', 2000, 'top-right', 'light', false)
+     },500)
+  }
+
+  const isTokenExpired = () => {
+    
+    if (!token.value) {
+      expireSession()
+     return true
+    }
+    try {
+      const decoded = jwtDecode<{exp?: Number}>(token.value)
+      const now = Date.now() / 1000
+      
+      if (decoded) {
+        //@ts-ignore
+        const validation = decoded.exp < now
+        if (validation) {
+          expireSession()
+          return true
+        }
+      }
+
+      return false
+
+    } catch (error) {
+      expireSession()
+      return true
+    }
+  } 
+
   const refreshToken = async () => {
     try {
       const { access } = await authService.refreshToken(state.value.refresh);
@@ -357,6 +392,7 @@ export const useAuth = defineStore("user", () => {
     isOpenForEvaluation,
     students,
     team,
+    isTokenExpired,
     getStudents,
     getUser,
     getUserInfo,
