@@ -42,11 +42,14 @@ onMounted(async () => {
     userFiltered.value = await CategoryStore.getField()
     ThemeItems.value = await CategoryStore.getCrossCuttingThemes()
 
+    
+
     for(const field of WorkStore.WorkStorage.field){
         const findISub = userFiltered.value.findIndex(sub => sub.name === field.name)
         userFiltered.value.splice(findISub, 1)
         console.log(field)
     }
+
 })
 </script>
 <template>

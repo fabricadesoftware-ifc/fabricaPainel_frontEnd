@@ -6,6 +6,10 @@
         }
     })
     defineEmits(['submitPropose'])
+
+    onUnmounted(()=> {
+        localStorage.removeItem('actualstep')
+    })
 </script>
 <template>
 <div class="d-flex flex-column align-center ga-7">
@@ -24,7 +28,7 @@
         </div>
         <div class="d-flex ga-5 align-center">
             <h1 style="font-size: 20px;">Orientador do projeto:</h1>
-            <p>{{ form_work.advisor[0].name }}</p>
+            <p>{{ form_work.advisor[0]?.name }}</p>
         </div>
         <div class="d-flex ga-5 align-center flex-wrap">
             <h1 style="font-size: 20px;">Colaboradores do projeto:</h1>

@@ -60,6 +60,8 @@ const handleAddUser = async (selectedStudent) => {
     me: props.me,
     pushToTeam: (user) => WorkStore.WorkStorage.team.push(user)
   })
+
+  console.log(WorkStore.WorkStorage)
 }
 
 function removeUser(email) {
@@ -67,14 +69,17 @@ function removeUser(email) {
 }
 
 onMounted(async () => {
+    if (WorkStore.WorkStorage.team.length <= 1) {
     const team = await loadTeamMembers({
       currentUser: AuthStore.user,
       teamIds: AuthStore.user.team,
       currentTeam: WorkStore.WorkStorage.team,
       searchUserFn: AuthStore.searchUsers,  
     })
-
+    console.log(WorkStore.WorkStorage.team)
     WorkStore.WorkStorage.team = team
+    }
+    
 })
 </script>
 <template>

@@ -28,7 +28,7 @@ export async function loadTeamMembers({
         } else {
           const userData = await searchUserFn(teamId.toString(), 'STUDENT')
           if (userData && userData.length > 0) {
-            teamMembers.push(userData[0])
+            // teamMembers.push(userData[0])
           }
         }
       }
@@ -80,9 +80,11 @@ export const AddUser = async ({
   pushToTeam,
 }: AddUserParams): Promise<void> => {
   if (!selectedStudent) return
-
+  //@ts-ignore
+  console.log(selectedStudent)
+  if (selectedStudent.user.toString().length === 10) {
   const users = await searchUsersFn(selectedStudent.user.toString(), selectedStudent.user_type)
-
+  
   if (users.length === 0 || !verifyUserClassFn(users[0])) {
     showMessage(
                 `Estudante não encontrado`,
@@ -138,5 +140,15 @@ export const AddUser = async ({
     }
   }
 }
+  } else {
+    showMessage(
+      `A matrícula deve conter no mínimo 10 números`,
+      "error",
+      1500,
+      "top-right",
+      "auto",
+      false
+  );
+  }
 }
 
