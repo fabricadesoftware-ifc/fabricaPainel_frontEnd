@@ -118,9 +118,6 @@ onMounted(() => {
   //           edition: editionStore.currentEdition?.id,
   //         }
 
-  console.log(workStore.WorkStorage)
-  console.log(AuthStore.user.team)
-
 })
 </script>
 <template>

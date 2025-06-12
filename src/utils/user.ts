@@ -142,7 +142,7 @@ export const AddUser = async ({
 }
   } else {
     showMessage(
-      `A matrícula deve conter exatamente 10 números`,
+      `A matrícula deve conter no mínimo 10 números`,
       "error",
       1500,
       "top-right",
