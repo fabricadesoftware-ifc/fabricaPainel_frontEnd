@@ -50,7 +50,7 @@ import CardUser from '../steps/layout/CardUser.vue';
                     <div v-if="!is_subject" class="d-flex ga-5 pa-2 flex-column ">
                     <CardUser
                         v-for="step in step_array" :key="step.id" :me="me"
-                        :email="step?.email" :name="step?.name"  @click="$emit('removeUser', step.email)"/>
+                        :email="step?.email" :name="step?.name"  @click="props.me.id == step.id ? '' : $emit('removeUser', step.email)"/>
                     </div>
                     <div v-else class="d-flex justify-start ga-5 w-100 align-center flex-wrap ">
                         <VChip v-for="subject in step_array" closable :key="subject.id" @click:close="$emit('ExcludeSub', subject.id)">{{ subject.name }}</VChip>

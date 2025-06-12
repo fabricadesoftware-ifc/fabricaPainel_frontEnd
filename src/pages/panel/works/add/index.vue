@@ -106,6 +106,14 @@ onMounted(() => {
     }
     actualstep.value = useractualstep
   }
+  //@ts-ignore
+  // const newTeam = {
+  //           team_members: workStore.WorkStorage.team.map((member: any) => member.id),
+  //           sender_id: (AuthStore.user as any).id,
+  //           edition: editionStore.currentEdition?.id,
+  //         }
+
+  console.log(workStore.WorkStorage)
 })
 </script>
 <template>

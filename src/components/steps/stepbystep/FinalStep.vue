@@ -9,6 +9,10 @@ import { useDisplay } from 'vuetify';
     })
     defineEmits(['submitPropose'])
     const {width} = useDisplay()
+
+    onUnmounted(()=> {
+        localStorage.removeItem('actualstep')
+    })
 </script>
 <template>
 <div class="d-flex flex-column align-center ga-7" :style="width < 750 ? {height: '450px'} : ''">
@@ -27,7 +31,7 @@ import { useDisplay } from 'vuetify';
         </div>
         <div class="d-flex ga-5 flex-wrap align-center">
             <h1 style="font-size: 20px;">Orientador do projeto:</h1>
-            <p>{{ form_work.advisor[0].name }}</p>
+            <p>{{ form_work.advisor[0]?.name }}</p>
         </div>
         <div class="d-flex ga-5  align-center flex-wrap">
             <h1 style="font-size: 20px;">Colaboradores do projeto:</h1>

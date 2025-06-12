@@ -89,30 +89,29 @@ export const useWork = defineStore('work', () => {
       console.log('WorkStorage.value.team:', WorkStorage.value.team)
       console.log('WorkStorage.value.team.length:', WorkStorage.value.team.length)
 
-      // Primeiro, verificar se há uma equipe no authStore
-      if ((authStore.team as any)?.id) {
-        teamId = (authStore.team as any).id
-        console.log('Team ID encontrado no authStore:', teamId)
-      }
-      // Senão, verificar se o usuário tem uma equipe
-      else if ((authStore.user as any)?.team && (authStore.user as any).team.length > 0) {
-        const userTeamData = (authStore.user as any).team[0]
-        // Se userTeamData for um número (ID da equipe), usar diretamente
-        // Se for um objeto, tentar extrair o ID
-        if (typeof userTeamData === 'number') {
-          teamId = userTeamData
-        } else {
-          teamId = userTeamData?.team_id || userTeamData?.id
-        }
-        console.log('Team ID encontrado no user.team:', teamId)
-      }
+      // // Primeiro, verificar se há uma equipe no authStore
+      // if ((authStore.team as any)?.id) {
+      //   teamId = (authStore.team as any).id
+      //   console.log('Team ID encontrado no authStore:', teamId)
+      // }
+      // // Senão, verificar se o usuário tem uma equipe
+      // else if ((authStore.user as any)?.team && (authStore.user as any).team.length > 0) {
+      //   const userTeamData = (authStore.user as any).team[0]
+      //   // Se userTeamData for um número (ID da equipe), usar diretamente
+      //   // Se for um objeto, tentar extrair o ID
+      //   if (typeof userTeamData === 'number') {
+      //     teamId = userTeamData
+      //   } else {
+      //     teamId = userTeamData?.team_id || userTeamData?.id
+      //   }
+      //   console.log('Team ID encontrado no user.team:', teamId)
+      // }
       // Se não há equipe existente, criar uma nova com os membros do WorkStorage
-      else if (WorkStorage.value.team.length >= (editionStore.currentEdition?.members_min || 3)) {
+      if (WorkStorage.value.team.length >= (editionStore.currentEdition?.members_min || 3)) {
         console.log('Criando nova equipe com membros:', WorkStorage.value.team)
         try {
           const newTeam = {
             team_members: WorkStorage.value.team.map((member: any) => member.id),
-            sender_id: (authStore.user as any).id,
             edition: editionStore.currentEdition?.id,
           }
           console.log('Dados da nova equipe a ser criada:', newTeam)
@@ -131,7 +130,6 @@ export const useWork = defineStore('work', () => {
         try {
           const newTeam = {
             team_members: WorkStorage.value.team.map((member: any) => member.id),
-            sender_id: (authStore.user as any).id,
             edition: editionStore.currentEdition?.id,
           }
           console.log('Dados da equipe fallback:', newTeam)
@@ -152,7 +150,7 @@ export const useWork = defineStore('work', () => {
       const newWork = await WorkService.sendWork({
         title: WorkStorage.value.title || 'teste',
         abstract: WorkStorage.value.abstract,
-        fields: WorkStorage.value.field.map(f => f.id),
+        field: WorkStorage.value.field.map(f => f.id),
         advisor: WorkStorage.value.advisor[0]?.id,
         cross_cutting_theme: WorkStorage.value.cross_cutting_theme?.id,
         collaborators: WorkStorage.value.collaborators.map(co => co.id),
@@ -160,14 +158,27 @@ export const useWork = defineStore('work', () => {
         team: teamId,
         edition: editionStore.currentEdition?.id,
       })
+
+      console.log(newWork, authStore.team)
       state.works.push(newWork)
       console.log('Trabalho enviado com sucesso! Team ID:', teamId)
     } catch (error: any) {
       console.error('Erro completo na submissão:', error)
+     
       setError(error.message)
       throw error
     } finally {
       setLoading(false)
+      WorkStorage.value = {
+        title: '',
+        abstract: '',
+        field: [],
+        advisor: [],
+        cross_cutting_theme: {} as ICrossCuttingTheme,
+        team: [],
+        collaborators: [],
+        integrated_project: false
+      }
     }
   }
 
