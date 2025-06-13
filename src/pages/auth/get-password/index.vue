@@ -57,7 +57,7 @@ const getPassword = async () => {
         <v-col cols="12">
           <v-card-subtitle class="text-center">
             <v-alert title="Senha" color="primary" icon="$warning" rounded="lg" variant="outlined"
-              text="Enviaremos um e-mail com as instruções para recuperar sua senha.">
+              text="Enviaremos um e-mail com as instruções para recuperar ou obter sua senha.">
 
             </v-alert>
           </v-card-subtitle>
