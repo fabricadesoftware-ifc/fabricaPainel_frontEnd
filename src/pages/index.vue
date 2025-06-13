@@ -47,20 +47,9 @@ onMounted(() => {
                   font-size: 19px;
                   border: 1px, solid, rgba(234, 234, 234, 0.17);
                   font-weight: 500;
-                "
-                to="/auth/login"
-                >Registro</v-btn
-              >
-              <v-btn
-                rounded="pill"
-                width="160px"
-                height="50px"
-                color="primary"
-                border="black"
-                style="font-size: 20px; font-weight: 700"
-                to="/auth/login"
-                >Login</v-btn
-              >
+                " to="/auth/get-password">Registro</v-btn>
+              <v-btn rounded="pill" width="160px" height="50px" color="primary" border="black"
+                style="font-size: 20px; font-weight: 700" to="/auth/login">Login</v-btn>
             </div>
           </header>
           <main>
