@@ -122,14 +122,23 @@ onMounted(() => {
                 </v-btn>
               </div>
             </div>
-            <div class="d-flex mt-5" style="justify-content: end">
+            <div class="d-flex mt-5" 
+              :style="{
+                justifyContent: isMobile ? 'center' : 'end',
+              }">
               <v-btn
                 rounded="lg"
                 class="d-flex align-center text-white"
                 style="font-weight: 400; font-size: 23px"
                 color="transparent"
               >
-                <v-text>Explore o painel</v-text>
+                <v-text
+                  :style="{
+                    fontSize: isMobile ? '16px' : '23px',
+                  }"
+                >
+                  Explore o painel
+                </v-text>
                 <span class="ml-3">
                   <v-img src="@/assets/vector.svg" width="12px" height="8.92" />
                 </span>
