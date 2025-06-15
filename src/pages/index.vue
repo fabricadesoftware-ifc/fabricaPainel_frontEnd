@@ -15,16 +15,24 @@ onMounted(() => {
 <template>
   <body>
     <v-parallax>
-      <v-img src="@/assets/home_banner.png" gradient="rgba(0,0,0,0.69)">
-        <div class="my-8 mx-12">
+      <v-img src="@/assets/home_banner.png" gradient="rgba(0,0,0,0.69)" cover>
+        <div 
+          class="my-8"
+          :class="isMobile? 'mx-6' : 'mx-12'"
+        >
           <header class="d-flex justify-space-between">
             <div class="d-flex align-center" style="user-select: none">
               <v-img
-                src="@/assets/logotipo_painel_integracao.png"
-                height="52"
-                width="46"
+                src="@/assets/logotipo_painel_integracao.png" 
+                :height="isMobile ? 27 : 52"
+                :width="isMobile ? 25 : 46"
               />
-              <h2 class="font-weight-regular text-white ml-4">Painel</h2>
+              <h2
+                class="font-weight-regular text-white"
+                :class="isMobile ? 'ml-2' : 'ml-4'"
+              >
+                Painel
+              </h2>
             </div>
             <div v-if="authStore.isLogged">
               <v-btn
