@@ -74,15 +74,16 @@ onMounted(() => {
           <main>
             <div class="h-screen d-flex flex-column" style="margin-top: 50px">
               <h1
-                class="text-white d-flex flex-wrap"
-                style="
-                  width: 912px;
-                  line-height: 1.3;
-                  letter-spacing: 4px;
-                  font-size: 64px;
-                  font-weight: 500;
-                  margin-top: 85px;
-                "
+                class="text-white"
+                :style="{
+                  fontSize: isMobile ? '32px' : '64px',
+                  lineHeight: 1.3,
+                  letterSpacing: '2px',
+                  fontWeight: 550,
+                  textAlign: isMobile ? 'center' : 'left',
+                  width: isMobile ? '100%' : '910px',
+                  marginTop: isMobile ? '120px' : '85px',
+                }"
               >
                 Painel da Semana de Integração
               </h1>
