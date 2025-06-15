@@ -71,19 +71,20 @@ onMounted(() => {
                   fontWeight: 550,
                   textAlign: isMobile ? 'center' : 'left',
                   width: isMobile ? '100%' : '910px',
-                  marginTop: isMobile ? '120px' : '85px',
+                  marginTop: isMobile ? '150px' : '85px',
                 }"
               >
                 Painel da Semana de Integração
               </h1>
               <h2
                 class="text-white font-weight-regular"
-                style="
-                  font-size: 24px;
-                  width: 733px;
-                  line-height: 35px;
-                  margin-top: 80px;
-                "
+                :style="{
+                  fontSize: isMobile ? '14px' : '24px',
+                  textAlign: isMobile ? 'center' : 'left',
+                  width: isMobile ? '340px' : '733px',
+                  lineHeight: 1.4,
+                  marginTop: isMobile ? '35px' : '80px',
+                }"
               >
                 Painel designado a SEPE do IFC, que administra e avalia os
                 trabalhos dos estudantes
