@@ -72,17 +72,21 @@ onMounted(() => {
             </div>
           </header>
           <main>
-            <div class="h-screen d-flex flex-column" style="margin-top: 50px">
+            <div class="h-screen d-flex flex-column" 
+            :style="{
+              marginTop: '50px',
+              alignItems: isMobile ? 'center' : ''
+              }">
               <h1
                 class="text-white"
                 :style="{
                   fontSize: isMobile ? '32px' : '64px',
                   lineHeight: 1.3,
                   letterSpacing: '2px',
-                  fontWeight: 550,
+                  fontWeight: isMobile ? 500 : 600,
                   textAlign: isMobile ? 'center' : 'left',
                   width: isMobile ? '100%' : '910px',
-                  marginTop: isMobile ? '150px' : '85px',
+                  marginTop: isMobile ? '35%' : '85px',
                 }"
               >
                 Painel da Semana de Integração
@@ -102,6 +106,7 @@ onMounted(() => {
               </h2>
               <div class="d-flex ga-10" style="margin-top: 150px">
                 <v-btn
+                  v-if="!isMobile"
                   rounded="pill"
                   width="221"
                   height="54"
@@ -133,7 +138,8 @@ onMounted(() => {
                 </v-btn>
               </div>
             </div>
-            <div class="d-flex mt-5" 
+            <div 
+              class="d-flex mt-5" 
               :style="{
                 justifyContent: isMobile ? 'center' : 'end',
               }">
