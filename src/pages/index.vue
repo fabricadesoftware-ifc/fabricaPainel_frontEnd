@@ -36,6 +36,7 @@ onMounted(() => {
             </div>
             <div v-if="authStore.isLogged">
               <v-btn
+                v-if="!isMobile"
                 class="font-weight-bold"
                 rounded="pill"
                 width="250px"
@@ -47,6 +48,7 @@ onMounted(() => {
             </div>
             <div v-else class="d-flex ga-8">
               <v-btn
+                v-if="!isMobile"
                 rounded="pill"
                 width="160px"
                 height="50px"
@@ -72,7 +74,7 @@ onMounted(() => {
                   fontSize: isMobile ? '32px' : '64px',
                   lineHeight: 1.3,
                   letterSpacing: '2px',
-                  fontWeight: isMobile ? 500 : 600,
+                  fontWeight: isMobile ? 500 : 550,
                   textAlign: isMobile ? 'center' : 'left',
                   width: isMobile ? '100%' : '910px',
                   marginTop: isMobile ? '35%' : '85px',
@@ -93,7 +95,15 @@ onMounted(() => {
                 Painel designado a SEPE do IFC, que administra e avalia os
                 trabalhos dos estudantes
               </h2>
-              <div class="d-flex ga-10" style="margin-top: 150px">
+              <div
+                :style="{
+                  marginTop: isMobile ? '35px' : '150px',
+                  display: 'flex',
+                  flexDirection: isMobile ? 'column' : 'row',
+                  gap: isMobile ? '6px' : '35px',
+                  alignItems: 'center'
+                }"
+              >
                 <v-btn
                   v-if="!isMobile"
                   rounded="pill"
@@ -112,15 +122,33 @@ onMounted(() => {
                   />
                 </v-btn>
                 <v-btn
+                  v-if="isMobile"
+                  class="font-weight-bold"
+                  rounded="lg"
+                  width="250px"
+                  height="60px"
+                  color="primary"
+                  to="/panel/works"
+                >
+                  Acessar Plataforma
+                </v-btn>
+                <v-btn
                   rounded="pill"
-                  width="270"
-                  height="54"
+                  :width="270"
+                  :height="54"
                   class="font-weight-regular no-uppercase"
-                  style="font-size: 21px; letter-spacing: 0"
+                  :style="{
+                    fontSize: isMobile ? '16px' : '21px',
+                    letterSpacing: 0,
+                    backgroundColor: isMobile ? 'transparent' : '',
+                    color: isMobile ? 'white' : '',
+                    boxShadow: isMobile ? 'none' : '',
+                  }"
                 >
                   <a
                     href="/public/2024- PAINEL DE INTEGRAÇÃO DO IFC - 2024.docx.pdf"
                     download="Regimento_Painel_de_Integração_IFC-2024"
+                    style="color: inherit; text-decoration: none;"
                   >
                     Ler Regulamentação
                   </a>
@@ -128,20 +156,18 @@ onMounted(() => {
               </div>
             </div>
             <div 
-              class="d-flex mt-5" 
+              class="d-flex" 
               :style="{
                 justifyContent: isMobile ? 'center' : 'end',
               }">
               <v-btn
                 rounded="lg"
                 class="d-flex align-center text-white"
-                style="font-weight: 400; font-size: 23px"
+                style="font-weight: 400; font-size: 23px; box-shadow: none;"
                 color="transparent"
               >
                 <v-text
-                  :style="{
-                    fontSize: isMobile ? '16px' : '23px',
-                  }"
+                  :class="isMobile ? 'text-body-2' : 'text-h6'"
                 >
                   Explore o painel
                 </v-text>
