@@ -16,14 +16,14 @@ onMounted(() => {
   <body>
     <v-parallax>
       <v-img src="@/assets/home_banner.png" gradient="rgba(0,0,0,0.69)" cover>
-        <div 
+        <div
           class="my-8"
           :class="isMobile? 'mx-6' : 'mx-12'"
         >
           <header class="d-flex justify-space-between">
             <div class="d-flex align-center" style="user-select: none">
               <v-img
-                src="@/assets/logotipo_painel_integracao.png" 
+                src="@/assets/logotipo_painel_integracao.png"
                 :height="isMobile ? 27 : 52"
                 :width="isMobile ? 25 : 46"
               />
@@ -74,7 +74,7 @@ onMounted(() => {
             </div>
           </header>
           <main>
-            <div class="h-screen d-flex flex-column" 
+            <div class="h-screen d-flex flex-column"
             :style="{
               marginTop: '50px',
               alignItems: isMobile ? 'center' : ''
@@ -98,13 +98,12 @@ onMounted(() => {
                 :style="{
                   fontSize: isMobile ? '14px' : '24px',
                   textAlign: isMobile ? 'center' : 'left',
-                  width: isMobile ? '340px' : '733px',
+                  width: isMobile ? '100%' : '733px',
                   lineHeight: 1.4,
                   marginTop: isMobile ? '35px' : '80px',
                 }"
               >
-                Painel designado a SEPE do IFC, que administra e avalia os
-                trabalhos dos estudantes
+                Painel designado a SEPE do IFC, que administra e avalia os trabalhos dos estudantes
               </h2>
               <div
                 :style="{
@@ -136,14 +135,16 @@ onMounted(() => {
                   v-if="isMobile"
                   class="font-weight-bold"
                   rounded="lg"
-                  width="250px"
+                  min-width="25vw"
+                  max-width="50vw"
                   height="60px"
                   color="primary"
                   to="/panel/works"
                 >
-                  Acessar Plataforma
+                Acessar Plataforma
                 </v-btn>
                 <v-btn
+                  prepend-icon="mdi-download"
                   rounded="pill"
                   :width="270"
                   :height="54"
@@ -166,8 +167,8 @@ onMounted(() => {
                 </v-btn>
               </div>
             </div>
-            <div 
-              class="d-flex" 
+            <div
+              class="d-flex"
               :style="{
                 justifyContent: isMobile ? 'center' : 'end',
               }">
