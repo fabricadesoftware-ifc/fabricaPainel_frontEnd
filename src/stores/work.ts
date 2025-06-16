@@ -90,22 +90,22 @@ export const useWork = defineStore('work', () => {
       console.log('WorkStorage.value.team.length:', WorkStorage.value.team.length)
 
       // // Primeiro, verificar se há uma equipe no authStore
-      // if ((authStore.team as any)?.id) {
-      //   teamId = (authStore.team as any).id
-      //   console.log('Team ID encontrado no authStore:', teamId)
-      // }
-      // // Senão, verificar se o usuário tem uma equipe
-      // else if ((authStore.user as any)?.team && (authStore.user as any).team.length > 0) {
-      //   const userTeamData = (authStore.user as any).team[0]
-      //   // Se userTeamData for um número (ID da equipe), usar diretamente
-      //   // Se for um objeto, tentar extrair o ID
-      //   if (typeof userTeamData === 'number') {
-      //     teamId = userTeamData
-      //   } else {
-      //     teamId = userTeamData?.team_id || userTeamData?.id
-      //   }
-      //   console.log('Team ID encontrado no user.team:', teamId)
-      // }
+      if ((authStore.team as any)?.id) {
+        teamId = (authStore.team as any).id
+        console.log('Team ID encontrado no authStore:', teamId)
+      }
+      // Senão, verificar se o usuário tem uma equipe
+      else if ((authStore.user as any)?.team && (authStore.user as any).team.length > 0) {
+        const userTeamData = (authStore.user as any).team[0]
+        // Se userTeamData for um número (ID da equipe), usar diretamente
+        // Se for um objeto, tentar extrair o ID
+        if (typeof userTeamData === 'number') {
+          teamId = userTeamData
+        } else {
+          teamId = userTeamData?.team_id || userTeamData?.id
+        }
+        console.log('Team ID encontrado no user.team:', teamId)
+      }
       // Se não há equipe existente, criar uma nova com os membros do WorkStorage
       if (WorkStorage.value.team.length >= (editionStore.currentEdition?.members_min || 3)) {
         console.log('Criando nova equipe com membros:', WorkStorage.value.team)

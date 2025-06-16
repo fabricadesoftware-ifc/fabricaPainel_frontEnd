@@ -1,4 +1,6 @@
 <script setup>
+import { steps, resetSteps } from '@/utils/steps/works'
+
     defineProps({
         form_work: {
             type: Object,
@@ -9,6 +11,8 @@
 
     onUnmounted(()=> {
         localStorage.removeItem('actualstep')
+        resetSteps()
+        console.log(steps)
     })
 </script>
 <template>

@@ -11,6 +11,7 @@ const ThemeItems = ref([])
 const autocompleteRef = ref(null)
 
 function selectedTheme(value){
+    
     const theme = ThemeItems.value.find(t => t.name === value)
     WorkStore.WorkStorage.cross_cutting_theme = theme
 }
@@ -20,7 +21,10 @@ const AddUser = (value) => {
     const findField = WorkStore.WorkStorage.field.find(s => s.name === selectedField?.name)
     if (selectedField && !findField) {
         WorkStore.WorkStorage.field.push(selectedField)
+         const findFilteredField = userFiltered.value.find(s => s.name === selectedField?.name)
+        userFiltered.value.splice(findFilteredField, 1)
         autocompleteRef.value.blur()
+   
     } else {
         showMessage(
             'essa matéria já foi selecionada',
@@ -34,8 +38,13 @@ const AddUser = (value) => {
 }
 
 function RemoveSubject(value) {
-    const findField = WorkStore.WorkStorage.field.findIndex(s => s.name === value)
+    console.log(WorkStore.WorkStorage.field)
+    console.log(value)
+    const findField = WorkStore.WorkStorage.field.findIndex(s => s.id === value)
+    userFiltered.value.push(WorkStore.WorkStorage.field[findField])
     WorkStore.WorkStorage.field.splice(findField, 1)
+
+    
 }
 
 onMounted(async () => {
