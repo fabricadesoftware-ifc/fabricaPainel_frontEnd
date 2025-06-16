@@ -1,5 +1,6 @@
 <script setup>
 import { useDisplay } from 'vuetify';
+import { steps, resetSteps } from '@/utils/steps/works'
 
     defineProps({
         form_work: {
@@ -12,6 +13,8 @@ import { useDisplay } from 'vuetify';
 
     onUnmounted(()=> {
         localStorage.removeItem('actualstep')
+        resetSteps()
+        console.log(steps)
     })
 </script>
 <template>
