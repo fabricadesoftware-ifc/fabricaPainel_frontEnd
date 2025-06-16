@@ -39,39 +39,45 @@ const getPassword = async () => {
 </style>
 
 <template>
-  <v-parallax src="@/assets/home_banner.png" class="custom-parallax" gradient="rgba(0,0,0,0.69)">
-    <header class="d-flex mt-3 mt-sm-5 mx-4 mx-sm-8 mx-md-12 justify-space-between">
-      <router-link class="d-flex align-center" to="/" style="user-select: none">
-        <v-img src="@/assets/logotipo_painel_integracao.png" :height="$vuetify.display.xs ? '60' : '100'"
-          :width="$vuetify.display.xs ? '28' : '46'" />
-        <h2 class="logo--title font-weight-regular text-white ml-2 ml-sm-4"
-          :class="$vuetify.display.xs ? 'text-h6' : ''">Painel
-        </h2>
-      </router-link>
-    </header>
-    <div v-if="loading" class="d-flex align-center justify-center h-100 w-100">
-      <v-progress-circular indeterminate color="primary" size="64" />
-    </div>
-    <div class="d-flex justify-center mt-16" v-else>
-      <v-card class="d-flex rounded-xl w-auto pa-6 login-card">
+  <v-parallax style="height: 100vh;" src="@/assets/home_banner.png" class="custom-parallax" gradient="rgba(0,0,0,0.69)">
+    <Loading :loading="loading" />
+     <PanelLogo />
+    <div class="d-flex justify-center mt-16">
+      <v-card class="d-flex rounded-xl pa-6 login-card get-password-card">
         <v-col cols="12">
           <v-card-subtitle class="text-center">
             <v-alert title="Senha" color="primary" icon="$warning" rounded="lg" variant="outlined"
-              text="Enviaremos um e-mail com as instruções para recuperar ou obter sua senha.">
+              text="Enviaremos um e-mail com as instruções para recuperar ou obter sua senha." class="break-text">
 
             </v-alert>
           </v-card-subtitle>
-          <v-card-text>
-            <v-form @submit.prevent="getPassword">
-              <v-text-field v-model="email" label="Email" variant="outlined" prepend-inner-icon="mdi-email" required
+           <v-card-text>
+           <v-form @submit.prevent="getPassword">
+           <v-text-field v-model="email" label="Email" variant="outlined" prepend-inner-icon="mdi-email" required
                 rounded="lg" type="email" />
-              <v-btn block color="primary" class="py-6" rounded="lg" @click="getPassword">
-                Enviar <v-icon icon="mdi-arrow-right"></v-icon>
-              </v-btn>
-            </v-form>
-          </v-card-text>
+         <AuthButton alternative_text="Acessar a Plataforma" router_link="/auth/login" @action="getPassword" />
+         </v-form>
+         </v-card-text>
         </v-col>
       </v-card>
     </div>
   </v-parallax>
 </template>
+
+<style scoped>
+.get-password-card {
+  width: auto;
+}
+
+@media screen and (max-width: 700px) {
+  .get-password-card {
+  width: 90%;
+  height: 450px;
+}
+}
+
+.break-text {
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+</style>

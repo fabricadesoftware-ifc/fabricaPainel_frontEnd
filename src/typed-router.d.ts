@@ -23,7 +23,6 @@ declare module 'vue-router/auto-routes' {
     '/auth/accept-invite-team/[id]/[token]': RouteRecordInfo<'/auth/accept-invite-team/[id]/[token]', '/auth/accept-invite-team/:id/:token', { id: ParamValue<true>, token: ParamValue<true> }, { id: ParamValue<false>, token: ParamValue<false> }>,
     '/auth/get-password/': RouteRecordInfo<'/auth/get-password/', '/auth/get-password', Record<never, never>, Record<never, never>>,
     '/auth/login/': RouteRecordInfo<'/auth/login/', '/auth/login', Record<never, never>, Record<never, never>>,
-    '/auth/reset-password/': RouteRecordInfo<'/auth/reset-password/', '/auth/reset-password', Record<never, never>, Record<never, never>>,
     '/auth/token/': RouteRecordInfo<'/auth/token/', '/auth/token', Record<never, never>, Record<never, never>>,
     '/dashboard/': RouteRecordInfo<'/dashboard/', '/dashboard', Record<never, never>, Record<never, never>>,
     '/panel/editions/': RouteRecordInfo<'/panel/editions/', '/panel/editions', Record<never, never>, Record<never, never>>,

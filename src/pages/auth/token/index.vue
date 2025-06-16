@@ -50,13 +50,13 @@ const resendToken = async () => {
 </script>
 
 <template>
-  <div v-if="loading" class="d-flex align-center justify-center h-100 w-100">
-    <v-progress-circular indeterminate color="primary" size="64" />
-  </div>
-  <v-container class="w-100 h-100 d-flex justify-center align-center" v-else>
+  
+
+     <v-parallax style="height: 100vh;" src="@/assets/home_banner.png" class="custom-parallax d-flex justify-center align-center" gradient="rgba(0,0,0,0.69)">
+      <Loading :loading="loading" />
     <v-row>
-      <v-col cols="12" md="6" class="mx-auto">
-        <v-card>
+      <v-col cols="12" md="6" class="mx-auto d-flex justify-center align-center">
+        <v-card class="pa-5 rounded-xl token-container">
           <v-card-title class="text-center">
             <h2 class="text-primary font-weight-bold text-h4">Token</h2>
           </v-card-title>
@@ -95,5 +95,19 @@ const resendToken = async () => {
         </v-card>
       </v-col>
     </v-row>
-  </v-container>
+  </v-parallax>
+
 </template>
+
+<style scoped>
+.token-container {
+  width: 100%;
+}
+
+@media screen and (max-width: 700px) {
+  .token-container {
+  width: 90%;
+  height: 400px;
+}
+}
+</style>
