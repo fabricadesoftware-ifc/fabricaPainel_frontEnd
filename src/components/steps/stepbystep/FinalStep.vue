@@ -2,6 +2,8 @@
 import { steps, resetSteps } from '@/utils/steps/works'
 import { useDisplay } from 'vuetify';
 const {width} = useDisplay()
+
+
     defineProps({
         form_work: {
             type: Object,
