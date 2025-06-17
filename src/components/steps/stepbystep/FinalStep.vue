@@ -19,8 +19,12 @@ import { steps, resetSteps } from '@/utils/steps/works'
 </script>
 <template>
 <div class="d-flex flex-column align-center ga-7" :style="width < 750 ? {height: '450px'} : ''">
-    <VCard class="w-75 h-100 pa-5 d-flex flex-column  overflow-y-auto ga-10 border elevation-0"  :style="{whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'break-word' }" rounded="xl">
-        <div class="d-flex flex-wrap ga-5 align-center">
+    <VCard class="w-75 h-75 pa-5 d-flex flex-column overflow-y-auto ga-10 border elevation-0"  :style="{whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'break-word' }" rounded="xl">
+         <div class="d-flex align-center">
+            <h1 class="w-50" style="font-size: 20px;" >Título do Trabalho:</h1>
+             <p class="w-100">{{ form_work.title }}</p>
+        </div>
+        <div class="d-flex ga-5 align-center flex-wrap">
             <h1 style="font-size: 20px;">Alunos da Equipe:</h1>
             <p v-for="team in form_work.team" :key="team.id">{{ team.name }}</p>
         </div>
