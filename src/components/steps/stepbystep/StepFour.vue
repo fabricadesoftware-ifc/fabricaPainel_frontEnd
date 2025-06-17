@@ -6,6 +6,8 @@ import { useEdition } from '@/stores/edition';
 import { hasReachedWorkLimit } from '@/utils/steps/works';
 
 import { useDisplay } from 'vuetify';
+import { hasReachedWorkLimit } from '@/utils/steps/works';
+
 const AuthStore = useAuth()
 const WorkStore = useWork()
 const editionStore = useEdition()
@@ -88,6 +90,6 @@ const heightComputed = computed(() => {
             <p style="font-size: 12px;">* Limite máximo de colaboradores: {{ editionStore.currentEdition?.collaborators_max || 5 }}</p>
             <p style="font-size: 12px;">* Limite minimo de colaboradores: {{ editionStore.currentEdition?.collaborators_min || 1 }}</p>
         </div>
-        <StepContainer :painel_height="heightComputed" title="Colaboradores do seu projeto" :step_array="WorkStore.WorkStorage.collaborators" painel_height="408" :is_subject="false" @RemoveUser="removeUser" :min="editionStore.currentEdition?.collaborators_min || 1" no_arr_msg="Nenhum colaborador selecionado"/>
+        <StepContainer :painel_height="heightComputed" title="Colaboradores do seu projeto" :step_array="WorkStore.WorkStorage.collaborators" :is_subject="false" @RemoveUser="removeUser" :min="editionStore.currentEdition?.collaborators_min || 1" no_arr_msg="Nenhum colaborador selecionado"/>
     </div>
 </template>
