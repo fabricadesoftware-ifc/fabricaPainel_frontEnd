@@ -58,7 +58,7 @@ onMounted(() => {
                   border: 1px, solid, rgba(234, 234, 234, 0.17);
                   font-weight: 500;
                 "
-                to="/auth/login"
+                to="/auth/get-password""
                 >Registro</v-btn
               >
               <v-btn
