@@ -72,7 +72,7 @@ onMounted(async () => {
     if (WorkStore.WorkStorage.team.length <= 1) {
     const team = await loadTeamMembers({
       currentUser: AuthStore.user,
-      teamIds: AuthStore.user.team,
+      teamIds: AuthStore.user.team.map(t => t.id),
       currentTeam: WorkStore.WorkStorage.team,
       searchUserFn: AuthStore.searchUsers,  
     })

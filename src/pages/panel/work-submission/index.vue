@@ -51,7 +51,7 @@ function NextStep() {
     steps.value[actualstep.value].is_actual = false
   }
   actualstep.value++
-  localStorage.setItem('actualstep', actualstep.value)
+  // localStorage.setItem('actualstep', actualstep.value)
 }
 
 function PrevStep() {
@@ -63,7 +63,7 @@ function PrevStep() {
     steps.value[actualstep.value - 1].is_actual = true
   }
   actualstep.value--
-  localStorage.setItem('actualstep', actualstep.value)
+  // localStorage.setItem('actualstep', actualstep.value)
 }
 
 onMounted(() => {

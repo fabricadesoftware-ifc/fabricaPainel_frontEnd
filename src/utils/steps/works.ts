@@ -50,3 +50,25 @@ export const resetSteps = () => {
   }
 
 }
+
+export const hasReachedWorkLimit = (
+  user:any,
+  userWorks:any,
+  maxWorks:any,
+  year = new Date().getFullYear(),
+  validStatus = [1, 2, 3]
+) => {
+  let activeWorks = 0
+
+  for (let work of userWorks) {
+    if (
+      validStatus.includes(work.status) &&
+      work.edition?.year === year
+    ) {
+      activeWorks++
+    }
+  }
+
+  console.log(`${user.email}_activeWorks: ${activeWorks}/${maxWorks}`)
+  return activeWorks >= maxWorks
+}
