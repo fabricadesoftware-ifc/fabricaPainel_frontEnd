@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 import WorkService from '@/services/works'
 import { useEdition } from '@/stores/edition'
 import { useAuth } from './auth'
-import { useStorage } from '@vueuse/core'
 import { ICrossCuttingTheme } from '@/interfaces/themes'
 import { IWorkStorage } from '@/interfaces/work'
 import { showMessage } from '@/utils/toastify'
@@ -23,7 +22,7 @@ export const useWork = defineStore('work', () => {
     error: null as string | null,
   })
 
-  const WorkStorage = useStorage<IWorkStorage>('workstorage', {
+  const WorkStorage = <IWorkStorage> reactive({
       title: '',
       abstract: '',
       field: [],
@@ -34,7 +33,7 @@ export const useWork = defineStore('work', () => {
       integrated_project: false
   })
 
-  const team = computed(() => WorkStorage.value.team )
+  const team = computed(() => WorkStorage.team )
   const allWorks = computed(() => state.works)
   const currentWork = computed(() => state.currentWork)
   const userWorks = computed(() => state.userWorks)
@@ -77,97 +76,87 @@ export const useWork = defineStore('work', () => {
     }
   }
 
+  type TeamMember = {id: number}
+  type Team = {
+    team_members: TeamMember[]
+    [key: string]:any 
+  }
   const sendWork = async () => {
     setError(null)
     try {
       let teamId = null
 
-      console.log('=== DEBUG TEAM DETECTION ===')
-      console.log('authStore.team:', authStore.team)
-      console.log('authStore.user:', authStore.user)
-      console.log('authStore.user?.team:', (authStore.user as any)?.team)
-      console.log('WorkStorage.value.team:', WorkStorage.value.team)
-      console.log('WorkStorage.value.team.length:', WorkStorage.value.team.length)
+      // Primeiro verifica se o usuário tem uma equipe, e se tiver compara se alguma das equipes é a mesma que ele colocou no trabalho
+      if ((authStore.user as any)?.team && (authStore.user as any).team.length > 0) {
 
-      // Primeiro, verificar se há uma equipe no authStore
-      if ((authStore.team as any)?.id) {
-        teamId = (authStore.team as any).id
-        console.log('Team ID encontrado no authStore:', teamId)
-      }
-      // Senão, verificar se o usuário tem uma equipe
-      else if ((authStore.user as any)?.team && (authStore.user as any).team.length > 0) {
-        const userTeamData = (authStore.user as any).team[0]
-        // Se userTeamData for um número (ID da equipe), usar diretamente
-        // Se for um objeto, tentar extrair o ID
-        if (typeof userTeamData === 'number') {
-          teamId = userTeamData
-        } else {
-          teamId = userTeamData?.team_id || userTeamData?.id
+        const userTeamData = (authStore.user as any).team
+       
+        for (let team of userTeamData as Team[]) {
+        let teamMembers: number[] = (team.team_members.map((s:{id:number}) => s.id))
+       
+        let teamStored: any[] = (WorkStorage.team.map(s => s.id))
+        teamMembers.sort((a,b) => a - b)
+        teamStored.sort((a,b) => a - b)
+        if (teamMembers.every(((value, index) => value === teamStored[index] ))) {
+        teamId = team.id
+        } 
         }
-        console.log('Team ID encontrado no user.team:', teamId)
-      }
-      // Se não há equipe existente, criar uma nova com os membros do WorkStorage
-      else if (WorkStorage.value.team.length >= (editionStore.currentEdition?.members_min || 3)) {
-        console.log('Criando nova equipe com membros:', WorkStorage.value.team)
+      } 
+        // Se não há equipe existente, criar uma nova com os membros do WorkStorage
+      if (!teamId) {
+        
+      
         try {
           const newTeam = {
-            team_members: WorkStorage.value.team.map((member: any) => member.id),
-            sender_id: (authStore.user as any).id,
+            team_members: WorkStorage.team.map((member: any) => member.id),
             edition: editionStore.currentEdition?.id,
           }
-          console.log('Dados da nova equipe a ser criada:', newTeam)
+          
           const createdTeam = await (authStore as any).createTeam(newTeam)
-          console.log('Resposta da criação da equipe:', createdTeam)
+         
           teamId = createdTeam?.id || (authStore.team as any)?.id
-          console.log('Nova equipe criada com ID:', teamId)
+         
         } catch (createError: any) {
           console.error('Erro ao criar equipe:', createError)
           throw new Error('Erro ao criar equipe: ' + createError.message)
         }
       }
-      // Se ainda não temos teamId, tentar usar a equipe existente como fallback
-      else if (WorkStorage.value.team.length > 0) {
-        console.log('Tentando fallback: criando equipe mesmo com menos de 3 membros')
-        try {
-          const newTeam = {
-            team_members: WorkStorage.value.team.map((member: any) => member.id),
-            sender_id: (authStore.user as any).id,
-            edition: editionStore.currentEdition?.id,
-          }
-          console.log('Dados da equipe fallback:', newTeam)
-          const createdTeam = await (authStore as any).createTeam(newTeam)
-          teamId = createdTeam?.id || (authStore.team as any)?.id
-          console.log('Equipe fallback criada com ID:', teamId)
-        } catch (fallbackError) {
-          console.error('Erro no fallback de criação de equipe:', fallbackError)
-        }
-      }
+              
+     
+        const newWork = await WorkService.sendWork({
+          title: WorkStorage.title || 'teste',
+          abstract: WorkStorage.abstract,
+          field: WorkStorage.field.map(f => f.id),
+          advisor: WorkStorage.advisor[0]?.id,
+          cross_cutting_theme: WorkStorage.cross_cutting_theme?.id,
+          collaborators: WorkStorage.collaborators.map(co => co.id),
+          integrated_project: WorkStorage.integrated_project,
+          team: teamId,
+          edition: editionStore.currentEdition?.id,
+        })
+       
 
-      console.log('Team ID final:', teamId)
+        state.works.push(newWork)
+        showMessage('Trabalho enviado com sucesso!', 'success', 2000, 'top-right', 'light', true)
 
-      if (!teamId) {
-        throw new Error('Erro: Não foi possível determinar ou criar uma equipe para este trabalho. Verifique se você tem membros suficientes na equipe.')
-      }
-
-      const newWork = await WorkService.sendWork({
-        title: WorkStorage.value.title || 'teste',
-        abstract: WorkStorage.value.abstract,
-        fields: WorkStorage.value.field.map(f => f.id),
-        advisor: WorkStorage.value.advisor[0]?.id,
-        cross_cutting_theme: WorkStorage.value.cross_cutting_theme?.id,
-        collaborators: WorkStorage.value.collaborators.map(co => co.id),
-        integrated_project: WorkStorage.value.integrated_project,
-        team: teamId,
-        edition: editionStore.currentEdition?.id,
-      })
-      state.works.push(newWork)
-      console.log('Trabalho enviado com sucesso! Team ID:', teamId)
+       
+        
     } catch (error: any) {
       console.error('Erro completo na submissão:', error)
+     
       setError(error.message)
       throw error
     } finally {
       setLoading(false)
+      // Limpa o WorkStorage
+        WorkStorage.title = ''
+        WorkStorage.abstract = ''
+        WorkStorage.field = []
+        WorkStorage.advisor = []
+        WorkStorage.cross_cutting_theme = {} as ICrossCuttingTheme
+        WorkStorage.team = []
+        WorkStorage.collaborators = []
+        WorkStorage.integrated_project = false
     }
   }
 
@@ -206,7 +195,7 @@ export const useWork = defineStore('work', () => {
     }
   }
 
-  const fetchUserWorks = async (user_type: String,id: Number) => {
+  const fetchUserWorks = async (user_type: string, id: string) => {
     setLoading(true)
     setError(null)
     try {
@@ -240,8 +229,8 @@ export const useWork = defineStore('work', () => {
   }
 
   const RemoveUsersInWork = (email: string) => {
-      const user = WorkStorage.value.team.findIndex(stu => stu?.email === email)
-      WorkStorage.value.team.splice(user, 1)
+      const user = WorkStorage.team.findIndex(stu => stu?.email === email)
+      WorkStorage.team.splice(user, 1)
   }
 
   const removeWork = async (id: string | number, token: string) => {

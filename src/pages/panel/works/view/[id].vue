@@ -65,7 +65,7 @@ const confirmsAction = (confirm:String) => {
             <WorkHeader @buttonAction="confirmation = !confirmation" :student_able_to_cancel="datesValidation.student_able_to_canel" :advisor_able_to_give_grade="datesValidation.advisor_able_to_give_grade" :evaluator_able_to_give_grade="datesValidation.evaluator_able_to_give_grade" :user_function="resolveUserFunction(workStore.currentWork, authStore.user)" :grade="workStore.currentWork.feedback" :status_content="resolveStatus(workStore.currentWork.status)?.text" :status_color="resolveStatus(workStore.currentWork.status)?.color" :title="workStore.currentWork.title" />
       
 
-        <div class="d-flex flex-column ga-3">
+        <div class="d-flex flex-column ga-3 flex-wrap w-100" style="max-width: 100%; flex-wrap: wrap; word-break: break-all;">
             <h2 class="opacity-70 " style="font-weight: 700; font-size: 20px;">Proposta de Integração</h2>
             <p style="font-size: 16px;">{{ workStore.currentWork.abstract }}</p>
         </div>

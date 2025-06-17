@@ -1,5 +1,15 @@
 import { ref } from "vue"
-export const steps = ref([
+
+// Passos para cadastrar um trabalho
+
+type Step = {
+  title: string,
+  value: string,
+  complete: boolean,
+  is_actual: boolean
+}
+
+export const steps = ref<Step[]>([
   {
     title: 'Alunos da Equipe',
     value: '1',
@@ -31,3 +41,34 @@ export const steps = ref([
     is_actual: false
   }
 ])
+
+
+export const resetSteps = () => {
+  for (let i = 0; i < steps.value.length; i++) {
+    steps.value[i].complete = false
+    steps.value[i].is_actual = false
+  }
+
+}
+
+export const hasReachedWorkLimit = (
+  user:any,
+  userWorks:any,
+  maxWorks:any,
+  year = new Date().getFullYear(),
+  validStatus = [1, 2, 3]
+) => {
+  let activeWorks = 0
+
+  for (let work of userWorks) {
+    if (
+      validStatus.includes(work.status) &&
+      work.edition?.year === year
+    ) {
+      activeWorks++
+    }
+  }
+
+  console.log(`${user.email}_activeWorks: ${activeWorks}/${maxWorks}`)
+  return activeWorks >= maxWorks
+}

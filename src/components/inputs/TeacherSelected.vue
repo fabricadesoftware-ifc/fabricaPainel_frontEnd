@@ -11,7 +11,8 @@ const props = defineProps([
   'placeholder',
   'error_msg',
   'hint',
-  'disabled'
+  'disabled',
+
 ]);
 const emits = defineEmits(["addUser", "removeUser"]);
 

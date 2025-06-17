@@ -3,10 +3,11 @@ import { useWork } from '@/stores/work';
 import { showMessage } from '@/utils/toastify';
 import { useAuth } from '@/stores/auth';
 import { useEdition } from '@/stores/edition';
+import { hasReachedWorkLimit } from '@/utils/steps/works';
+
 const AuthStore = useAuth()
 const WorkStore = useWork()
 const editionStore = useEdition()
-
 
 const hintInput = computed(() => {
     const maxCollaborators = editionStore.currentEdition?.collaborators_max || 5
@@ -22,7 +23,35 @@ const AddUser = async (selectedColaborator) => {
         const userExists = WorkStore.WorkStorage.collaborators.some(stu => stu.email === selectedColaborator.email)
         const isYourAdvisor = WorkStore.WorkStorage.advisor[0].email === selectedColaborator.email
         if (!userExists && !isYourAdvisor){
+            
+            if (selectedColaborator.is_collaborator == true) {
+            await WorkStore.fetchUserWorks('TEACHER', selectedColaborator.id)
+            const limiteReached = hasReachedWorkLimit(
+            selectedColaborator,
+            WorkStore.collaboratorWorks,
+            editionStore.currentEdition.works_per_collaborator_max
+            )
+            if (limiteReached) {
+                showMessage(
+                'Este colaborador não está mais disponível',
+                "error",
+                1500,
+                "top-right",
+                "auto",
+                false)
+            } else {    
             WorkStore.WorkStorage.collaborators.push(selectedColaborator)
+            }
+            } else {
+                 showMessage(
+                "Este professor não é um colaborador",
+                "error",
+                1500,
+                "top-right",
+                "auto",
+                false
+            );
+            }
         }
         else {
             showMessage(
