@@ -4,7 +4,7 @@ export function useScreen () {
   const browserWidth = ref(window.innerWidth)
   const deviceWidth = ref(screen.width)
   const isMobile = ref(false)
-  if (window.innerWidth < 1010) {
+  if (window.innerWidth < 1024) {
     isMobile.value = true
   }
 
