@@ -59,7 +59,7 @@ function NextStep() {
     steps.value[actualstep.value].is_actual = false
   }
   actualstep.value++
-  localStorage.setItem('actualstep', actualstep.value)
+  // localStorage.setItem('actualstep', actualstep.value)
 }
 
 const StepObj = computed(() => {
@@ -75,8 +75,13 @@ function PrevStep() {
     steps.value[actualstep.value - 1].is_actual = true
   }
   actualstep.value--
-  localStorage.setItem('actualstep', actualstep.value)
+  // localStorage.setItem('actualstep', actualstep.value)
 }
+
+onUnmounted(()=> {
+  workStore.WorkStorage.team = []
+
+})
 
 onMounted(() => {
   // Primeiro, verificar se precisa abrir o dialog baseado no localStorage
@@ -114,6 +119,8 @@ onMounted(() => {
   //         }
 
   console.log(workStore.WorkStorage)
+  console.log(AuthStore.user.team)
+
 })
 </script>
 <template>

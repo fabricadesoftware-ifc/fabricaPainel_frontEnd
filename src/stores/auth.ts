@@ -338,9 +338,9 @@ export const useAuth = defineStore("user", () => {
     }
   };
 
-  const getUserThemes = async () => {
+  const getUserThemes = async (id:string) => {
     try {
-      const data = await authService.getUserThemes(state.value.user.id);
+      const data = await authService.getUserThemes(id);
       state.value.userThemes = data;
     } catch (error) {
       console.error(error);
