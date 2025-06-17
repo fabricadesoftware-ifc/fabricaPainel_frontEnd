@@ -4,6 +4,7 @@ import { showMessage } from '@/utils/toastify';
 import { useAuth } from '@/stores/auth';
 import { useEdition } from '@/stores/edition';
 import { loadTeamMembers, AddUser } from '@/utils/user';
+import { useDisplay } from 'vuetify';
 const AuthStore = useAuth()
 const WorkStore = useWork()
 const editionStore = useEdition()
@@ -81,9 +82,16 @@ onMounted(async () => {
     }
     
 })
+const {width} = useDisplay()
+const heightComputed = computed(() => {
+    if(width.value < 500){
+        return 300
+    }
+    return 400
+})
 </script>
 <template>
-    <div style="width: 70%;" class="pa-2 h-100">
+    <div :style="width > 950 ? {width: '70%'} : {width: '100%'}" class="pa-2 h-100">
         <StudentSelected rounded="xl"
             :disabled="WorkStore.WorkStorage.team.length === (editionStore.currentEdition?.members_max || 7)"
             :hint="hintInput" error_msg="estudante não encontrado" placeholder="pesquise por um estudante"
@@ -95,7 +103,7 @@ onMounted(async () => {
                 }}</p>
         </div>
         <StepContainer title="Sua Equipe" no_arr_msg="Não há equipe" :step_array="WorkStore.WorkStorage.team"
-            :is_subject="false" :me="props.me" @RemoveUser="removeUser"
+            :is_subject="false" :painel_height="heightComputed" :me="props.me" @RemoveUser="removeUser"
             :min="editionStore.currentEdition?.members_min || 3" />
     </div>
 </template>

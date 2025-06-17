@@ -5,6 +5,7 @@ import { useAuth } from '@/stores/auth';
 import { useEdition } from '@/stores/edition';
 import { hasReachedWorkLimit } from '@/utils/steps/works';
 
+import { useDisplay } from 'vuetify';
 const AuthStore = useAuth()
 const WorkStore = useWork()
 const editionStore = useEdition()
@@ -72,14 +73,21 @@ function removeUser(email){
     WorkStore.WorkStorage.collaborators.splice(teacherI, 1)
 }
 
+const {width} = useDisplay()
+const heightComputed = computed(() => {
+    if(width.value < 500){
+        return 300
+    }
+    return 400
+})
 </script>
 <template>
-    <div style="width: 70%; " class="pa-2 h-100">
+    <div :style="width > 950 ? {width: '70%'} : {width: '100%'}" class="pa-2 h-100">
         <TeacherSelected :disabled="WorkStore.WorkStorage.collaborators.length === (editionStore.currentEdition?.collaborators_max || 5)" :hint="hintInput" error_msg="colaborador não encontrado" placeholder="pesquise pelo colaborador" label="pesquise pelo colaborador" user-type="TEACHER" @addUser="AddUser" @removeUser="removeUser"/>
         <div class="d-flex ga-2 mt-5">
             <p style="font-size: 12px;">* Limite máximo de colaboradores: {{ editionStore.currentEdition?.collaborators_max || 5 }}</p>
             <p style="font-size: 12px;">* Limite minimo de colaboradores: {{ editionStore.currentEdition?.collaborators_min || 1 }}</p>
         </div>
-        <StepContainer title="Colaboradores do seu projeto" :step_array="WorkStore.WorkStorage.collaborators" :is_subject="false" @RemoveUser="removeUser" :min="editionStore.currentEdition?.collaborators_min || 1" no_arr_msg="Nenhum colaborador selecionado"/>
+        <StepContainer :painel_height="heightComputed" title="Colaboradores do seu projeto" :step_array="WorkStore.WorkStorage.collaborators" painel_height="408" :is_subject="false" @RemoveUser="removeUser" :min="editionStore.currentEdition?.collaborators_min || 1" no_arr_msg="Nenhum colaborador selecionado"/>
     </div>
 </template>

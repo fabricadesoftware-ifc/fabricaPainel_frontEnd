@@ -44,6 +44,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StepbyStepHeader: typeof import('./components/steps/layout/StepbyStepHeader.vue')['default']
+    StepbyStepHeaderMobile: typeof import('./components/steps/layout/mobile/StepbyStepHeaderMobile.vue')['default']
     StepContainer: typeof import('./components/inputs/StepContainer.vue')['default']
     StepDialog: typeof import('./components/steps/layout/StepDialog.vue')['default']
     StepFive: typeof import('./components/steps/stepbystep/StepFive.vue')['default']

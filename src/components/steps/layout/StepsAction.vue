@@ -1,4 +1,7 @@
-<script setup> 
+<script setup>
+import { useDisplay } from 'vuetify'
+
+ 
    const props = defineProps({
         actualstep: {
             type: Number,
@@ -13,9 +16,16 @@
     const isDisabledValue = computed(() => {
         return isRef(props.disabledBtn) ? props.disabledBtn.value : props.disabledBtn
     })
+    const {height} = useDisplay()
+    const computedMB = computed(() => {
+        if(height.value > 800){
+          return 'mb-16'
+        }
+        return 'mb-10'
+    })
 </script>
 <template>
-    <VStepperActions class="w-100 position-absolute bottom-0 mb-9">
+    <VStepperActions :class="`w-100 position-absolute bottom-0 ${computedMB}`">
           <template #prev="{ props }">
             <VBtn v-bind="props" text="blue" class="border-none" v-if="actualstep !== 0" @click="$emit('PrevStep')">
               <VIcon icon="mdi-arrow-left"></VIcon>

@@ -1,5 +1,6 @@
 <script setup>
-    import CardUser from '../steps/layout/CardUser.vue';
+    import { useDisplay } from 'vuetify';
+import CardUser from '../steps/layout/CardUser.vue';
     const props = defineProps({
         step_array: {
             type: Array,
@@ -31,19 +32,18 @@
             default: 420,
         }
     })
-
 </script>
 <template>
-    <div class="mt-7 " :style="{height: painel_height + 'px'}">
-            <VCard class="pa-5 border elevation-0 rounded-lg h-100">
-                <div class="d-flex justify-space-between align-center">
-                    <VCardTitle class="font-weight-bold">{{ title }}</VCardTitle>
+    <div class="mt-7" :style="{height: painel_height + 'px'}">
+            <VCard class="pa-5 border d-flex flex-column  elevation-0 rounded-lg h-100">
+                <div class="d-flex flex-wrap ga-5  justify-space-between align-center">
+                    <h1 class="font-weight-bold text-center text-h5">{{ title }}</h1>
                     <VChip :color="step_array?.length < min ? 'red' : 'green'"
                         class="font-weight-bold d-flex justify-center align-center " style="width: 250px;">
                         {{ step_array?.length < min ? 'limite minimo não atingido'
                             : 'limite minimo atingido' }}</VChip>
                 </div>
-                <div class="d-flex flex-column mt-5 pa-2 h-75 overflow-y-auto">
+                <div class="d-flex flex-column mt-5 ga-10 pa-2 h-75 overflow-y-auto">
                     <VCardSubtitle v-if="step_array?.length === 0">
                        {{ no_arr_msg }}
                     </VCardSubtitle>

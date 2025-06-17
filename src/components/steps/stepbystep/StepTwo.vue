@@ -3,6 +3,7 @@ import { useCategory } from '@/stores/category';
 import { useWork } from '@/stores/work';
 import { useEdition } from '@/stores/edition';
 import { showMessage } from '@/utils/toastify';
+import { useDisplay } from 'vuetify';
 const CategoryStore = useCategory()
 const WorkStore = useWork()
 const editionStore = useEdition()
@@ -64,9 +65,17 @@ onMounted(async () => {
     }
 
 })
+const {width}= useDisplay()
+
+const heightComputed = computed(() => {
+    if(width.value < 500){
+        return 200
+    }
+    return 300
+})
 </script>
 <template>
-    <div style="width: 70%; " class="pa-2 h-100">
+    <div :style="width > 950 ? {width: '70%'} : {width: '100%'}" class="pa-2 h-100">
         <VAutocomplete v-model="selectedSub" rounded="xl"  @update:model-value="AddSubject"  placeholder="Selecione a matéria" bg-color="grey-lighten-3" variant="solo"
             no-data-text="todas as matérias foram selecionadas"
             :items="subjectFiltered?.map(s => s.name)" ref="autocompleteRef">
@@ -74,7 +83,7 @@ onMounted(async () => {
         <div class="d-flex ga-2">
             <p style="font-size: 12px;">* Limite minimo de matérias: {{ editionStore.currentEdition?.subjects_min || 3 }}</p>
         </div>
-        <StepContainer :painel_height="300" title="As matérias integradas no seu projeto" no_arr_msg="você ainda não selecionou as matérias" :step_array="WorkStore.WorkStorage.field" :is_subject="true" :min="editionStore.currentEdition?.subjects_min || 3" @excludeSub="RemoveSubject"/>
+        <StepContainer :painel_height="heightComputed" title="As matérias integradas no seu projeto" no_arr_msg="você ainda não selecionou as matérias" :step_array="WorkStore.WorkStorage.field" :is_subject="true" :min="editionStore.currentEdition?.subjects_min || 3" @excludeSub="RemoveSubject"/>
         <div class="pa-5 ga-2 d-flex flex-column">
             <p class="font-weight-bold text-h6 ">Tema Transversais do seu projeto</p>
             <VSelect variant="outlined" v-model="WorkStore.WorkStorage.cross_cutting_theme.name" rounded="xl" :items="ThemeItems.map(t => t.name)" @update:model-value="(value) => selectedTheme(value)"></VSelect>
