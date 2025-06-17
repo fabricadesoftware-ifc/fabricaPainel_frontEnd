@@ -15,7 +15,7 @@
     })
 </script>
 <template>
-<div class="pa-3 d-flex justify-space-between align-center h-25 w-100 p-5">
+<div class="d-flex justify-space-between align-center h-25 w-100 mt-5">
     <div>
         <div class="d-flex align-center ga-2">
             <p class="font-weight-bold" style="font-size: 20px;">{{ name }}</p>
