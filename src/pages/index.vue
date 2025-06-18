@@ -44,22 +44,21 @@ function downloadPdf() {
             <v-btn class="font-weight-bold d-lg-flex d-md-flex d-none" rounded="pill" size="x-large" color="primary"
               to="/panel/works">Acessar Plataforma</v-btn>
           </div>
-          <div v-else class="d-flex ga-4">
-            <v-btn rounded="pill" width="8vw" size="x-large" color="white" variant="outlined"
-              to="/auth/get-password">Registro</v-btn>
+          <div v-else class="d-lg-flex d-none ga-4">
+            <v-btn rounded="pill" size="x-large" color="white" variant="outlined" to="/auth/get-password">Primeiro
+              Acesso</v-btn>
             <v-btn class="font-weight-bold" rounded="pill" width="8vw" size="x-large" color="primary"
-              to="/auth/login">Login</v-btn>
+              to="/auth/login">Entrar</v-btn>
           </div>
         </header>
         <div class="d-flex flex-column h-100" :class="lgAndUp ? 'w-50' : 'w-100'">
           <div class="h-screen d-flex flex-column justify-center align-md-center align-lg-start">
             <p class="d-flex text-white font-weight-bold"
               :class="lgAndUp ? 'text-start text-h1' : 'text-center text-h4'">
-              Painel da Semana de Integração
+              Painel de Integração IFC Araquari
             </p>
             <p class="mt-16 text-h5 text-white font-weight-light" :class="lgAndUp ? 'text-start' : 'text-center'">
-              Painel designado a SEPE do IFC, que administra e avalia os
-              trabalhos dos estudantes
+              Plataforma que organiza, acompanha e avalia os trabalhos acadêmicos da Semana de Integração
             </p>
             <div class="d-flex flex-wrap justify-lg-start justify-center mt-16 ga-5 ">
               <v-btn :rounded="lgAndUp ? 'pill' : 'rounded-0'" color="primary"
@@ -75,7 +74,7 @@ function downloadPdf() {
             </div>
           </div>
         </div>
-        <div class="d-flex mt-5 justify-lg-end justify-center">
+        <div class="d-flex mt-2 justify-lg-end justify-center">
           <v-btn rounded="lg" variant="text" class="d-flex text-h5 align-center text-white" color="white"
             append-icon="mdi-arrow-down-bold-circle" style="">
             <v-text>Explore o painel</v-text>
