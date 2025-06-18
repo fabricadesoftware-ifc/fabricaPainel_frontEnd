@@ -41,7 +41,7 @@ function downloadPdf() {
             <h2 class="font-weight-regular text-white ml-4">Painel</h2>
           </div>
           <div v-if="authStore.isLogged">
-            <v-btn class="font-weight-bold" rounded="pill" width="8vw" size="x-large" color="primary"
+            <v-btn class="font-weight-bold d-lg-flex d-md-flex d-none" rounded="pill" size="x-large" color="primary"
               to="/panel/works">Acessar Plataforma</v-btn>
           </div>
           <div v-else class="d-flex ga-4">
@@ -62,8 +62,11 @@ function downloadPdf() {
               trabalhos dos estudantes
             </p>
             <div class="d-flex flex-wrap justify-lg-start justify-center mt-16 ga-5 ">
-              <v-btn :rounded="lgAndUp ? 'pill' : 'rounded-0'" color="primary" class="font-weight-regular"
-                size="x-large" to="/panel/editions" append-icon="mdi-arrow-right-circle">Edição atual
+              <v-btn :rounded="lgAndUp ? 'pill' : 'rounded-0'" color="primary"
+                :class="lgAndUp ? 'font-weight-regular' : 'font-weight-bold'" size="x-large"
+                :to="lgAndUp ? '/panel/editions' : '/panel/works'"
+                :append-icon="lgAndUp ? 'mdi-arrow-right-circle' : ''">
+                {{ lgAndUp ? 'Edição atual' : 'Acessar a Plataforma' }}
               </v-btn>
               <v-btn rounded="pill" size="x-large" class="font-weight-medium" append-icon="mdi-download"
                 :variant="lgAndUp ? 'tonal' : 'text'" :color="lgAndUp ? 'white' : 'white'" @click="downloadPdf">
