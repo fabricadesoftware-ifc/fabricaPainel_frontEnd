@@ -12,8 +12,40 @@ const props = defineProps({
     member_id: {
         type: [Number,String],
         default: null
+    },
+    status: {
+        type: [Number, String],
+        default: 1
     }
 })
+
+const resolveAdvisorOrCollaboratorStatus = (status: Number | String) => {
+    switch (status) {
+        case 1: {
+            return {
+                text: 'Pendente',
+                color: 'yellow-darken-2'
+            }
+        }
+        case 2: {
+            return {
+                text: 'Aprovado',
+                color: 'green-darken-2'
+            }
+        }
+        case 3: {
+            return {
+                text: 'Rejeitado',
+                color: 'red-darken-2'
+            }
+        }
+        default:
+            return {
+                text: 'Pendente',
+                color: 'yellow-darken-2'
+            }
+    }
+}
 
 onMounted(()=> {
     console.log(props.member_id)
@@ -30,7 +62,7 @@ onMounted(()=> {
                     </div>
                     <p class="opacity-60" style="font-size: 15px;">{{ props.member.email }}</p>
                 </div>
-                      <v-chip class="d-flex justify-center align-center" color="yellow-darken-2" label style="width: 150px;">Nota não Atribuída</v-chip>
+                      <v-chip class="d-flex justify-center align-center" :color="resolveAdvisorOrCollaboratorStatus(props.status).color" label style="width: 150px;">{{ resolveAdvisorOrCollaboratorStatus(props.status).text }}</v-chip>
 
 
         </div>

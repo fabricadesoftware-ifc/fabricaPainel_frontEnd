@@ -25,7 +25,8 @@ const AddUser = async (selectedAdvisor) => {
             const limiteReached = hasReachedWorkLimit(
             selectedAdvisor,
             WorkStore.advisorWorks,
-            EditionStore.currentEdition.works_per_advisor_max
+            EditionStore.currentEdition.works_per_advisor_max,
+            true
             )
             if (limiteReached) {
                 showMessage(
