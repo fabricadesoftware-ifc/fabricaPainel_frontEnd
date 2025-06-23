@@ -37,7 +37,7 @@ import CardUser from '../steps/layout/CardUser.vue';
     <div class="mt-7" :style="{height: painel_height + 'px'}">
             <VCard class="pa-5 border d-flex flex-column  elevation-0 rounded-lg h-100">
                 <div class="d-flex flex-wrap ga-5  justify-space-between align-center">
-                    <h1 class="font-weight-bold text-center text-h5">{{ title }}</h1>
+                    <h1 class="font-weight-bold text-center text-h5" :class=" painel_height === 225 ? 'text-h6' : '' ">{{ title }}</h1>
                     <VChip :color="step_array?.length < min ? 'red' : 'green'"
                         class="font-weight-bold d-flex justify-center align-center " style="width: 250px;">
                         {{ step_array?.length < min ? 'limite minimo não atingido'
@@ -52,7 +52,7 @@ import CardUser from '../steps/layout/CardUser.vue';
                         v-for="step in step_array" :key="step.id" :me="me"
                         :email="step?.email" :name="step?.name"  @click="$emit('removeUser', step.email)"/>
                     </div>
-                    <div v-else class="d-flex justify-start ga-10 w-100 align-center flex-wrap pa-5">
+                    <div v-else class="d-flex justify-start ga-5 w-100 align-center flex-wrap ">
                         <VChip v-for="subject in step_array" closable :key="subject.id" @click:close="$emit('ExcludeSub', subject.id)">{{ subject.name }}</VChip>
                     </div>
                     </div>
