@@ -69,7 +69,7 @@ const {width}= useDisplay()
 
 const heightComputed = computed(() => {
     if(width.value < 500){
-        return 200
+        return 240
     }
     return 300
 })
