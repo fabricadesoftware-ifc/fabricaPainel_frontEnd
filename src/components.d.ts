@@ -10,6 +10,7 @@ declare module 'vue' {
     AboutBanner: typeof import('./components/about/AboutBanner.vue')['default']
     AboutIntrodution: typeof import('./components/about/AboutIntrodution.vue')['default']
     AboutProgramation: typeof import('./components/about/AboutProgramation.vue')['default']
+    AcceptanceWork: typeof import('./components/work/acceptanceWork.vue')['default']
     AddUserGroup: typeof import('./components/auth/AddUserGroup.vue')['default']
     AuthButton: typeof import('./components/auth/layout/AuthButton.vue')['default']
     BackButton: typeof import('./components/globals/buttons/BackButton.vue')['default']
