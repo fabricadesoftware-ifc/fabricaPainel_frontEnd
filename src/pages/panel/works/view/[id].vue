@@ -76,12 +76,12 @@ const confirmsAction = (confirm:String) => {
           <MembersCard v-for="(student, index) in orderByUserId(workStore.currentWork.team.team_members, authStore.user.id)" :member_id="student.id" :member="student" :user_id="authStore.user.id" :key="index" />
         </MembersContainer>
 
-        <MembersContainer title="Orientador do Trabalho" attribute="Status do Aceite/Rejeite">
-          <MembersCard :member="workStore.currentWork.advisor" :member_id="workStore.currentWork.advisor.id" :user_id="authStore.user.id" />
+        <MembersContainer title="Orientador do Trabalho"  attribute="Status do Aceite/Rejeite">
+          <MembersCard :status="workStore.currentWork.advisor_status" :member="workStore.currentWork.advisor" :member_id="workStore.currentWork.advisor.id" :user_id="authStore.user.id" />
         </MembersContainer>
 
         <MembersContainer title="Colaboradores do Trabalho" attribute="Status do Aceite/Rejeite">
-          <MembersCard v-for="(collaborator, index) in workStore.currentWork.work_collaborator" :member="collaborator.collaborator" :member_id="collaborator.collaborator.id" :user_id="authStore.user.id" :key="index" />
+          <MembersCard v-for="(collaborator, index) in workStore.currentWork.work_collaborator" :member="collaborator.collaborator" :member_id="collaborator.collaborator.id" :status="collaborator.status" :user_id="authStore.user.id" :key="index" />
         </MembersContainer>
 
         </div> 

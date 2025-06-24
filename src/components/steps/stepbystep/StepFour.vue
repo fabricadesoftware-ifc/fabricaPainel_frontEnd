@@ -29,7 +29,8 @@ const AddUser = async (selectedColaborator) => {
             const limiteReached = hasReachedWorkLimit(
             selectedColaborator,
             WorkStore.collaboratorWorks,
-            editionStore.currentEdition.works_per_collaborator_max
+            editionStore.currentEdition.works_per_collaborator_max,
+            false
             )
             if (limiteReached) {
                 showMessage(
