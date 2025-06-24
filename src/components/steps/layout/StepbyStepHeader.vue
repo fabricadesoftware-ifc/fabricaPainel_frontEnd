@@ -9,6 +9,10 @@ const props = defineProps({
   actualstep: {
     type: Number,
     required: true
+  },
+  is_edition: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -34,7 +38,7 @@ const { width } = useDisplay()
             {{ step.title }}
           </p>
         </VStepperItem>
-        <div :class="i !== 4 ? 'ms-10' : 'd-none'">
+        <div :class="(i !== 4 && !is_edition)  || (is_edition && i !== 3) ? 'ms-10' : 'd-none'">
           <VDivider vertical style="height: 50px; width: 2px;" class="pa-0"></VDivider>
         </div>
       </div>

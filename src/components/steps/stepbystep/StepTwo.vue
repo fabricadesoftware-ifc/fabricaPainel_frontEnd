@@ -22,14 +22,14 @@ function selectedTheme(value){
 const AddSubject = (value) => {
     const selectedField = subjectFiltered.value?.find(s => s.name === value)
     const findField = WorkStore.WorkStorage.field.find(s => s.name === selectedField?.name)
+    console.log(WorkStore.WorkStorage.field)
     if (selectedField && !findField) {
         WorkStore.WorkStorage.field.push(selectedField)
          const findFilteredField = subjectFiltered.value.findIndex(s => s.name === selectedField?.name)
         subjectFiltered.value.splice(findFilteredField, 1)
         
-        autocompleteRef.value.blur()
-        selectedSub.value = null
-   
+        autocompleteRef.value.reset()
+        selectedSub.value = null   
     } else {
         showMessage(
             'essa matéria já foi selecionada',
@@ -56,8 +56,6 @@ onMounted(async () => {
     subjectFiltered.value = await CategoryStore.getField()
     ThemeItems.value = await CategoryStore.getCrossCuttingThemes()
 
-    
-
     for(const field of WorkStore.WorkStorage.field){
         const findISub = subjectFiltered.value.findIndex(sub => sub.name === field.name)
         subjectFiltered.value.splice(findISub, 1)
@@ -76,7 +74,7 @@ const heightComputed = computed(() => {
 </script>
 <template>
     <div :style="width > 950 ? {width: '70%'} : {width: '100%'}" class="pa-2 h-100">
-        <VAutocomplete v-model="selectedSub" rounded="xl"  @update:model-value="AddSubject"  placeholder="Selecione a matéria" bg-color="grey-lighten-3" variant="solo"
+        <VAutocomplete rounded="xl"  @update:model-value="AddSubject"  placeholder="Selecione a matéria" bg-color="grey-lighten-3" variant="solo"
             no-data-text="todas as matérias foram selecionadas"
             :items="subjectFiltered?.map(s => s.name)" ref="autocompleteRef">
         </VAutocomplete>
