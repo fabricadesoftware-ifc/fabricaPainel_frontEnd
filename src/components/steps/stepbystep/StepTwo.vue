@@ -50,7 +50,7 @@ function RemoveSubject(value) {
 onMounted(async () => {
   subjectFiltered.value = await CategoryStore.getField();
   ThemeItems.value = await CategoryStore.getCrossCuttingThemes();
-
+ WorkStore.WorkStorage.cross_cutting_theme = {name: 'Escolha Uma Matéria Transversal'}
   if (!WorkStore.WorkStorage.cross_cutting_theme && ThemeItems.value.length > 0) {
     WorkStore.WorkStorage.cross_cutting_theme = ThemeItems.value[0];
   }
