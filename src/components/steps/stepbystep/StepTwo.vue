@@ -19,7 +19,9 @@ function selectedTheme(value){
 }
 
 function selectedOds(value){
+    console.log(value)
     WorkStore.WorkStorage.ods = value
+    console.log(WorkStore.WorkStorage.ods)
 }
 
 
@@ -85,7 +87,7 @@ onMounted(async () => {
         </div>
         <div class="pa-5 ga-2 d-flex flex-column">
             <p class="font-weight-bold text-h6 ">Objetivos de Desenvolvimento Sustentaveis do seu projeto</p>
-            <VSelect variant="outlined" multiple chips closable-chips rounded="xl" :items="CategoryStore.ods" @update:model-value="(value) => selectedOds(value)"></VSelect>
+            <VSelect variant="outlined" item-title="name" item-value="id" multiple chips closable-chips rounded="xl" :items="CategoryStore.ods" @update:model-value="(value) => selectedOds(value)"></VSelect>
         </div>
     </div>
 </template>

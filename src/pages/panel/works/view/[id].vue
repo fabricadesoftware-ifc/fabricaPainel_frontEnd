@@ -70,7 +70,7 @@ const confirmsAction = (confirm:String) => {
             <p style="font-size: 16px;">{{ workStore.currentWork.abstract }}</p>
         </div>
 
-       <SubjectsSession :subjects="workStore.currentWork.field" :cross_cutting_theme="workStore.currentWork.cross_cutting_theme" />
+       <SubjectsSession :ods="workStore.currentWork.ods" :subjects="workStore.currentWork.field" :cross_cutting_theme="workStore.currentWork.cross_cutting_theme" />
 
         <MembersContainer>
           <MembersCard v-for="(student, index) in orderByUserId(workStore.currentWork.team.team_members, authStore.user.id)" :member_id="student.id" :member="student" :user_id="authStore.user.id" :key="index" />

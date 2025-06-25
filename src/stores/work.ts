@@ -132,6 +132,7 @@ export const useWork = defineStore('work', () => {
           cross_cutting_theme: WorkStorage.cross_cutting_theme?.id,
           collaborators: WorkStorage.collaborators.map(co => co.id),
           integrated_project: WorkStorage.integrated_project,
+          ods: WorkStorage.ods,
 
           team: teamId,
           edition: editionStore.currentEdition?.id,
@@ -157,6 +158,7 @@ export const useWork = defineStore('work', () => {
         WorkStorage.advisor = []
         WorkStorage.cross_cutting_theme = {} as ICrossCuttingTheme
         WorkStorage.team = []
+        WorkStorage.ods = []
         WorkStorage.collaborators = []
         WorkStorage.integrated_project = false
     }

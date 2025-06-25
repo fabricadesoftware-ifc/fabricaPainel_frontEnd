@@ -16,7 +16,7 @@ export const useCategory = defineStore("categories", () => {
   const authStore = useAuth();
   const router = useRouter();
   const crossCuttingThemes = computed(() => state.themes.map((t) => t.name));
-  const ods = computed(() => state.ods.map((o) => o.name));
+  const ods = computed(() => state.ods);
   const field = computed(() => state.field.map((f) => f.name));
 
   const setLoading = (loading: boolean) => {
