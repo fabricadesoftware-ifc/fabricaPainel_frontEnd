@@ -27,7 +27,7 @@ export const useWork = defineStore('work', () => {
       abstract: '',
       field: [],
       advisor: [],
-      cross_cutting_theme: {} as ICrossCuttingTheme,
+      cross_cutting_theme: {name: 'Escolha Uma Matéria Transversal'} as ICrossCuttingTheme,
       team: [],
       collaborators: [],
       integrated_project: false

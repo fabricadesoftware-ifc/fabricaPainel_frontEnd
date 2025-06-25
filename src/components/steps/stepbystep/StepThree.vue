@@ -5,7 +5,6 @@ import { showMessage } from '@/utils/toastify';
 import { useAuth } from '@/stores/auth';
 import { hasReachedWorkLimit } from '@/utils/steps/works';
 import { useDisplay } from 'vuetify';
-import { hasReachedWorkLimit } from '@/utils/steps/works';
 const AuthStore = useAuth()
 const WorkStore = useWork()
 const EditionStore = useEdition()

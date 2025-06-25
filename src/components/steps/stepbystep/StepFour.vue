@@ -6,7 +6,6 @@ import { useEdition } from '@/stores/edition';
 import { hasReachedWorkLimit } from '@/utils/steps/works';
 
 import { useDisplay } from 'vuetify';
-import { hasReachedWorkLimit } from '@/utils/steps/works';
 
 const AuthStore = useAuth()
 const WorkStore = useWork()

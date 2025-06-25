@@ -1,5 +1,5 @@
 <script setup>
-import { steps, resetSteps } from '@/utils/steps/works'
+import { steps } from '@/utils/steps/works'
 import { useDisplay } from 'vuetify';
 const {width} = useDisplay()
 
@@ -12,15 +12,11 @@ const {width} = useDisplay()
     })
     defineEmits(['submitPropose'])
 
-    onUnmounted(()=> {
-        localStorage.removeItem('actualstep')
-        resetSteps()
-        console.log(steps)
-    })
+   
 </script>
 <template>
-<div class="d-flex flex-column align-center ga-7"  :style="width < 750 ? {height: '450px'} : ''">
-    <VCard class="w-75 h-75 pa-5 d-flex flex-column overflow-y-auto ga-10 border elevation-0"  :style="{whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'break-word' }" rounded="xl">
+<div class="d-flex flex-column align-center ga-7 w-100"  :style=" {height: width < 750 ? '550px' : '700px'}">
+    <VCard class="w-100 h-75 pa-5 d-flex flex-column overflow-y-auto ga-10 border elevation-0"  :style="{whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'break-word', marginTop: width < 750 ? '10px' : '100px'}" rounded="xl">
          <div class="d-flex align-center">
             <h1 class="w-50" style="font-size: 20px;" >Título do Trabalho:</h1>
              <p class="w-100">{{ form_work.title }}</p>

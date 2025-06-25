@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useAuth } from '@/stores/auth'
 import { useWork } from '@/stores/work'
 import { useEdition } from '@/stores/edition'
-import { steps } from '@/utils/steps/works'
+import { steps, resetSteps } from '@/utils/steps/works'
 import { useDisplay } from 'vuetify'
 const AuthStore = useAuth()
 const workStore = useWork()
@@ -49,17 +49,21 @@ async function DialogActive(type) {
 }
 
 function NextStep() {
+  
   if (actualstep.value <= 3) {
     steps.value[actualstep.value].complete = true
     steps.value[actualstep.value].is_actual = false
     steps.value[actualstep.value + 1].is_actual = true
+    
   }
   else if (actualstep.value === 4) {
     steps.value[actualstep.value].complete = true
     steps.value[actualstep.value].is_actual = false
+  
   }
-  actualstep.value++
+actualstep.value++
   // localStorage.setItem('actualstep', actualstep.value)
+  console.log(actualstep.value)
 }
 
 const StepObj = computed(() => {
@@ -67,20 +71,31 @@ const StepObj = computed(() => {
 })
 
 function PrevStep() {
-  if(actualstep.value === 5){
-    steps.value[actualstep.value - 1].is_actual = true
-  }
-  else{
+  console.log(actualstep.value)
+  console.log(steps.value)
+
+  if (actualstep.value <= 0) return 
+
+
+  
+  if (actualstep.value < 4) {
     steps.value[actualstep.value].is_actual = false
-    steps.value[actualstep.value - 1].is_actual = true
-  }
-  actualstep.value--
-  // localStorage.setItem('actualstep', actualstep.value)
+
+    steps.value[actualstep.value].complete = false
+    }
+    actualstep.value--
+
+    steps.value[actualstep.value].is_actual = true
+  
+
+  
 }
 
 onUnmounted(()=> {
   workStore.WorkStorage.team = []
-
+  localStorage.removeItem('actualstep')
+  resetSteps()
+  console.log(steps)
 })
 
 onMounted(() => {
@@ -122,13 +137,13 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div style="height: 100vh;">
-    <VStepper v-model="actualstep" class="d-flex h-100">
+  <div style="height: 100vh; position: relative;">
+    <VStepper v-model="actualstep" class="d-flex h-100 ">
       <StepbyStepHeader :steps="steps" :actualstep="actualstep"  v-if="width > 950"/>
       <VStepperWindow class="w-100 h-100">
         <StepsHeader :user="AuthStore.user" :step_num="StepObj?.value" :step_completed="StepObj?.complete" :step_value="StepObj?.title" @openNav="openNav = !openNav"/>
-          <div class="w-100 d-flex justify-center align-center" style="height: 80%;">
-            <div :style="width < 950 ? {width: '100%'} : {width: '75%'}" class="d-flex justify-center align-center">
+          <div v-if="actualstep != 6" class="w-100 d-flex justify-center align-center" style="height: 80%;">
+            <div  :style="width < 950 ? {width: '100%'} : {width: '75%'}" class="d-flex justify-center align-center">
               <StepOne :me="AuthStore.user" :team="workStore?.team" :isproject_integrated="workStore?.WorkStorage?.integrated_project" v-if="actualstep === 0" />
               <StepTwo v-if="actualstep === 1" />
               <StepThree v-if="actualstep === 2" />
