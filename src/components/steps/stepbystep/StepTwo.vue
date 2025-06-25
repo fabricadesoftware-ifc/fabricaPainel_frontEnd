@@ -10,8 +10,15 @@ const WorkStore = useWork()
 const editionStore = useEdition()
 const subjectFiltered = ref([])
 const ThemeItems = ref([])
+const OdsItems = ref([])
 const autocompleteRef = ref(null)
 const selectedSub = ref(null)
+
+function selectedOds(value){
+    console.log(value)
+    WorkStore.WorkStorage.ods = value
+    console.log(WorkStore.WorkStorage.ods)
+}
 
 
 const AddSubject = (value) => {
@@ -48,13 +55,13 @@ function RemoveSubject(value) {
 }
 
 onMounted(async () => {
-  subjectFiltered.value = await CategoryStore.getField();
-  ThemeItems.value = await CategoryStore.getCrossCuttingThemes();
+
+    subjectFiltered.value = await CategoryStore.getField()
+    ThemeItems.value = await CategoryStore.getCrossCuttingThemes()
+    await CategoryStore.getOds() 
+  
   if (WorkStore.WorkStorage.cross_cutting_theme == {}) {
  WorkStore.WorkStorage.cross_cutting_theme = {name: 'Escolha Uma Matéria Transversal'}
-  }
-  if (!WorkStore.WorkStorage.cross_cutting_theme && ThemeItems.value.length > 0) {
-    WorkStore.WorkStorage.cross_cutting_theme = ThemeItems.value[0];
   }
 
   for (const field of WorkStore.WorkStorage.field) {
@@ -96,6 +103,10 @@ const heightComputed = computed(() => {
 >
 
 </VSelect>
+        </div>
+        <div class="pa-5 ga-2 d-flex flex-column">
+            <p class="font-weight-bold text-h6 ">Objetivos de Desenvolvimento Sustentaveis do seu projeto</p>
+            <VSelect variant="outlined" item-title="name" item-value="id" multiple chips closable-chips rounded="xl" :items="CategoryStore.ods" @update:model-value="(value) => selectedOds(value)"></VSelect>
         </div>
     </div>
 </template>
