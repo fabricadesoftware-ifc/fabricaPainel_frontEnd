@@ -2,7 +2,7 @@
 import { useScreen } from "@/composables/composables";
 import { useAuth } from "@/stores/auth";
 import { useDisplay } from "vuetify";
-
+import { downloadPdf } from "@/utils/user";
 const authStore = useAuth();
 const { lgAndUp } = useDisplay()
 const { isMobile } = useScreen();
@@ -11,15 +11,7 @@ onMounted(() => {
   console.log(isMobile.value);
 });
 
-function downloadPdf() {
-  const link = document.createElement('a');
-  link.href = '/orientacoes.pdf';
-  link.download = 'orientacoes.pdf';
-  link.target = '_blank';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
+
 </script>
 
 <style>
@@ -54,7 +46,7 @@ function downloadPdf() {
         <div class="d-flex flex-column h-100" :class="lgAndUp ? 'w-50' : 'w-100'">
           <div class="h-screen d-flex flex-column justify-center align-md-center align-lg-start">
             <p class="d-flex text-white font-weight-bold"
-              :class="lgAndUp ? 'text-start text-h1' : 'text-center text-h4'">
+              :class="lgAndUp ? 'text-start text-h2' : 'text-center text-h4'">
               Painel de Integração IFC Araquari
             </p>
             <p class="mt-16 text-h5 text-white font-weight-light" :class="lgAndUp ? 'text-start' : 'text-center'">

@@ -1,9 +1,8 @@
 import { ref } from "vue";
       
 export const usersData = ref([  
-      { name: "Perfil", link: "url" },
-      { name: "Edição", link: "/panel/editions" },
-      { name: "Propostas", link: "/panel/works" },
-      { name: "Regulamentação", link: "url" },
+      { name: "Edição", link: "/panel/editions", action: 'navigate' },
+      { name: "Propostas", link: "/panel/works", action: 'navigate' },
+      { name: "Regulamentação", link: "", action: 'download' },
 ]);
 

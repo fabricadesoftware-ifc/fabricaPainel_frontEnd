@@ -3,11 +3,14 @@ import { ref } from 'vue'
 import { useAuth } from '@/stores/auth'
 import { useWork } from '@/stores/work'
 import { useEdition } from '@/stores/edition'
-import { steps } from '@/utils/steps/works'
+import { steps, resetSteps } from '@/utils/steps/works'
+import { useDisplay } from 'vuetify'
 const AuthStore = useAuth()
 const workStore = useWork()
 const editionStore = useEdition()
 const actualstep = ref(0)
+const openNav = ref(false)
+const {width} = useDisplay()
 const open_dialog = ref(false)
 const useractualstep = Number(localStorage.getItem('actualstep'))
 
@@ -46,34 +49,53 @@ async function DialogActive(type) {
 }
 
 function NextStep() {
+  
   if (actualstep.value <= 3) {
     steps.value[actualstep.value].complete = true
     steps.value[actualstep.value].is_actual = false
     steps.value[actualstep.value + 1].is_actual = true
+    
   }
   else if (actualstep.value === 4) {
     steps.value[actualstep.value].complete = true
     steps.value[actualstep.value].is_actual = false
+  
   }
-  actualstep.value++
+actualstep.value++
   // localStorage.setItem('actualstep', actualstep.value)
+  console.log(actualstep.value)
 }
 
+const StepObj = computed(() => {
+  return steps.value[actualstep.value]
+})
+
 function PrevStep() {
-  if(actualstep.value === 5){
-    steps.value[actualstep.value - 1].is_actual = true
-  }
-  else{
+  console.log(actualstep.value)
+  console.log(steps.value)
+
+  if (actualstep.value <= 0) return 
+
+
+  
+  if (actualstep.value < 4) {
     steps.value[actualstep.value].is_actual = false
-    steps.value[actualstep.value - 1].is_actual = true
-  }
-  actualstep.value--
-  // localStorage.setItem('actualstep', actualstep.value)
+
+    steps.value[actualstep.value].complete = false
+    }
+    actualstep.value--
+
+    steps.value[actualstep.value].is_actual = true
+  
+
+  
 }
 
 onUnmounted(()=> {
   workStore.WorkStorage.team = []
-
+  localStorage.removeItem('actualstep')
+  resetSteps()
+  console.log(steps)
 })
 
 onMounted(() => {
@@ -111,35 +133,32 @@ onMounted(() => {
   //           edition: editionStore.currentEdition?.id,
   //         }
 
-  console.log(workStore.WorkStorage)
-  console.log(AuthStore.user.team)
 
 })
 </script>
 <template>
-  <div style="height: 100vh;">
-    <VStepper v-model="actualstep" mobile class="d-flex h-100">
-      <StepbyStepHeader :steps="steps" :actualstep="actualstep" />
+  <div style="height: 100vh; position: relative;">
+    <VStepper v-model="actualstep" class="d-flex h-100 ">
+      <StepbyStepHeader :steps="steps" :actualstep="actualstep"  v-if="width > 950"/>
       <VStepperWindow class="w-100 h-100">
-        <StepsHeader :user="AuthStore.user" />
-        <VContainer class="d-flex justify-center flex-column align-center h-100">
-
-          <StepOne :me="AuthStore.user" :team="workStore?.team" :isproject_integrated="workStore?.WorkStorage?.integrated_project" v-if="actualstep === 0" />
-
-          <StepTwo v-if="actualstep === 1" />
-          <StepThree v-if="actualstep === 2" />
-          <StepFour v-if="actualstep === 3" />
-          <StepFive v-if="actualstep === 4" />
-          <FinalStep :form_work="workStore.WorkStorage" v-if="actualstep === 5"
+        <StepsHeader :user="AuthStore.user" :step_num="StepObj?.value" :step_completed="StepObj?.complete" :step_value="StepObj?.title" @openNav="openNav = !openNav"/>
+          <div v-if="actualstep != 6" class="w-100 d-flex justify-center align-center overflow-y-auto" style="height: 80%;">
+            <div  :style="{width: width < 950 ? '100%' : '75%'}" class="d-flex justify-center align-center h-100">
+              <StepOne :me="AuthStore.user" :team="workStore?.team" :isproject_integrated="workStore?.WorkStorage?.integrated_project" v-if="actualstep === 0" />
+              <StepTwo v-if="actualstep === 1" />
+              <StepThree v-if="actualstep === 2" />
+              <StepFour v-if="actualstep === 3" />
+              <StepFive v-if="actualstep === 4" />
+              <FinalStep :form_work="workStore.WorkStorage" v-if="actualstep === 5"
             @submitPropose="open_dialog = !open_dialog" />
+            </div>
+          </div>  
           <SuccessStep v-if="actualstep === 6" />
-        </VContainer>
         <StepsAction :actualstep="actualstep" :disabledBtn="ReturnValidatedtoDisabledBtn" @PrevStep="PrevStep"
           @NextStep="NextStep" v-if="actualstep !== 6" />
       </VStepperWindow>
     </VStepper>
-
-    <StepDialog
+    <StepDialog 
       :btn_cancel_text="actualstep === 0 ? 'Não' : 'Cancelar'"
       :btn_confirm_text="actualstep === 0 ? 'Sim' : 'Confirmar'"
       :title="actualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
@@ -147,5 +166,22 @@ onMounted(() => {
       v-model="open_dialog"
       @confirmation="DialogActive"
     />
+    <VNavigationDrawer v-model="openNav" location="right">
+        <router-link to="/">
+        <div class="d-flex justify-center align-center ga-3 pa-5" >
+          <img src="../../../../assets/logotipo_painel_integracao.png" width="50">
+          <h1>Painel</h1>
+        </div>
+        </router-link>
+        <VDivider></VDivider>
+        <VList>
+            <VListItem prepend-icon="mdi-information">
+                precisa de ajuda?
+            </VListItem>
+            <VListItem prepend-icon="mdi-account">
+               <VListItemTitle>{{ AuthStore.user.name }}</VListItemTitle>
+            </VListItem>
+        </VList>
+    </VNavigationDrawer>
   </div>
 </template>

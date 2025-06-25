@@ -152,3 +152,12 @@ export const AddUser = async ({
   }
 }
 
+export function downloadPdf() {
+  const link = document.createElement('a');
+  link.href = '/orientacoes.pdf';
+  link.download = 'orientacoes.pdf';
+  link.target = '_blank';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}

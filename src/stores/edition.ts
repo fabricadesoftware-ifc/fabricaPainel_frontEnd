@@ -12,6 +12,78 @@ export const useEdition = defineStore('edition', () => {
     error: null as string | null,
   })
 
+  const newEdtion = useStorage('neweditionstorage', {
+    newedition: [
+      {
+        label: 'nome da edição',
+        placeholder: 'nome da edição do painel',
+        value: '',
+        type: 'text'
+      },
+      {
+        label: 'tema da edição',
+        placeholder: 'tema da edição do painel',
+        value: '',
+        type: 'text'
+      },
+      {
+        label: 'data do evento',
+        value: '',
+        type: 'date'
+      },
+      {
+        label: 'data de inicio da submissão',
+        value: '',
+        type: 'date'
+      },
+      {
+        label: 'data de inicio da 1 Aceite/Rejeição',
+        value: '',
+        type: 'date'
+      },
+      {
+        label: 'data de inicio do novo orientador',
+        value: '',
+        type: 'date'
+      },
+       {
+        label: 'data de inicio da 2 Aceite/Rejeição',
+        value: '',
+        type: 'date'
+      },
+      {
+        label: 'data de inicio da avaliação',
+        value: '',
+        type: 'date'
+      },
+       {
+        label: 'data de fim da submissão',
+        value: '',
+        type: 'date'
+      },
+      {
+        label: 'data de fim da 1 Aceite/Rejeição',
+        value: '',
+        type: 'date'
+      },
+      {
+        label: 'data de fim do novo orientador',
+        value: '',
+        type: 'date'
+      },
+      {
+        label: 'data de fim da 2 Aceite/Rejeição',
+        value: '',
+        type: 'date'
+      },
+      {
+        label: 'data de fim da avaliação',
+        value: '',
+        type: 'date'
+      },
+    ]
+  })
+
   const currentEdition = computed(() => state.value.currentEdition)
   const alertStudent = computed(() => 'A data de submissão é de ' + state.value.currentEdition?.initial_submission_date + ' até ' + state.value.currentEdition?.final_submission_date)
   const teacherStudent = computed(() => 'Registro de Avaliadores (' + state.value.currentEdition?.initial_registration_evaluator_date + ' até ' + state.value.currentEdition?.final_registration_evaluator_date + ')')
@@ -101,7 +173,7 @@ export const useEdition = defineStore('edition', () => {
     setError(null)
     try {
       const updatedEdition = await EditionsService.updateEdition(editionId, editionData)
-      const index = state.value.editions.findIndex((edition : any) => edition.id === editionId)
+      const index = state.value.editions.findIndex((edition: any) => edition.id === editionId)
       if (index !== -1) {
         state.value.editions[index] = updatedEdition
       }
@@ -141,5 +213,6 @@ export const useEdition = defineStore('edition', () => {
     createEdition,
     updateEdition,
     submitFeedback,
+    newEdtion
   }
 })
