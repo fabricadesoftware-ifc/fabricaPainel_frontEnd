@@ -142,8 +142,8 @@ onMounted(() => {
       <StepbyStepHeader :steps="steps" :actualstep="actualstep"  v-if="width > 950"/>
       <VStepperWindow class="w-100 h-100">
         <StepsHeader :user="AuthStore.user" :step_num="StepObj?.value" :step_completed="StepObj?.complete" :step_value="StepObj?.title" @openNav="openNav = !openNav"/>
-          <div v-if="actualstep != 6" class="w-100 d-flex justify-center align-center" style="height: 80%;">
-            <div  :style="width < 950 ? {width: '100%'} : {width: '75%'}" class="d-flex justify-center align-center">
+          <div v-if="actualstep != 6" class="w-100 d-flex justify-center align-center overflow-y-auto" style="height: 80%;">
+            <div  :style="{width: width < 950 ? '100%' : '75%'}" class="d-flex justify-center align-center h-100">
               <StepOne :me="AuthStore.user" :team="workStore?.team" :isproject_integrated="workStore?.WorkStorage?.integrated_project" v-if="actualstep === 0" />
               <StepTwo v-if="actualstep === 1" />
               <StepThree v-if="actualstep === 2" />
@@ -158,7 +158,7 @@ onMounted(() => {
           @NextStep="NextStep" v-if="actualstep !== 6" />
       </VStepperWindow>
     </VStepper>
-    <StepDialog
+    <StepDialog 
       :btn_cancel_text="actualstep === 0 ? 'Não' : 'Cancelar'"
       :btn_confirm_text="actualstep === 0 ? 'Sim' : 'Confirmar'"
       :title="actualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"

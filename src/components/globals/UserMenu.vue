@@ -3,6 +3,7 @@ import { reactive, onMounted } from "vue";
 import { useAuth } from "@/stores/auth";
 import { usersData } from "@/utils/userMenu";
 import { useRouter } from "vue-router"
+import { downloadPdf } from "@/utils/user";
 const authStore = useAuth()
 const router = useRouter()
 const username = ref('')
@@ -33,7 +34,7 @@ onMounted(()=> {
     </template>
 
     <v-list class="cursor-pointer">
-      <v-list-item @click="router.push(item.link)" class="d-flex flex-row align-center justify-center"
+      <v-list-item @click="item.action == 'navigate' ? router.push(item.link) : downloadPdf()" class="d-flex flex-row align-center justify-center"
         v-for="(item, index) in usersData"
         :key="index"
         :value="index"

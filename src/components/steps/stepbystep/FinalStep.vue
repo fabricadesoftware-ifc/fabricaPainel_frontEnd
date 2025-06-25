@@ -15,7 +15,7 @@ const {width} = useDisplay()
    
 </script>
 <template>
-<div class="d-flex flex-column align-center ga-7 w-100"  :style=" {height: width < 750 ? '550px' : '700px'}">
+<div class="d-flex flex-column align-center ga-7 w-100"  :style=" {height: width < 750 ? '550px' : '800px'}">
     <VCard class="w-100 h-75 pa-5 d-flex flex-column overflow-y-auto ga-10 border elevation-0"  :style="{whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'break-word', marginTop: width < 750 ? '10px' : '100px'}" rounded="xl">
          <div class="d-flex align-center">
             <h1 class="w-50" style="font-size: 20px;" >Título do Trabalho:</h1>

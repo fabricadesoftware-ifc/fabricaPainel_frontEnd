@@ -29,13 +29,13 @@ import CardUser from '../steps/layout/CardUser.vue';
         },
         painel_height: {
             type: Number,
-            default: 420,
+            default: 820,
         }
     })
 </script>
 <template>
-    <div class="mt-7" :style="{height: painel_height + 'px'}">
-            <VCard class="pa-5 border d-flex flex-column  elevation-0 rounded-lg h-100">
+    <div class="mt-7 d-flex flex-column" :style="{height: `${painel_height}px`}">
+            <VCard class="pa-5 border d-flex flex-column  elevation-0 overflow-auto rounded-lg h-100 flex-1">
                 <div class="d-flex flex-wrap ga-5  justify-space-between align-center">
                     <h1 class="font-weight-bold text-center text-h5" :class=" painel_height === 225 ? 'text-h6' : '' ">{{ title }}</h1>
                     <VChip :color="step_array?.length < min ? 'red' : 'green'"

@@ -20,7 +20,7 @@ const RowComputed = computed(() => {
             <div>
                 <v-text-field v-model="workStore.WorkStorage.title" maxlength="200"></v-text-field>
             </div>
-            <p class="text-grey-lighten-1">Escreva uma proposta de integração com no máximo 500 palavras...</p>
+            <VLabel >Escreva uma proposta de integração com no máximo 500 palavras...</VLabel>
             <div>
                 <VTextarea v-model="workStore.WorkStorage.abstract" counter="500 palavras" maxlength="500"
                     variant="outlined" auto-grow rounded="xl" :rows="RowComputed"></VTextarea>

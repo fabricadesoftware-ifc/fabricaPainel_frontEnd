@@ -38,14 +38,12 @@ const AddUser = async (selectedAdvisor) => {
                 "auto",
                 false)
             } else {
-            await AuthStore.getUserThemes(selectedAdvisor.id)
-            
-            console.log(AuthStore.userThemes)
-            if (AuthStore.userThemes.length > 0 && AuthStore.userThemes.some(s => s.name == WorkStore.WorkStorage.cross_cutting_theme.name)) {
+          
+            if (selectedAdvisor.is_advisor == true) {
             WorkStore.WorkStorage.advisor.push(selectedAdvisor)
             } else {
                 showMessage(
-                'Esse orientador não está relacionado a matéria transversal escolhida',
+                'Este professor não é um orientador',
                 "error",
                 1500,
                 "top-right",

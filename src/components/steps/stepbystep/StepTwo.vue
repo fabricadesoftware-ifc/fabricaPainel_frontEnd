@@ -50,7 +50,9 @@ function RemoveSubject(value) {
 onMounted(async () => {
   subjectFiltered.value = await CategoryStore.getField();
   ThemeItems.value = await CategoryStore.getCrossCuttingThemes();
+  if (WorkStore.WorkStorage.cross_cutting_theme == {}) {
  WorkStore.WorkStorage.cross_cutting_theme = {name: 'Escolha Uma Matéria Transversal'}
+  }
   if (!WorkStore.WorkStorage.cross_cutting_theme && ThemeItems.value.length > 0) {
     WorkStore.WorkStorage.cross_cutting_theme = ThemeItems.value[0];
   }
@@ -63,7 +65,7 @@ onMounted(async () => {
 
 const heightComputed = computed(() => {
     if(width.value < 500){
-        return 240
+        return 'auto'
     }
     return 300
 })
@@ -88,7 +90,6 @@ const heightComputed = computed(() => {
 
   return-object
   placeholder="Selecione o Tema Transversal"
-  @click="WorkStore.WorkStorage.advisor = []"
   variant="outlined"
   rounded="xl"
   hide-details

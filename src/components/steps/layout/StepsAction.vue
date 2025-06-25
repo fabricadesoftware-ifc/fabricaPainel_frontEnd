@@ -16,12 +16,12 @@ import { useDisplay } from 'vuetify'
     const isDisabledValue = computed(() => {
         return isRef(props.disabledBtn) ? props.disabledBtn.value : props.disabledBtn
     })
-    const {height} = useDisplay()
+    const {width} = useDisplay()
     const computedMB = computed(() => {
-        if(height.value > 800){
+        if(width.value > 800){
           return 'mb-16'
         }
-        return 'mb-10'
+        return 'mb-3'
     })
 </script>
 <template>

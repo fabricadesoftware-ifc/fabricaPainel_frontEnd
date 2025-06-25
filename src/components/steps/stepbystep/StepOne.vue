@@ -85,7 +85,7 @@ onMounted(async () => {
 const {width} = useDisplay()
 const heightComputed = computed(() => {
     if(width.value < 500){
-        return 300
+        return 'auto'
     }
     return 400
 })
