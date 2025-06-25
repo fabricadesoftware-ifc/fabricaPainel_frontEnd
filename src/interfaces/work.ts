@@ -33,6 +33,10 @@ export interface IAdvisor {
   email?: string
 }
 
+export interface IOds{
+  name: string,
+}
+
 export interface ITeamMember {
   id?: string | number
   name?: string
@@ -45,6 +49,7 @@ export interface IWorkStorage {
   field: IField[]
   advisor: IAdvisor[]
   cross_cutting_theme: ICrossCuttingTheme
+  ods: IOds[]
   team: ITeamMember[]
   collaborators: IAdvisor[]
   integrated_project: boolean

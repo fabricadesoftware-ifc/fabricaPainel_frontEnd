@@ -8,15 +8,20 @@ const WorkStore = useWork()
 const editionStore = useEdition()
 const subjectFiltered = ref([])
 const ThemeItems = ref([])
+const OdsItems = ref([])
 const autocompleteRef = ref(null)
 const selectedSub = ref(null)
 
-function selectedTheme(value){
-    
+function selectedTheme(value){   
     const theme = ThemeItems.value.find(t => t.name === value)
     WorkStore.WorkStorage.cross_cutting_theme = theme
     WorkStore.WorkStorage.advisor = []
 }
+
+function selectedOds(value){
+    WorkStore.WorkStorage.ods = value
+}
+
 
 const AddSubject = (value) => {
     const selectedField = subjectFiltered.value?.find(s => s.name === value)
@@ -54,8 +59,7 @@ function RemoveSubject(value) {
 onMounted(async () => {
     subjectFiltered.value = await CategoryStore.getField()
     ThemeItems.value = await CategoryStore.getCrossCuttingThemes()
-
-    
+    await CategoryStore.getOds()
 
     for(const field of WorkStore.WorkStorage.field){
         const findISub = subjectFiltered.value.findIndex(sub => sub.name === field.name)
@@ -74,10 +78,14 @@ onMounted(async () => {
         <div class="d-flex ga-2">
             <p style="font-size: 12px;">* Limite minimo de matérias: {{ editionStore.currentEdition?.subjects_min || 3 }}</p>
         </div>
-        <StepContainer :painel_height="300" title="As matérias integradas no seu projeto" no_arr_msg="você ainda não selecionou as matérias" :step_array="WorkStore.WorkStorage.field" :is_subject="true" :min="editionStore.currentEdition?.subjects_min || 3" @excludeSub="RemoveSubject"/>
+        <StepContainer :painel_height="200" title="As matérias integradas no seu projeto" no_arr_msg="você ainda não selecionou as matérias" :step_array="WorkStore.WorkStorage.field" :is_subject="true" :min="editionStore.currentEdition?.subjects_min || 3" @excludeSub="RemoveSubject"/>
         <div class="pa-5 ga-2 d-flex flex-column">
             <p class="font-weight-bold text-h6 ">Tema Transversais do seu projeto</p>
             <VSelect variant="outlined" v-model="WorkStore.WorkStorage.cross_cutting_theme.name" rounded="xl" :items="ThemeItems.map(t => t.name)" @update:model-value="(value) => selectedTheme(value)"></VSelect>
+        </div>
+        <div class="pa-5 ga-2 d-flex flex-column">
+            <p class="font-weight-bold text-h6 ">Objetivos de Desenvolvimento Sustentaveis do seu projeto</p>
+            <VSelect variant="outlined" multiple chips closable-chips rounded="xl" :items="CategoryStore.ods" @update:model-value="(value) => selectedOds(value)"></VSelect>
         </div>
     </div>
 </template>
