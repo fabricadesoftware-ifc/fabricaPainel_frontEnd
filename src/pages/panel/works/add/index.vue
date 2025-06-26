@@ -1,13 +1,14 @@
 <script setup>
 import { ref } from 'vue'
-import { useAuth } from '@/stores/auth'
 import { useWork } from '@/stores/work'
 import { useEdition } from '@/stores/edition'
+import { useAuth } from '@/stores/auth'
 import { steps, resetSteps } from '@/utils/steps/works'
 import { useDisplay } from 'vuetify'
-const AuthStore = useAuth()
+import router from '@/router'
 const workStore = useWork()
 const editionStore = useEdition()
+const AuthStore = useAuth()
 const actualstep = ref(0)
 const openNav = ref(false)
 const {width} = useDisplay()
@@ -98,7 +99,7 @@ onUnmounted(()=> {
   console.log(steps)
 })
 
-onMounted(() => {
+onMounted( async () => {
   // Primeiro, verificar se precisa abrir o dialog baseado no localStorage
   // antes de modificar o actualstep
   const shouldShowIntegratedProjectDialog = useractualstep === 0
@@ -126,14 +127,13 @@ onMounted(() => {
     }
     actualstep.value = useractualstep
   }
+
   //@ts-ignore
   // const newTeam = {
   //           team_members: workStore.WorkStorage.team.map((member: any) => member.id),
   //           sender_id: (AuthStore.user as any).id,
   //           edition: editionStore.currentEdition?.id,
   //         }
-
-
 })
 </script>
 <template>
