@@ -43,11 +43,11 @@ type Advisor = { id: Number | String }
 type Work = { advisor: Advisor, work_collaborator: Array<any>, evaluator: Array<any> }
 //@ts-ignore
 export const resolveUserFunction = (work:Work, user) => {
-  console.log(work)
-    const advisor = work.advisor == user.id
+  console.log('work', work, 'user', user)
+    const advisor = work.advisor.id == user.id
     const evaluator = work.evaluator.some((s) => s.user.id == user.id)
     const collaborator = work.work_collaborator.some((s) => s.collaborator.id == user.id)
-    
+    console.log('advisor', advisor, 'evaluator', evaluator, 'collaborator', collaborator)
     if (advisor) {
         return 'ADVISOR'
     } else if (evaluator) {
