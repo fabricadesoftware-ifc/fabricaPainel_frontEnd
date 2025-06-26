@@ -39,6 +39,12 @@ const resolveAdvisorOrCollaboratorStatus = (status: Number | String) => {
                 color: 'red-darken-2'
             }
         }
+        case 4: {
+             return {
+                text: 'Expirado',
+                color: 'blue-grey lighten-1'
+            }
+        }
         default:
             return {
                 text: 'Pendente',

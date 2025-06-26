@@ -34,6 +34,12 @@ export const resolveStatus = (status:number) => {
                 color: 'red-darken-2'
             }
         }
+        case 5: {
+          return {
+            text: 'Expirado',
+            color: 'blue-grey lighten-1'
+          }
+        }
     }
 } 
 
