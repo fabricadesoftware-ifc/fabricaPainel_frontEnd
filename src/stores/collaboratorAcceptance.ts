@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
 import AcceptanceService from "@/services/acceptance";
 import { useAuth } from "./auth";
-import { useStorage } from "@vueuse/core";
+import { useSessionStorage } from "@vueuse/core";
 import { showMessage } from "@/utils/toastify";
 
 export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", () => {
-  const state = useStorage("collaboratorAcceptance", {
+  const state = useSessionStorage("collaboratorAcceptance", {
     loading: false,
     error: null as string | null,
     accepted: false,

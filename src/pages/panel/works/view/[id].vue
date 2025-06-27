@@ -3,7 +3,6 @@ import { onMounted, reactive, computed, ref } from "vue";
 import { useWork } from "@/stores/work";
 import { useAuth } from "@/stores/auth";
 import { useEdition } from "@/stores/edition";
-import { useAdvisorAcceptance } from "@/stores/advisorAcceptance";
 import { useRouter } from "vue-router";
 import {
   orderByUserId,
@@ -12,16 +11,16 @@ import {
   userCase,
 } from "@/utils/works";
 import { useCollaboratorAcceptance } from "@/stores/collaboratorAcceptance";
+import { useAdvisorAcceptance } from "@/stores/advisorAcceptance";
 import editions from "@/services/editions";
 
 const router = useRouter();
 const work_id = (router.currentRoute.value.params as { id: string }).id;
-const advisorAcceptanceStore = useAdvisorAcceptance()
 const authStore = useAuth();
 const workStore = useWork();
 const editionStore = useEdition();
 const acceptanceStore = useCollaboratorAcceptance();
-
+const advisorAcceptanceStore = useAdvisorAcceptance()
 const date = new Date();
 
 const usersValidation = reactive({
@@ -220,6 +219,9 @@ const confirmsAction = (confirm: string) => {
         v-if="acceptanceStore.state.isCollaborator && acceptanceStore.state.collaboratorStatus === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3"
         :work="workStore.currentWork"
       />
+      
+      <AcceptanceAdvisorWork v-if="advisorAcceptanceStore.state.isAdvisor && workStore.currentWork.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3"
+        :work="workStore.currentWork" />
     </v-container>
   </LayoutPanel>
   <div v-else class="d-flex align-center justify-center h-100 w-100">

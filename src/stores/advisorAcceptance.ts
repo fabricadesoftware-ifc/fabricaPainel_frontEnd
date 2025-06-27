@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
 import AcceptanceService from "@/services/acceptance";
-import { useStorage } from "@vueuse/core";
+import { useSessionStorage } from "@vueuse/core";
+import { showMessage } from "@/utils/toastify";
 
 export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
-  const state = useStorage("advisorAcceptance", {
+  const state = useSessionStorage("advisorAcceptance", {
     loading: false,
     error: null as string | null,
     accepted: false,
@@ -45,6 +46,7 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
     try {
       if (!state.value.verificationToken) throw new Error("Token de verificação não encontrado.");
       await AcceptanceService.acceptAdvisorWork(state.value.verificationToken);
+      showMessage('Orientação aceita com sucesso!', 'success', 2000, 'top-right', 'light', true)
       state.value.accepted = true;
       state.value.advisorStatus = 1;
     } catch (error: any) {
@@ -60,6 +62,7 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
     try {
       if (!state.value.verificationToken) throw new Error("Token de verificação não encontrado.");
       await AcceptanceService.rejectAdvisorWork(state.value.verificationToken);
+      showMessage('Orientação rejeitada com sucesso!', 'success', 2000, 'top-right', 'light', true)
       state.value.rejected = true;
       state.value.advisorStatus = 2;
     } catch (error: any) {
