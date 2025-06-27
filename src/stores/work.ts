@@ -225,8 +225,10 @@ export const useWork = defineStore('work', () => {
     setLoading(true)
     setError(null)
     try {
-      await WorkService.approveWork(state.currentWork.verification_token)
-      state.currentWork.status = 2
+      console.log('AAAAA GAY')
+      
+      await WorkService.approveWork(state.value.currentWork.verification_token)
+      state.value.currentWork.status = 2
       showMessage('Proposta Aprovada com sucesso', 'success', 2000, 'top-right', 'light', false)
 
     } catch (error: any) {

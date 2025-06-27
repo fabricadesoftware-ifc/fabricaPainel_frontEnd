@@ -28,7 +28,7 @@ router.onError((err, to) => {
     console.error(err)
   }
 })
-const routesBloqued = ['/auth/accept-invite-team/:id/:token', "/auth/get-password/", "/panel/colaborators/", "/panel/editions/view/:id", "/panel/paper/:id", "/panel/works/", "/panel/works/add/", "/panel/paper/:id", "/panel/registration-of-topics/"]
+const routesBloqued = ['/auth/accept-invite-team/:id/:token', "/auth/get-password/", "/panel/colaborators/", "/panel/editions/view/:id", "/panel/paper/:id", "/panel/works/", "/panel/works/add", "/panel/works/add/" ,  "/panel/paper/:id", "/panel/registration-of-topics/"]
 const works = JSON.parse(localStorage.getItem("worksstorage"))
 const is_authenticated = JSON.parse(localStorage.getItem("state_user") || '{"isLogged": false}')
 

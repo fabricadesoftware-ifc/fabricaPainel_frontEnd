@@ -82,7 +82,7 @@ const confirmsAction = (confirm: string) => {
   if (confirm === "Confirmar") {
     if (authStore.user.is_advisor) {
       if (datesValidation.value.advisor_able_to_aprove_work) {
-        
+        console.log('realmente chego na view')
         userCase?.function && userCase.function(
           workStore.currentWork?.verification_token, workStore
         )

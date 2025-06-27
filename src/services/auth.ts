@@ -35,7 +35,9 @@ class AuthService {
 
   async login (email: string, password: string) {
     try {
-      const { data } = await api.post('token/', { email, password })
+    
+      const { data } = await api.post('token/', { email, password },)
+      console.log(data)
       return data
     } catch (error) {
       this.handleError(error, 'login')
@@ -45,6 +47,7 @@ class AuthService {
   async getUser (id: string) {
     try {
       const { data } = await api.get(`users/${id}`)
+      console.log(data)
       return data
     } catch (error) {
       this.handleError(error, 'get user')
