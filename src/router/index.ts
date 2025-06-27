@@ -28,24 +28,29 @@ router.onError((err, to) => {
     console.error(err)
   }
 })
-const routesBloqued = ['/auth/accept-invite-team/:id/:token', "/auth/get-password/", "/panel/colaborators/", "/panel/editions/view/:id", "/panel/paper/:id", "/panel/register-evaluators/", "/panel/", "/panel/paper/:id", "/panel/registration-of-topics/", "/panel/work-submission/"]
+const routesBloqued = ['/auth/accept-invite-team/:id/:token', "/auth/get-password/", "/panel/colaborators/", "/panel/editions/view/:id", "/panel/paper/:id", "/panel/works/", "/panel/works/add/", "/panel/paper/:id", "/panel/registration-of-topics/"]
+const works = JSON.parse(localStorage.getItem("worksstorage"))
 const is_authenticated = JSON.parse(localStorage.getItem("state_user") || '{"isLogged": false}')
 
 router.beforeEach((to, from, next) => {
-  if(routesBloqued.includes(to.path) && !is_authenticated.isLogged){
-    showMessage(
-      'tempo de login expirado retornando para a página de login',
-      'error',
-      1500,
-      'right-top',
-      'light',
-      false
-    )
-    setTimeout(() => {
-      return next('/auth/login')
-    }, 1500)
+  if (routesBloqued.includes(to.path) && !is_authenticated.isLogged) {
+    return next('/')
   }
+  next()
+})
 
+router.beforeEach((to, from, next) => {
+  const userWork = works?.userWorks[0]
+  if (userWork) {
+    if (to.path === '/panel/works/add/' && new Date().getFullYear() === userWork.edition.year) {
+      if (userWork.status !== 4) {
+        next('/panel/works/')
+      }
+      else {
+        next()
+      }
+    }
+  }
   next()
 })
 
