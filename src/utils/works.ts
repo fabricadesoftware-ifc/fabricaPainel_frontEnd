@@ -94,6 +94,7 @@ export const removeWork = async (id: String, store: StoreWithRemoveWork, token: 
 }
 
 export const aproveWork = async (verification_token: String, store: StoreWithAproveWork) => {
+  console.log('aq tambme')
   await store.approveWork(verification_token)
 }
 
@@ -120,6 +121,7 @@ export const validate_user_function = (user_function: string, work_status: Numbe
     }
   } else if (user_function === 'ADVISOR' && work_status == 1 || work_status == 3 ) {
       
+
         userCase.text = 'Aprovar Trabalho'
         userCase.color = '#1F8BDD'
         userCase.icon = '$success'

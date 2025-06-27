@@ -81,8 +81,11 @@ const aceitar = async () => {
   await acceptanceStore.acceptAsAdvisor();
   show.value = false;
   action.value = "";
+
+
   workStore.state.currentWork.advisor_status = 2 
   await workStore.getWork(props.work.id)
+
 };
 
 const recusar = async () => {
