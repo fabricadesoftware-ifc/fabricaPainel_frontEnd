@@ -1,64 +1,63 @@
 <template>
-  <div
-    v-if="show"
-    class="acceptance-popup"
-    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 9999; display: flex; align-items: center; justify-content: center;"
-    >
-    <div
-      class="acceptance-card"
-      style="background: white; border-radius: 8px; padding: 32px 24px; min-width: 320px; box-shadow: 0 2px 16px rgba(0,0,0,0.2);"
-    >
-      <div style="font-weight: bold; font-size: 20px; margin-bottom: 16px;">
+  <v-dialog v-model="show" persistent max-width="400px">
+    <v-card>
+      <v-card-title class="text-h6 font-weight-bold">
         Aceitar convite de colaborador
-      </div>
-      <div style="margin-bottom: 24px;">
+      </v-card-title>
+
+      <v-card-text>
         Você foi convidado como colaborador deste trabalho. Deseja aceitar?
-      </div>
-      <div style="display: flex; justify-content: flex-end; gap: 8px;">
-        <button
+      </v-card-text>
+
+      <v-card-actions class="justify-end">
+        <v-btn
+          color="error"
           @click="recusar"
+          :loading="acceptanceStore.state.loading && action === 'recusar'"
           :disabled="acceptanceStore.state.loading"
-          style="background: #ff5252; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;"
+          variant="flat"
         >
-          <!-- <span v-if="acceptanceStore.state.loading && action === 'recusar'">...</span> -->
-          <span>Recusar</span>
-        </button>
-        <button
+          Recusar
+        </v-btn>
+
+        <v-btn
+          color="primary"
           @click="aceitar"
+          :loading="acceptanceStore.state.loading && action === 'aceitar'"
           :disabled="acceptanceStore.state.loading"
-          style="background: #1976d2; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;"
+          variant="flat"
         >
-          <!-- <span v-if="acceptanceStore.state.loading && action === 'aceitar'">...</span> -->
-          <span >Aceitar</span>
-        </button>
-      </div>
-    </div>
-  </div>
+          Aceitar
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
-import { ref, watch, onMounted, defineProps } from "vue";
+import { ref, onMounted, defineProps } from "vue";
 import { useCollaboratorAcceptance } from "@/stores/collaboratorAcceptance";
 import { useWork } from "@/stores/work";
 import { useAuth } from "@/stores/auth";
 
 const props = defineProps({ work: Object });
+
 const acceptanceStore = useCollaboratorAcceptance();
-const workStore = useWork()
-const authStore = useAuth()
+const workStore = useWork();
+const authStore = useAuth();
+
 const show = ref(false);
 const action = ref("");
-const collab = workStore?.currentWork.work_collaborator.findIndex(s => s.collaborator.id == authStore.user.id)
+
+// Índice do colaborador no array
+const collabIndex = workStore?.currentWork?.work_collaborator?.findIndex(
+  (s) => s.collaborator.id === authStore.user.id
+);
 
 function updateShow() {
-  if (
-    acceptanceStore.state.isCollaborator &&
-    acceptanceStore.state.collaboratorStatus == 1
-  ) {
-    show.value = true;
-  } else {
-    show.value = false;
-  }
+  const isCollaborator = acceptanceStore.state.isCollaborator;
+  const pendingStatus = acceptanceStore.state.collaboratorStatus === 1;
+  show.value = isCollaborator && pendingStatus;
 }
 
 onMounted(() => {
@@ -73,15 +72,18 @@ const aceitar = async () => {
   await acceptanceStore.acceptAsCollaborator();
   show.value = false;
   action.value = "";
-  workStore.state.currentWork.work_collaborator[collab].status = 2  
+  if (collabIndex >= 0) {
+    workStore.state.currentWork.work_collaborator[collabIndex].status = 2;
+  }
 };
 
 const recusar = async () => {
   action.value = "recusar";
-  
-  await acceptanceStore.rejectAsCollaborator()
+  await acceptanceStore.rejectAsCollaborator();
   show.value = false;
   action.value = "";
-  workStore.state.currentWork.work_collaborator[collab].status = 3
+  if (collabIndex >= 0) {
+    workStore.state.currentWork.work_collaborator[collabIndex].status = 3;
+  }
 };
 </script>
