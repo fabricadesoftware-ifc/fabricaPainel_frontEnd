@@ -1,6 +1,7 @@
 <script setup> 
   import { StepsEdition } from '@/utils/steps/editions';
   import { useEdition } from '@/stores/edition';
+import router from '@/router';
   const editionStore = useEdition()
   const actualstep = ref(0)
 
@@ -37,6 +38,8 @@ function PrevStep() {
   }
   actualstep.value--
 }
+
+
 </script>
 <template>
 <div style="height: 100vh;">

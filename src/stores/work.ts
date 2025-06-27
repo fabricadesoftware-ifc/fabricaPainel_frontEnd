@@ -6,11 +6,12 @@ import { useAuth } from './auth'
 import { ICrossCuttingTheme } from '@/interfaces/themes'
 import { IWorkStorage } from '@/interfaces/work'
 import { showMessage } from '@/utils/toastify'
+import { useStorage } from '@vueuse/core'
 
 export const useWork = defineStore('work', () => {
   const editionStore = useEdition()
   const authStore = useAuth()
-  const state = reactive({
+  const state = useStorage('worksstorage', {
     works: [] as any[],
     userWorks: [] as any[], 
     advisorWorks: [] as any[],
@@ -35,19 +36,19 @@ export const useWork = defineStore('work', () => {
   })
 
   const team = computed(() => WorkStorage.team )
-  const allWorks = computed(() => state.works)
-  const currentWork = computed(() => state.currentWork)
-  const userWorks = computed(() => state.userWorks)
-  const advisorWorks = computed(()=> state.advisorWorks)
-  const collaboratorWorks = computed(()=> state.collaboratorWorks)
-  const evaluatorWorks = computed(()=> state.evaluatorWorks)
+  const allWorks = computed(() => state.value.works)
+  const currentWork = computed(() => state.value.currentWork)
+  const userWorks = computed(() => state.value.userWorks)
+  const advisorWorks = computed(()=> state.value.advisorWorks)
+  const collaboratorWorks = computed(()=> state.value.collaboratorWorks)
+  const evaluatorWorks = computed(()=> state.value.evaluatorWorks)
 
   const getWorkByCrossCuttingTheme = async (crossCuttingTheme: string) => {
     setLoading(true)
     setError(null)
     try {
       const myWorks = await WorkService.getWorkByCrossCuttingTheme(crossCuttingTheme)
-      state.myWorks = myWorks
+      state.value.myWorks = myWorks
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -56,11 +57,11 @@ export const useWork = defineStore('work', () => {
   }
 
   const setLoading = (loading: boolean) => {
-    state.loading = loading
+    state.value.loading = loading
   }
 
   const setError = (message: string | null) => {
-    state.error = message
+    state.value.error = message
   }
 
   const fetchWorks = async () => {
@@ -69,7 +70,7 @@ export const useWork = defineStore('work', () => {
     try {
       const works = await WorkService.getWorks()
       console.log(works)
-      state.works = works
+      state.value.works = works
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -139,7 +140,7 @@ export const useWork = defineStore('work', () => {
         })
        
 
-        state.works.push(newWork)
+        state.value.works.push(newWork)
         showMessage('Trabalho enviado com sucesso!', 'success', 2000, 'top-right', 'light', true)
 
        
@@ -169,9 +170,9 @@ export const useWork = defineStore('work', () => {
     setError(null)
     try {
       const patchedWork = await WorkService.updateWork(workId, partialWorkData)
-      const index = state.works.findIndex(work => work.id === workId)
+      const index = state.value.works.findIndex(work => work.id === workId)
       if (index !== -1) {
-        state.works[index] = patchedWork
+        state.value.works[index] = patchedWork
       }
     } catch (error: any) {
       setError(error.message)
@@ -191,7 +192,7 @@ export const useWork = defineStore('work', () => {
     setError(null)
     try {
       const selectedWork = await WorkService.getWork(workId)
-      state.currentWork = selectedWork
+      state.value.currentWork = selectedWork
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -204,14 +205,14 @@ export const useWork = defineStore('work', () => {
     setError(null)
     try {
       const works = await WorkService.getUserWorks(user_type, id)
-      if (user_type == 'STUDENT') state.userWorks = works
+      if (user_type == 'STUDENT') state.value.userWorks = works
       else {
-        state.advisorWorks = works.advisor
-        state.collaboratorWorks = works.collaborator
-        state.evaluatorWorks = works.evaluator
+        state.value.advisorWorks = works.advisor
+        state.value.collaboratorWorks = works.collaborator
+        state.value.evaluatorWorks = works.evaluator
         
       }
-      console.log(state.userWorks)
+      console.log(state.value.userWorks)
       return works
     } catch (error: any) {
       setError(error.message)
@@ -242,6 +243,7 @@ export const useWork = defineStore('work', () => {
       await WorkService.rejectWork(state.currentWork.verification_token)
       state.currentWork.status = 4
       showMessage('Proposta Rejeitada com sucesso', 'success', 2000, 'top-right', 'light', false)
+
 
     } catch (error: any) {
       setError(error.message)
