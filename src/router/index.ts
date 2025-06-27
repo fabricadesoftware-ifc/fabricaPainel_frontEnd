@@ -40,7 +40,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.beforeEach((to, from, next) => {
-  const userWork = works.userWorks[0]
+  const userWork = works?.userWorks[0]
   if (userWork) {
     if (to.path === '/panel/works/add/' && new Date().getFullYear() === userWork.edition.year) {
       if (userWork.status !== 4) {
