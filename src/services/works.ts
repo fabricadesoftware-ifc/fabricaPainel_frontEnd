@@ -97,6 +97,15 @@ class WorkService {
     }
   }
 
+  async rejectWork(verification_token: string) {
+    try {
+      const { data } = await api.get(`/reject-submission/${verification_token}/`);
+      return data;
+    } catch (error) {
+      this.handleError(error, "reject");
+    }
+  }
+
   async cancelWork(id:String | Number, token: string) {
     try {
       const {data} = await api.delete(`/work/${id}/`, {

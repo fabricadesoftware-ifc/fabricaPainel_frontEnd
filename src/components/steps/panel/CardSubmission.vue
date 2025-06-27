@@ -1,6 +1,8 @@
 \<script setup>
 import router from '@/router';
 import { resolveStatus } from '@/utils/works';
+
+
 const props = defineProps({
     actual_title: {
         type: String,
@@ -18,11 +20,24 @@ const props = defineProps({
     work_id: {
         type: [String, Number]
     },
+    work_data: {
+        type: Object,
+        default: null,
+    },
+    user: {
+        type: [String, Number],
+        default: null,
+    }
  
 })
 
+
+
+
+// id do avaliador é == id do user ou id do colaborador == id do user
+
 onMounted(()=> {
-    console.log(props.work_id)
+    console.log(props.collaborators_id)
 })
 </script>
 <template>

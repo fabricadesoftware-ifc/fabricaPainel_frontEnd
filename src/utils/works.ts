@@ -44,7 +44,7 @@ type Work = { advisor: Advisor, work_collaborator: Array<any>, evaluator: Array<
 //@ts-ignore
 export const resolveUserFunction = (work:Work, user) => {
   console.log(work)
-    const advisor = work.advisor == user.id
+    const advisor = work.advisor.id == user.id
     const evaluator = work.evaluator.some((s) => s.user.id == user.id)
     const collaborator = work.work_collaborator.some((s) => s.collaborator.id == user.id)
     
@@ -66,17 +66,26 @@ export const userCase = reactive<{
   color: string
   icon: string,
   function: Function | null,
+  function_two: Function | null,
 
 }>({
   text: '',
   color: '',
   icon: '',
   function: null,
-
+  function_two: null,
 })
 
 type StoreWithRemoveWork = {
   removeWork: (id: String, token: String) => Promise<any>
+}
+
+type StoreWithAproveWork = {
+  approveWork: (verification_token: String) => Promise<any>
+}
+
+type StoreWithRejectWork = {
+  rejectWork: (verification_token: String) => Promise<any>
 }
 
 export const removeWork = async (id: String, store: StoreWithRemoveWork, token: String) => {
@@ -84,9 +93,22 @@ export const removeWork = async (id: String, store: StoreWithRemoveWork, token: 
   await store.removeWork(id, token)
 }
 
-export const validate_user_function = (user_function: string) => {
+export const aproveWork = async (verification_token: String, store: StoreWithAproveWork) => {
+  await store.approveWork(verification_token)
+}
+
+export const rejectWork = async (verification_token: String, store: StoreWithRejectWork) => {
+  await store.rejectWork(verification_token)
+}
+
+
+export const validate_user_function = (user_function: string, work_status: Number) => {
   console.log(user_function)
+
   if (user_function === 'EVALUATOR' || user_function === 'ADVISOR') {
+    if (work_status == 2) {
+
+    
     userCase.text = 'Atribuir Nota'
     userCase.color = '#1F8BDD'
     userCase.icon = '$ratingFull'
@@ -96,8 +118,16 @@ export const validate_user_function = (user_function: string) => {
     } else {
       userCase.function = null
     }
+  } else if (user_function === 'ADVISOR' && work_status == 1 || work_status == 3 ) {
+      
+        userCase.text = 'Aprovar Trabalho'
+        userCase.color = '#1F8BDD'
+        userCase.icon = '$success'
+        userCase.function = aproveWork
+        userCase.function_two = rejectWork
+  }
     
-  } else {
+  } else if (user_function == 'STUDENT') {
     userCase.text = 'Cancelar Submissão'
     userCase.color = '#EC3223'
     userCase.icon = '$delete'

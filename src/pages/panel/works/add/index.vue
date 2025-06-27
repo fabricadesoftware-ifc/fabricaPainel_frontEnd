@@ -162,7 +162,7 @@ onMounted( async () => {
       :btn_cancel_text="actualstep === 0 ? 'Não' : 'Cancelar'"
       :btn_confirm_text="actualstep === 0 ? 'Sim' : 'Confirmar'"
       :title="actualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
-      :description="actualstep === 0 ? 'Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes' : 'Após submeter o trabalho um email será enviado para os <b>colaboradores</b> e para o <b>orientador</b> do seu projeto'"
+      :description="actualstep === 0 ? 'Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes' : 'Após submeter o trabalho um email será enviado para os colaboradores e para o orientador do seu projeto'"
       v-model="open_dialog"
       @confirmation="DialogActive"
     />

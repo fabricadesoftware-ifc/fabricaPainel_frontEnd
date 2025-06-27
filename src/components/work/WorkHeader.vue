@@ -1,80 +1,136 @@
- <script lang="ts" setup>
-import { userCase, validate_user_function } from '@/utils/works'
+<script lang="ts" setup>
+import { computed, watch, onMounted, toRefs } from "vue";
+import { userCase, validate_user_function } from "@/utils/works";
 
-const emits = defineEmits([
-    'buttonAction'
-])
+const emits = defineEmits(["buttonAction"]);
+
 const props = defineProps({
-    title: {
-        type: String,
-        required: true
-    },
-    status_content: {
-        type: String,
-        required: true
-    },
-    status_color: {
-        type: String,
-        required: true,
-    },
-    grade: {
-        type: [Number, String, null, undefined]
-    },
-    user_function: {
-        type: String,
-        default: ''
-    },
-    student_able_to_cancel: {
-        type: Boolean,
-    },
-    advisor_able_to_give_grade: {
-        type: Boolean,
-    },
-    evaluator_able_to_give_grade: {
-        type: Boolean,
+  work_status: {
+    type: Number,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  status_content: {
+    type: String,
+    required: true,
+  },
+  status_color: {
+    type: String,
+    required: true,
+  },
+  grade: {
+    type: [Number, String, null, undefined],
+  },
+  user_function: {
+    type: String,
+    default: "",
+  },
+  student_able_to_cancel: {
+    type: Boolean,
+    default: false,
+  },
+  advisor_able_to_give_grade: {
+    type: Boolean,
+    default: false,
+  },
+  evaluator_able_to_give_grade: {
+    type: Boolean,
+    default: false,
+  },
+  advisor_able_to_aprove_work: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+// Torna as props reativas
+const {
+  work_status,
+  user_function,
+  student_able_to_cancel,
+  advisor_able_to_give_grade,
+  evaluator_able_to_give_grade,
+  advisor_able_to_aprove_work,
+} = toRefs(props);
+
+// Computed para mostrar botão corretamente
+const shouldShowButton = computed(() => {
+  const uf = user_function.value;
+  const ws = work_status.value;
+  console.log(evaluator_able_to_give_grade.value)
+
+  console.log(uf, ws)
+  if (uf === "STUDENT") {
+    return student_able_to_cancel.value && ws === 1 || ws === 3;
+  } else if (uf === "ADVISOR") {
+    if (advisor_able_to_aprove_work.value && ws === 1) {
+      return true;
+    } else if (advisor_able_to_give_grade.value && ws === 2) {
+      return true;
     }
-    
-})
+  } else {
+    return evaluator_able_to_give_grade.value && ws === 2;
+  }
+  return false;
+});
 
-const showButtonBasedOnUserAndDate = (user_function:String) => {
-    switch (user_function) {
-        case 'STUDENT':
-            return props.student_able_to_cancel
-        case 'ADVISOR': 
-            return props.advisor_able_to_give_grade
-        case 'EVALUATOR': 
-            return props.evaluator_able_to_give_grade
-    }
-}
-
-onMounted(()=> {
-    validate_user_function(props.user_function)
-    console.log(props.grade)
-})
-
-</script>
- 
- <template>
+// Validação reativa
+watch(
+  [work_status, user_function],
+  ([newStatus, newFunction]) => {
+    validate_user_function(newFunction, newStatus);
    
- <div class=" w-100 d-flex justify-space-between flex-wrap ga-8 align-center">
+  },
+  { immediate: true }
+);
+
+onMounted(() => {
+    console.log(user_function.value, work_status.value)
+  validate_user_function(user_function.value, work_status.value);
+});
+</script>
+
+<template>
+  <div class="w-100 d-flex justify-space-between flex-wrap ga-8 align-center">
     <div class="d-flex align-center justify-space-between w-100 ga-3">
-    <div class="d-flex align-center ga-3">
-    <h1 style="font-size: 40px;">{{ props.title }}</h1>
+      <div class="d-flex align-center ga-3">
+        <h1 style="font-size: 40px">{{ props.title }}</h1>
 
-    <v-chip :color="props.status_color" style="width: 150px; display: flex; justify-content: center; align-items: center; font-size: 17px;">{{ props.status_content }}</v-chip>
+        <v-chip
+          :color="props.status_color"
+          style="min-width: 150px; display: flex; justify-content: center; align-items: center; font-size: 17px;"
+        >
+          {{ props.status_content }}
+        </v-chip>
+      </div>
+
+      <v-btn
+        @click="emits('buttonAction')"
+        v-if="shouldShowButton"
+        :prepend-icon="userCase.icon"
+        variant="text"
+        size="small"
+        :style="`color: ${userCase.color}; brightness: 50%;`"
+      >
+        <p style="font-size: 15px; font-weight: 600">{{ userCase.text }}</p>
+      </v-btn>
     </div>
 
-    <v-btn @click="emits('buttonAction')" v-if="showButtonBasedOnUserAndDate(props.user_function) && (props.status_content != 'Aprovado' && props.status_content != 'Rejeitado')" :prepend-icon="userCase.icon" variant="text" size="small" :style="`color: ${userCase.color}; brightness: 50%; `">
-        <p style="font-size: 15px; font-weight: 600;">{{
-            userCase.text  
-}}</p>
-    </v-btn>
-    </div>
     <div class="w-100 d-flex align-center ga-5">
-    <p class="opacity-70" style="font-weight: 700; font-size: 20px;">Nota do Trabalho:</p>
-    <v-chip :color="props.grade == null ? 'yellow-darken-3' : 'green-darken-3'" class="d-flex justify-center align-center" label style="width: 150px;">{{ !props.grade ?  'Nota não Atribuída' : props.grade }}</v-chip>
+      <p class="opacity-70" style="font-weight: 700; font-size: 20px">
+        Nota do Trabalho:
+      </p>
+      <v-chip
+        :color="props.grade == null ? 'yellow-darken-3' : 'green-darken-3'"
+        class="d-flex justify-center align-center"
+        label
+        style="width: 150px"
+      >
+        {{ !props.grade ? "Nota não Atribuída" : props.grade }}
+      </v-chip>
     </div>
-    
-      
- </div>
+  </div>
 </template>
