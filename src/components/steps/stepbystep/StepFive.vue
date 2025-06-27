@@ -1,7 +1,9 @@
 <script setup>
+import { useEdition } from '@/stores/edition';
 import { useWork } from '@/stores/work';
 import { useDisplay } from 'vuetify';
 const workStore = useWork()
+const editionStore = useEdition()
 const { width, height } = useDisplay()
 const wComputed = computed(() => width.value)
 
@@ -10,6 +12,10 @@ const RowComputed = computed(() => {
         return 8
     }
     return 15
+})
+
+onMounted(() => {
+    console.log(editionStore.currentEdition)
 })
 </script>
 <template>
@@ -20,9 +26,9 @@ const RowComputed = computed(() => {
             <div>
                 <v-text-field v-model="workStore.WorkStorage.title" maxlength="200"></v-text-field>
             </div>
-            <VLabel >Escreva uma proposta de integração com no máximo 500 palavras...</VLabel>
+            <VLabel >Escreva uma proposta de integração com no máximo {{ editionStore.currentEdition.words_per_work_max }} palavras...</VLabel>
             <div>
-                <VTextarea v-model="workStore.WorkStorage.abstract" counter="500 palavras" maxlength="500"
+                <VTextarea v-model="workStore.WorkStorage.abstract" :counter="editionStore.currentEdition.words_per_work_max + 'palavras'" :maxlength="editionStore.currentEdition.words_per_work_max"
                     variant="outlined" auto-grow rounded="xl" :rows="RowComputed"></VTextarea>
             </div>
         </div>
