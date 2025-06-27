@@ -225,6 +225,24 @@ export const useWork = defineStore('work', () => {
     setError(null)
     try {
       await WorkService.approveWork(state.currentWork.verification_token)
+      state.currentWork.status = 2
+      showMessage('Proposta Aprovada com sucesso', 'success', 2000, 'top-right', 'light', false)
+
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+   const rejectWork = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      await WorkService.rejectWork(state.currentWork.verification_token)
+      state.currentWork.status = 4
+      showMessage('Proposta Rejeitada com sucesso', 'success', 2000, 'top-right', 'light', false)
+
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -265,6 +283,7 @@ export const useWork = defineStore('work', () => {
     collaboratorWorks,
     evaluatorWorks,
     approveWork,
+    rejectWork,
     WorkStorage,
     RemoveUsersInWork,
     removeWork,

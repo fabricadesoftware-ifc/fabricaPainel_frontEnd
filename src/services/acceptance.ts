@@ -6,18 +6,40 @@ class AcceptanceService {
     throw new Error(`Failed to ${action} acceptance`);
   }
 
-  async acceptCollaboratorWork(verificationToken: string) {
+    async acceptAdvisorWork(verificationToken: string) {
     try {
-      const { data } = await api.get(`/api/accept-collaborator-work/${verificationToken}/`);
+      const { data } = await api.get(`accept-advisor-work/${verificationToken}/`);
       return data;
     } catch (error) {
+      this.handleError(error, "accept advisor work");
+    }
+  }
+
+  async rejectAdvisorWork(verificationToken: string) {
+    try {
+      const { data } = await api.get(`reject-advisor-work/${verificationToken}/`);
+      return data;
+    } catch (error) {
+      this.handleError(error, "reject advisor work");
+    }
+  }
+
+
+
+  async acceptCollaboratorWork(verificationToken: string) {
+    try {
+      const { data } = await api.get(`accept-collaborator-work/${verificationToken}/`);
+      return data;
+    } catch (error) {
+      console.log(error)
       this.handleError(error, "accept collaborator work");
     }
   }
 
   async rejectCollaboratorWork(verificationToken: string) {
+    
     try {
-      const { data } = await api.get(`/api/reject-collaborator-work/${verificationToken}/`);
+      const { data } = await api.get(`reject-collaborator-work/${verificationToken}/`);
       return data;
     } catch (error) {
       this.handleError(error, "reject collaborator work");

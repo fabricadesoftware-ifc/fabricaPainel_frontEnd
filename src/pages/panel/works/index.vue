@@ -138,6 +138,9 @@ onMounted(async () => {
               :work_id="work.id"
               :work="work.edition.final_submission_date"
               :work_status="work.status"
+              :user="UserStore.user"
+              :work_data="work"
+              
             />
           </template>
 
@@ -148,6 +151,8 @@ onMounted(async () => {
               :work_id="work.id"
               :work="work.edition.final_submission_date"
               :work_status="work.status"
+              :user="UserStore.user"
+              :work_data="work"
             />
           </template>
         </TeacherContainer>

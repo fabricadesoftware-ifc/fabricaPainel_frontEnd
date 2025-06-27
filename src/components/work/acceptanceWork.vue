@@ -20,16 +20,16 @@
           :disabled="acceptanceStore.state.loading"
           style="background: #ff5252; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;"
         >
-          <span v-if="acceptanceStore.state.loading && action === 'recusar'">...</span>
-          <span v-else>Recusar</span>
+          <!-- <span v-if="acceptanceStore.state.loading && action === 'recusar'">...</span> -->
+          <span>Recusar</span>
         </button>
         <button
           @click="aceitar"
           :disabled="acceptanceStore.state.loading"
           style="background: #1976d2; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;"
         >
-          <span v-if="acceptanceStore.state.loading && action === 'aceitar'">...</span>
-          <span v-else>Aceitar</span>
+          <!-- <span v-if="acceptanceStore.state.loading && action === 'aceitar'">...</span> -->
+          <span >Aceitar</span>
         </button>
       </div>
     </div>
@@ -39,11 +39,16 @@
 <script setup>
 import { ref, watch, onMounted, defineProps } from "vue";
 import { useCollaboratorAcceptance } from "@/stores/collaboratorAcceptance";
+import { useWork } from "@/stores/work";
+import { useAuth } from "@/stores/auth";
 
 const props = defineProps({ work: Object });
 const acceptanceStore = useCollaboratorAcceptance();
+const workStore = useWork()
+const authStore = useAuth()
 const show = ref(false);
 const action = ref("");
+const collab = workStore?.currentWork.work_collaborator.findIndex(s => s.collaborator.id == authStore.user.id)
 
 function updateShow() {
   if (
@@ -68,12 +73,15 @@ const aceitar = async () => {
   await acceptanceStore.acceptAsCollaborator();
   show.value = false;
   action.value = "";
+  workStore.state.currentWork.work_collaborator[collab].status = 2  
 };
 
 const recusar = async () => {
   action.value = "recusar";
-  await acceptanceStore.rejectAsCollaborator();
+  
+  await acceptanceStore.rejectAsCollaborator()
   show.value = false;
   action.value = "";
+  workStore.state.currentWork.work_collaborator[collab].status = 3
 };
 </script>

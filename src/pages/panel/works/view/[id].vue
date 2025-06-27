@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, computed, ref } from "vue";
 import { useWork } from "@/stores/work";
 import { useAuth } from "@/stores/auth";
 import { useEdition } from "@/stores/edition";
+import { useAdvisorAcceptance } from "@/stores/advisorAcceptance";
 import { useRouter } from "vue-router";
 import {
   orderByUserId,
@@ -12,52 +13,86 @@ import {
 } from "@/utils/works";
 import { useCollaboratorAcceptance } from "@/stores/collaboratorAcceptance";
 import editions from "@/services/editions";
+
 const router = useRouter();
 const work_id = (router.currentRoute.value.params as { id: string }).id;
+const advisorAcceptanceStore = useAdvisorAcceptance()
 const authStore = useAuth();
 const workStore = useWork();
 const editionStore = useEdition();
-const date = new Date();
 const acceptanceStore = useCollaboratorAcceptance();
 
-const datesValidation = reactive({
-  student_able_to_canel:
+const date = new Date();
+
+const usersValidation = reactive({
+  advisor_able_to_aprove_work: false,
+  evaluator_able_to_give_grade: false,
+  advisor_able_to_give_grade: false,
+  student_able_to_cancel: false,
+});
+
+const datesValidation = computed(() => {
+
+  console.log('fim segunda submissao',  editionStore.currentEdition?.final_second_submission_date,
+    'fim do orientador', editionStore.currentEdition?.final_second_advisor_date, 'fim do evaluator', editionStore.currentEdition?.final_evaluators_date
+  )
+  usersValidation.student_able_to_cancel =
     date <
     new Date(
       editionStore.currentEdition?.final_second_submission_date ?? "2100-01-01"
-    ),
-  advisor_able_to_give_grade:
+    );
+
+  usersValidation.advisor_able_to_give_grade =
     date <
     new Date(
       editionStore.currentEdition?.final_second_advisor_date ?? "2100-01-01"
-    ),
-  evaluator_able_to_give_grade:
+    );
+
+  usersValidation.evaluator_able_to_give_grade =
     date <
     new Date(
       editionStore.currentEdition?.final_evaluators_date ?? "2100-01-01"
-    ),
+    );
+
+  usersValidation.advisor_able_to_aprove_work =
+    date <
+    new Date(
+      editionStore.currentEdition?.final_second_submission_date ?? "2100-01-01"
+    );
+
+  return usersValidation;
 });
 
 const tokenExpired = authStore.isTokenExpired();
 
+const uptadeWorkStatus = computed(() => workStore.currentWork?.status ?? 1);
+const isLoaded = ref(false);
 onMounted(async () => {
   await workStore.getWork(work_id);
   await editions.getOpenEdition();
   acceptanceStore.setCollaboratorInfo(workStore.currentWork);
-
   console.log(workStore.currentWork);
+   isLoaded.value = true;
 });
 
-//
+const aprove = ref(false);
 const confirmation = ref(false);
-const confirmsAction = (confirm: String) => {
-  if (confirm == "Confirmar") {
+
+const confirmsAction = (confirm: string) => {
+  if (confirm === "Confirmar") {
     if (authStore.user.is_advisor) {
-      console.log("advisor give grade");
+      if (datesValidation.value.advisor_able_to_aprove_work) {
+        
+        userCase?.function && userCase.function(
+          workStore.currentWork?.verification_token, workStore
+        )
+        aprove.value = false
+      }
     } else if (authStore.user.is_evaluator) {
       console.log("evaluator give grade");
     } else {
       if (!tokenExpired) {
+        
         userCase?.function &&
           userCase.function(
             workStore.currentWork?.id,
@@ -67,15 +102,29 @@ const confirmsAction = (confirm: String) => {
         router.push("/panel/works");
       }
     }
-  } else {
+  } else if (confirm == "Rejeitar"){
+    if (authStore.user.is_advisor) {
+      if (datesValidation.value.advisor_able_to_aprove_work) {
+        
+        userCase?.function_two && userCase.function_two(
+          workStore.currentWork?.verification_token, workStore
+        )
+        aprove.value = false
+      }
+      confirmation.value = false
+    }
+  }  else {
     confirmation.value = false;
   }
 };
 </script>
+
 <template>
   <LayoutPanel v-if="workStore.currentWork">
     <v-container class="w-100">
       <div class="d-flex flex-column ga-10">
+
+
         <StepDialog
           :btn_cancel_text="'Cancelar'"
           :btn_confirm_text="'Confirmar'"
@@ -85,18 +134,26 @@ const confirmsAction = (confirm: String) => {
           @confirmation="confirmsAction"
         />
 
-        <WorkHeader
-          @buttonAction="confirmation = !confirmation"
-          :student_able_to_cancel="datesValidation.student_able_to_canel"
-          :advisor_able_to_give_grade="
-            datesValidation.advisor_able_to_give_grade
-          "
-          :evaluator_able_to_give_grade="
-            datesValidation.evaluator_able_to_give_grade
-          "
-          :user_function="
-            resolveUserFunction(workStore.currentWork, authStore.user)
-          "
+        <StepDialog
+          :has_backButton="true"
+          :btn_cancel_text="'Rejeitar'"
+          :btn_confirm_text="'Confirmar'"
+          :title="'Deseja aprovar esta proposta?'"
+          :description="'Ao aprovar a propsta será possível atribuir nota ao trabalho e aos estudantes.'"
+          v-model="aprove"
+          @confirmation="confirmsAction"
+          @back="aprove = !aprove"
+        />
+
+        <WorkHeader v-if="isLoaded"
+        :key="work_id"
+          :work_status="uptadeWorkStatus"
+          @buttonAction="[1,2,3].includes(uptadeWorkStatus) && resolveUserFunction(workStore?.currentWork, authStore.user) == 'STUDENT' ? confirmation = !confirmation : uptadeWorkStatus == 2 ? confirmation = !confirmation : aprove = !aprove"
+          :student_able_to_cancel="datesValidation.student_able_to_cancel"
+          :advisor_able_to_give_grade="datesValidation.advisor_able_to_give_grade"
+          :evaluator_able_to_give_grade="datesValidation.evaluator_able_to_give_grade"
+          :advisor_able_to_aprove_work="datesValidation.advisor_able_to_aprove_work"
+          :user_function="resolveUserFunction(workStore.currentWork, authStore.user)"
           :grade="workStore.currentWork.feedback"
           :status_content="resolveStatus(workStore.currentWork.status)?.text"
           :status_color="resolveStatus(workStore.currentWork.status)?.color"
@@ -113,7 +170,11 @@ const confirmsAction = (confirm: String) => {
           <p style="font-size: 16px">{{ workStore.currentWork.abstract }}</p>
         </div>
 
-       <SubjectsSession :ods="workStore.currentWork.ods" :subjects="workStore.currentWork.field" :cross_cutting_theme="workStore.currentWork.cross_cutting_theme" />
+        <SubjectsSession
+          :ods="workStore.currentWork.ods"
+          :subjects="workStore.currentWork.field"
+          :cross_cutting_theme="workStore.currentWork.cross_cutting_theme"
+        />
 
         <MembersContainer>
           <MembersCard
@@ -128,20 +189,35 @@ const confirmsAction = (confirm: String) => {
           />
         </MembersContainer>
 
-        <MembersContainer title="Orientador do Trabalho"  attribute="Status do Aceite/Rejeite">
-          <MembersCard :status="workStore.currentWork.advisor_status" :member="workStore.currentWork.advisor" :member_id="workStore.currentWork.advisor.id" :user_id="authStore.user.id" />
+        <MembersContainer
+          title="Orientador do Trabalho"
+          attribute="Status do Aceite/Rejeite"
+        >
+          <MembersCard
+            :status="workStore.currentWork.advisor_status"
+            :member="workStore.currentWork.advisor"
+            :member_id="workStore.currentWork.advisor.id"
+            :user_id="authStore.user.id"
+          />
         </MembersContainer>
 
-        <MembersContainer title="Colaboradores do Trabalho" attribute="Status do Aceite/Rejeite">
-          <MembersCard v-for="(collaborator, index) in workStore.currentWork.work_collaborator" :member="collaborator.collaborator" :member_id="collaborator.collaborator.id" :status="collaborator.status" :user_id="authStore.user.id" :key="index" />
+        <MembersContainer
+          title="Colaboradores do Trabalho"
+          attribute="Status do Aceite/Rejeite"
+        >
+          <MembersCard
+            v-for="(collaborator, index) in workStore.currentWork.work_collaborator"
+            :member="collaborator.collaborator"
+            :member_id="collaborator.collaborator.id"
+            :status="collaborator.status"
+            :user_id="authStore.user.id"
+            :key="index"
+          />
         </MembersContainer>
       </div>
 
       <acceptance-work
-        v-if="
-          acceptanceStore.state.isCollaborator
-          && acceptanceStore.state.collaboratorStatus == 1
-        "
+        v-if="acceptanceStore.state.isCollaborator && acceptanceStore.state.collaboratorStatus === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3"
         :work="workStore.currentWork"
       />
     </v-container>

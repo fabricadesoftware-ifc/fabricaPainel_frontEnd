@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import AcceptanceService from "@/services/acceptance";
 import { useAuth } from "./auth";
 import { useStorage } from "@vueuse/core";
+import { showMessage } from "@/utils/toastify";
 
 export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", () => {
   const state = useStorage("collaboratorAcceptance", {
@@ -48,6 +49,7 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
     try {
       if (!state.value.verificationToken) throw new Error("Token de verificação não encontrado.");
       await AcceptanceService.acceptCollaboratorWork(state.value.verificationToken);
+         showMessage('Colaboração aceita com sucesso!', 'success', 2000, 'top-right', 'light', true)
       state.value.accepted = true;
       state.value.collaboratorStatus = 1;
     } catch (error: any) {
@@ -60,9 +62,12 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
   const rejectAsCollaborator = async () => {
     setLoading(true);
     setError(null);
+    console.log(state.value.verificationToken)
     try {
       if (!state.value.verificationToken) throw new Error("Token de verificação não encontrado.");
+      console.log('aq ta vindo')
       await AcceptanceService.rejectCollaboratorWork(state.value.verificationToken);
+         showMessage('Colaboração rejeitada com sucesso!', 'success', 2000, 'top-right', 'light', true)
       state.value.rejected = true;
       state.value.collaboratorStatus = 2;
     } catch (error: any) {
