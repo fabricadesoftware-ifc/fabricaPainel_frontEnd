@@ -70,6 +70,7 @@ onMounted(async () => {
   await workStore.getWork(work_id);
   await editions.getOpenEdition();
   acceptanceStore.setCollaboratorInfo(workStore.currentWork);
+  advisorAcceptanceStore.setAdvisorInfo(workStore.currentWork)
   console.log(workStore.currentWork);
    isLoaded.value = true;
 });
@@ -216,12 +217,13 @@ const confirmsAction = (confirm: string) => {
       </div>
 
       <acceptance-work
-        v-if="acceptanceStore.state.isCollaborator && acceptanceStore.state.collaboratorStatus === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3"
+        v-if="acceptanceStore.state.isCollaborator && acceptanceStore.state.collaboratorStatus === 1 && uptadeWorkStatus != 4"
         :work="workStore.currentWork"
       />
       
       <AcceptanceAdvisorWork v-if="advisorAcceptanceStore.state.isAdvisor && workStore.currentWork.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3"
         :work="workStore.currentWork" />
+
     </v-container>
   </LayoutPanel>
   <div v-else class="d-flex align-center justify-center h-100 w-100">

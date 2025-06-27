@@ -10,6 +10,13 @@
       </v-card-text>
 
       <v-card-actions class="justify-end">
+          <v-btn
+        
+          @click="close"
+          variant="flat"
+        >
+          Decidir depois
+        </v-btn>
         <v-btn
           color="error"
           @click="recusar"
@@ -66,6 +73,10 @@ onMounted(() => {
     updateShow();
   }
 });
+
+const close = () => {
+  show.value = false;
+}
 
 const aceitar = async () => {
   action.value = "aceitar";

@@ -2,8 +2,10 @@ import { defineStore } from "pinia";
 import AcceptanceService from "@/services/acceptance";
 import { useSessionStorage } from "@vueuse/core";
 import { showMessage } from "@/utils/toastify";
+import { useAuth } from "./auth";
 
 export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
+  const authStore = useAuth()
   const state = useSessionStorage("advisorAcceptance", {
     loading: false,
     error: null as string | null,
@@ -13,6 +15,7 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
     isAdvisor: false,
     verificationToken: "",
   });
+  const user = authStore.user
 
   const setLoading = (loading: boolean) => {
     state.value.loading = loading;
@@ -29,7 +32,8 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
     // console.log("collab encontrado:", collab);
     // console.log("collab status:", collab?.status);
     // console.log("collab verification_token:", collab?.verification_token);
-    if (work.advisor) {
+    if (work.advisor.id == user.id) {
+      console.log('sim ddeu porra')
       state.value.isAdvisor = true;
       state.value.advisorStatus = work.advisor_status; // 1=pendente, 2=aceito, 3=cancelado
       state.value.verificationToken = work.verification_token;

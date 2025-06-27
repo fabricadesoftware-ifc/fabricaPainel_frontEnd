@@ -11,6 +11,13 @@
 
       <v-card-actions class="justify-end">
         <v-btn
+          
+          @click="close"
+          variant="flat"
+        >
+          Decidir depois
+        </v-btn>
+        <v-btn
           color="error"
           @click="recusar"
           :loading="acceptanceStore.state.loading && action === 'recusar'"
@@ -58,11 +65,16 @@ function updateShow() {
 }
 
 onMounted(() => {
+  
   if (props.work) {
     acceptanceStore.setAdvisorInfo(props.work);
     updateShow();
   }
 });
+
+const close = () => {
+  show.value = false;
+}
 
 const aceitar = async () => {
   action.value = "aceitar";
@@ -70,6 +82,7 @@ const aceitar = async () => {
   show.value = false;
   action.value = "";
   workStore.state.currentWork.advisor_status = 2 
+  await workStore.getWork(props.work.id)
 };
 
 const recusar = async () => {
