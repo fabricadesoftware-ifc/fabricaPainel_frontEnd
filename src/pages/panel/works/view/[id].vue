@@ -59,7 +59,7 @@ const datesValidation = computed(() => {
     date <
     new Date(
       editionStore.currentEdition?.final_second_submission_date ?? "2100-01-01"
-    );
+    ) && workStore?.currentWork.advisor_status == 2;
 
   return usersValidation;
 });

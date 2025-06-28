@@ -32,6 +32,12 @@ export const resolveStatus = (status:number) => {
                 color: 'red-darken-2'
             }
         }
+        case 5: {
+          return {
+            text: 'Expirado',
+            color: 'blue gray blue-300'
+          }
+        }
     }
 }
 
@@ -116,7 +122,7 @@ export const validate_user_function = (user_function: string, work_status: Numbe
     } else {
       userCase.function = null
     }
-  } else if (user_function === 'ADVISOR' && work_status == 1 || work_status == 3 ) {
+  } else if (user_function === 'ADVISOR' && work_status == 1 || work_status == 3) {
 
 
         userCase.text = 'Aprovar Trabalho'
