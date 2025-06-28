@@ -1,10 +1,14 @@
 <script lang="ts" setup>
+// @ts-ignore
+import { defineProps, onMounted } from 'vue'
 const props = defineProps({
     user_type: {
-        type: String
+        type: String,
+        default: ''
     },
     works: {
-        type: Object
+        type: Object,
+        default: () => ({})
     }
 })
 

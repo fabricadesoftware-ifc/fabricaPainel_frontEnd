@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { reactive, onMounted } from "vue";
+// @ts-ignore
+import { onMounted, ref } from "vue";
+// @ts-ignore
+import { useRouter } from "vue-router"
 import { useAuth } from "@/stores/auth";
 import { usersData } from "@/utils/userMenu";
-import { useRouter } from "vue-router"
 import { downloadPdf } from "@/utils/user";
 const authStore = useAuth()
 const router = useRouter()
@@ -26,9 +28,9 @@ onMounted(()=> {
           </div>
 
           <p style="font-size: 16px;">{{username}}</p>
-         
+
            <img src="@/assets/icons/menu.svg" style="width: 14px; height: 14px;" alt="">
-         
+
         </span>
       </v-btn>
     </template>

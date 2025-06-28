@@ -2,7 +2,7 @@ import { computed } from "vue";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 import authService from "@/services/auth";
-import { useEdition } from "./edition";
+// import { useEdition } from "./edition";
 import { showMessage } from "@/utils/toastify";
 import { useStorage } from "@vueuse/core";
 import router from "@/router";
@@ -15,10 +15,7 @@ export const useAuth = defineStore("user", () => {
       name: "",
       email: "",
       user_type: "",
-      is_advisor: "",
-      is_collaborator: "",
       is_management: "",
-      is_evaluator: "",
       team: null,
       is_advisor: null,
       is_evaluator: null,
@@ -34,7 +31,7 @@ export const useAuth = defineStore("user", () => {
     userThemes: [],
   });
 
-  const editionStore = useEdition();
+  // const editionStore = useEdition();
 
   const isLogged = computed(() => state.value.isLogged);
   const user = computed(() => state.value.user);
@@ -48,19 +45,19 @@ export const useAuth = defineStore("user", () => {
     });
   });
   const students = computed(() => state.value.students);
-  const isOpenForWork = computed(
-    () => state.value.user.user_type === "STUDENT" && editionStore.isOpenForWork
-  );
-  const isOpenForRegister = computed(
-    () =>
-      state.value.user.user_type === "TEACHER" && editionStore.isOpenForRegister
-  );
-  const isOpenForEvaluation = computed(
-    () =>
-      state.value.user.user_type === "TEACHER" &&
-      editionStore.isOpenForEvaluation
-  );
-  const isOpenForAprove = computed(() => editionStore.isOpenForAprove);
+  // const isOpenForWork = computed(
+  //   () => state.value.user.user_type === "STUDENT" && editionStore.isOpenForWork
+  // );
+  // const isOpenForRegister = computed(
+  //   () =>
+  //     state.value.user.user_type === "TEACHER" && editionStore.isOpenForRegister
+  // );
+  // const isOpenForEvaluation = computed(
+  //   () =>
+  //     state.value.user.user_type === "TEACHER" &&
+  //     editionStore.isOpenForEvaluation
+  // );
+  // const isOpenForAprove = computed(() => editionStore.isOpenForAprove);
   const team = computed(() => state.value.team);
   const userTeam = computed(() => state.value.userTeam);
   const userThemes = computed(() => state.value.userThemes);
@@ -89,15 +86,15 @@ export const useAuth = defineStore("user", () => {
   }
 
   const isTokenExpired = () => {
-    
+
     if (!token.value) {
       expireSession()
      return true
     }
     try {
-      const decoded = jwtDecode<{exp?: Number}>(token.value)
+      const decoded = jwtDecode<{exp?: number}>(token.value)
       const now = Date.now() / 1000
-      
+
       if (decoded) {
         //@ts-ignore
         const validation = decoded.exp < now
@@ -113,7 +110,7 @@ export const useAuth = defineStore("user", () => {
       expireSession()
       return true
     }
-  } 
+  }
 
   const refreshToken = async () => {
     try {
@@ -190,10 +187,7 @@ export const useAuth = defineStore("user", () => {
       name: "",
       email: "",
       user_type: "",
-      is_advisor: "",
-      is_collaborator: "",
       is_management: "",
-      is_evaluator: "",
       team: null,
       is_advisor: null,
       is_evaluator: null,
@@ -388,10 +382,6 @@ export const useAuth = defineStore("user", () => {
     resetPasswordToken,
     uid,
     formattedStudents,
-    isOpenForWork,
-    isOpenForRegister,
-    isOpenForAprove,
-    isOpenForEvaluation,
     students,
     team,
     isTokenExpired,

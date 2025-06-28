@@ -31,10 +31,8 @@
 // @ts-ignore
 import { useRouter } from "vue-router";
 import { uselayout } from "@/stores/app";
-import { useAuth } from "@/stores/auth";
 import { useScreen } from "@/composables/composables";
 
-const authStore = useAuth();
 const { isMobile } = useScreen();
 
 const router = useRouter();

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { computed, watch, onMounted, toRefs } from "vue";
+// @ts-ignore
+import { computed, watch, onMounted, toRefs, defineProps, defineEmits } from "vue";
 import { userCase, validate_user_function } from "@/utils/works";
 
 const emits = defineEmits(["buttonAction"]);
@@ -22,7 +23,7 @@ const props = defineProps({
     required: true,
   },
   grade: {
-    type: [Number, String, null, undefined],
+    type: [Number, String],
   },
   user_function: {
     type: String,
@@ -80,9 +81,9 @@ const shouldShowButton = computed(() => {
 // Validação reativa
 watch(
   [work_status, user_function],
-  ([newStatus, newFunction]) => {
+  ([newStatus, newFunction]: [number, string]) => {
     validate_user_function(newFunction, newStatus);
-   
+
   },
   { immediate: true }
 );

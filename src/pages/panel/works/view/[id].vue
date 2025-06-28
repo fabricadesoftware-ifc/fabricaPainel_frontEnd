@@ -1,9 +1,11 @@
 <script lang="ts" setup>
+// @ts-ignore
 import { onMounted, reactive, computed, ref } from "vue";
+// @ts-ignore
+import { useRouter } from "vue-router";
 import { useWork } from "@/stores/work";
 import { useAuth } from "@/stores/auth";
 import { useEdition } from "@/stores/edition";
-import { useRouter } from "vue-router";
 import {
   orderByUserId,
   resolveStatus,
@@ -92,7 +94,7 @@ const confirmsAction = (confirm: string) => {
       console.log("evaluator give grade");
     } else {
       if (!tokenExpired) {
-        
+
         userCase?.function &&
           userCase.function(
             workStore.currentWork?.id,
@@ -105,7 +107,7 @@ const confirmsAction = (confirm: string) => {
   } else if (confirm == "Rejeitar"){
     if (authStore.user.is_advisor) {
       if (datesValidation.value.advisor_able_to_aprove_work) {
-        
+
         userCase?.function_two && userCase.function_two(
           workStore.currentWork?.verification_token, workStore
         )
@@ -155,8 +157,8 @@ const confirmsAction = (confirm: string) => {
           :advisor_able_to_aprove_work="datesValidation.advisor_able_to_aprove_work"
           :user_function="resolveUserFunction(workStore.currentWork, authStore.user)"
           :grade="workStore.currentWork.feedback"
-          :status_content="resolveStatus(workStore.currentWork.status)?.text"
-          :status_color="resolveStatus(workStore.currentWork.status)?.color"
+          :status_content="resolveStatus(workStore.currentWork.status)?.text || 'Não informado'"
+          :status_color="resolveStatus(workStore.currentWork.status)?.color || 'Não informado'"
           :title="workStore.currentWork.title"
         />
 
@@ -220,7 +222,7 @@ const confirmsAction = (confirm: string) => {
         v-if="acceptanceStore.state.isCollaborator && acceptanceStore.state.collaboratorStatus === 1 && uptadeWorkStatus != 4"
         :work="workStore.currentWork"
       />
-      
+
       <AcceptanceAdvisorWork v-if="advisorAcceptanceStore.state.isAdvisor && workStore.currentWork.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3"
         :work="workStore.currentWork" />
 

@@ -1,16 +1,19 @@
 <script lang="ts" setup>
+// @ts-ignore
+import { defineProps } from "vue";
+
 interface Ods {
-   name: String,
-   id: Number
+   name: string,
+   id: number
 }
 
 interface Subject {
-   name: String,
-   id: Number
+   name: string,
+   id: number
 }
 
 interface CrossCuttingTheme {
-   name: String,
+   name: string,
 }
 
 const props = defineProps<{

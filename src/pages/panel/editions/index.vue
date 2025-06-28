@@ -54,11 +54,11 @@ onMounted(() => {
               <p class="text-grey-darken-2">
                 <span class="d-block">Data de Submissão:</span>
                 <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.initial_submission_date) }}
+                  {{ formatDate(edition.initial_submission_date || 'Não informado') }}
                 </span>
                 até
                 <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.final_submission_date) }}
+                  {{ formatDate(edition.final_submission_date || 'Não informado') }}
                 </span>
               </p>
             </v-col>
@@ -66,11 +66,11 @@ onMounted(() => {
               <p class="text-grey-darken-2">
                 <span class="d-block">Data de Orientação:</span>
                 <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.initial_advisor_date) }}
+                  {{ formatDate(edition.initial_advisor_acceptance || 'Não informado') }}
                 </span>
                 até
                 <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.final_advisor_date) }}
+                  {{ formatDate(edition.final_advisor_acceptance || 'Não informado') }}
                 </span>
               </p>
             </v-col>
@@ -78,11 +78,11 @@ onMounted(() => {
               <p class="text-grey-darken-2">
                 <span class="d-block">Data de Avaliadores:</span>
                 <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.initial_evaluators_date) }}
+                  {{ formatDate(edition.initial_evaluators_date || 'Não informado') }}
                 </span>
                 até
                 <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.final_evaluators_date) }}
+                  {{ formatDate(edition.final_evaluators_date || 'Não informado') }}
                 </span>
               </p>
             </v-col>

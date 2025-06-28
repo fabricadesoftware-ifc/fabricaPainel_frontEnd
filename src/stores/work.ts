@@ -13,7 +13,7 @@ export const useWork = defineStore('work', () => {
   const authStore = useAuth()
   const state = useStorage('worksstorage', {
     works: [] as any[],
-    userWorks: [] as any[], 
+    userWorks: [] as any[],
     advisorWorks: [] as any[],
     collaboratorWorks: [] as any[],
     evaluatorWorks: [] as any[],
@@ -81,7 +81,7 @@ export const useWork = defineStore('work', () => {
   type TeamMember = {id: number}
   type Team = {
     team_members: TeamMember[]
-    [key: string]:any 
+    [key: string]:any
   }
   const sendWork = async () => {
     setError(null)
@@ -92,39 +92,39 @@ export const useWork = defineStore('work', () => {
       if ((authStore.user as any)?.team && (authStore.user as any).team.length > 0) {
 
         const userTeamData = (authStore.user as any).team
-       
+
         for (let team of userTeamData as Team[]) {
         let teamMembers: number[] = (team.team_members.map((s:{id:number}) => s.id))
-       
+
         let teamStored: any[] = (WorkStorage.team.map(s => s.id))
         teamMembers.sort((a,b) => a - b)
         teamStored.sort((a,b) => a - b)
         if (teamMembers.every(((value, index) => value === teamStored[index] ))) {
         teamId = team.id
-        } 
         }
-      } 
+        }
+      }
         // Se não há equipe existente, criar uma nova com os membros do WorkStorage
       if (!teamId) {
-        
-      
+
+
         try {
           const newTeam = {
             team_members: WorkStorage.team.map((member: any) => member.id),
             edition: editionStore.currentEdition?.id,
           }
-          
+
           const createdTeam = await (authStore as any).createTeam(newTeam)
-         
+
           teamId = createdTeam?.id || (authStore.team as any)?.id
-         
+
         } catch (createError: any) {
           console.error('Erro ao criar equipe:', createError)
           throw new Error('Erro ao criar equipe: ' + createError.message)
         }
       }
-              
-     
+
+
         const newWork = await WorkService.sendWork({
           title: WorkStorage.title || 'teste',
           abstract: WorkStorage.abstract,
@@ -138,16 +138,16 @@ export const useWork = defineStore('work', () => {
           team: teamId,
           edition: editionStore.currentEdition?.id,
         })
-       
+
 
         state.value.works.push(newWork)
         showMessage('Trabalho enviado com sucesso!', 'success', 2000, 'top-right', 'light', true)
 
-       
-        
+
+
     } catch (error: any) {
       console.error('Erro completo na submissão:', error)
-     
+
       setError(error.message)
       throw error
     } finally {
@@ -210,7 +210,7 @@ export const useWork = defineStore('work', () => {
         state.value.advisorWorks = works.advisor
         state.value.collaboratorWorks = works.collaborator
         state.value.evaluatorWorks = works.evaluator
-        
+
       }
       console.log(state.value.userWorks)
       return works
@@ -226,7 +226,7 @@ export const useWork = defineStore('work', () => {
     setError(null)
     try {
       console.log('AAAAA GAY')
-      
+
       await WorkService.approveWork(state.value.currentWork.verification_token)
       state.value.currentWork.status = 2
       showMessage('Proposta Aprovada com sucesso', 'success', 2000, 'top-right', 'light', false)
@@ -242,8 +242,8 @@ export const useWork = defineStore('work', () => {
     setLoading(true)
     setError(null)
     try {
-      await WorkService.rejectWork(state.currentWork.verification_token)
-      state.currentWork.status = 4
+      await WorkService.rejectWork(state.value.currentWork.verification_token)
+      state.value.currentWork.status = 4
       showMessage('Proposta Rejeitada com sucesso', 'success', 2000, 'top-right', 'light', false)
 
 

@@ -85,39 +85,39 @@ export const useEdition = defineStore('edition', () => {
   })
 
   const currentEdition = computed(() => state.value.currentEdition)
-  const alertStudent = computed(() => 'A data de submissão é de ' + state.value.currentEdition?.initial_submission_date + ' até ' + state.value.currentEdition?.final_submission_date)
-  const teacherStudent = computed(() => 'Registro de Avaliadores (' + state.value.currentEdition?.initial_registration_evaluator_date + ' até ' + state.value.currentEdition?.final_registration_evaluator_date + ')')
+  // const alertStudent = computed(() => 'A data de submissão é de ' + state.value.currentEdition?.initial_submission_date + ' até ' + state.value.currentEdition?.final_submission_date)
+  // const teacherStudent = computed(() => 'Registro de Avaliadores (' + state.value.currentEdition?.initial_registration_evaluator_date + ' até ' + state.value.currentEdition?.final_registration_evaluator_date + ')')
 
-  const isOpenForWork = computed(() => {
-    const currentDate = new Date()
-    const initialSubmissionDate = new Date(state.value.currentEdition?.initial_submission_date)
-    const finalSubmissionDate = new Date(state.value.currentEdition?.final_submission_date)
-    return initialSubmissionDate <= currentDate && finalSubmissionDate >= currentDate
-  })
-  const isOpenForRegister = computed(() => {
-    const currentDate = new Date()
-    const initialSubmissionDate = new Date(state.value.currentEdition?.initial_registration_theme_date)
-    const finalSubmissionDate = new Date(state.value.currentEdition?.final_registration_theme_date)
-    return initialSubmissionDate <= currentDate && finalSubmissionDate >= currentDate
-  })
-  const isOpenForAprove = computed(() => {
-    const currentDate = new Date()
-    const initialAdvisorDate = new Date(state.value.currentEdition?.initial_advisor_date)
-    const finalAdvisorDate = new Date(state.value.currentEdition?.final_advisor_date)
-    return initialAdvisorDate <= currentDate && finalAdvisorDate >= currentDate
-  })
-  const isOpenForGroup = computed(() => {
-    const currentDate = new Date()
-    const initialThemeDate = new Date(state.value.currentEdition?.initial_registration_theme_date)
-    const finalSubmissionDate = new Date(state.value.currentEdition?.final_submission_date)
-    return initialThemeDate <= currentDate && finalSubmissionDate >= currentDate
-  })
-  const isOpenForEvaluation = computed(() => {
-    const currentDate = new Date()
-    const initialEvaluationDate = new Date(state.value.currentEdition?.initial_evaluators_date)
-    const finalEvaluationDate = new Date(state.value.currentEdition?.final_evaluators_date)
-    return initialEvaluationDate <= currentDate && finalEvaluationDate >= currentDate
-  })
+  // const isOpenForWork = computed(() => {
+  //   const currentDate = new Date()
+  //   const initialSubmissionDate = new Date(state.value.currentEdition?.initial_submission_date)
+  //   const finalSubmissionDate = new Date(state.value.currentEdition?.final_submission_date)
+  //   return initialSubmissionDate <= currentDate && finalSubmissionDate >= currentDate
+  // })
+  // const isOpenForRegister = computed(() => {
+  //   const currentDate = new Date()
+  //   const initialSubmissionDate = new Date(state.value.currentEdition?.initial_registration_theme_date)
+  //   const finalSubmissionDate = new Date(state.value.currentEdition?.final_registration_theme_date)
+  //   return initialSubmissionDate <= currentDate && finalSubmissionDate >= currentDate
+  // })
+  // const isOpenForAprove = computed(() => {
+  //   const currentDate = new Date()
+  //   const initialAdvisorDate = new Date(state.value.currentEdition?.initial_advisor_date)
+  //   const finalAdvisorDate = new Date(state.value.currentEdition?.final_advisor_date)
+  //   return initialAdvisorDate <= currentDate && finalAdvisorDate >= currentDate
+  // })
+  // const isOpenForGroup = computed(() => {
+  //   const currentDate = new Date()
+  //   const initialThemeDate = new Date(state.value.currentEdition?.initial_registration_theme_date)
+  //   const finalSubmissionDate = new Date(state.value.currentEdition?.final_submission_date)
+  //   return initialThemeDate <= currentDate && finalSubmissionDate >= currentDate
+  // })
+  // const isOpenForEvaluation = computed(() => {
+  //   const currentDate = new Date()
+  //   const initialEvaluationDate = new Date(state.value.currentEdition?.initial_evaluators_date)
+  //   const finalEvaluationDate = new Date(state.value.currentEdition?.final_evaluators_date)
+  //   return initialEvaluationDate <= currentDate && finalEvaluationDate >= currentDate
+  // })
 
   const setLoading = (loading: boolean) => {
     state.value.loading = loading
@@ -201,13 +201,6 @@ export const useEdition = defineStore('edition', () => {
   return {
     state,
     currentEdition,
-    alertStudent,
-    teacherStudent,
-    isOpenForWork,
-    isOpenForRegister,
-    isOpenForAprove,
-    isOpenForGroup,
-    isOpenForEvaluation,
     fetchEditions,
     fetchCurrentEdition,
     createEdition,

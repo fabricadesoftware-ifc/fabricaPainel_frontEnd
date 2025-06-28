@@ -1,5 +1,3 @@
-import { useRouter } from "vue-router"
-const router = useRouter()
 export const orderByUserId = (members: Array<any>, user_id: number | string) => {
   return members.sort((a, b) => {
     if (a.id === user_id) return -1
@@ -35,10 +33,9 @@ export const resolveStatus = (status:number) => {
             }
         }
     }
-} 
+}
 
-type User = {id: Number | String}
-type Advisor = { id: Number | String }
+type Advisor = { id: number | string }
 
 type Work = { advisor: Advisor, work_collaborator: Array<any>, evaluator: Array<any> }
 //@ts-ignore
@@ -47,7 +44,7 @@ export const resolveUserFunction = (work:Work, user) => {
     const advisor = work.advisor.id == user.id
     const evaluator = work.evaluator.some((s) => s.user.id == user.id)
     const collaborator = work.work_collaborator.some((s) => s.collaborator.id == user.id)
-    
+
     if (advisor) {
         return 'ADVISOR'
     } else if (evaluator) {
@@ -109,18 +106,18 @@ export const validate_user_function = (user_function: string, work_status: Numbe
   if (user_function === 'EVALUATOR' || user_function === 'ADVISOR') {
     if (work_status == 2) {
 
-    
+
     userCase.text = 'Atribuir Nota'
     userCase.color = '#1F8BDD'
     userCase.icon = '$ratingFull'
 
     if (user_function == 'EVALUATOR') {
-      userCase.function = null  
+      userCase.function = null
     } else {
       userCase.function = null
     }
   } else if (user_function === 'ADVISOR' && work_status == 1 || work_status == 3 ) {
-      
+
 
         userCase.text = 'Aprovar Trabalho'
         userCase.color = '#1F8BDD'
@@ -128,11 +125,11 @@ export const validate_user_function = (user_function: string, work_status: Numbe
         userCase.function = aproveWork
         userCase.function_two = rejectWork
   }
-    
+
   } else if (user_function == 'STUDENT') {
     userCase.text = 'Cancelar Submissão'
     userCase.color = '#EC3223'
     userCase.icon = '$delete'
-    userCase.function = removeWork  
+    userCase.function = removeWork
   }
 }
