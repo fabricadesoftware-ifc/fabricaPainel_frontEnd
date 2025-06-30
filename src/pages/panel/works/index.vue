@@ -107,6 +107,11 @@ onMounted(async () => {
           "
         />
 
+        <v-lazy
+  :min-height="200"
+  :options="{'threshold':0.5}"
+  transition="fade-transition"
+>
         <CardSubmission
           v-if="UserStore.user.user_type == 'STUDENT'"
           v-for="(work, index) in submissionsCurrent"
@@ -156,6 +161,7 @@ onMounted(async () => {
             />
           </template>
         </TeacherContainer>
+        </v-lazy>
       </div>
 
       <div class="d-flex justify-space-between align-center text-h6 pb-10">
@@ -165,12 +171,19 @@ onMounted(async () => {
       </div>
 
       <div>
+           <v-lazy
+  :min-height="200"
+  :options="{'threshold':0.5}"
+  transition="fade-transition"
+>
         <div
           v-if="
             submissionsPast.length > 0 &&
             UserStore.user.user_type == 'STUDENT'
           "
         >
+        
+     
           <CardSubmission
             v-for="(works, index) in submissionsPast"
             :key="works.id"
@@ -216,7 +229,7 @@ onMounted(async () => {
             />
           </template>
         </TeacherContainer>
-
+</v-lazy>
         <div
           class="pa-5"
           v-if="
@@ -228,6 +241,7 @@ onMounted(async () => {
           </h1>
         </div>
       </div>
+      
     </v-container>
   </LayoutPanel>
 

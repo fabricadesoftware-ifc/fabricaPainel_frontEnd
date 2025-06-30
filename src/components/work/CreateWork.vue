@@ -16,7 +16,7 @@ const props = defineProps({
                 >
                 <p class="font-weight-bold" style="font-size: 20px;">Você ainda não possui nenhum trabalho
                     submetido</p>
-                <div class="d-flex justify-center align-center ga-2" @click="router.push('/panel/works/add/')">
+                <div class="d-flex justify-center align-center ga-2 pa-3 hover-create" @click="router.push('/panel/works/add/')">
                     <VBtn class="bg-blue" rounded="pill" flat size="25">
                         <VIcon icon="mdi-plus" size="25"></VIcon>
                     </VBtn>
@@ -29,3 +29,15 @@ const props = defineProps({
                 </div>
         </div>
 </template>
+<style scoped >
+.hover-create {
+       border-radius: 40px;
+        
+    }
+
+    .hover-create:hover {
+        transition: 0.5s ease-in-out;
+        background-color: rgba(28, 150, 231, 0.3);
+        
+    }
+</style>

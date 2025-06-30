@@ -124,6 +124,7 @@ const confirmsAction = (confirm: string) => {
 <template>
   <LayoutPanel v-if="workStore.currentWork">
     <v-container class="w-100">
+       <v-fade-transition appear>
       <div class="d-flex flex-column ga-10">
 
 
@@ -146,6 +147,7 @@ const confirmsAction = (confirm: string) => {
           @confirmation="confirmsAction"
           @back="aprove = !aprove"
         />
+        
 
         <WorkHeader v-if="isLoaded"
         :key="work_id"
@@ -216,6 +218,7 @@ const confirmsAction = (confirm: string) => {
             :key="index"
           />
         </MembersContainer>
+        
       </div>
 
       <acceptance-work
@@ -225,7 +228,7 @@ const confirmsAction = (confirm: string) => {
 
       <AcceptanceAdvisorWork v-if="advisorAcceptanceStore.state.isAdvisor && workStore.currentWork.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3"
         :work="workStore.currentWork" />
-
+</v-fade-transition>
     </v-container>
   </LayoutPanel>
   <div v-else class="d-flex align-center justify-center h-100 w-100">
