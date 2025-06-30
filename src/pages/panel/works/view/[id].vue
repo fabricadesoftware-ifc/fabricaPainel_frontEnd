@@ -1,9 +1,11 @@
 <script lang="ts" setup>
+// @ts-ignore
 import { onMounted, reactive, computed, ref } from "vue";
+// @ts-ignore
+import { useRouter } from "vue-router";
 import { useWork } from "@/stores/work";
 import { useAuth } from "@/stores/auth";
 import { useEdition } from "@/stores/edition";
-import { useRouter } from "vue-router";
 import {
   orderByUserId,
   resolveStatus,
@@ -57,7 +59,7 @@ const datesValidation = computed(() => {
     date <
     new Date(
       editionStore.currentEdition?.final_second_submission_date ?? "2100-01-01"
-    );
+    ) && workStore?.currentWork.advisor_status == 2;
 
   return usersValidation;
 });
@@ -92,7 +94,7 @@ const confirmsAction = (confirm: string) => {
       console.log("evaluator give grade");
     } else {
       if (!tokenExpired) {
-        
+
         userCase?.function &&
           userCase.function(
             workStore.currentWork?.id,
@@ -105,7 +107,7 @@ const confirmsAction = (confirm: string) => {
   } else if (confirm == "Rejeitar"){
     if (authStore.user.is_advisor) {
       if (datesValidation.value.advisor_able_to_aprove_work) {
-        
+
         userCase?.function_two && userCase.function_two(
           workStore.currentWork?.verification_token, workStore
         )
@@ -122,6 +124,7 @@ const confirmsAction = (confirm: string) => {
 <template>
   <LayoutPanel v-if="workStore.currentWork">
     <v-container class="w-100">
+       <v-fade-transition appear>
       <div class="d-flex flex-column ga-10">
 
 
@@ -144,6 +147,7 @@ const confirmsAction = (confirm: string) => {
           @confirmation="confirmsAction"
           @back="aprove = !aprove"
         />
+        
 
         <WorkHeader v-if="isLoaded"
         :key="work_id"
@@ -155,8 +159,8 @@ const confirmsAction = (confirm: string) => {
           :advisor_able_to_aprove_work="datesValidation.advisor_able_to_aprove_work"
           :user_function="resolveUserFunction(workStore.currentWork, authStore.user)"
           :grade="workStore.currentWork.feedback"
-          :status_content="resolveStatus(workStore.currentWork.status)?.text"
-          :status_color="resolveStatus(workStore.currentWork.status)?.color"
+          :status_content="resolveStatus(workStore.currentWork.status)?.text || 'Não informado'"
+          :status_color="resolveStatus(workStore.currentWork.status)?.color || 'Não informado'"
           :title="workStore.currentWork.title"
         />
 
@@ -214,16 +218,17 @@ const confirmsAction = (confirm: string) => {
             :key="index"
           />
         </MembersContainer>
+        
       </div>
 
       <acceptance-work
         v-if="acceptanceStore.state.isCollaborator && acceptanceStore.state.collaboratorStatus === 1 && uptadeWorkStatus != 4"
         :work="workStore.currentWork"
       />
-      
+
       <AcceptanceAdvisorWork v-if="advisorAcceptanceStore.state.isAdvisor && workStore.currentWork.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3"
         :work="workStore.currentWork" />
-
+</v-fade-transition>
     </v-container>
   </LayoutPanel>
   <div v-else class="d-flex align-center justify-center h-100 w-100">

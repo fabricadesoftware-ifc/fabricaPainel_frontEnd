@@ -8,7 +8,7 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
-import { showMessage } from '@/utils/toastify'
+// import { showMessage } from '@/utils/toastify'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,7 +29,9 @@ router.onError((err, to) => {
   }
 })
 const routesBloqued = ['/auth/accept-invite-team/:id/:token', "/auth/get-password/", "/panel/colaborators/", "/panel/editions/view/:id", "/panel/paper/:id", "/panel/works/", "/panel/works/add", "/panel/works/add/" ,  "/panel/paper/:id", "/panel/registration-of-topics/"]
-const works = JSON.parse(localStorage.getItem("worksstorage"))
+// TODO: rever logica do works
+const works = JSON.parse(localStorage.getItem("worksstorage") || '{"userWorks": []}')
+//
 const is_authenticated = JSON.parse(localStorage.getItem("state_user") || '{"isLogged": false}')
 
 router.beforeEach((to, from, next) => {
@@ -38,6 +40,7 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
+
 
 router.beforeEach((to, from, next) => {
   const userWork = works?.userWorks[0]

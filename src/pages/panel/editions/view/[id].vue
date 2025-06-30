@@ -1,22 +1,25 @@
 <script lang="ts" setup>
+// @ts-ignore
 import { computed, onMounted, ref } from "vue";
+// @ts-ignore
 import { useRoute } from "vue-router";
 import { useEdition } from "@/stores/edition";
+import { IEdition } from "@/interfaces/edition";
 
 const { state, fetchEditions } = useEdition();
 
 const router = useRoute();
 const id = ref(null);
-const edition = ref("Carregando...");
+const edition = ref<IEdition | null>(null);
 
 const formatDate = computed(() => {
-  return (dateTime: any) => {
+  return (dateTime: string | any) => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
     };
-    return new Date(dateTime).toLocaleDateString("pt-BR", options);
+    return new Date(dateTime || '').toLocaleDateString("pt-BR", options);
   };
 });
 
