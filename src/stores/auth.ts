@@ -2,9 +2,10 @@ import { computed } from "vue";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 import authService from "@/services/auth";
-import { useEdition } from "./edition";
+// import { useEdition } from "./edition";
 import { showMessage } from "@/utils/toastify";
 import { useStorage } from "@vueuse/core";
+import router from "@/router";
 
 export const useAuth = defineStore("user", () => {
   const state = useStorage("state_user", {
@@ -14,7 +15,11 @@ export const useAuth = defineStore("user", () => {
       name: "",
       email: "",
       user_type: "",
+      is_management: "",
       team: null,
+      is_advisor: null,
+      is_evaluator: null,
+      is_collaborator: null,
     },
     tokenEmail: "",
     students: [] as Array<{ id: string; name: string }>,
@@ -26,7 +31,7 @@ export const useAuth = defineStore("user", () => {
     userThemes: [],
   });
 
-  const editionStore = useEdition();
+  // const editionStore = useEdition();
 
   const isLogged = computed(() => state.value.isLogged);
   const user = computed(() => state.value.user);
@@ -40,19 +45,19 @@ export const useAuth = defineStore("user", () => {
     });
   });
   const students = computed(() => state.value.students);
-  const isOpenForWork = computed(
-    () => state.value.user.user_type === "STUDENT" && editionStore.isOpenForWork
-  );
-  const isOpenForRegister = computed(
-    () =>
-      state.value.user.user_type === "TEACHER" && editionStore.isOpenForRegister
-  );
-  const isOpenForEvaluation = computed(
-    () =>
-      state.value.user.user_type === "TEACHER" &&
-      editionStore.isOpenForEvaluation
-  );
-  const isOpenForAprove = computed(() => editionStore.isOpenForAprove);
+  // const isOpenForWork = computed(
+  //   () => state.value.user.user_type === "STUDENT" && editionStore.isOpenForWork
+  // );
+  // const isOpenForRegister = computed(
+  //   () =>
+  //     state.value.user.user_type === "TEACHER" && editionStore.isOpenForRegister
+  // );
+  // const isOpenForEvaluation = computed(
+  //   () =>
+  //     state.value.user.user_type === "TEACHER" &&
+  //     editionStore.isOpenForEvaluation
+  // );
+  // const isOpenForAprove = computed(() => editionStore.isOpenForAprove);
   const team = computed(() => state.value.team);
   const userTeam = computed(() => state.value.userTeam);
   const userThemes = computed(() => state.value.userThemes);
@@ -71,6 +76,41 @@ export const useAuth = defineStore("user", () => {
       console.error(error);
     }
   };
+
+  function expireSession() {
+    logout()
+    router.push('/auth/login')
+     setTimeout(()=>{
+      showMessage('Sua sessão expirou, faça login novamente', 'error', 2000, 'top-right', 'light', false)
+     },500)
+  }
+
+  const isTokenExpired = () => {
+
+    if (!token.value) {
+      expireSession()
+     return true
+    }
+    try {
+      const decoded = jwtDecode<{exp?: number}>(token.value)
+      const now = Date.now() / 1000
+
+      if (decoded) {
+        //@ts-ignore
+        const validation = decoded.exp < now
+        if (validation) {
+          expireSession()
+          return true
+        }
+      }
+
+      return false
+
+    } catch (error) {
+      expireSession()
+      return true
+    }
+  }
 
   const refreshToken = async () => {
     try {
@@ -147,10 +187,15 @@ export const useAuth = defineStore("user", () => {
       name: "",
       email: "",
       user_type: "",
+      is_management: "",
       team: null,
+      is_advisor: null,
+      is_evaluator: null,
+      is_collaborator: null,
     };
     state.value.team = null;
     state.value.userTeam = {};
+    router.push('/')
   };
 
   const getStudents = async () => {
@@ -180,6 +225,11 @@ export const useAuth = defineStore("user", () => {
       throw error;
     }
   };
+
+  const GetMe = async () => {
+      state.value.user = await authService.GetMe()
+  
+  }
 
   const getUserTeam = async () => {
     try {
@@ -222,7 +272,9 @@ export const useAuth = defineStore("user", () => {
 
   const createTeam = async (team: any) => {
     try {
+      
       const data = await authService.createTeam(team);
+      
       await getTeam(data.id);
     } catch (error: any) {
       showMessage(
@@ -280,9 +332,9 @@ export const useAuth = defineStore("user", () => {
     }
   };
 
-  const getUserThemes = async () => {
+  const getUserThemes = async (id:string) => {
     try {
-      const data = await authService.getUserThemes(state.value.user.id);
+      const data = await authService.getUserThemes(id);
       state.value.userThemes = data;
     } catch (error) {
       console.error(error);
@@ -293,6 +345,18 @@ export const useAuth = defineStore("user", () => {
   const searchUsers = async (search: string, type: string) => {
     try {
       const data = await authService.searchUsers(search, type);
+     
+      return data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  };
+
+  const searchTeacher = async (search: string, type: string) => {
+    try {
+      const data = await authService.searchTeacher(search, type);
+      
       return data;
     } catch (error) {
       console.error(error);
@@ -318,12 +382,9 @@ export const useAuth = defineStore("user", () => {
     resetPasswordToken,
     uid,
     formattedStudents,
-    isOpenForWork,
-    isOpenForRegister,
-    isOpenForAprove,
-    isOpenForEvaluation,
     students,
     team,
+    isTokenExpired,
     getStudents,
     getUser,
     getUserInfo,
@@ -345,5 +406,7 @@ export const useAuth = defineStore("user", () => {
     searchUsers,
     setTokenEmail,
     getEvaluatorByUserId,
+    GetMe,
+    searchTeacher
   };
 });

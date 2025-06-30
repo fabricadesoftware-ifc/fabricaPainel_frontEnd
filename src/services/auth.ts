@@ -35,7 +35,9 @@ class AuthService {
 
   async login (email: string, password: string) {
     try {
-      const { data } = await api.post('token/', { email, password })
+    
+      const { data } = await api.post('token/', { email, password },)
+     
       return data
     } catch (error) {
       this.handleError(error, 'login')
@@ -45,6 +47,16 @@ class AuthService {
   async getUser (id: string) {
     try {
       const { data } = await api.get(`users/${id}`)
+   
+      return data
+    } catch (error) {
+      this.handleError(error, 'get user')
+    }
+  }
+
+  async GetMe(){
+     try {
+      const { data } = await api.get(`users/me/`)
       return data
     } catch (error) {
       this.handleError(error, 'get user')
@@ -124,8 +136,13 @@ class AuthService {
     }
   }
 
-  async searchUsers (search: string, type: string) {
-    const { data } = await api.get(`users/?search=${search}&type=${type}`)
+  async searchUsers (search: string, type: string) { 
+    const { data } = await api.get(`users/?registration=${search}&type=${type}`);
+    return data;
+  }
+  
+  async searchTeacher(search: string, type:string){
+    const {data} = await api.get(`users/?name=${search}&type=${type}`)
     return data
   }
 

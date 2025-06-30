@@ -16,7 +16,7 @@ export const useCategory = defineStore("categories", () => {
   const authStore = useAuth();
   const router = useRouter();
   const crossCuttingThemes = computed(() => state.themes.map((t) => t.name));
-  const ods = computed(() => state.ods.map((o) => o.name));
+  const ods = computed(() => state.ods);
   const field = computed(() => state.field.map((f) => f.name));
 
   const setLoading = (loading: boolean) => {
@@ -31,6 +31,19 @@ export const useCategory = defineStore("categories", () => {
     try {
       const response = await CategoriesService.getCrossCuttingThemes();
       state.themes = response;
+      return response
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterFields = async (name: string) => {
+    try {
+      const response = await CategoriesService.FilterField(name)
+      state.themes = response;
+     
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -79,6 +92,7 @@ export const useCategory = defineStore("categories", () => {
     try {
       const response = await CategoriesService.getField();
       state.field = response;
+      return response
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -117,5 +131,6 @@ export const useCategory = defineStore("categories", () => {
     getCrossCuttingThemes,
     saveCrossCuttingThemes,
     removeAdvisorCrossCuttingThemes,
+    filterFields
   };
 });

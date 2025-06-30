@@ -8,6 +8,7 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
+// import { showMessage } from '@/utils/toastify'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,34 @@ router.onError((err, to) => {
   } else {
     console.error(err)
   }
+})
+const routesBloqued = ['/auth/accept-invite-team/:id/:token', "/auth/get-password/", "/panel/colaborators/", "/panel/editions/view/:id", "/panel/paper/:id", "/panel/works/", "/panel/works/add", "/panel/works/add/" ,  "/panel/paper/:id", "/panel/registration-of-topics/"]
+// TODO: rever logica do works
+const works = JSON.parse(localStorage.getItem("worksstorage") || '{"userWorks": []}')
+//
+const is_authenticated = JSON.parse(localStorage.getItem("state_user") || '{"isLogged": false}')
+
+router.beforeEach((to, from, next) => {
+  if (routesBloqued.includes(to.path) && !is_authenticated.isLogged) {
+    return next('/')
+  }
+  next()
+})
+
+
+router.beforeEach((to, from, next) => {
+  const userWork = works?.userWorks[0]
+  if (userWork) {
+    if (to.path === '/panel/works/add/' && new Date().getFullYear() === userWork.edition.year) {
+      if (userWork.status !== 4) {
+        next('/panel/works/')
+      }
+      else {
+        next()
+      }
+    }
+  }
+  next()
 })
 
 router.isReady().then(() => {

@@ -13,6 +13,11 @@ import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
+   server: {
+    host: '0.0.0.0',
+    port: 3000,
+    allowedHosts: ['a9ed-191-52-58-163.ngrok-free.app']
+  },
   plugins: [
     VueRouter({
       dts: "src/typed-router.d.ts",
@@ -96,7 +101,5 @@ export default defineConfig({
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },
-  server: {
-    port: 3000,
-  },
+  
 });
