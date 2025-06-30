@@ -9,7 +9,7 @@ class StudentAssessmentService {
   async getAssessments () {
     try {
       const { data } = await api.get('student-assessments/')
-      console.log(data)
+      
       return data
     } catch (error) {
       this.handleError(error, 'fetch')

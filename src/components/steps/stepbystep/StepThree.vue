@@ -22,7 +22,7 @@ const AddUser = async (selectedAdvisor) => {
 
         if(!findadvisor){
             await WorkStore.fetchUserWorks('TEACHER', selectedAdvisor.id)
-            console.log(WorkStore.state)
+         
             const limiteReached = hasReachedWorkLimit(
             selectedAdvisor,
             WorkStore.advisorWorks,

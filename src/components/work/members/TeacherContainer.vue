@@ -20,9 +20,7 @@ const checkWorks = () => {
         .concat(props.works.evaluatorWorks || []);
     return allWorks.length > 0;
 }
-onMounted(()=> {
-    console.log(props.works)
-})
+
 </script>
 <template>
     <div class="w-100 d-flex justify-center flex-column ga-10">

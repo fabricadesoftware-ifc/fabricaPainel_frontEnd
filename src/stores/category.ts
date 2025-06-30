@@ -43,7 +43,7 @@ export const useCategory = defineStore("categories", () => {
     try {
       const response = await CategoriesService.FilterField(name)
       state.themes = response;
-      console.log(state.themes)
+     
     } catch (error: any) {
       setError(error.message);
     } finally {

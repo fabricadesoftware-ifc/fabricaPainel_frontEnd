@@ -38,7 +38,7 @@ async function DialogActive(type) {
 
   if (type == 'Sim') {
     workStore.WorkStorage.integrated_project = true
-    console.log(workStore.WorkStorage)
+ 
   } else if (type == 'Não') {
     workStore.WorkStorage.integrated_project = false
   }
@@ -64,7 +64,7 @@ function NextStep() {
   }
 actualstep.value++
   // localStorage.setItem('actualstep', actualstep.value)
-  console.log(actualstep.value)
+  
 }
 
 const StepObj = computed(() => {
@@ -72,8 +72,7 @@ const StepObj = computed(() => {
 })
 
 function PrevStep() {
-  console.log(actualstep.value)
-  console.log(steps.value)
+
 
   if (actualstep.value <= 0) return 
 
@@ -96,7 +95,7 @@ onUnmounted(()=> {
   workStore.WorkStorage.team = []
   localStorage.removeItem('actualstep')
   resetSteps()
-  console.log(steps)
+
 })
 
 onMounted( async () => {

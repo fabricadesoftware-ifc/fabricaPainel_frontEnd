@@ -69,7 +69,7 @@ export const useWork = defineStore('work', () => {
     setError(null)
     try {
       const works = await WorkService.getWorks()
-      console.log(works)
+      
       state.value.works = works
     } catch (error: any) {
       setError(error.message)
@@ -212,7 +212,7 @@ export const useWork = defineStore('work', () => {
         state.value.evaluatorWorks = works.evaluator
 
       }
-      console.log(state.value.userWorks)
+    
       return works
     } catch (error: any) {
       setError(error.message)
@@ -225,7 +225,6 @@ export const useWork = defineStore('work', () => {
     setLoading(true)
     setError(null)
     try {
-      console.log('AAAAA GAY')
 
       await WorkService.approveWork(state.value.currentWork.verification_token)
       state.value.currentWork.status = 2

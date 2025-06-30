@@ -33,7 +33,7 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
     // console.log("collab status:", collab?.status);
     // console.log("collab verification_token:", collab?.verification_token);
     if (work.advisor.id == user.id) {
-      console.log('sim ddeu porra')
+     
       state.value.isAdvisor = true;
       state.value.advisorStatus = work.advisor_status; // 1=pendente, 2=aceito, 3=cancelado
       state.value.verificationToken = work.verification_token;

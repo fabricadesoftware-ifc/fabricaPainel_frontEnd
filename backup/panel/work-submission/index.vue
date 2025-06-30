@@ -74,7 +74,7 @@ onMounted(() => {
     actualstep.value = useractualstep
   }
   AuthStore.GetMe()
-  console.log(actualstep.value)
+  
 })
 </script>
 <template>

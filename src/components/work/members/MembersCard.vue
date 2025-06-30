@@ -47,9 +47,6 @@ const resolveAdvisorOrCollaboratorStatus = (status: Number | String) => {
     }
 }
 
-onMounted(()=> {
-    console.log(props.member_id)
-})
 </script>
 <template>
       <div class="d-flex justify-space-between">

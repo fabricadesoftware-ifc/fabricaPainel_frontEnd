@@ -38,7 +38,7 @@ function updateSearch(value) {
 }
 
 async function searchUsers(search) {
-  console.log(search)
+
   if (search.length < 3 || typeof search != "string") {
     noDataMessage.value = `Pesquise por um ${String(
       props.label

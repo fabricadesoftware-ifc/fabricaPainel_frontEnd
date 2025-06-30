@@ -28,7 +28,7 @@ const props = defineProps({
 
 const verifyUserWorks = async (user) => {
     const result = await WorkStore.fetchUserWorks(user.user_type, user.id)
-    console.log('Trabalhos encontrados:', result)
+   
 
     return result.some(work => 
     [1, 2, 3].includes(work.status) &&
@@ -62,7 +62,6 @@ const handleAddUser = async (selectedStudent) => {
     pushToTeam: (user) => WorkStore.WorkStorage.team.push(user)
   })
 
-  console.log(WorkStore.WorkStorage)
 }
 
 function removeUser(email) {
@@ -77,7 +76,7 @@ onMounted(async () => {
       currentTeam: WorkStore.WorkStorage.team,
       searchUserFn: AuthStore.searchUsers,  
     })
-    console.log(WorkStore.WorkStorage.team)
+ 
     WorkStore.WorkStorage.team = team
     }
     

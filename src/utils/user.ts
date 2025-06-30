@@ -81,7 +81,6 @@ export const AddUser = async ({
 }: AddUserParams): Promise<void> => {
   if (!selectedStudent) return
   //@ts-ignore
-  console.log(selectedStudent)
   if (selectedStudent.user.toString().length === 10) {
   const users = await searchUsersFn(selectedStudent.user.toString(), selectedStudent.user_type)
   

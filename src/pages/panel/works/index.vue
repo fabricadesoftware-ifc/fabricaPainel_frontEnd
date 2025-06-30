@@ -44,7 +44,7 @@ const loadSubmissions = async () => {
       evaluatorWorks: orderByStatusAndYear(workStore.evaluatorWorks, true),
     };
 
-    console.log((workStore.evaluatorWorks))
+   
     submissionsPast.value = {
       advisorWorks: orderByStatusAndYear(workStore.advisorWorks, false),
       collaboratorWorks: orderByStatusAndYear(workStore.collaboratorWorks, false),
@@ -70,7 +70,7 @@ onMounted(async () => {
     await loadSubmissions();
   }
 
-  console.log(workStore.evaluatorWorks)
+
 });
 </script>
 
