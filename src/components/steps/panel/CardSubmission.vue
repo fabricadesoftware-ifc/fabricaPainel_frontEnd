@@ -6,10 +6,12 @@ import { resolveStatus } from '@/utils/works';
 const props = defineProps({
     actual_title: {
         type: String,
-        required: true,
+        required: false,
+        default: 'Tema não disponível'
     },
     edition_title: {
         type: String,
+        default: 'Edição não disponível'
     },
     work: {
         type: String,

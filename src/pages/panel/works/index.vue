@@ -119,6 +119,7 @@ onMounted(async () => {
           :work_id="work.id"
           :work="work.edition?.final_submission_date"
           :work_status="work.status"
+          
         />
 
         <TeacherContainer
