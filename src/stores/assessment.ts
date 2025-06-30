@@ -94,7 +94,7 @@ export const useAssessmentStore = defineStore('assessment', () => {
     setError(null)
     try {
       const assessments = await AssessmentService.getAssessments()
-      console.log(assessments)
+    
       const filteredAssessments = assessments.filter((assessment: any) => assessment.work === workId)
       return filteredAssessments
     } catch (error: any) {

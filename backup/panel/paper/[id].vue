@@ -40,7 +40,7 @@ const messageStudent =
     : "";
 
 const verifyGrades = async () => {
-  console.log(state.assessments)
+  
   return state.assessments.filter((assess) => assess.work === work_id);
 };
 

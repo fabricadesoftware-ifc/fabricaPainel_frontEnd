@@ -61,9 +61,8 @@ const {
 const shouldShowButton = computed(() => {
   const uf = user_function.value;
   const ws = work_status.value;
-  console.log(evaluator_able_to_give_grade.value)
 
-  console.log(uf, ws)
+
   if (uf === "STUDENT") {
     return student_able_to_cancel.value && ws === 1 || ws === 3;
   } else if (uf === "ADVISOR") {
@@ -89,7 +88,6 @@ watch(
 );
 
 onMounted(() => {
-    console.log(user_function.value, work_status.value)
   validate_user_function(user_function.value, work_status.value);
 });
 </script>

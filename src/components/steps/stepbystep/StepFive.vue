@@ -14,9 +14,6 @@ const RowComputed = computed(() => {
     return 15
 })
 
-onMounted(() => {
-    console.log(editionStore.currentEdition)
-})
 </script>
 <template>
     <div class="w-100 pa-2 d-flex flex-column ga-5 max-w-100 ">

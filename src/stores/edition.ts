@@ -133,7 +133,7 @@ export const useEdition = defineStore('edition', () => {
     try {
       const editions = await EditionsService.getEditions()
       state.value.editions = editions
-      console.log(editions)
+
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -147,7 +147,7 @@ export const useEdition = defineStore('edition', () => {
     try {
       const edition = await EditionsService.getOpenEdition()
       state.value.currentEdition = edition
-      console.log(edition)
+   
     } catch (error: any) {
       setError(error.message)
     } finally {

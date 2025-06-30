@@ -39,7 +39,7 @@
   onMounted( async () => {
     await workStore.fetchUserWorks()
     await EditionStore.fetchCurrentEdition()
-    console.log(workStore.userWorks[0])
+   
   })
 </script>
 <template>

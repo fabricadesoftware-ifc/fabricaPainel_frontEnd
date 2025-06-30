@@ -62,10 +62,10 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
   const rejectAsCollaborator = async () => {
     setLoading(true);
     setError(null);
-    console.log(state.value.verificationToken)
+
     try {
       if (!state.value.verificationToken) throw new Error("Token de verificação não encontrado.");
-      console.log('aq ta vindo')
+     
       await AcceptanceService.rejectCollaboratorWork(state.value.verificationToken);
          showMessage('Colaboração rejeitada com sucesso!', 'success', 2000, 'top-right', 'light', true)
       state.value.rejected = true;

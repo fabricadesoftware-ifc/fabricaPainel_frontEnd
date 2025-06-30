@@ -31,7 +31,7 @@ class AcceptanceService {
       const { data } = await api.get(`accept-collaborator-work/${verificationToken}/`);
       return data;
     } catch (error) {
-      console.log(error)
+   
       this.handleError(error, "accept collaborator work");
     }
   }

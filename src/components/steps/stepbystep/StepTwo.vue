@@ -15,9 +15,9 @@ const autocompleteRef = ref(null)
 const selectedSub = ref(null)
 
 function selectedOds(value){
-    console.log(value)
+    
     WorkStore.WorkStorage.ods = value
-    console.log(WorkStore.WorkStorage.ods)
+    
 }
 
 
@@ -45,8 +45,7 @@ const AddSubject = (value) => {
 }
 
 function RemoveSubject(value) {
-    console.log(WorkStore.WorkStorage.field)
-    console.log(value)
+    
     const findField = WorkStore.WorkStorage.field.findIndex(s => s.id === value)
     subjectFiltered.value.push(WorkStore.WorkStorage.field[findField])
     WorkStore.WorkStorage.field.splice(findField, 1)

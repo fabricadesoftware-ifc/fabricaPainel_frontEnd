@@ -103,6 +103,6 @@ export const hasReachedWorkLimit = (
     }
   }
 
-  console.log(`${user.email}_activeWorks: ${activeWorks}/${maxWorks}`, userWorks);
+ 
   return activeWorks >= maxWorks;
 };

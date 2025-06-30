@@ -7,10 +7,6 @@ const authStore = useAuth();
 const { lgAndUp } = useDisplay()
 const { isMobile } = useScreen();
 
-onMounted(() => {
-  console.log(isMobile.value);
-});
-
 
 </script>
 

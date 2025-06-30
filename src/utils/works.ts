@@ -46,7 +46,7 @@ type Advisor = { id: number | string }
 type Work = { advisor: Advisor, work_collaborator: Array<any>, evaluator: Array<any> }
 //@ts-ignore
 export const resolveUserFunction = (work:Work, user) => {
-  console.log(work)
+  
     const advisor = work.advisor.id == user.id
     const evaluator = work.evaluator.some((s) => s.user.id == user.id)
     const collaborator = work.work_collaborator.some((s) => s.collaborator.id == user.id)
@@ -92,12 +92,12 @@ type StoreWithRejectWork = {
 }
 
 export const removeWork = async (id: String, store: StoreWithRemoveWork, token: String) => {
-    console.log(store)
+ 
   await store.removeWork(id, token)
 }
 
 export const aproveWork = async (verification_token: String, store: StoreWithAproveWork) => {
-  console.log('aq tambme')
+
   await store.approveWork(verification_token)
 }
 
@@ -107,7 +107,7 @@ export const rejectWork = async (verification_token: String, store: StoreWithRej
 
 
 export const validate_user_function = (user_function: string, work_status: Number) => {
-  console.log(user_function)
+
 
   if (user_function === 'EVALUATOR' || user_function === 'ADVISOR') {
     if (work_status == 2) {

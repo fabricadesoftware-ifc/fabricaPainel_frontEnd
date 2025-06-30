@@ -36,9 +36,6 @@ const props = defineProps({
 
 // id do avaliador é == id do user ou id do colaborador == id do user
 
-onMounted(()=> {
-    console.log(props.collaborators_id)
-})
 </script>
 <template>
     <div class="w-100">
@@ -52,7 +49,7 @@ onMounted(()=> {
                         <VCardSubtitle>{{ work }}</VCardSubtitle>
                         <V-Chip :color="resolveStatus(props.work_status).color">{{ resolveStatus(props.work_status).text }}</V-Chip>
                     </div>
-                    <div @click="router.push(`/panel/works/view/${props.work_id}`)" class="d-flex justify-center align-center text-blue ga-2 cursor-pointer">
+                    <div @click="router.push(`/panel/works/view/${props.work_id}`)" class="d-flex pa-2 hover-button justify-center align-center text-blue ga-2 cursor-pointer">
                         <VIcon icon="mdi-open-in-new"></VIcon>
                         <p>Ver Submissão</p>
                     </div>
@@ -61,3 +58,13 @@ onMounted(()=> {
         </div>
     </div>
 </template>
+
+<style scoped>
+.hover-button {
+        border-radius: 30px;
+}
+.hover-button:hover {
+        transition: 0.5s ease-in-out;
+        background-color: rgba(28, 150, 231, 0.3);
+}
+</style>

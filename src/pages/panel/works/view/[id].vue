@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // @ts-ignore
-import { onMounted, reactive, computed, ref } from "vue";
+import { onMounted, reactive, computed, ref, watch } from "vue";
 // @ts-ignore
 import { useRouter } from "vue-router";
 import { useWork } from "@/stores/work";
@@ -34,9 +34,6 @@ const usersValidation = reactive({
 
 const datesValidation = computed(() => {
 
-  console.log('fim segunda submissao',  editionStore.currentEdition?.final_second_submission_date,
-    'fim do orientador', editionStore.currentEdition?.final_second_advisor_date, 'fim do evaluator', editionStore.currentEdition?.final_evaluators_date
-  )
   usersValidation.student_able_to_cancel =
     date <
     new Date(
@@ -68,12 +65,16 @@ const tokenExpired = authStore.isTokenExpired();
 
 const uptadeWorkStatus = computed(() => workStore.currentWork?.status ?? 1);
 const isLoaded = ref(false);
+
+// watch((newStore) => {
+
+// })
 onMounted(async () => {
   await workStore.getWork(work_id);
   await editions.getOpenEdition();
-  acceptanceStore.setCollaboratorInfo(workStore.currentWork);
-  advisorAcceptanceStore.setAdvisorInfo(workStore.currentWork)
-  console.log(workStore.currentWork);
+  acceptanceStore.setCollaboratorInfo(workStore?.currentWork);
+  advisorAcceptanceStore.setAdvisorInfo(workStore?.currentWork)
+ 
    isLoaded.value = true;
 });
 
@@ -84,14 +85,14 @@ const confirmsAction = (confirm: string) => {
   if (confirm === "Confirmar") {
     if (authStore.user.is_advisor) {
       if (datesValidation.value.advisor_able_to_aprove_work) {
-        console.log('realmente chego na view')
+       
         userCase?.function && userCase.function(
           workStore.currentWork?.verification_token, workStore
         )
         aprove.value = false
       }
     } else if (authStore.user.is_evaluator) {
-      console.log("evaluator give grade");
+      
     } else {
       if (!tokenExpired) {
 
@@ -221,14 +222,15 @@ const confirmsAction = (confirm: string) => {
         
       </div>
 
-      <acceptance-work
+      
+</v-fade-transition>
+<acceptance-work
         v-if="acceptanceStore.state.isCollaborator && acceptanceStore.state.collaboratorStatus === 1 && uptadeWorkStatus != 4"
         :work="workStore.currentWork"
       />
 
-      <AcceptanceAdvisorWork v-if="advisorAcceptanceStore.state.isAdvisor && workStore.currentWork.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3"
-        :work="workStore.currentWork" />
-</v-fade-transition>
+      <AcceptanceAdvisorWork v-if="advisorAcceptanceStore.state.isAdvisor && workStore?.currentWork.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3"
+        :work="workStore?.currentWork" />
     </v-container>
   </LayoutPanel>
   <div v-else class="d-flex align-center justify-center h-100 w-100">

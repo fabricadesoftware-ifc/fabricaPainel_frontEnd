@@ -228,7 +228,7 @@ export const useAuth = defineStore("user", () => {
 
   const GetMe = async () => {
       state.value.user = await authService.GetMe()
-      console.log(state.value.user)
+  
   }
 
   const getUserTeam = async () => {
@@ -272,9 +272,9 @@ export const useAuth = defineStore("user", () => {
 
   const createTeam = async (team: any) => {
     try {
-      console.log(team)
+      
       const data = await authService.createTeam(team);
-      console.log(data)
+      
       await getTeam(data.id);
     } catch (error: any) {
       showMessage(
@@ -345,7 +345,7 @@ export const useAuth = defineStore("user", () => {
   const searchUsers = async (search: string, type: string) => {
     try {
       const data = await authService.searchUsers(search, type);
-      console.log(data, type)
+     
       return data;
     } catch (error) {
       console.error(error);
@@ -356,7 +356,7 @@ export const useAuth = defineStore("user", () => {
   const searchTeacher = async (search: string, type: string) => {
     try {
       const data = await authService.searchTeacher(search, type);
-      console.log(data, type)
+      
       return data;
     } catch (error) {
       console.error(error);
