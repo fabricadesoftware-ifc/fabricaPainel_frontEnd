@@ -50,14 +50,14 @@
         <VChip :class="is_submit ? 'bg-green' : 'bg-red'">{{ is_submit ? 'trabalho submetido' : 'trabalho ainda não submetido' }}</VChip>
       </div>
       <div class="d-flex pa-10 flex-column w-100 justify-space-between align-center">
-        <CardSubmission :actual_title="EditionStore.currentEdition.theme" :work="SubmissionVerify?.work" :work_status="SubmissionVerify?.status"/>
+        <CardSubmission :actual_title="EditionStore?.currentEdition?.theme" :work="SubmissionVerify?.work" :work_status="SubmissionVerify?.status"/>
       </div>
       <div class="d-flex justify-space-between align-center text-h6">
         <h1 class="font-weight-bold" style="font-size: 30px;">Edições anteriores</h1>
       </div>
       <div >
         <div v-if="verifySubmitWork.length > 0">
-          <CardSubmission v-for="works in verifySubmitWork" :key="works.id" :work="works.edition.final_submission_date" :work_status="2" :edition_title="works.edition.theme"/>
+          <CardSubmission v-for="works in verifySubmitWork" :key="works.id" :work="works.edition.final_submission_date" :work_status="2" :actual_title="works.edition.theme"/>
         </div>
         <div class="pa-5" v-else>
             <h1 class="text-h6 text-center">Você não tem trabalhos submetidos em edições anteriores</h1>

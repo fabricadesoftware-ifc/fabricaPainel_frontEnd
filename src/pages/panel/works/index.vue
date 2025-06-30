@@ -89,7 +89,7 @@ onMounted(async () => {
       <div class="mb-10">
         <div class="d-flex align-center mt-10 mb-10 ga-5 w-100">
           <h1 class="text-h5 font-weight-bold" style="font-size: 30px">
-            {{ EditionStore.currentEdition.edition_name }}
+            {{ EditionStore.currentEdition?.edition_name }}
           </h1>
           <VChip
             class="bg-blue d-flex justify-center align-center"
@@ -103,7 +103,7 @@ onMounted(async () => {
           v-if="!is_submit && UserStore.user.user_type == 'STUDENT'"
           :date="
             new Date() <
-            new Date(EditionStore.currentEdition.final_second_submission_date)
+            new Date(EditionStore.currentEdition?.final_second_submission_date)
           "
         />
 
@@ -117,7 +117,7 @@ onMounted(async () => {
           v-for="(work, index) in submissionsCurrent"
           :key="index"
           :work_id="work.id"
-          :work="work.edition.final_submission_date"
+          :work="work.edition?.final_submission_date"
           :work_status="work.status"
         />
 
@@ -131,7 +131,7 @@ onMounted(async () => {
               v-for="(work, index) in submissionsCurrent.evaluatorWorks"
               :key="index"
               :work_id="work.id"
-              :work="work.edition.final_submission_date"
+              :work="work.edition?.final_submission_date"
               :work_status="work.status"
             />
           </template>
@@ -141,7 +141,7 @@ onMounted(async () => {
               v-for="(work, index) in submissionsCurrent.advisorWorks"
               :key="index"
               :work_id="work.id"
-              :work="work.edition.final_submission_date"
+              :work="work.edition?.final_submission_date"
               :work_status="work.status"
               :user="UserStore.user"
               :work_data="work"
@@ -154,7 +154,7 @@ onMounted(async () => {
               v-for="(work, index) in submissionsCurrent.collaboratorWorks"
               :key="index"
               :work_id="work.id"
-              :work="work.edition.final_submission_date"
+              :work="work.edition?.final_submission_date"
               :work_status="work.status"
               :user="UserStore.user"
               :work_data="work"
@@ -186,11 +186,11 @@ onMounted(async () => {
      
           <CardSubmission
             v-for="(works, index) in submissionsPast"
-            :key="works.id"
-            :work="works.edition.final_submission_date"
+            :key="works?.id"
+            :work="works?.edition.final_submission_date"
             :work_id="works.id"
-            :work_status="works.status"
-            :edition_title="index == 0 ? works.edition.edition_name : ''"
+            :work_status="works?.status"
+            :edition_title="index == 0 ? works?.edition.edition_name : ''"
           />
         </div>
 
@@ -203,9 +203,9 @@ onMounted(async () => {
             <CardSubmission
               v-for="(work, index) in submissionsPast.evaluatorWorks"
               :key="index"
-              :work_id="work.id"
-              :work="work.edition.final_submission_date"
-              :work_status="work.status"
+              :work_id="work?.id"
+              :work="work?.edition.final_submission_date"
+              :work_status="work?.status"
             />
           </template>
 
@@ -213,9 +213,9 @@ onMounted(async () => {
             <CardSubmission
               v-for="(work, index) in submissionsPast.advisorWorks"
               :key="index"
-              :work_id="work.id"
-              :work="work.edition.final_submission_date"
-              :work_status="work.status"
+              :work_id="work?.id"
+              :work="work?.edition.final_submission_date"
+              :work_status="work?.status"
             />
           </template>
 
@@ -223,9 +223,9 @@ onMounted(async () => {
             <CardSubmission
               v-for="(work, index) in submissionsPast.collaboratorWorks"
               :key="index"
-              :work_id="work.id"
-              :work="work.edition.final_submission_date"
-              :work_status="work.status"
+              :work_id="work?.id"
+              :work="work?.edition.final_submission_date"
+              :work_status="work?.status"
             />
           </template>
         </TeacherContainer>

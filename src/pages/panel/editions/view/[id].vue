@@ -59,33 +59,33 @@ const defaultBanner =
                 <span class="text-primary font-weight-bold">INFORMAÇÕES</span>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Nome:</span>
-                  <span>{{ edition.edition_name }}</span>
+                  <span>{{ edition?.edition_name }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data do Evento:</span>
-                  <span>{{ formatDate(edition.event_date) }}</span>
+                  <span>{{ formatDate(edition?.event_date) }}</span>
                 </row>
                 <span class="text-primary font-weight-bold">PRAZOS E DATAS</span>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data de início de Submissão:</span>
-                  <span>{{ formatDate(edition.initial_submission_date) }}</span>
+                  <span>{{ formatDate(edition?.initial_submission_date) }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data de fim de Submissão:</span>
-                  <span>{{ formatDate(edition.final_submission_date) }}</span>
+                  <span>{{ formatDate(edition?.final_submission_date) }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data de início de Avaliações:</span>
-                  <span>{{ formatDate(edition.initial_evaluators_date) }}</span>
+                  <span>{{ formatDate(edition?.initial_evaluators_date) }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data de fim de Avaliações</span>
-                  <span>{{ formatDate(edition.final_evaluators_date) }}</span>
+                  <span>{{ formatDate(edition?.final_evaluators_date) }}</span>
                 </row>
                 <v-btn @click="showinfo()" class="bg-blue">{{textButton}}</v-btn>
               </v-col>
               <v-col>
-                <img alt="" class="w-100 rounded-xl" :src="edition.banner?.file || defaultBanner" />
+                <img alt="" class="w-100 rounded-xl" :src="edition?.banner?.file || defaultBanner" />
               </v-col>
             </v-row>
           </div>
@@ -100,15 +100,15 @@ const defaultBanner =
                 </div>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Nome:</span>
-                  <span>{{ edition.edition_name }}</span>
+                  <span>{{ edition?.edition_name }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data do Evento:</span>
-                  <span>{{ formatDate(edition.event_date) }}</span>
+                  <span>{{ formatDate(edition?.event_date) }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Carga Horária</span>
-                  <span>{{ edition.workload }}H</span>
+                  <span>{{ edition?.workload }}H</span>
                 </row>
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">
                   <span class="text-primary font-weight-bold">PRAZOS E DATAS</span>
@@ -116,31 +116,31 @@ const defaultBanner =
                 </div>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data do Final do Evento:</span>
-                  <span>{{ formatDate(edition.final_event_date) }}</span>
+                  <span>{{ formatDate(edition?.final_event_date) }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data de início de Submissão:</span>
-                  <span>{{ formatDate(edition.initial_submission_date) }}</span>
+                  <span>{{ formatDate(edition?.initial_submission_date) }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data de fim de Submissão:</span>
-                  <span>{{ formatDate(edition.final_submission_date) }}</span>
+                  <span>{{ formatDate(edition?.final_submission_date) }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Segunda Data de início de Submissão:</span>
-                  <span>{{ formatDate(edition.initial_second_submission_date) }}</span>
+                  <span>{{ formatDate(edition?.initial_second_submission_date) }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Segunda Data de fim de Submissão:</span>
-                  <span>{{ formatDate(edition.final_second_submission_date) }}</span>
+                  <span>{{ formatDate(edition?.final_second_submission_date) }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data de início de Avaliações:</span>
-                  <span>{{ formatDate(edition.initial_evaluators_date) }}</span>
+                  <span>{{ formatDate(edition?.initial_evaluators_date) }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Data de fim de Avaliações</span>
-                  <span>{{ formatDate(edition.final_evaluators_date) }}</span>
+                  <span>{{ formatDate(edition?.final_evaluators_date) }}</span>
                 </row>
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">
                   <span class="text-primary font-weight-bold">LIMITES POR PROJETO</span>
@@ -148,35 +148,35 @@ const defaultBanner =
                 </div>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite Mínimo de Membros na Equipe</span>
-                  <span>{{ edition.members_min }}</span>
+                  <span>{{ edition?.members_min }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite Máximo de Membros na Equipe</span>
-                  <span>{{ edition.members_max }}</span>
+                  <span>{{ edition?.members_max }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite Mínimo de Colaboradores no Projeto</span>
-                  <span>{{ edition.collaborators_min }}</span>
+                  <span>{{ edition?.collaborators_min }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite Máximo de Colaboradores no Projeto</span>
-                  <span>{{ edition.collaborators_max }}</span>
+                  <span>{{ edition?.collaborators_max }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite Mínimo de Matérias</span>
-                  <span>{{ edition.subjects_min }}</span>
+                  <span>{{ edition?.subjects_min }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite Máximo de Matérias</span>
-                  <span>{{ edition.subjects_max }}</span>
+                  <span>{{ edition?.subjects_max }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Quantidade de Avaliadores</span>
-                  <span>{{ edition.evaluators_count }}</span>
+                  <span>{{ edition?.evaluators_count }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Límite Máximo de Caracteres por Projeto</span>
-                  <span>{{ edition.words_per_work_max }}</span>
+                  <span>{{ edition?.words_per_work_max }}</span>
                 </row>
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">
                   <span class="text-primary font-weight-bold">LIMITES DE CARGO</span>
@@ -184,15 +184,15 @@ const defaultBanner =
                 </div>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite de Projetos por Avaliador</span>
-                  <span>{{ edition.works_per_evaluator_max }}</span>
+                  <span>{{ edition?.works_per_evaluator_max }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite de Projetos por Colaborador</span>
-                  <span>{{ edition.works_per_collaborator_max }}</span>
+                  <span>{{ edition?.works_per_collaborator_max }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Limite de Projetos por Coordenador</span>
-                  <span>{{ edition.works_per_advisor_max }}</span>
+                  <span>{{ edition?.works_per_advisor_max }}</span>
                 </row>
               </div>
               <v-btn @click="showinfo()" class="bg-blue">{{textButton}}</v-btn>
