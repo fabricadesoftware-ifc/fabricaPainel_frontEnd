@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { useScreen } from "@/composables/composables";
 import { useAuth } from "@/stores/auth";
 import { useDisplay } from "vuetify";
 import { downloadPdf } from "@/utils/user";
 const authStore = useAuth();
 const { lgAndUp } = useDisplay()
-const { isMobile } = useScreen();
+
 
 
 </script>
