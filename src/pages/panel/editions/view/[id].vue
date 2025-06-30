@@ -38,8 +38,6 @@ function showinfo(){
   seemore.value = !seemore.value
   textButton.value = seemore.value ? 'Fechar' : 'Ver Mais'
 }
-const defaultBanner =
-  "https://th.bing.com/th/id/OIP.MQJrIQeghQLdcs1uFBZHzwHaEp?rs=1&pid=ImgDetMain"; //reitrar
 </script>
 
 <template>
@@ -85,7 +83,7 @@ const defaultBanner =
                 <v-btn @click="showinfo()" class="bg-blue">{{textButton}}</v-btn>
               </v-col>
               <v-col>
-                <img alt="" class="w-100 rounded-xl" :src="edition?.banner?.file || defaultBanner" />
+                <img alt="" class="w-100 rounded-xl" :src="edition?.banner?.file" />
               </v-col>
             </v-row>
           </div>
