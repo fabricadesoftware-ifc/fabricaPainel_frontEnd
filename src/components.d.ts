@@ -28,6 +28,7 @@ declare module 'vue' {
     FinalStep: typeof import('./components/steps/stepbystep/FinalStep.vue')['default']
     FooterComp: typeof import('./components/globals/layout/FooterComp.vue')['default']
     FooterComp2: typeof import('./components/globals/layout/FooterComp2.vue')['default']
+    IndividualGrade: typeof import('./components/inputs/assesment/IndividualGrade.vue')['default']
     InformativeAlert: typeof import('./components/globals/InformativeAlert.vue')['default']
     IsDevV: typeof import('./components/IsDevV.vue')['default']
     IssuesPreviewV: typeof import('./components/IssuesPreviewV.vue')['default']
@@ -65,6 +66,7 @@ declare module 'vue' {
     TitleH1: typeof import('./components/globals/TitleH1.vue')['default']
     UserList: typeof import('./components/auth/UserList.vue')['default']
     UserMenu: typeof import('./components/globals/UserMenu.vue')['default']
+    WorkGrade: typeof import('./components/inputs/assesment/WorkGrade.vue')['default']
     WorkHeader: typeof import('./components/work/WorkHeader.vue')['default']
   }
 }
