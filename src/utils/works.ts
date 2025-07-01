@@ -46,7 +46,7 @@ type Advisor = { id: number | string }
 type Work = { advisor: Advisor, work_collaborator: Array<any>, evaluator: Array<any> }
 //@ts-ignore
 export const resolveUserFunction = (work:Work, user) => {
-  
+
     const advisor = work.advisor.id == user.id
     const evaluator = work.evaluator.some((s) => s.user.id == user.id)
     const collaborator = work.work_collaborator.some((s) => s.collaborator.id == user.id)
