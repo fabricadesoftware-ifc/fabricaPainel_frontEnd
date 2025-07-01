@@ -72,6 +72,7 @@ const isLoaded = ref(false);
 onMounted(async () => {
   await workStore.getWork(work_id);
   await editions.getOpenEdition();
+  console.log(workStore.currentWork)
   acceptanceStore.setCollaboratorInfo(workStore?.currentWork);
   advisorAcceptanceStore.setAdvisorInfo(workStore?.currentWork)
  
@@ -79,6 +80,7 @@ onMounted(async () => {
 });
 
 const aprove = ref(false);
+const workGrade = ref(false);
 const confirmation = ref(false);
 
 const confirmsAction = (confirm: string) => {
@@ -120,6 +122,27 @@ const confirmsAction = (confirm: string) => {
     confirmation.value = false;
   }
 };
+
+const giveWorkGrade = (grade) => {
+  
+}
+
+const handleWorkHeaderAction = () => {
+  const userFunction = resolveUserFunction(workStore.currentWork, authStore.user);
+  const status = uptadeWorkStatus.value;
+  console.log(userFunction == 'EVALUATOR') 
+    
+  console.log(status)
+  if ([1, 2, 3].includes(status) && userFunction === 'STUDENT') {
+    confirmation.value = !confirmation.value;
+  } else if (status === 2 && userFunction != 'EVALUATOR') {
+    confirmation.value = !confirmation.value;
+  } else if (userFunction == 'EVALUATOR') {
+    workGrade.value = !workGrade.value;
+  } else {
+    aprove.value = !aprove.value;
+  }
+}
 </script>
 
 <template>
@@ -128,6 +151,7 @@ const confirmsAction = (confirm: string) => {
        <v-fade-transition appear>
       <div class="d-flex flex-column ga-10">
 
+        <WorkGrade @close="workGrade = !workGrade" v-model="workGrade" />
 
         <StepDialog
           :btn_cancel_text="'Cancelar'"
@@ -153,7 +177,7 @@ const confirmsAction = (confirm: string) => {
         <WorkHeader v-if="isLoaded"
         :key="work_id"
           :work_status="uptadeWorkStatus"
-          @buttonAction="[1,2,3].includes(uptadeWorkStatus) && resolveUserFunction(workStore?.currentWork, authStore.user) == 'STUDENT' ? confirmation = !confirmation : uptadeWorkStatus == 2 ? confirmation = !confirmation : aprove = !aprove"
+          @buttonAction="handleWorkHeaderAction"
           :student_able_to_cancel="datesValidation.student_able_to_cancel"
           :advisor_able_to_give_grade="datesValidation.advisor_able_to_give_grade"
           :evaluator_able_to_give_grade="datesValidation.evaluator_able_to_give_grade"
