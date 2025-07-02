@@ -7,6 +7,7 @@ import { useEdition } from "@/stores/edition";
 import { useCollaboratorAcceptance } from "@/stores/collaboratorAcceptance";
 import { useAdvisorAcceptance } from "@/stores/advisorAcceptance";
 import { useAssessmentStore } from "@/stores/assessment";
+import { useStudentAssessment } from "@/stores/studentAssessment";
 import editions from "@/services/editions";
 
 import { buildUserValidations} from "@/utils/work_view/validations";
@@ -27,9 +28,10 @@ const editionStore = useEdition();
 const acceptanceStore = useCollaboratorAcceptance();
 const advisorAcceptanceStore = useAdvisorAcceptance();
 const assesmentStore = useAssessmentStore();
+const studentAssesment = useStudentAssessment();
 
 const date = new Date();
-const assesmentWork = computed(() => assesmentStore?.currentAssessment)
+const assesmentWork = ref(null)
 
 const usersValidation = reactive(
   buildUserValidations(date, editionStore, workStore)
@@ -43,7 +45,7 @@ onMounted(async () => {
   await workStore.getWork(work_id);
   await editions.getOpenEdition();
   await assesmentStore.getAssessmentsByWork(workStore?.currentWork?.id)
-  console.log(assesmentWork.value)
+  assesmentWork.value = assesmentStore.currentAssessment[0]?.grade
   acceptanceStore.setCollaboratorInfo(workStore?.currentWork);
   advisorAcceptanceStore.setAdvisorInfo(workStore?.currentWork);
   isLoaded.value = true;
@@ -52,6 +54,8 @@ onMounted(async () => {
 const aprove = ref(false);
 const workGrade = ref(false);
 const confirmation = ref(false);
+const userGrade = ref(false)
+const memberGrade = ref<any>(null)
 
 const confirmsAction = (confirm: string) => {
   confirmsActionFn(
@@ -71,20 +75,31 @@ const confirmsAction = (confirm: string) => {
 
 interface Grade {
   work_grade: number;
-  comittee_feedback: string;
+  is_work_grade: boolean;
 }
 
 const giveWorkGrade = async (grade: Grade) => {
   await giveWorkGradeFn(
-    grade,
+    grade.work_grade,
     workStore,
     authStore,
     date,
     work_id,
     assesmentStore,
-    () => (workGrade.value = false)
+    studentAssesment,
+    memberGrade.value,
+    grade.is_work_grade,
+
+    () => (grade.is_work_grade ? workGrade.value = false : userGrade.value = false)
   );
+
+  if (grade.is_work_grade) {
    await assesmentStore.getAssessmentsByWork(workStore?.currentWork?.id)
+   assesmentWork.value = assesmentStore.currentAssessment[0].grade
+  } else {
+    await studentAssesment.fetchAssessment(memberGrade.value.name, workStore?.currentWork?.id)
+    assesmentWork.value = studentAssesment.assesment[0].grade
+  }
 };
 
 const handleWorkHeaderAction = () => {
@@ -93,7 +108,14 @@ const handleWorkHeaderAction = () => {
     workGrade: () => (workGrade.value = !workGrade.value),
     aprove: () => (aprove.value = !aprove.value),
   });
+
+ 
 };
+
+ const openUserGrade = (member: object) => {
+    userGrade.value = !userGrade.value
+    memberGrade.value = member
+  }
 </script>
 
 <template>
@@ -102,6 +124,8 @@ const handleWorkHeaderAction = () => {
       <v-fade-transition appear>
         <div class="d-flex flex-column ga-10">
           <WorkGrade @giveGrade="giveWorkGrade" @close="workGrade = !workGrade" v-model="workGrade" />
+
+          <IndividualGrade :user="memberGrade" @giveGrade="giveWorkGrade" @close="userGrade = !userGrade" v-model="userGrade" />
 
           <StepDialog
             :btn_cancel_text="'Cancelar'"
@@ -133,7 +157,7 @@ const handleWorkHeaderAction = () => {
             :evaluator_able_to_give_grade="usersValidation.evaluator_able_to_give_grade"
             :advisor_able_to_aprove_work="usersValidation.advisor_able_to_aprove_work"
             :user_function="resolveUserFunction(workStore.currentWork, authStore.user)"
-            :grade="assesmentWork[0]?.grade"
+            :grade="assesmentWork"
             :status_content="resolveStatus(workStore.currentWork.status)?.text || 'Não informado'"
             :status_color="resolveStatus(workStore.currentWork.status)?.color || 'Não informado'"
             :title="workStore.currentWork.title"
@@ -162,6 +186,9 @@ const handleWorkHeaderAction = () => {
               :member="student"
               :user_id="authStore.user.id"
               :key="index"
+              :work_advisor="workStore?.currentWork?.advisor ?? null"
+              :is_student="true"
+              @open-student-assesment="openUserGrade(student)"
             />
           </MembersContainer>
 
@@ -174,6 +201,7 @@ const handleWorkHeaderAction = () => {
               :member="workStore.currentWork.advisor"
               :member_id="workStore.currentWork.advisor.id"
               :user_id="authStore.user.id"
+              :work_advisor="workStore?.currentWork?.advisor ?? null"
             />
           </MembersContainer>
 
@@ -187,6 +215,7 @@ const handleWorkHeaderAction = () => {
               :member_id="collaborator.collaborator.id"
               :status="collaborator.status"
               :user_id="authStore.user.id"
+              :work_advisor="workStore?.currentWork?.advisor ?? null"
               :key="index"
             />
           </MembersContainer>

@@ -7,6 +7,9 @@ export async function giveWorkGradeFn(
   date: Date,
   work_id: any,
   assessmentStore: any,
+  studentAssesmentStore: any,
+  user: any,
+  is_work_grade: any,
   closeDialog: () => void
 ): Promise<void> {
   
@@ -14,14 +17,27 @@ export async function giveWorkGradeFn(
     (s: any) => s.user.id === Number(authStore?.user?.id)
   )?.id;
 
+  if (is_work_grade) {
+
   const assessment: any = {
     evaluator: work_evaluator,
     work: work_id,
-    grade: grade.work_grade,
+    grade: grade,
     date_time: date.toISOString(),
-    comittee_feedback: grade.comittee_feedback,
+    comittee_feedback: '',
   };
 
   await assessmentStore.createAssessment(assessment);
+  } else {
+    const assessment: any = {
+    work: work_id,
+    grade: grade,
+    date_time: date.toISOString(),
+    student: user.id,
+  };
+
+  await studentAssesmentStore.createAssessment(assessment);
+  }
   closeDialog();
+  
 }

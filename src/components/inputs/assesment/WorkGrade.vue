@@ -24,11 +24,7 @@ watch(grade, (newVal) => {
 const emits = defineEmits(['giveGrade', 'close'])
 
 const sendWorkData = () => {
-    emits('giveGrade', {
-    work_grade: grade.value,
-    comittee_feedback: feedback.value
-    }
-    )
+    emits('giveGrade', { work_grade: grade.value, is_work_grade: true })
 } 
 </script>
 <template>
@@ -55,11 +51,6 @@ const sendWorkData = () => {
 
         <div>
             
-        <div class="d-flex w-100 flex-column ga-3">
-            <p style="font-size: 20px;" class="text-grey-darken-3">Mensagem de feedback</p>
-
-            <v-textarea name="input-7-1" variant="filled" auto-grow v-model="feedback"></v-textarea>
-        </div>
         <VCardActions class="w-100 d-flex  justify-end">
           <VBtn class="font-weight-bold" @click="emits('close')"> cancelar 
           <template #prepend></template></VBtn>
