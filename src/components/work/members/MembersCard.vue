@@ -87,7 +87,7 @@ onMounted(async ()=> {
 
 watch(studentAssesment.assesments, async (newVal) => {
         await studentAssesment.fetchAssessment(props.member.name,  workStore?.currentWork.id)
-        grade.value = studentAssesment.assesment[0].grade
+        grade.value = studentAssesment?.assesment[0]
 })
 
 watch(watchWork, async (newVal) => {

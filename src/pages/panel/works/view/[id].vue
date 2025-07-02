@@ -98,7 +98,6 @@ const giveWorkGrade = async (grade: Grade) => {
    assesmentWork.value = assesmentStore.currentAssessment[0].grade
   } else {
     await studentAssesment.fetchAssessment(memberGrade.value.name, workStore?.currentWork?.id)
-    assesmentWork.value = studentAssesment.assesment[0].grade
   }
 };
 
