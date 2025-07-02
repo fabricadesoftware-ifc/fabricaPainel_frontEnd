@@ -2,10 +2,12 @@
 
 import { useStudentAssessment } from '@/stores/studentAssessment'
 import { useAssessmentStore } from '@/stores/assessment'
+import { useAuth } from '@/stores/auth'
 import { useWork } from '@/stores/work'
 
 const studentAssesment = useStudentAssessment()
 const assesmentStore = useAssessmentStore()
+const authStore = useAuth()
 const workStore = useWork()
 // @ts-ignore
 const props = defineProps({
@@ -122,7 +124,7 @@ watch(watchWork, async (newVal) => {
                         {{  assesmentStore?.currentAssessment ? (Number(assesmentStore?.currentAssessment[0]?.grade) + Number(grade.grade))/2 :  grade.grade }}
                         </v-chip>
 
-                        <v-chip v-if="props.is_student && props.work_advisor.id != props.user_id && props.is_student"
+                        <v-chip v-if="props.is_student && props.work_advisor.id != props.user_id && !authStore.user.is_collaborator && !authStore.user.is_evaluator && props.is_student"
                         :color="!grade ? 'yellow-darken-3' : 'green-darken-3'"
                         class="d-flex justify-center align-center" label style="width: 150px">
                         {{ !grade ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' : grade.grade }}
