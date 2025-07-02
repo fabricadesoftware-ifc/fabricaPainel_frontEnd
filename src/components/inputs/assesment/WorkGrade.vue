@@ -1,18 +1,35 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { defineEmits } from 'vue';
 const grade = ref(0)
+const feedback = ref('')
 
-const showGrade = () => {
-    console.log(grade.value)
-}
-
-const rules = [
-    v => v > 10 || 'A nota deve ser no máximo 10',
-    v => v < 10 || 'A nota deve ser no mínimo 0',
-    v => v !== null && v !== '' || 'A nota é obrigatória',
-]
+watch(grade, (newVal) => {
+    
+    const module = Math.abs(grade.value)
+    grade.value = module
+    Math.abs(grade.value)
+    if (grade.value > 10) {
+        grade.value = 10
+    } else if (grade.value < 0) {
+        grade.value = 0
+    }
+    if (!Number.isInteger(grade.value)) {
+        const tofix = grade.value.toFixed(2)
+          grade.value = Number(tofix)
+    }
+  
+})
 
 const emits = defineEmits(['giveGrade', 'close'])
+
+const sendWorkData = () => {
+    emits('giveGrade', {
+    work_grade: grade.value,
+    comittee_feedback: feedback.value
+    }
+    )
+} 
 </script>
 <template>
     <v-dialog
@@ -31,36 +48,25 @@ const emits = defineEmits(['giveGrade', 'close'])
                 <!-- <p class="text-h3 text-grey-darken-3">{{ grade.toFixed(1) }}</p> -->
 
                 <div class="d-flex justify-start align-center">
-   <v-number-input required v-model="grade" :rules="rules" max="10" min="0" control-variant="default"></v-number-input>
+                <input style="outline: none; height: 100px; font-size: 25px;" class="text-center align-center" v-model="grade" type="Number">
 </div>
-                <div style="width: 100px; height: 3px;" class=" bg-blue-darken-2"></div>
+                <div style="width: 200px; height: 3px;" class=" bg-blue-darken-2"></div>
             </div>
 
-            <div>
-                    <!-- <v-slider
-        color="blue"
-        track-color="black"
-        thumb-color="blue"
-        thumb-label="always"
-        v-model="grade"
-        min="0"
-        max="10"
-        step="0.1"  
-     
-        ></v-slider> -->
-    <!-- <div class="w-100 px-1 text-grey-darken-3 d-flex justify-space-between">
-        <p v-for="(num, index) in [0, 5, 10]">
-            {{ num }}
-        </p>
-    </div> -->
-            </div>
         <div>
+            
+        <div class="d-flex w-100 flex-column ga-3">
+            <p style="font-size: 20px;" class="text-grey-darken-3">Mensagem de feedback</p>
+
+            <v-textarea name="input-7-1" variant="filled" auto-grow v-model="feedback"></v-textarea>
+        </div>
         <VCardActions class="w-100 d-flex  justify-end">
           <VBtn class="font-weight-bold" @click="emits('close')"> cancelar 
           <template #prepend></template></VBtn>
-          <VBtn class="bg-blue rounded-xl" style="width: 150px;" @click="emits('giveGrade', grade)"> confirmar </VBtn>
+          <VBtn class="bg-blue rounded-xl" style="width: 150px;" @click="sendWorkData"> confirmar </VBtn>
         </VCardActions>
         </div>
+
         </div>
        
        </div>

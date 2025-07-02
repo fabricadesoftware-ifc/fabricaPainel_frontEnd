@@ -72,7 +72,7 @@ const shouldShowButton = computed(() => {
       return true;
     }
   } else {
-    return evaluator_able_to_give_grade.value && ws === 2;
+    return evaluator_able_to_give_grade.value && ws === 2 && !props.grade;
   }
   return false;
 });
@@ -89,6 +89,7 @@ watch(
 
 onMounted(() => {
   validate_user_function(user_function.value, work_status.value);
+  console.log(props.grade)
 });
 </script>
 
