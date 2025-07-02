@@ -116,7 +116,7 @@ onMounted(() => {
       </v-btn>
     </div>
 
-    <div class="w-100 d-flex align-center ga-5">
+    <div v-if="user_function != 'COLLABORATOR'" class="w-100 d-flex align-center ga-5">
       <p class="opacity-70" style="font-weight: 700; font-size: 20px">
         Nota do Trabalho:
       </p>
