@@ -32,10 +32,10 @@ export const resolveStatus = (status:number) => {
                 color: 'red-darken-2'
             }
         }
-        case 5: {
+       case 5: {
           return {
             text: 'Expirado',
-            color: 'blue gray blue-300'
+            color: 'blue-grey lighten-1'
           }
         }
     }
