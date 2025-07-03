@@ -24,80 +24,78 @@ const formatDate = computed(() => {
   };
 });
 
+const haveActualEdition = computed(() => {
+  return state.editions.some((edition: { is_open: any; }) => edition.is_open);
+});
+
+const openEdition = computed(() => {
+  return state.editions.find((edition: { is_open: any; }) => edition.is_open);
+});
+
+const closedEditions = computed(() => {
+  return state.editions.filter((edition: { is_open: any; }) => !edition.is_open);
+});
+
 onMounted(() => {
   fetchEditions();
 });
 </script>
 
 <template>
-  <LayoutDashboard>
-    <div class="d-flex flex-row flex-wrap ga-4">
-      <v-card v-for="edition in state.editions" :key="edition.id" class="border-md w-100" rounded="xl"
-        variant="outlined" @click="selectCard(Number(edition.id))">
-        <div class="h-100 d-flex flex-column justify-space-between pa-10">
-          <v-row>
-            <v-col cols="12">
-              <p class="text-blue">
-                {{ edition.theme }}
-              </p>
-              <h2 class="text-primary font-weight-bold text-h5">
-                {{ edition.edition_name }}
-                <div class="text-grey text-body-1">
-                  Carga Horária: {{ edition.workload }} horas
-                </div>
-                <div class="text-body-1 position-absolute top-0 right-0 pa-10">
-                  {{ edition.year }}
-                </div>
-              </h2>
-            </v-col>
-            <v-col>
-              <p class="text-grey-darken-2">
-                <span class="d-block">Data de Submissão:</span>
-                <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.initial_submission_date || 'Não informado') }}
-                </span>
-                até
-                <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.final_submission_date || 'Não informado') }}
-                </span>
-              </p>
-            </v-col>
-            <v-col>
-              <p class="text-grey-darken-2">
-                <span class="d-block">Data de Orientação:</span>
-                <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.initial_advisor_acceptance || 'Não informado') }}
-                </span>
-                até
-                <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.final_advisor_acceptance || 'Não informado') }}
-                </span>
-              </p>
-            </v-col>
-            <v-col>
-              <p class="text-grey-darken-2">
-                <span class="d-block">Data de Avaliadores:</span>
-                <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.initial_evaluators_date || 'Não informado') }}
-                </span>
-                até
-                <span class="text-black font-weight-bold">
-                  {{ formatDate(edition.final_evaluators_date || 'Não informado') }}
-                </span>
-              </p>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <p class="text-grey">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae quo
-                maxime mollitia illo provident ex minima tenetur voluptate aliquam
-                omnis...
-              </p>
-            </v-col>
-          </v-row>
-        </div>
-      </v-card>
+  <LayoutPanel>
+    <div class="d-flex flex-row flex-wrap ga-4 px-16">
+      <h1 style="font-size: 40px;">Edições</h1>
+
+      <!-- Edição em aberto -->
+      <div v-if="openEdition" class="mb-8 mt-10 w-100 px-16">
+        <h2 class="mb-5">Edição em Aberto</h2>
+        <v-card :key="openEdition.id" class="border-md w-100" rounded="xl" variant="outlined">
+          <div class="h-100 d-flex flex-column justify-space-between pa-10">
+            <v-row style="justify-content: space-between; display: flex; align-items: center; height: 50px;">
+              <div>
+                <h2 class="text-primary font-weight-bold text-h5">
+                  {{ openEdition.edition_name }}
+                </h2>
+              </div>
+              <div>
+                <p style="color: gray;">{{ formatDate(openEdition.event_date ?? '') }} <span style="color: black;">até</span> {{ formatDate(openEdition.final_event_date ?? '') }}</p>
+              </div>
+              <div>
+                <v-chip class="text-capitalize" color="#4ED700" text-color="white">Em Aberto</v-chip>
+              </div>
+              <div>
+                <p class="text-blue" style="display: flex; align-items: center; gap: 5px; cursor: pointer;" @click="selectCard(Number(openEdition.id))"><img src="@/assets/icons/externalLink.svg" alt=""> Ver Edição</p>
+              </div>
+            </v-row>
+          </div>
+        </v-card>
+      </div>
+
+      <!-- Demais edições -->
+      <div class="mb-8 w-100 px-16" style="display: flex; flex-direction: column; gap: 20px;">
+        <h2 v-if="closedEditions.length" class="mt-8 mb-5 w-100">Edições Anteriores</h2>
+        <v-card v-for="edition in closedEditions.slice().reverse()" :key="edition.id" class="border-md w-100" rounded="xl"
+          variant="outlined">
+          <div class="h-100 d-flex flex-column justify-space-between pa-10">
+            <v-row style="justify-content: space-between; display: flex; align-items: center; height: 50px;">
+              <div>
+                <h2 class="text-primary font-weight-bold text-h5">
+                  {{ edition.edition_name }}
+                </h2>
+              </div>
+              <div>
+                <p style="color: gray;">{{ formatDate(edition.event_date ?? '') }} <span style="color: black;">até</span> {{ formatDate(edition.final_event_date ?? '') }}</p>
+              </div>
+              <div>
+                <v-chip class="text-capitalize" color="primary" text-color="white">Concluida</v-chip>
+              </div>
+              <div>
+                <p class="text-blue" style="display: flex; align-items: center; gap: 5px; cursor: pointer;" @click="selectCard(Number(edition.id))"><img src="@/assets/icons/externalLink.svg" alt=""> Ver Edição</p>
+              </div>
+            </v-row>
+          </div>
+        </v-card>
+      </div>
     </div>
-  </LayoutDashboard>
+  </LayoutPanel>
 </template>
