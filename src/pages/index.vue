@@ -5,8 +5,6 @@ import { downloadPdf } from "@/utils/user";
 const authStore = useAuth();
 const { lgAndUp } = useDisplay()
 
-
-
 </script>
 
 <style>

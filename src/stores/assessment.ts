@@ -60,6 +60,19 @@ export const useAssessmentStore = defineStore('assessment', () => {
     }
   }
 
+    const getAssessmentsByWork = async (id: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const assessment = await AssessmentService.getAssesmentByWork(id)
+      state.currentAssessment = assessment
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const updateAssessment = async (id: string, partialData: any) => {
     setLoading(true)
     setError(null)
@@ -89,21 +102,6 @@ export const useAssessmentStore = defineStore('assessment', () => {
     }
   }
 
-  const getAssessmentsByWorkId = async (workId: string) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const assessments = await AssessmentService.getAssessments()
-    
-      const filteredAssessments = assessments.filter((assessment: any) => assessment.work === workId)
-      return filteredAssessments
-    } catch (error: any) {
-      setError(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   return {
     state,
     allAssessments,
@@ -113,6 +111,6 @@ export const useAssessmentStore = defineStore('assessment', () => {
     getAssessment,
     updateAssessment,
     deleteAssessment,
-    getAssessmentsByWorkId,
+    getAssessmentsByWork,
   }
 })
