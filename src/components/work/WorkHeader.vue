@@ -86,7 +86,7 @@ watch(
 
 onMounted(() => {
   validate_user_function(user_function.value, work_status.value);
-  console.log(props.grade)
+  
 });
 </script>
 
@@ -112,9 +112,11 @@ onMounted(() => {
         size="small"
         :style="`color: ${userCase.color}; brightness: 50%;`"
       >
+      
         <p style="font-size: 15px; font-weight: 600">{{ userCase.text }}</p>
       </v-btn>
     </div>
+
 
     <div v-if="user_function != 'COLLABORATOR'" class="w-100 d-flex align-center ga-5">
       <p class="opacity-70" style="font-weight: 700; font-size: 20px">
