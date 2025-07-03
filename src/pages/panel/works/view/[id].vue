@@ -118,7 +118,7 @@ const handleWorkHeaderAction = () => {
 </script>
 
 <template>
-  <LayoutPanel v-if="workStore.currentWork">
+  <LayoutPanel v-if="workStore.currentWork && isLoaded">
     <v-container class="w-100">
       <v-fade-transition appear>
         <div class="d-flex flex-column ga-10">
@@ -161,6 +161,7 @@ const handleWorkHeaderAction = () => {
             :status_color="resolveStatus(workStore.currentWork.status)?.color || 'Não informado'"
             :title="workStore.currentWork.title"
           />
+          
 
           <div
             class="d-flex flex-column ga-3 flex-wrap w-100"
