@@ -24,10 +24,6 @@ const formatDate = computed(() => {
   };
 });
 
-const haveActualEdition = computed(() => {
-  return state.editions.some((edition: { is_open: any; }) => edition.is_open);
-});
-
 const openEdition = computed(() => {
   return state.editions.find((edition: { is_open: any; }) => edition.is_open);
 });
@@ -47,13 +43,13 @@ onMounted(() => {
       <h1 style="font-size: 40px;">Edições</h1>
 
       <!-- Edição em aberto -->
-      <div v-if="openEdition" class="mb-8 mt-10 w-100 px-16">
+      <div v-if="!openEdition" class="mb-8 mt-10 w-100 px-16">
         <h2 class="mb-5">Edição em Aberto</h2>
         <v-card :key="openEdition.id" class="border-md w-100" rounded="xl" variant="outlined">
           <div class="h-100 d-flex flex-column justify-space-between pa-10">
             <v-row style="justify-content: space-between; display: flex; align-items: center; height: 50px;">
               <div>
-                <h2 class="text-primary font-weight-bold text-h5">
+                <h2 class="font-weight-bold text-h5">
                   {{ openEdition.edition_name }}
                 </h2>
               </div>
@@ -64,11 +60,16 @@ onMounted(() => {
                 <v-chip class="text-capitalize" color="#4ED700" text-color="white">Em Aberto</v-chip>
               </div>
               <div>
-                <p class="text-blue" style="display: flex; align-items: center; gap: 5px; cursor: pointer;" @click="selectCard(Number(openEdition.id))"><img src="@/assets/icons/externalLink.svg" alt=""> Ver Edição</p>
+                <v-btn class="text-blue" style="display: flex; align-items: center; gap: 5px; cursor: pointer;" flat @click="selectCard(Number(openEdition.id))"><img src="@/assets/icons/externalLink.svg" alt=""> Ver Edição</v-btn>
               </div>
             </v-row>
           </div>
         </v-card>
+      </div>
+      <!-- Se não houver edição em aberto -->
+      <div v-else  class="mb-8 mt-10 w-100 px-16" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+        <h1>Ainda não há uma edição cadastrada neste ano</h1>
+        <v-btn flat class="text-primary" style="font-size: 20px;"><img src="@/assets/icons/AddIcon.svg" alt="">Cadastrar Edição</v-btn>
       </div>
 
       <!-- Demais edições -->
@@ -79,7 +80,7 @@ onMounted(() => {
           <div class="h-100 d-flex flex-column justify-space-between pa-10">
             <v-row style="justify-content: space-between; display: flex; align-items: center; height: 50px;">
               <div>
-                <h2 class="text-primary font-weight-bold text-h5">
+                <h2 class="font-weight-bold text-h5">
                   {{ edition.edition_name }}
                 </h2>
               </div>
