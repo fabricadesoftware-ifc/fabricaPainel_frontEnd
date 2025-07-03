@@ -47,6 +47,20 @@ export const useStudentAssessment = defineStore('studentAssessment', () => {
     }
   }
 
+ const fetchAssessmentReport = async (edition_year: any) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const assessment = await StudentAssessmentService.getAssessmentReport(edition_year)
+      return assessment
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+
   const createAssessment = async (assessment: any) => {
     setLoading(true)
     setError(null)
@@ -110,6 +124,7 @@ export const useStudentAssessment = defineStore('studentAssessment', () => {
     state,
     assesment,
     assesments,
+    fetchAssessmentReport,
     fetchAssessments,
     fetchAssessment,
     createAssessment,
