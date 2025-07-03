@@ -7,7 +7,7 @@ import { useEdition } from "@/stores/edition";
 import { IEdition } from "@/interfaces/edition";
 import { useAuth } from "@/stores/auth";
 import { useStudentAssessment } from "@/stores/studentAssessment";
-const { state, fetchEditions, currentEdition } = useEdition();
+const { state, fetchEditions } = useEdition();
 
 const router = useRoute();
 const id = ref(null);
@@ -49,8 +49,8 @@ function showinfo(){
   seemore.value = !seemore.value
   textButton.value = seemore.value ? 'Fechar' : 'Ver Mais'
 }
-const defaultBanner =
-  "https://th.bing.com/th/id/OIP.MQJrIQeghQLdcs1uFBZHzwHaEp?rs=1&pid=ImgDetMain"; //reitrar
+// const defaultBanner =
+//   "https://th.bing.com/th/id/OIP.MQJrIQeghQLdcs1uFBZHzwHaEp?rs=1&pid=ImgDetMain"; //reitrar
 </script>
 
 <template>
