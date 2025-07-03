@@ -16,9 +16,9 @@ class StudentAssessmentService {
     }
   }
 
-  async getAssessment (id: string) {
+  async getAssessment (id: string, work_id: string) {
     try {
-      const { data } = await api.get(`student-assessments/${id}/`)
+      const { data } = await api.get(`student-assessments/?student=${id}&work=${work_id}`)
       return data
     } catch (error) {
       this.handleError(error, 'fetch')

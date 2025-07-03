@@ -23,7 +23,7 @@ const props = defineProps({
     required: true,
   },
   grade: {
-    type: [Number, String],
+    type: [Number, String, null],
   },
   user_function: {
     type: String,
@@ -52,7 +52,6 @@ const {
   work_status,
   user_function,
   student_able_to_cancel,
-  advisor_able_to_give_grade,
   evaluator_able_to_give_grade,
   advisor_able_to_aprove_work,
 } = toRefs(props);
@@ -68,11 +67,9 @@ const shouldShowButton = computed(() => {
   } else if (uf === "ADVISOR") {
     if (advisor_able_to_aprove_work.value && ws === 1) {
       return true;
-    } else if (advisor_able_to_give_grade.value && ws === 2) {
-      return true;
     }
   } else {
-    return evaluator_able_to_give_grade.value && ws === 2;
+    return evaluator_able_to_give_grade.value && ws === 2 && !props.grade;
   }
   return false;
 });
@@ -89,6 +86,7 @@ watch(
 
 onMounted(() => {
   validate_user_function(user_function.value, work_status.value);
+  console.log(props.grade)
 });
 </script>
 
@@ -118,7 +116,7 @@ onMounted(() => {
       </v-btn>
     </div>
 
-    <div class="w-100 d-flex align-center ga-5">
+    <div v-if="user_function != 'COLLABORATOR'" class="w-100 d-flex align-center ga-5">
       <p class="opacity-70" style="font-weight: 700; font-size: 20px">
         Nota do Trabalho:
       </p>

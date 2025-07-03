@@ -33,6 +33,16 @@ class AssessmentService {
     }
   }
 
+  async getAssesmentByWork (id: string) {
+     try {
+      const { data } = await api.get(`/assessment/?work=${id}`)
+      console.log(data)
+      return data
+    } catch (error) {
+      this.handleError(error, 'fetch')
+    }
+  }
+
   async updateAssessment (id: string, partialData: any) {
     try {
       const { data } = await api.patch(`/assessment/${id}/`, partialData)
