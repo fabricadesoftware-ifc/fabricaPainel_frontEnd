@@ -6,11 +6,12 @@ import { useRoute } from "vue-router";
 import { useEdition } from "@/stores/edition";
 import { IEdition } from "@/interfaces/edition";
 
-const { state, fetchEditions } = useEdition();
+const { state, fetchEditions, currentEdition } = useEdition();
 
 const router = useRoute();
 const id = ref(null);
 const edition = ref<IEdition | null>(null);
+const date = new Date()
 
 const formatDate = computed(() => {
   return (dateTime: string | any) => {
@@ -23,14 +24,21 @@ const formatDate = computed(() => {
   };
 });
 
-onMounted(() => {
-  fetchEditions().then(() => {
+onMounted(async () => {
+  await fetchEditions().then(() => {
     // @ts-ignore
     id.value = router.params?.id;
     // @ts-ignore
     edition.value = state.editions.find((ed: any) => ed.id === Number(id.value));
   });
+
+  
 });
+//@ts-ignore
+const able_to_download_grades = computed(() => {
+ 
+  return date > new Date(edition.value?.final_event_date ?? '2100-01-01')
+})
 
 const textButton = ref('Ver Mais')
 const seemore = ref(false)
@@ -43,19 +51,26 @@ const defaultBanner =
 </script>
 
 <template>
-  <LayoutDashboard>
+  <LayoutPanel>
     <v-container>
       <v-btn href="/panel/editions" style="box-shadow: none;" class="mb-2 text-blue"> <v-icon icon="mdi-arrow-left mr-1"></v-icon> Voltar</v-btn>
       <template v-if="edition">
-          <div class="h-100 d-flex flex-column justify-space-between pa-10">
-            <h2 class="font-weight-bold text-h3 pt-2 mb-7 d-flex align-center" style="gap: 10px;">
+          <div class="h-100 d-flex flex-column justify-space-between">
+            <div class="d-flex align-center justify-space-between ga-15 w-50">
+              <div class="d-flex align-center ga-10">
+            <h2 class="font-weight-bold text-h3 " style="gap: 10px;">
               <!-- @vue-ignore -->
               {{ edition.edition_name }}
+               </h2>
               <VChip v-if="edition.is_open" class="bg-blue d-flex justify-center align-center" pill style="width: 120px;">Em aberto</VChip>
               <VChip v-else class="bg-red d-flex justify-center align-center" pill style="width: 120px;">Encerrado</VChip>
-            </h2>
-            <v-row>
-              <v-col class="d-flex flex-column ga-4 justify-start" cols="6">
+           </div>
+           
+             <v-btn v-if="able_to_download_grades" color="blue"> <v-icon>mdi-download</v-icon><p class="ml-2">Baixar Relatório de Notas</p></v-btn>
+           
+            </div>
+            <v-row class="ga-10">
+              <v-col class="d-flex flex-column ga-4 justify-start mt-10" cols="6">
                 <span class="text-primary font-weight-bold">INFORMAÇÕES</span>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
                   <span>Nome:</span>
@@ -84,8 +99,8 @@ const defaultBanner =
                 </row>
                 <v-btn @click="showinfo()" class="bg-blue">{{textButton}}</v-btn>
               </v-col>
-              <v-col>
-                <img alt="" class="w-100 rounded-xl" :src="edition.banner?.file || defaultBanner" />
+              <v-col style="width: 400px; height: 500px;">
+                <img style="object-fit: fill;" alt="" class="w-100 h-100 rounded-xl" :src="edition.banner?.file" />
               </v-col>
             </v-row>
           </div>
@@ -209,5 +224,5 @@ const defaultBanner =
         </div>
       </template>
     </v-container>
-  </LayoutDashboard>
+ </LayoutPanel>
 </template>
