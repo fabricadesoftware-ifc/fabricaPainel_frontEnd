@@ -89,7 +89,7 @@ export const hasReachedWorkLimit = (
   let activeWorks = 0;
   for (const work of userWorks) {
     if (is_advisor) {
-      if (work.advisor_status == validStatus && work.edition?.year === year && workValidStatus.includes(work.status)) {
+      if (work?.advisor_status == validStatus && work.edition?.year === year && workValidStatus.includes(work.status)) {
         activeWorks++;
       }
     } else {
