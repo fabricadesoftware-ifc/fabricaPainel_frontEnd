@@ -27,7 +27,7 @@ class StudentAssessmentService {
     }
   }
 
-  async getAssessmentReport(edition_year) {
+  async getAssessmentReport(edition_year: any) {
     try {
       const { data } = await api.get(`generate-assessment-report/${edition_year}/`, {
         responseType: "blob",
