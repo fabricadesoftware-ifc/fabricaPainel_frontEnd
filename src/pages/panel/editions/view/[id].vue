@@ -6,13 +6,14 @@ import { useRoute } from "vue-router";
 import { useEdition } from "@/stores/edition";
 import { IEdition } from "@/interfaces/edition";
 import { useAuth } from "@/stores/auth";
-
+import { useStudentAssessment } from "@/stores/studentAssessment";
 const { state, fetchEditions, currentEdition } = useEdition();
 
 const router = useRoute();
 const id = ref(null);
 const edition = ref<IEdition | null>(null);
 const authStore = useAuth()
+const studentAssesment = useStudentAssessment()
 const date = new Date()
 
 const formatDate = computed(() => {
@@ -68,7 +69,7 @@ const defaultBanner =
               <VChip v-else class="bg-red d-flex justify-center align-center" pill style="width: 120px;">Encerrado</VChip>
            </div>
            
-             <v-btn v-if="able_to_download_grades" color="blue"> <v-icon>mdi-download</v-icon><p class="ml-2">Baixar Relatório de Notas</p></v-btn>
+             <v-btn @click="studentAssesment.fetchAssessmentReport(edition.year)" v-if="able_to_download_grades" color="blue"> <v-icon>mdi-download</v-icon><p class="ml-2">Baixar Relatório de Notas</p></v-btn>
            
             </div>
             <v-row class="ga-10">
