@@ -5,12 +5,14 @@ import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useEdition } from "@/stores/edition";
 import { IEdition } from "@/interfaces/edition";
+import { useAuth } from "@/stores/auth";
 
 const { state, fetchEditions, currentEdition } = useEdition();
 
 const router = useRoute();
 const id = ref(null);
 const edition = ref<IEdition | null>(null);
+const authStore = useAuth()
 const date = new Date()
 
 const formatDate = computed(() => {
@@ -37,7 +39,7 @@ onMounted(async () => {
 //@ts-ignore
 const able_to_download_grades = computed(() => {
  
-  return date > new Date(edition.value?.final_event_date ?? '2100-01-01')
+  return date > new Date(edition.value?.final_event_date ?? '2100-01-01') && ['TEACHER', 'ADMIN'].includes(authStore.user.user_type)
 })
 
 const textButton = ref('Ver Mais')
