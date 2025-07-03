@@ -12,5 +12,6 @@ export function buildUserValidations(date: Date, editionStore: any, workStore: a
     advisor_able_to_aprove_work:
       date < new Date(editionStore.currentEdition?.final_second_submission_date ?? "2100-01-01") &&
       workStore?.currentWork?.advisor_status == 2
+
   };
 }

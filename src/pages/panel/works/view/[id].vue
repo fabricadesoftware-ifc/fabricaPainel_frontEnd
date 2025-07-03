@@ -198,6 +198,7 @@ const handleWorkHeaderAction = () => {
           >
             <MembersCard
               :status="workStore?.currentWork?.advisor_status"
+
               :member="workStore.currentWork.advisor"
               :member_id="workStore.currentWork.advisor.id"
               :user_id="authStore.user.id"
@@ -235,6 +236,7 @@ const handleWorkHeaderAction = () => {
         v-if="
           advisorAcceptanceStore.state.isAdvisor &&
           (workStore?.currentWork?.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3)
+
         "
         :work="workStore?.currentWork"
       />
