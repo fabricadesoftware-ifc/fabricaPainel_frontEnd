@@ -101,26 +101,29 @@ onMounted(async () => {
 
         <CreateWork
           v-if="!is_submit && UserStore?.user?.user_type == 'STUDENT'"
-          :date="
+          :date_end="
             new Date() <
             new Date(EditionStore?.currentEdition?.final_second_submission_date)
           "
-        />
+          :date_start="new Date() >= new Date(EditionStore?.currentEdition?.initial_submission_date)"
 
+        />
+<div>
         <v-lazy
   :min-height="200"
   :options="{'threshold':0.5}"
   transition="fade-transition"
 >
+<div v-if="UserStore?.user?.user_type == 'STUDENT'">
         <CardSubmission
-          v-if="UserStore?.user?.user_type == 'STUDENT'"
+         
           v-for="(work, index) in submissionsCurrent"
           :key="index"
           :work_id="work?.id"
           :work="work?.edition?.final_submission_date"
           :work_status="work?.status"
         />
-
+</div>
         <TeacherContainer
           v-else
           :works="submissionsCurrent"
@@ -162,6 +165,7 @@ onMounted(async () => {
           </template>
         </TeacherContainer>
         </v-lazy>
+        </div>
       </div>
 
       <div class="d-flex justify-space-between align-center text-h6 pb-10">
