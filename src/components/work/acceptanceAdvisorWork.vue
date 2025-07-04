@@ -39,6 +39,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-btn @click="show = !show" style="position: absolute; z-index: 9999; top: 150px; right: 70px;" v-if="!show && work.advisor_status == 1" color="blue">Decidir Orientação</v-btn>
 </template>
 
 <script setup>

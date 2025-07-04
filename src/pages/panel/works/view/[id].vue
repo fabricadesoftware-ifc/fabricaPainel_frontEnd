@@ -57,6 +57,7 @@ const confirmation = ref(false);
 const userGrade = ref(false)
 const memberGrade = ref<any>(null)
 
+
 const confirmsAction = (confirm: string) => {
   confirmsActionFn(
     confirm,
@@ -222,7 +223,7 @@ const handleWorkHeaderAction = () => {
         </div>
       </v-fade-transition>
 
-      <acceptance-work
+      <acceptance-work 
         v-if="
           acceptanceStore.state.isCollaborator &&
           acceptanceStore.state.collaboratorStatus === 1 &&
