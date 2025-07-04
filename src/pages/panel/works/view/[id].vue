@@ -118,7 +118,7 @@ const handleWorkHeaderAction = () => {
 </script>
 
 <template>
-  <LayoutPanel v-if="workStore.currentWork">
+  <LayoutPanel v-if="workStore.currentWork && isLoaded">
     <v-container class="w-100">
       <v-fade-transition appear>
         <div class="d-flex flex-column ga-10">
@@ -161,6 +161,7 @@ const handleWorkHeaderAction = () => {
             :status_color="resolveStatus(workStore.currentWork.status)?.color || 'Não informado'"
             :title="workStore.currentWork.title"
           />
+          
 
           <div
             class="d-flex flex-column ga-3 flex-wrap w-100"
@@ -196,7 +197,8 @@ const handleWorkHeaderAction = () => {
             attribute="Status do Aceite/Rejeite"
           >
             <MembersCard
-              :status="workStore.currentWork.advisor_status"
+              :status="workStore?.currentWork?.advisor_status"
+
               :member="workStore.currentWork.advisor"
               :member_id="workStore.currentWork.advisor.id"
               :user_id="authStore.user.id"
@@ -233,10 +235,12 @@ const handleWorkHeaderAction = () => {
       <AcceptanceAdvisorWork
         v-if="
           advisorAcceptanceStore.state.isAdvisor &&
-          (workStore?.currentWork.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3)
+          (workStore?.currentWork?.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3)
+
         "
         :work="workStore?.currentWork"
       />
+      
     </v-container>
   </LayoutPanel>
 

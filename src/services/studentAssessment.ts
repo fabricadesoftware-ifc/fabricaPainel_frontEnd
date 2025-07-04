@@ -1,64 +1,94 @@
-import api from '@/plugins/api'
+import api from "@/plugins/api";
 
 class StudentAssessmentService {
-  private handleError (error: any, action: string) {
-    console.error(`Error during ${action}:`, error)
-    throw new Error(`Failed to ${action} student assessment`)
+  private handleError(error: any, action: string) {
+    console.error(`Error during ${action}:`, error);
+    throw new Error(`Failed to ${action} student assessment`);
   }
 
-  async getAssessments () {
+  async getAssessments() {
     try {
-      const { data } = await api.get('student-assessments/')
-      
-      return data
+      const { data } = await api.get("student-assessments/");
+
+      return data;
     } catch (error) {
-      this.handleError(error, 'fetch')
+      this.handleError(error, "fetch");
     }
   }
 
-  async getAssessment (id: string, work_id: string) {
+  async getAssessment(id: string, work_id: string) {
     try {
-      const { data } = await api.get(`student-assessments/?student=${id}&work=${work_id}`)
-      return data
+      const { data } = await api.get(
+        `student-assessments/?student=${id}&work=${work_id}`
+      );
+      return data;
     } catch (error) {
-      this.handleError(error, 'fetch')
+      this.handleError(error, "fetch");
     }
   }
 
-  async createAssessment (assessment: any) {
+  async getAssessmentReport(edition_year: any) {
     try {
-      const { data } = await api.post('student-assessments/', assessment)
-      return data
+      const { data } = await api.get(`generate-assessment-report/${edition_year}/`, {
+        responseType: "blob",
+      });
+
+      const fileURL = window.URL.createObjectURL(
+        new Blob([data], { type: "application/pdf" })
+      );
+
+      const link = document.createElement("a");
+      link.href = fileURL;
+      link.download = "assessment_report.pdf"; // nome sugerido
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => window.URL.revokeObjectURL(fileURL), 1000);
+
+      return data;
     } catch (error) {
-      this.handleError(error, 'create')
+      this.handleError(error, "fetch");
     }
   }
 
-  async updateAssessment (id: string, assessment: any) {
+  async createAssessment(assessment: any) {
     try {
-      const { data } = await api.put(`student-assessments/${id}/`, assessment)
-      return data
+      const { data } = await api.post("student-assessments/", assessment);
+      return data;
     } catch (error) {
-      this.handleError(error, 'update')
+      this.handleError(error, "create");
     }
   }
 
-  async patchAssessment (id: string, partialData: any) {
+  async updateAssessment(id: string, assessment: any) {
     try {
-      const { data } = await api.patch(`student-assessments/${id}/`, partialData)
-      return data
+      const { data } = await api.put(`student-assessments/${id}/`, assessment);
+      return data;
     } catch (error) {
-      this.handleError(error, 'patch')
+      this.handleError(error, "update");
     }
   }
 
-  async deleteAssessment (id: string) {
+  async patchAssessment(id: string, partialData: any) {
     try {
-      await api.delete(`student-assessments/${id}/`)
+      const { data } = await api.patch(
+        `student-assessments/${id}/`,
+        partialData
+      );
+      return data;
     } catch (error) {
-      this.handleError(error, 'delete')
+      this.handleError(error, "patch");
+    }
+  }
+
+  async deleteAssessment(id: string) {
+    try {
+      await api.delete(`student-assessments/${id}/`);
+    } catch (error) {
+      this.handleError(error, "delete");
     }
   }
 }
 
-export default new StudentAssessmentService()
+export default new StudentAssessmentService();
