@@ -4,15 +4,19 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 
 const props = defineProps({
-    date: {
+    date_end: {
         type: Boolean,
-        default: true
-    }
+        default: false
+    },
+    date_start: {
+        type: Boolean,
+        default: false
+    },
 })
 </script>
 <template>
     <div class="w-100">
-            <div v-if="props.date" class="pa-10 d-flex flex-column justify-center ga-2 align-center cursor-pointer"
+            <div v-if="props.date_end && props.date_start" class="pa-10 d-flex flex-column justify-center ga-2 align-center cursor-pointer"
                 >
                 <p class="font-weight-bold" style="font-size: 20px;">Você ainda não possui nenhum trabalho
                     submetido</p>

@@ -101,10 +101,12 @@ onMounted(async () => {
 
         <CreateWork
           v-if="!is_submit && UserStore?.user?.user_type == 'STUDENT'"
-          :date="
+          :date_end="
             new Date() <
             new Date(EditionStore?.currentEdition?.final_second_submission_date)
           "
+          :date_start="new Date() >= new Date(EditionStore?.currentEdition?.initial_submission_date)"
+
         />
 <div>
         <v-lazy
