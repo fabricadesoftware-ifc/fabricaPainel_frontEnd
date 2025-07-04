@@ -39,6 +39,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+    <v-btn @click="show = !show" style="position: absolute; z-index: 9999; top: 150px; right: 70px;" v-if="!show && pendingStatus" color="blue">Decidir Colaboração</v-btn>
 </template>
 
 <script setup>
@@ -60,10 +61,11 @@ const action = ref("");
 const collabIndex = workStore?.currentWork?.work_collaborator?.findIndex(
   (s) => s.collaborator.id === authStore.user.id
 );
+const pendingStatus = computed(()=>acceptanceStore.state.collaboratorStatus === 1);
 
 function updateShow() {
   const isCollaborator = acceptanceStore.state.isCollaborator;
-  const pendingStatus = acceptanceStore.state.collaboratorStatus === 1;
+  
   show.value = isCollaborator && pendingStatus;
 }
 
