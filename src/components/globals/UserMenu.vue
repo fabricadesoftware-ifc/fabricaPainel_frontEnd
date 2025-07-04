@@ -6,10 +6,12 @@ import { useRouter } from "vue-router"
 import { useAuth } from "@/stores/auth";
 import { usersData } from "@/utils/userMenu";
 import { downloadPdf } from "@/utils/user";
+import { useDisplay } from "vuetify";
 const authStore = useAuth()
 const router = useRouter()
 const username = ref('')
 
+const {width} = useDisplay()
 
 onMounted(()=> {
   username.value = authStore.user.name
@@ -23,11 +25,11 @@ onMounted(()=> {
     <template v-slot:activator="{ props }">
       <v-btn variant="text" v-bind="props" style="height: 50px;">
         <span style="display: flex; align-items: center; justify-content: space-between; gap: 15px;">
-          <div style="width: 40px; height: 40px;">
+          <div :style="{width: width > 780 ? '40px' : '30px', height: width > 780 ? '40px' : '30px'}">
             <img class="h-100 w-100 rounded-pill" src="@/assets/images/user-image.png" />
           </div>
 
-          <p style="font-size: 16px;">{{username}}</p>
+          <p :style="{fontSize: width > 780 ? '16px' : '12px'}">{{ username }}</p>
 
            <img src="@/assets/icons/menu.svg" style="width: 14px; height: 14px;" alt="">
 

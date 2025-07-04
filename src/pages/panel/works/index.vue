@@ -5,6 +5,7 @@ import router from "@/router";
 import { useEdition } from "@/stores/edition";
 import { useAuth } from "@/stores/auth";
 import { resolveUserFunction } from "@/utils/works";
+import { useDisplay } from "vuetify";
 
 const workStore = useWork();
 const EditionStore = useEdition();
@@ -72,14 +73,16 @@ onMounted(async () => {
 
 
 });
+
+const {width} = useDisplay()
 </script>
 
 <template>
   <LayoutPanel v-if="!tokenExpired && !loading">
     <v-container class="w-100">
       <div v-if="UserStore?.user?.user_type == 'STUDENT'" class="d-flex justify-space-between align-center text-h6">
-        <h1 class="font-weight-bold" style="font-size: 40px">Submissões</h1>
-        <VChip :class="is_submit ? 'bg-green' : 'bg-red'">
+        <h1 class="font-weight-bold" :style="{fontSize: width > 780 ? '40px' : '25px'}">Submissões</h1>
+        <VChip :size="width > 780 ? 'default' : 'x-small'" :class="is_submit ? 'bg-green' : 'bg-red'">
           {{
             is_submit ? "trabalho submetido" : "trabalho ainda não submetido"
           }}
@@ -88,13 +91,13 @@ onMounted(async () => {
 
       <div class="mb-10">
         <div v-if="EditionStore?.currentEdition?.edition_name" class="d-flex align-center mt-10 mb-10 ga-5 w-100">
-          <h1 class="text-h5 font-weight-bold" style="font-size: 30px">
+          <h1 :style="{fontSize: width > 780 ? '30px' : '20px'}" class=" font-weight-bold">
             {{ EditionStore?.currentEdition?.edition_name }}
           </h1>
-          <VChip
+          <VChip :size="width > 780 ? 'default' : 'x-small'"
             class="bg-blue d-flex justify-center align-center"
             pill
-            style="width: 120px"
+            :style="{width: width > 780 ? '120px' : '90px'}"
             >Em aberto
           </VChip>
         </div>
@@ -169,7 +172,7 @@ onMounted(async () => {
       </div>
 
       <div class="d-flex justify-space-between align-center text-h6 pb-10">
-        <h1 class="font-weight-bold" style="font-size: 30px">
+        <h1 class="font-weight-bold" :style="{fontSize: width > 780 ? '30px' : '20px'}">
           Edições anteriores
         </h1>
       </div>
