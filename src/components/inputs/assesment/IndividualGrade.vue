@@ -28,6 +28,7 @@ const props = defineProps({
 
 const sendWorkData = () => {
     emits('giveGrade', {work_grade: grade.value, is_work_grade: false})
+    grade.value = 0
 } 
 </script>
 <template>
