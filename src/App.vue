@@ -26,12 +26,15 @@
   import { useAuth } from './stores/auth'
   import { globalRouter } from "./plugins/globalRouter";
 
+
   const router = useRouter()
   const authStore = useAuth()
+
 
   globalRouter.router = router
 
   onMounted(async () => {
+
     await authStore.checkAuth()
   })
 </script>

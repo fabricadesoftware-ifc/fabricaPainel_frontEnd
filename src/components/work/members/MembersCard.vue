@@ -116,7 +116,7 @@ watch(watchWork, async (newVal) => {
                     </div>
                     <p class="opacity-60" style="font-size: 15px;">{{ props.member.email }}</p>
                 </div>
-                        <v-btn @click="emits('openStudentAssesment')" v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition.year == date.getFullYear()" color="blue" style="width: 150px">Atribuir Nota</v-btn>
+                        <v-btn @click="emits('openStudentAssesment')" v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition.year == date.getFullYear() && workStore?.currentWork?.status === 2 && assesmentStore?.currentAssessment[0]?.grade" color="blue" style="width: 150px">Atribuir Nota</v-btn>
 
                         <v-chip v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition.year != date.getFullYear()"
                         :color="!grade ? 'yellow-darken-3' : 'green-darken-3'"
