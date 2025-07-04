@@ -39,7 +39,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-btn @click="show = !show" style="position: absolute; z-index: 9999; top: 150px; right: 70px;" v-if="!show && pendingStatus" color="blue">Decidir Colaboração</v-btn>
+  <v-btn @click="show = !show" style="position: absolute; z-index: 99; top: 150px; right: 70px;" v-if="!show && pendingStatus" color="blue">Decidir Colaboração</v-btn>
 </template>
 
 <script setup>

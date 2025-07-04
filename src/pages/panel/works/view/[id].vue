@@ -180,7 +180,7 @@ const handleWorkHeaderAction = () => {
             :cross_cutting_theme="workStore.currentWork.cross_cutting_theme"
           />
 
-          <MembersContainer :attribute="['ADVISOR', 'STUDENT'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) ? 'Nota Individual' : ''">
+          <MembersContainer :attribute="['ADVISOR', 'STUDENT'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) && assesmentStore?.currentAssessment[0]?.grade ? 'Nota Individual' : ''">
             <MembersCard
               v-for="(student, index) in orderByUserId(workStore.currentWork.team.team_members, authStore.user.id)"
               :member_id="student.id"

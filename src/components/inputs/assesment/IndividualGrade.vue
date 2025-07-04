@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onUnmounted } from 'vue';
 import { defineEmits, defineProps } from 'vue';
 
 const grade = ref(0)
@@ -26,9 +26,12 @@ const props = defineProps({
     user: Object,
 })
 
+
 const sendWorkData = () => {
     emits('giveGrade', {work_grade: grade.value, is_work_grade: false})
+    grade.value = 0
 } 
+
 </script>
 <template>
     <v-dialog
