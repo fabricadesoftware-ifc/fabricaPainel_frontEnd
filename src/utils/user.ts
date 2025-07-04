@@ -153,7 +153,7 @@ export const AddUser = async ({
 
 export function downloadPdf() {
   const link = document.createElement('a');
-  link.href = '/orientacoes.pdf';
+  link.href = 'https://eventos.araquari.ifc.edu.br/wp-content/blogs.dir/4/files/sites/157/2025/06/REGIMENTO-PAINEL-DE-INTEGRACAO-2025.pdf';
   link.download = 'orientacoes.pdf';
   link.target = '_blank';
   document.body.appendChild(link);

@@ -197,7 +197,8 @@ const handleWorkHeaderAction = () => {
             attribute="Status do Aceite/Rejeite"
           >
             <MembersCard
-              :status="workStore.currentWork.advisor_status"
+              :status="workStore?.currentWork?.advisor_status"
+
               :member="workStore.currentWork.advisor"
               :member_id="workStore.currentWork.advisor.id"
               :user_id="authStore.user.id"
@@ -234,7 +235,8 @@ const handleWorkHeaderAction = () => {
       <AcceptanceAdvisorWork
         v-if="
           advisorAcceptanceStore.state.isAdvisor &&
-          (workStore?.currentWork.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3)
+          (workStore?.currentWork?.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3)
+
         "
         :work="workStore?.currentWork"
       />
