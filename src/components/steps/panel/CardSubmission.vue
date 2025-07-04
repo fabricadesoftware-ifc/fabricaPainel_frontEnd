@@ -49,7 +49,7 @@ const {width} = useDisplay()
 <template>
     <div class="w-100">
         <div class="d-flex justify-center flex-column ga-5" >
-            <h1 class="text-h5 font-weight-bold" style="font-size: 30px;">{{ edition_title }}</h1>
+            <h1 class="font-weight-bold" :style="{fontSize: width > 780 ? '30px' : '18px'}">{{ edition_title }}</h1>
             <div class="d-flex justify-center align-center">
                 <VCard :style="{flexDirection: width > 780 ? 'row' : 'column'}" class="d-flex align-center pa-5 justify-space-between w-100" :rounded="width > 780 ? 'lg' : 'xl'" elevation="0"
                     :border="true" width="1000">
