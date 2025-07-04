@@ -46,7 +46,7 @@ const props = defineProps({
                     :border="true" width="1000">
                     <div class="d-flex align-center ga-3">
                         <VCardTitle class="font-weight-bold">Submissão de proposta</VCardTitle>
-                        <VCardSubtitle>{{ work }}</VCardSubtitle>
+                        <VCardSubtitle>{{ new Date(work).toLocaleDateString() }}</VCardSubtitle>
                         <V-Chip :color="resolveStatus(props.work_status).color">{{ resolveStatus(props.work_status).text }}</V-Chip>
                     </div>
                     <div @click="router.push(`/panel/works/view/${props.work_id}`)" class="d-flex pa-2 hover-button justify-center align-center text-blue ga-2 cursor-pointer">
