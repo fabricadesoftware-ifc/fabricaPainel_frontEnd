@@ -18,9 +18,11 @@ import {
   giveWorkGradeFn } from "@/utils/work_view/grades";
 
 import { resolveStatus, resolveUserFunction, orderByUserId, userCase } from "@/utils/works";
+import { useDisplay } from "vuetify";
 
 const router = useRouter();
 const work_id = (router.currentRoute.value.params as { id: string }).id;
+const {width} = useDisplay()
 
 const authStore = useAuth();
 const workStore = useWork();
@@ -167,10 +169,10 @@ const handleWorkHeaderAction = () => {
             class="d-flex flex-column ga-3 flex-wrap w-100"
             style="max-width: 100%; flex-wrap: wrap; word-break: break-all"
           >
-            <h2 class="opacity-70" style="font-weight: 700; font-size: 20px">
+            <h2 class="opacity-70" :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">
               Proposta de Integração
             </h2>
-            <p style="font-size: 16px">{{ workStore.currentWork.abstract }}</p>
+            <p :style="{fontSize: width > 780 ? '16px': '12px'}">{{ workStore.currentWork.abstract }}</p>
           </div>
 
           <SubjectsSession
@@ -179,7 +181,7 @@ const handleWorkHeaderAction = () => {
             :cross_cutting_theme="workStore.currentWork.cross_cutting_theme"
           />
 
-          <MembersContainer :attribute="['ADVISOR', 'STUDENT'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) && assesmentStore?.currentAssessment[0]?.grade ? 'Nota Individual' : ''">
+          <MembersContainer :attribute="width <= 780 ? '' : ['ADVISOR'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) && assesmentStore?.currentAssessment[0]?.grade ? 'Nota Individual' : ['STUDENT'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) ? 'Nota Individual' : ''">
             <MembersCard
               v-for="(student, index) in orderByUserId(workStore.currentWork.team.team_members, authStore.user.id)"
               :member_id="student.id"
@@ -194,7 +196,7 @@ const handleWorkHeaderAction = () => {
 
           <MembersContainer
             title="Orientador do Trabalho"
-            attribute="Status do Aceite/Rejeite"
+            :attribute="width > 780 ? 'Status do Aceite/Rejeite' : ''"
           >
             <MembersCard
               :status="workStore?.currentWork?.advisor_status"
@@ -208,7 +210,7 @@ const handleWorkHeaderAction = () => {
 
           <MembersContainer
             title="Colaboradores do Trabalho"
-            attribute="Status do Aceite/Rejeite"
+            :attribute="width > 780 ? 'Status do Aceite/Rejeite' : ''"
           >
             <MembersCard
               v-for="(collaborator, index) in workStore.currentWork.work_collaborator"

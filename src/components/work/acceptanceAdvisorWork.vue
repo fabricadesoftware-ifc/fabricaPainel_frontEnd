@@ -39,7 +39,9 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-   <v-btn @click="show = !show" style="position: absolute; z-index: 99; top: 150px; right: 70px;" v-if="!show && work.advisor_status == 1" color="blue">Decidir Orientação</v-btn>
+  <div :class="`d-flex justify-center ${width > 780 ? '' : 'w-100'}`" :style="{position: 'absolute', zIndex: '99', top: width > 780 ? '150px' : '90px', right: width > 780 ? '70px' : '0px'}">
+   <v-btn :size="width > 780 ? 'default' : 'small' " @click="show = !show"  v-if="!show && work.advisor_status == 1" color="blue">Decidir Orientação</v-btn>
+   </div>
 </template>
 
 <script setup>
@@ -47,6 +49,7 @@ import { ref, onMounted, defineProps } from "vue";
 import { useAdvisorAcceptance } from "@/stores/advisorAcceptance";
 import { useWork } from "@/stores/work";
 import { useAuth } from "@/stores/auth";
+import { useDisplay } from "vuetify";
 
 const props = defineProps({ work: Object });
 
@@ -56,6 +59,7 @@ const authStore = useAuth();
 
 const show = ref(false);
 const action = ref("");
+const {width} = useDisplay()
 
 // Índice do colaborador no array
 
