@@ -37,11 +37,11 @@ const sendWorkData = () => {
          :overlay="false"
         transition="dialog-transition"
     >
-    <div class="w-100 h-100 d-flex justify-center align-center">
+    <div :class="`${width > 780 ? 'w-100' : 'w-75'} h-100 ${'mx-auto'} d-flex justify-center align-center`">
         <div style="width: 700px;" class="bg-white d-flex flex-column rounded-lg pa-5 ga-15">
             <div class="d-flex flex-column ga-2">
-            <h2 style="font-size: 25px;" class="text-grey-darken-4">Atribuir Nota ao Aluno</h2>
-            <p style="font-size: 20px;" class="text-grey-darken-3">Coloque o valor da nota de 0 a 10</p>
+            <h2 :style="{fontSize: width > 780 ? '25px' : '20px'}" class="text-grey-darken-4">Atribuir Nota ao Aluno</h2>
+            <p :style="{fontSize: width > 780 ? '20px' : '15px'}" class="text-grey-darken-3">Coloque o valor da nota de 0 a 10</p>
             </div>  
 
             <div class="w-100 d-flex flex-column justify-center align-center ga-5">
@@ -54,8 +54,8 @@ const sendWorkData = () => {
             </div>
 
             <div class="d-flex flex-column ga-2 align-center">
-                 <p style="font-size: 25px; font-weight: 600;" class="text-blue-darken-2">{{ props.user.name }}</p>
-            <p style="font-size: 18px;" class="text-grey-darken-3">{{ props.user.email }}</p>
+                 <p :style="{fontSize: width > 780 ? '25px' : '20px', fontWeight: '600'}" class="text-blue-darken-2">{{ props.user.name }}</p>
+            <p :style="{fontSize: width > 780 ? '18px' : '15px'}" class="text-grey-darken-3">{{ props.user.email }}</p>
             </div>
 
         <div>

@@ -91,7 +91,7 @@ onMounted(() => {
               </v-btn>
             </template>
             <v-list >
-              <v-list-item>
+              <v-list-item class="w-100 d-flex justify-center">
                 <p style="font-size: 15px; font-weight: 500">
                   {{ authStore?.user?.name }}
                 </p>
