@@ -65,7 +65,7 @@ onMounted(() => {
                 <v-chip class="text-capitalize" color="#4ED700" text-color="white">Em Aberto</v-chip>
               </div>
               <div>
-                <v-btn class="text-blue" style="display: flex; align-items: center; gap: 5px; cursor: pointer;" flat @click="selectCard(Number(openEdition?.id))"><img src="@/assets/icons/externalLink.svg" alt=""> Ver Edição</v-btn>
+                <v-btn class="text-blue" style="display: flex; align-items: center; gap: 5px; cursor: pointer;" flat @click="selectCard(Number(openEdition?.id))"><img src="@/assets/icons/externalLink.svg" alt="">Ver Edição</v-btn>
               </div>
             </v-row>
           </div>
@@ -74,8 +74,8 @@ onMounted(() => {
 
       <!-- Se não houver edição em aberto-->
       <div v-else  class="mb-8 mt-10 w-100 px-16" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-        <h1>Ainda não há uma edição cadastrada neste ano</h1>
-        <v-btn v-if="user?.user_type == 'ADMIN'" flat class="text-primary" style="font-size: 20px;"><img src="@/assets/icons/AddIcon.svg" alt="">Cadastrar Edição</v-btn>
+        <h1>Ainda não há uma edição cadastrada neste ano!</h1>
+        <v-btn v-if="user?.user_type == 'ADMIN'" flat class="text-primary" to="/panel/editions/add" style="font-size: 20px;"><img src="@/assets/icons/AddIcon.svg" alt="">Cadastrar Edição</v-btn>
       </div>
 
       <!-- Demais edições -->
