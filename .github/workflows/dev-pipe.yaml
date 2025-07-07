@@ -1,0 +1,46 @@
+name: Pipeline do Frontend para Desenvolvimento
+
+on:
+  push:
+    branches: [dev]
+
+  pull_request:
+    branches: [dev]
+
+jobs:
+  CI:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Definindo versão do Node.js
+        uses: actions/setup-node@v3.9.1
+        with:
+          node-version: "22"
+
+      - name: Cache do NPM
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Instalação de dependências
+        run: npm install --no-fund --no-audit
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3.4.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PWD }}
+
+      - name: Build da imagem Docker
+        run: docker build -t blackvsk/fabricapainel:frontend .
+
+      - name: Push da imagem para o Docker Hub
+        run: docker push blackvsk/fabricapainel:frontend
