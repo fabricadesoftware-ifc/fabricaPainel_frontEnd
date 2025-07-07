@@ -1,0 +1,28 @@
+# Dependências
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Diretórios de build fora do Docker
+dist
+build
+
+# Configuração de versionamento
+.git
+.gitignore
+.gitattributes
+
+# Configurações do editor
+.vscode
+.idea
+*.swp
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ambiente local
+.env.local
+.env.*.local
+.env
