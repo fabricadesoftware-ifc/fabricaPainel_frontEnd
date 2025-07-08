@@ -5,6 +5,7 @@ import router from "@/router";
 import { useEdition } from "@/stores/edition";
 import { useAuth } from "@/stores/auth";
 import { resolveUserFunction } from "@/utils/works";
+import { useDisplay } from "vuetify";
 
 const workStore = useWork();
 const EditionStore = useEdition();
@@ -72,55 +73,60 @@ onMounted(async () => {
 
 
 });
+
+const {width} = useDisplay()
 </script>
 
 <template>
   <LayoutPanel v-if="!tokenExpired && !loading">
     <v-container class="w-100">
       <div v-if="UserStore?.user?.user_type == 'STUDENT'" class="d-flex justify-space-between align-center text-h6">
-        <h1 class="font-weight-bold" style="font-size: 40px">Submissões</h1>
-        <VChip :class="is_submit ? 'bg-green' : 'bg-red'">
+        <h1 class="font-weight-bold" :style="{fontSize: width > 780 ? '40px' : '25px'}">Submissões</h1>
+        <VChip :size="width > 780 ? 'default' : 'x-small'" :class="is_submit ? 'bg-green' : 'bg-red'">
           {{
             is_submit ? "trabalho submetido" : "trabalho ainda não submetido"
           }}
         </VChip>
       </div>
 
-      <div class="mb-10">
+      <div class="mb-10 px-16">
         <div v-if="EditionStore?.currentEdition?.edition_name" class="d-flex align-center mt-10 mb-10 ga-5 w-100">
-          <h1 class="text-h5 font-weight-bold" style="font-size: 30px">
+          <h1 :style="{fontSize: width > 780 ? '30px' : '20px'}" class=" font-weight-bold">
             {{ EditionStore?.currentEdition?.edition_name }}
           </h1>
-          <VChip
+          <VChip :size="width > 780 ? 'default' : 'x-small'"
             class="bg-blue d-flex justify-center align-center"
             pill
-            style="width: 120px"
+            :style="{width: width > 780 ? '120px' : '90px'}"
             >Em aberto
           </VChip>
         </div>
 
         <CreateWork
           v-if="!is_submit && UserStore?.user?.user_type == 'STUDENT'"
-          :date="
+          :date_end="
             new Date() <
             new Date(EditionStore?.currentEdition?.final_second_submission_date)
           "
-        />
+          :date_start="new Date() >= new Date(EditionStore?.currentEdition?.initial_submission_date)"
 
+        />
+<div>
         <v-lazy
   :min-height="200"
   :options="{'threshold':0.5}"
   transition="fade-transition"
 >
+<div v-if="UserStore?.user?.user_type == 'STUDENT'">
         <CardSubmission
-          v-if="UserStore?.user?.user_type == 'STUDENT'"
+         
           v-for="(work, index) in submissionsCurrent"
           :key="index"
           :work_id="work?.id"
           :work="work?.edition?.final_submission_date"
           :work_status="work?.status"
         />
-
+</div>
         <TeacherContainer
           v-else
           :works="submissionsCurrent"
@@ -162,15 +168,16 @@ onMounted(async () => {
           </template>
         </TeacherContainer>
         </v-lazy>
+        </div>
       </div>
 
       <div class="d-flex justify-space-between align-center text-h6 pb-10">
-        <h1 class="font-weight-bold" style="font-size: 30px">
+        <h1 class="font-weight-bold" :style="{fontSize: width > 780 ? '40px' : '25px'}">
           Edições anteriores
         </h1>
       </div>
 
-      <div>
+      <div class="px-16">
            <v-lazy
   :min-height="200"
   :options="{'threshold':0.5}"

@@ -18,9 +18,11 @@ import {
   giveWorkGradeFn } from "@/utils/work_view/grades";
 
 import { resolveStatus, resolveUserFunction, orderByUserId, userCase } from "@/utils/works";
+import { useDisplay } from "vuetify";
 
 const router = useRouter();
 const work_id = (router.currentRoute.value.params as { id: string }).id;
+const {width} = useDisplay()
 
 const authStore = useAuth();
 const workStore = useWork();
@@ -118,8 +120,9 @@ const handleWorkHeaderAction = () => {
 </script>
 
 <template>
-  <LayoutPanel v-if="workStore.currentWork">
+  <LayoutPanel v-if="workStore.currentWork && isLoaded">
     <v-container class="w-100">
+        <v-btn href="/panel/works" style="box-shadow: none;" class="mb-2 text-blue"> <v-icon icon="mdi-arrow-left mr-1"></v-icon> Voltar</v-btn>
       <v-fade-transition appear>
         <div class="d-flex flex-column ga-10">
           <WorkGrade @giveGrade="giveWorkGrade" @close="workGrade = !workGrade" v-model="workGrade" />
@@ -161,15 +164,16 @@ const handleWorkHeaderAction = () => {
             :status_color="resolveStatus(workStore.currentWork.status)?.color || 'Não informado'"
             :title="workStore.currentWork.title"
           />
+          
 
           <div
             class="d-flex flex-column ga-3 flex-wrap w-100"
             style="max-width: 100%; flex-wrap: wrap; word-break: break-all"
           >
-            <h2 class="opacity-70" style="font-weight: 700; font-size: 20px">
+            <h2 class="opacity-70" :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">
               Proposta de Integração
             </h2>
-            <p style="font-size: 16px">{{ workStore.currentWork.abstract }}</p>
+            <p :style="{fontSize: width > 780 ? '16px': '12px'}">{{ workStore.currentWork.abstract }}</p>
           </div>
 
           <SubjectsSession
@@ -178,7 +182,7 @@ const handleWorkHeaderAction = () => {
             :cross_cutting_theme="workStore.currentWork.cross_cutting_theme"
           />
 
-          <MembersContainer :attribute="['ADVISOR', 'STUDENT'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) ? 'Nota Individual' : ''">
+          <MembersContainer :attribute="width <= 780 ? '' : ['ADVISOR'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) && assesmentStore?.currentAssessment[0]?.grade ? 'Nota Individual' : ['STUDENT'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) ? 'Nota Individual' : ''">
             <MembersCard
               v-for="(student, index) in orderByUserId(workStore.currentWork.team.team_members, authStore.user.id)"
               :member_id="student.id"
@@ -193,10 +197,11 @@ const handleWorkHeaderAction = () => {
 
           <MembersContainer
             title="Orientador do Trabalho"
-            attribute="Status do Aceite/Rejeite"
+            :attribute="width > 780 ? 'Status do Aceite/Rejeite' : ''"
           >
             <MembersCard
-              :status="workStore.currentWork.advisor_status"
+              :status="workStore?.currentWork?.advisor_status"
+
               :member="workStore.currentWork.advisor"
               :member_id="workStore.currentWork.advisor.id"
               :user_id="authStore.user.id"
@@ -206,7 +211,7 @@ const handleWorkHeaderAction = () => {
 
           <MembersContainer
             title="Colaboradores do Trabalho"
-            attribute="Status do Aceite/Rejeite"
+            :attribute="width > 780 ? 'Status do Aceite/Rejeite' : ''"
           >
             <MembersCard
               v-for="(collaborator, index) in workStore.currentWork.work_collaborator"
@@ -233,10 +238,12 @@ const handleWorkHeaderAction = () => {
       <AcceptanceAdvisorWork
         v-if="
           advisorAcceptanceStore.state.isAdvisor &&
-          (workStore?.currentWork.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3)
+          (workStore?.currentWork?.advisor_status === 1 && uptadeWorkStatus == 1 || uptadeWorkStatus == 3)
+
         "
         :work="workStore?.currentWork"
       />
+      
     </v-container>
   </LayoutPanel>
 

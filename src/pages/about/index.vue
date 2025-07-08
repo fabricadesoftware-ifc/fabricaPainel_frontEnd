@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 </script>
 <template>
-  <LayoutDefault>
+  <LayoutPanel>
     <AboutBanner :class="'p-0 border-0'" />
-  </LayoutDefault>
+  </LayoutPanel>
 </template>

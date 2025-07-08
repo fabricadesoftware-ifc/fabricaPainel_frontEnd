@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { defineEmits } from 'vue';
+import { useDisplay } from 'vuetify';
 const grade = ref(0)
 const feedback = ref('')
 
@@ -21,6 +22,8 @@ watch(grade, (newVal) => {
   
 })
 
+const {width} = useDisplay()
+
 const emits = defineEmits(['giveGrade', 'close'])
 
 const sendWorkData = () => {
@@ -33,11 +36,11 @@ const sendWorkData = () => {
          :overlay="false"
         transition="dialog-transition"
     >
-    <div class="w-100 h-100 d-flex justify-center align-center">
+    <div :class="`${width > 780 ? 'w-100' : 'w-75'} h-100 ${'mx-auto'} d-flex justify-center align-center`">
         <div style="width: 700px;" class="bg-white d-flex flex-column rounded-lg pa-5 ga-15">
             <div class="d-flex flex-column ga-2">
-            <h2 style="font-size: 25px;" class="text-grey-darken-4">Atribuir Nota ao Trabalho</h2>
-            <p style="font-size: 20px;" class="text-grey-darken-3">Coloque o valor da nota de 0 a 10</p>
+            <h2 :style="{fontSize: width > 780 ? '25px' : '20px'}" class="text-grey-darken-4">Atribuir Nota ao Trabalho</h2>
+            <p :style="{fontSize: width > 780 ? '20px' : '15px'}" class="text-grey-darken-3">Coloque o valor da nota de 0 a 10</p>
             </div>  
 
             <div class="w-100 d-flex flex-column justify-center align-center ga-5">

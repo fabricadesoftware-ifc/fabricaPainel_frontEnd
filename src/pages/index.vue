@@ -54,7 +54,7 @@ const { lgAndUp } = useDisplay()
               </v-btn>
               <v-btn rounded="pill" size="x-large" class="font-weight-medium" append-icon="mdi-download"
                 :variant="lgAndUp ? 'tonal' : 'text'" :color="lgAndUp ? 'white' : 'white'" @click="downloadPdf">
-                Orientações
+                Regimento
               </v-btn>
             </div>
           </div>
