@@ -120,7 +120,7 @@ const {width} = useDisplay()
                     <p class="opacity-60" :style="{fontSize: width > 780 ? '15px' : '13px'}">{{ props.member.email }}</p>
                 </div>
                 <div :style="{marginTop: width > 780 ? '0px' : '15px'}" class="d-flex ga-5 align-center">
-                <p style="font-weight: 700; font-size: 14px;" class="blue-darken-2 opacity-70" v-if="width <= 780 ? '' : ['ADVISOR'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) && assesmentStore?.currentAssessment[0]?.grade ? 'Nota Individual' : ['STUDENT'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) ? 'Nota Individual' : ''"> {{ props.is_student ? 'Nota Individual:' : 'Status: ' }} </p>
+                <p style="font-weight: 700; font-size: 14px;" class="blue-darken-2 opacity-70" v-if="width <= 780 ? ['ADVISOR'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) && assesmentStore?.currentAssessment[0]?.grade ? 'Nota Individual' : ['STUDENT'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) ? 'Nota Individual' : '' : ''"> {{ props.is_student ? 'Nota Individual:' : 'Status: ' }} </p>
 
                         <v-btn @click="emits('openStudentAssesment')" v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition.year == date.getFullYear() && workStore?.currentWork?.status === 2 && assesmentStore?.currentAssessment[0]?.grade" color="blue" :style="{width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px'}">Atribuir Nota</v-btn>
 

@@ -109,8 +109,8 @@ function showinfo(){
           </div>
 
           <!-- Card do Ver Mais -->
-          <div v-if="seemore" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 99999; display: flex; justify-content: center; align-content: center; background-color: rgb(0, 0, 0,0.6); backdrop-filter: blur(5px);">
-            <v-col class="d-flex flex-column ga-4 justify-center bg-white rounded" style="height: auto; padding: 100px 40px; max-height: 80vw;" cols="6">
+          <div v-if="seemore" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 99999; display: flex; justify-content: center; align-items: center; align-content: center; background-color: rgb(0, 0, 0,0.6); backdrop-filter: blur(5px);">
+            <v-col class="d-flex flex-column ga-4 justify-center bg-white rounded" style="height: 90%; padding: 100px 40px; max-height: 80vw;" cols="6">
               <div style="display: flex; flex-direction: column; max-height: 80vh; overflow: hidden; overflow-y: scroll; gap: 10px; padding-bottom: 50px;">
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">
                   <span class="text-primary font-weight-bold">INFORMAÇÕES</span>
