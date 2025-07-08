@@ -5,9 +5,11 @@ import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useEdition } from "@/stores/edition";
 import { useAuth } from "@/stores/auth";
+import { useDisplay } from "vuetify";
 
 
 const { user } = useAuth();
+const {width} = useDisplay();
 const { state, fetchEditions } = useEdition();
 const router = useRouter();
 
@@ -44,15 +46,14 @@ onMounted(() => {
 
 <template>
   <LayoutPanel>
-    <div class="d-flex flex-row flex-wrap ga-4 px-16">
-      <h1 style="font-size: 40px;">Edições</h1>
-
+    <div class="d-flex flex-row flex-wrap ga-4" :class="width > 780 ? 'px-16' : 'px-4'">
+      <h1 :style="{fontSize: width > 780 ? '40px' : '32px'}">Edições</h1>
       <!-- Edição em aberto -->
-      <div v-if="openEdition" class="mb-8 mt-10 w-100 px-16">
+      <div v-if="openEdition" class="mb-8 mt-10 w-100" :class="width > 780 ? 'px-16' : 'px-4'">
         <h2 class="mb-5">Edição em Aberto</h2>
-        <v-card :key="openEdition?.id" class="border-md w-100" rounded="xl" variant="outlined">
-          <div class="h-100 d-flex flex-column justify-space-between pa-10">
-            <v-row style="justify-content: space-between; display: flex; align-items: center; height: 50px;">
+        <v-card :key="openEdition?.id"  class="border-md w-100" rounded="xl" variant="outlined">
+          <div class="d-flex flex-column justify-space-between" style="padding: 40px;">
+            <v-row style="justify-content: space-between; display: flex; align-items: center; min-height: 50px; gap: 15px;">
               <div>
                 <h2 class="font-weight-bold text-h5">
                   {{ openEdition?.edition_name }}
@@ -74,17 +75,17 @@ onMounted(() => {
 
       <!-- Se não houver edição em aberto-->
       <div v-else  class="mb-8 mt-10 w-100 px-16" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-        <h1>Ainda não há uma edição cadastrada neste ano!</h1>
-        <v-btn v-if="user?.user_type == 'ADMIN'" flat class="text-primary" to="/panel/editions/add" style="font-size: 20px;"><img src="@/assets/icons/AddIcon.svg" alt="">Cadastrar Edição</v-btn>
+        <h1 :style="{fontSize: width > 780 ? '32px' : '20px'}" style="text-align: center;">Ainda não há uma edição cadastrada neste ano!</h1>
+        <v-btn v-if="user?.user_type == 'ADMIN'" flat class="text-primary" to="/panel/editions/add" :style="{fontSize: width > 780 ? '20px' : '16px'}"><img src="@/assets/icons/AddIcon.svg" :style="{width: width > 780 ? '32px' : '20px'}" alt="">Cadastrar Edição</v-btn>
       </div>
 
       <!-- Demais edições -->
-      <div class="mb-8 w-100 px-16" style="display: flex; flex-direction: column; gap: 20px;">
+      <div class="mb-8 w-100" :class="width > 780 ? 'px-16' : 'px-4'" style="display: flex; flex-direction: column; gap: 20px;">
         <h2 v-if="closedEditions.length" class="mt-8 mb-5 w-100">Edições Anteriores</h2>
         <v-card v-for="edition in closedEditions.slice().reverse()" :key="edition.id" class="border-md w-100" rounded="xl"
           variant="outlined">
-          <div class="h-100 d-flex flex-column justify-space-between pa-10">
-            <v-row style="justify-content: space-between; display: flex; align-items: center; height: 50px;">
+          <div class="d-flex flex-column justify-space-between" style="padding: 40px;">
+            <v-row style="justify-content: space-between; display: flex; align-items: center; min-height: 50px; gap: 15px;">
               <div>
                 <h2 class="font-weight-bold text-h5">
                   {{ edition.edition_name }}
