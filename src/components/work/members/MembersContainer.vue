@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { useDisplay } from 'vuetify';
+
 const props = defineProps({
     title: {
         type: String,
@@ -9,12 +11,14 @@ const props = defineProps({
         default: 'Nota Individual'
     }
 })
+
+const {width} = useDisplay()
 </script>
 <template>
         <div class="d-flex flex-column ga-10">
             <div class="w-100 d-flex justify-space-between opacity-70 mt-10">
-            <p style="font-weight: 700; font-size: 20px;">{{ props.title }}:</p>
-            <p style="font-weight: 700; font-size: 20px;">{{ props.attribute }}</p>
+            <p :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">{{ props.title }}:</p>
+            <p :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">{{ props.attribute }}</p>
             </div>
             <slot></slot>
         </div>

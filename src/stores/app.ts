@@ -34,9 +34,16 @@ export const uselayout = defineStore(
       return result.length > 0 ? result[0].actions : undefined
     })
 
+    const eraseWords = (link:any) => {
+      router.currentRoute.value.path = ''
+      return '/panel/' + link
+    }
+
     const toggleDrawer = () => state.value.drawer = !state.value.drawer
     const toggleDarkMode = () => darkMode.value = !darkMode.value
     const getSettings = async () => {
+
+      
       try {
         const data = {
           results: {
@@ -48,6 +55,14 @@ export const uselayout = defineStore(
               }, {
                 text: 'Sobre o Projeto',
                 value: '/about',
+              },
+              {
+                text: 'Edições',
+                value: eraseWords('editions'),
+              },
+               {
+                text: 'Propostas',
+                value:  eraseWords('works'),
               },
             ],
             navbarDashboard: [
