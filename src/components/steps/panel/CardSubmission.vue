@@ -53,7 +53,7 @@ const {width} = useDisplay()
             <div class="d-flex justify-center align-center">
                 <VCard :style="{flexDirection: width > 780 ? 'row' : 'column'}" class="d-flex align-center pa-5 justify-space-between w-100" :rounded="width > 780 ? 'lg' : 'xl'" elevation="0"
                     :border="true" width="1000">
-                    <div class="d-flex align-center ga-3 flex-wrap">
+                    <div :style="{justifyContent: width > 780 ? '' : 'center'}" class="d-flex align-center ga-3 flex-wrap">
                         <VCardTitle :style="{fontSize: width > 780 ? '20px' : width > 390 ? '15px' : '11px'}" class="font-weight-bold">Submissão de proposta</VCardTitle>                        
                         <V-Chip :size="width > 780 ? 'default' : width > 390 ? 'small' : 'x-small'" :color="resolveStatus(props.work_status).color">{{ resolveStatus(props.work_status).text }}</V-Chip>
                         <VCardSubtitle>{{ work }}</VCardSubtitle>

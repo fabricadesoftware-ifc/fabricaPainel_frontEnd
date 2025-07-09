@@ -114,7 +114,7 @@ onMounted(() => {
       <div class="d-flex align-center ga-5">
         <h1 :style="{fontSize: width > 780 ? '40px' : '25px'}">{{ props.title }}</h1>
 
-        <v-chip class="d-flex justify-center align-center"
+        <v-chip style="min-width: 70px;" class="d-flex justify-center align-center"
           :color="props.status_color"
           :size="width > 780 ? 'large' : 'small'"
         >
