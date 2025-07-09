@@ -87,8 +87,8 @@ const heightComputed = computed(() => {
         <TeacherSelected :disabled="WorkStore.WorkStorage.collaborators.length === (editionStore.currentEdition?.collaborators_max || 5)" :hint="hintInput" error_msg="colaborador não encontrado" placeholder="pesquise pelo colaborador" label="pesquise pelo colaborador" user-type="TEACHER" @addUser="AddUser" @removeUser="removeUser"/>
         <div class="d-flex ga-2 mt-5">
             <p style="font-size: 12px;">* Limite máximo de colaboradores: {{ editionStore.currentEdition?.collaborators_max || 5 }}</p>
-            <p style="font-size: 12px;">* Limite minimo de colaboradores: {{ editionStore.currentEdition?.collaborators_min || 1 }}</p>
+            <p style="font-size: 12px;">* Limite minimo de colaboradores: {{ editionStore.currentEdition?.collaborators_min || 0 }}</p>
         </div>
-        <StepContainer :painel_height="heightComputed" title="Colaboradores do seu projeto" :step_array="WorkStore.WorkStorage.collaborators" :is_subject="false" @RemoveUser="removeUser" :min="editionStore.currentEdition?.collaborators_min || 1" no_arr_msg="Nenhum colaborador selecionado"/>
+        <StepContainer :painel_height="heightComputed" title="Colaboradores do seu projeto" :step_array="WorkStore.WorkStorage.collaborators" :is_subject="false" @RemoveUser="removeUser" :min="editionStore.currentEdition?.collaborators_min || 0" no_arr_msg="Nenhum colaborador selecionado"/>
     </div>
 </template>

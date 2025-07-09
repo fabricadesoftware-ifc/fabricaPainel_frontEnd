@@ -15,7 +15,6 @@ const autocompleteRef = ref(null)
 const selectedSub = ref(null)
 
 function selectedOds(value){
-    
     WorkStore.WorkStorage.ods = value
     
 }
@@ -105,7 +104,7 @@ const heightComputed = computed(() => {
         </div>
         <div class="pa-5 ga-2 d-flex flex-column">
             <p class="font-weight-bold text-h6 ">Objetivos de Desenvolvimento Sustentaveis do seu projeto</p>
-            <VSelect variant="outlined" item-title="name" item-value="id" multiple chips closable-chips rounded="xl" :items="CategoryStore.ods" @update:model-value="(value) => selectedOds(value)"></VSelect>
+            <VSelect v-model="WorkStore.WorkStorage.ods" variant="outlined" item-title="name" item-value="id" multiple chips closable-chips rounded="xl" :items="CategoryStore?.ods" @update:model-value="(value) => selectedOds(value)"></VSelect>
         </div>
     </div>
 </template>

@@ -22,14 +22,17 @@ const ReturnValidatedtoDisabledBtn = computed(() => {
   if(actualstep.value === 1){
     const fieldOk = (workStore.WorkStorage.field || []).length >= (editionStore.currentEdition?.subjects_min || 3)
     const themeOk = Object.keys(workStore.WorkStorage.cross_cutting_theme || {}).length > 0
+    const checkCrossCuttingThem = workStore?.WorkStorage?.cross_cutting_theme?.name == 'Escolha Uma Matéria Transversal'
+    const checkOds = workStore?.WorkStorage?.ods.length > 0
 
-    return !(fieldOk && themeOk)
+    return !(fieldOk && themeOk && !checkCrossCuttingThem && checkOds)
   }
   if (actualstep.value === 2) {
     return workStore.WorkStorage.advisor?.length === 0
   }
   if (actualstep.value === 3) {
-    return workStore.WorkStorage.collaborators?.length === 0
+    
+    return workStore.WorkStorage.collaborators?.length < editionStore?.currentEdition?.collaborators_min
   }
   return false
 })
