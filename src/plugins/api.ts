@@ -2,9 +2,10 @@ import axios from "axios";
 import { useAuth } from "@/stores/auth";
 import { globalRouter } from "./globalRouter";
 
+const apiUrl = import.meta.env.VITE_API_URL
+
 const api = axios.create({
-  // baseURL: 'https://painelapi.fabricadesoftware.ifc.edu.br/api',
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: apiUrl,
   headers: {
     "Content-Type": "application/json",
   },
