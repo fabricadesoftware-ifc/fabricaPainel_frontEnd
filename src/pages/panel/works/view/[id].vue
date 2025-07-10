@@ -122,6 +122,7 @@ const handleWorkHeaderAction = () => {
 <template>
   <LayoutPanel v-if="workStore.currentWork && isLoaded">
     <v-container class="w-100">
+        <v-btn href="/panel/works" style="box-shadow: none;" class="mb-2 text-blue"> <v-icon icon="mdi-arrow-left mr-1"></v-icon> Voltar</v-btn>
       <v-fade-transition appear>
         <div class="d-flex flex-column ga-10">
           <WorkGrade @giveGrade="giveWorkGrade" @close="workGrade = !workGrade" v-model="workGrade" />

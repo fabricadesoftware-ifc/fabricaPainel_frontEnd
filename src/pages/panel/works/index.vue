@@ -89,7 +89,7 @@ const {width} = useDisplay()
         </VChip>
       </div>
 
-      <div class="mb-10">
+      <div class="mb-10 px-16">
         <div v-if="EditionStore?.currentEdition?.edition_name" class="d-flex align-center mt-10 mb-10 ga-5 w-100">
           <h1 :style="{fontSize: width > 780 ? '30px' : '20px'}" class=" font-weight-bold">
             {{ EditionStore?.currentEdition?.edition_name }}
@@ -172,12 +172,12 @@ const {width} = useDisplay()
       </div>
 
       <div class="d-flex justify-space-between align-center text-h6 pb-10">
-        <h1 class="font-weight-bold" :style="{fontSize: width > 780 ? '30px' : '20px'}">
+        <h1 class="font-weight-bold" :style="{fontSize: width > 780 ? '40px' : '25px'}">
           Edições anteriores
         </h1>
       </div>
 
-      <div>
+      <div class="px-16">
            <v-lazy
   :min-height="200"
   :options="{'threshold':0.5}"
