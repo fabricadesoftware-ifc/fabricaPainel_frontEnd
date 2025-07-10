@@ -111,8 +111,8 @@ onMounted(() => {
         <p  :style="{fontWeight: '600', fontSize: '12px'}">{{ userCase.text }}</p>
       </v-btn>
       </div>
-      <div class="d-flex align-center ga-5">
-        <h1 :style="{fontSize: width > 780 ? '40px' : '25px'}">{{ props.title }}</h1>
+      <div  class="d-flex align-center ga-5">
+        <h1 style="max-width: 80%;" :style="{fontSize: width > 780 ? '40px' : '25px'}">{{ props.title }}</h1>
 
         <v-chip style="min-width: 70px;" class="d-flex justify-center align-center"
           :color="props.status_color"
