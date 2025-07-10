@@ -46,7 +46,8 @@ onMounted(() => {
 
 <template>
   <LayoutPanel>
-    <div class="d-flex flex-row flex-wrap ga-4" :class="width > 780 ? 'px-16' : 'px-4'">
+     <v-container class="w-100">
+    <div class="d-flex flex-row flex-wrap ga-4">
       <h1 :style="{fontSize: width > 780 ? '40px' : '32px'}">Edições</h1>
       <!-- Edição em aberto -->
       <div v-if="openEdition" class="mb-8 mt-10 w-100" :class="width > 780 ? 'px-16' : 'px-4'">
@@ -105,5 +106,6 @@ onMounted(() => {
         </v-card>
       </div>
     </div>
+    </v-container>
   </LayoutPanel>
 </template>

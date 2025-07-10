@@ -39,7 +39,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-   <div :class="`d-flex justify-center ${width > 780 ? '' : 'w-100'}`" :style="{position: 'absolute', zIndex: '99', top: width > 780 ? '150px' : '90px', right: width > 780 ? '70px' : '0px'}">
+   <div :class="`d-flex justify-center ${width > 780 ? '' : 'w-100'}`" :style="{position: 'absolute', zIndex: '99', top: width > 780 ? '150px' : '70px', right: width > 780 ? '70px' : '0px'}">
    <v-btn :size="width > 780 ? 'default' : 'small' " @click="show = !show"  v-if="!show && pendingStatus" color="blue">Decidir Orientação</v-btn>
    </div>
 </template>
