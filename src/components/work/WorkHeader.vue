@@ -67,6 +67,8 @@ const shouldShowButton = computed(() => {
 
   if (uf === "STUDENT") {
     return student_able_to_cancel.value && ws === 1 || ws === 3;
+  } else if (uf === "COLLABORATOR") {
+    return false
   } else if (uf === "ADVISOR") {
     if (advisor_able_to_aprove_work.value && ws === 1) {
       return true;
@@ -74,6 +76,7 @@ const shouldShowButton = computed(() => {
   } else {
     return evaluator_able_to_give_grade.value && ws === 2 && !props.grade;
   }
+
   return false;
 });
 
@@ -111,10 +114,11 @@ onMounted(() => {
         <p  :style="{fontWeight: '600', fontSize: '12px'}">{{ userCase.text }}</p>
       </v-btn>
       </div>
-      <div  class="d-flex align-center ga-5">
-        <h1 style="max-width: 80%;" :style="{fontSize: width > 780 ? '40px' : '25px'}">{{ props.title }}</h1>
+      <div :style="{maxWidth: width > 780 ? '80%' : '100%'}" class="d-flex align-center ga-5">
+        <h1 :style="{fontSize: width > 780 ? '40px' : '25px'}">{{ props.title }}</h1>
 
-        <v-chip style="min-width: 70px;" class="d-flex justify-center align-center"
+
+        <v-chip :style="{minWidth: width > 780 ? '100px' : '100px'}" class="d-flex justify-center align-center"
           :color="props.status_color"
           :size="width > 780 ? 'large' : 'small'"
         >
