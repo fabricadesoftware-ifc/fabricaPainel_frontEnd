@@ -132,7 +132,7 @@ export const validate_user_function = (user_function: string, work_status: Numbe
         userCase.function_two = rejectWork
   }
 
-  } else if (user_function == 'STUDENT') {
+  } else if (user_function === 'STUDENT') {
     userCase.text = 'Cancelar Submissão'
     userCase.color = '#EC3223'
     userCase.icon = '$delete'

@@ -67,6 +67,8 @@ const shouldShowButton = computed(() => {
 
   if (uf === "STUDENT") {
     return student_able_to_cancel.value && ws === 1 || ws === 3;
+  } else if (uf === "COLLABORATOR") {
+    return false
   } else if (uf === "ADVISOR") {
     if (advisor_able_to_aprove_work.value && ws === 1) {
       return true;
@@ -74,6 +76,7 @@ const shouldShowButton = computed(() => {
   } else {
     return evaluator_able_to_give_grade.value && ws === 2 && !props.grade;
   }
+
   return false;
 });
 

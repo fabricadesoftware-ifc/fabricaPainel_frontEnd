@@ -6,7 +6,7 @@
       </v-card-title>
 
       <v-card-text>
-        Você foi convidado como orientador deste trabalho. Deseja aceitar?
+          Você foi convidado para ser o orientador deste trabalho. Ao aceitar, o trabalho será automaticamente aprovado e você poderá atribuir uma nota. Deseja aceitar?
       </v-card-text>
 
       <v-card-actions class="justify-end">
@@ -91,6 +91,9 @@ const aceitar = async () => {
   workStore.state.currentWork.advisor_status = 2 
   await workStore.getWork(props.work.id)
 
+  await workStore.approveWork(workStore?.currentWork?.verification_token)
+  workStore.state.currentWork.status = 2
+  
 };
 
 const recusar = async () => {
@@ -100,5 +103,7 @@ const recusar = async () => {
   action.value = "";
   workStore.state.currentWork.advisor_status = 3 
 
+  await workStore.rejectWork(workStore?.currentWork?.verification_token)
+  workStore.state.currentWork.status = 4
 };
 </script>
