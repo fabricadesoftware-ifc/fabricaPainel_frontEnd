@@ -86,7 +86,7 @@ const heightComputed = computed(() => {
         </div>
         <StepContainer :painel_height="heightComputed" title="As matérias integradas no seu projeto" no_arr_msg="você ainda não selecionou as matérias" :step_array="WorkStore.WorkStorage.field" :is_subject="true" :min="editionStore.currentEdition?.subjects_min || 3" @excludeSub="RemoveSubject"/>
         <div class="pa-5 ga-2 d-flex flex-column">
-            <p class="font-weight-bold text-h6 ">Tema Transversais do seu projeto</p>
+            <p class="font-weight-bold text-h6 ">Tema Transversal do seu projeto</p>
              <VSelect
   v-model="WorkStore.WorkStorage.cross_cutting_theme"
   :items="ThemeItems"

@@ -30,7 +30,6 @@
   const router = useRouter()
   const authStore = useAuth()
 
-
   globalRouter.router = router
 
   onMounted(async () => {
