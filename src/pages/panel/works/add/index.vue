@@ -50,7 +50,6 @@ async function DialogActive(type) {
 }
 
 function NextStep() {
-  
   if (actualstep.value <= 3) {
     steps.value[actualstep.value].complete = true
     steps.value[actualstep.value].is_actual = false
@@ -64,7 +63,6 @@ function NextStep() {
   }
 actualstep.value++
   // localStorage.setItem('actualstep', actualstep.value)
-  
 }
 
 const StepObj = computed(() => {
@@ -72,11 +70,7 @@ const StepObj = computed(() => {
 })
 
 function PrevStep() {
-
-
   if (actualstep.value <= 0) return 
-
-
   
   if (actualstep.value < 4) {
     steps.value[actualstep.value].is_actual = false
@@ -152,7 +146,7 @@ onMounted( async () => {
             @submitPropose="open_dialog = !open_dialog" />
             </div>
           </div>  
-          <SuccessStep v-if="actualstep === 6" />
+          <SuccessStep v-if="actualstep === 6" to="/panel/works/"/>
         <StepsAction :actualstep="actualstep" :disabledBtn="ReturnValidatedtoDisabledBtn" @PrevStep="PrevStep"
           @NextStep="NextStep" v-if="actualstep !== 6" />
       </VStepperWindow>

@@ -1,16 +1,14 @@
 <script setup>
 import { useDisplay } from 'vuetify'
-
- 
    const props = defineProps({
         actualstep: {
             type: Number,
-            required: true
+            required: true,
         },
         disabledBtn: {
             type: Boolean,
             required: true
-        }
+        },
     })
 
     const isDisabledValue = computed(() => {
@@ -34,8 +32,8 @@ import { useDisplay } from 'vuetify'
           </template>
           <template #next="{ props }" >
             <VBtn v-if="actualstep !== 5" v-bind="props" class="border-none text-blue bg-white" :class="actualstep === 0 ? 'position-absolute right-0 mb-9 me-6' : ''" @click="$emit('NextStep')" :disabled="isDisabledValue" >
-              {{ actualstep === 4 ? 'Finalizar' : 'Próximo' }}
-              <VIcon icon="mdi-arrow-right" v-if="actualstep !== 4 " ></VIcon>
+              {{ actualstep === 4  ? 'Finalizar' : 'Próximo' }}
+              <VIcon icon="mdi-arrow-right" v-if="actualstep !== 4"></VIcon>
             </VBtn>
           </template>
         </VStepperActions>

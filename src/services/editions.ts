@@ -25,7 +25,7 @@ class EditionsService {
     }
   }
 
-  async createEdition (editionData: IEdition) {
+  async createEdition (editionData: any) {
     try {
       const { data } = await api.post('/edition/', editionData)
       return data

@@ -30,4 +30,10 @@ export const StepsEdition = ref<Step[]>([
     complete: false,
     is_actual: false
   },
+  {
+    title: 'logo e banner da edição',
+    value: '5',
+    complete: false,
+    is_actual: false
+  }
 ])

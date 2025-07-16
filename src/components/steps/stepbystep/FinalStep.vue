@@ -12,7 +12,6 @@ const {width} = useDisplay()
     })
     defineEmits(['submitPropose'])
 
-   
 </script>
 <template>
 <div class="d-flex flex-column align-center ga-7 w-100"  :style=" {height: width < 750 ? '550px' : '800px'}">

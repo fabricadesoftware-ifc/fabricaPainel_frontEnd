@@ -4,10 +4,17 @@ import { useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify';
 const {width} = useDisplay()
 const router = useRouter();
+
+defineProps({
+    to: {
+       type: String,
+       required: true 
+    }
+})
 </script>
 <template>
     <div class="position-absolute bottom-0 mb-16" >
-        <VBtn rounded="pill" size="40" elevation="0" class="me-10 w-100 bg-blue" @click="router.push('/panel/works/')"><VIcon icon="mdi-arrow-left"></VIcon>voltar</VBtn>
+        <VBtn rounded="pill" size="40" elevation="0" class="me-10 w-100 bg-blue" @click="router.push(`${to}`)"><VIcon icon="mdi-arrow-left"></VIcon>voltar</VBtn>
     </div>
     <div>
         <div class="d-flex flex-column mb-10 align-center" :style="{marginTop: width < 750 ? '100px' : '250px'}">
