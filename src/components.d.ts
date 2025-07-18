@@ -38,6 +38,7 @@ declare module 'vue' {
     LayoutSteps: typeof import('./components/layout/LayoutSteps.vue')['default']
     Loading: typeof import('./components/globals/Loading.vue')['default']
     MainBanner: typeof import('./components/layout/MainBanner.vue')['default']
+    MediaInput: typeof import('./components/inputs/MediaInput.vue')['default']
     MembersCard: typeof import('./components/work/members/MembersCard.vue')['default']
     MembersContainer: typeof import('./components/work/members/MembersContainer.vue')['default']
     MyThemesV: typeof import('./components/MyThemesV.vue')['default']

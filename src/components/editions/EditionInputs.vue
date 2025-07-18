@@ -11,8 +11,8 @@
       required: true
     },
     icon: {
-      type: Boolean,
-      default: false
+      type: String,
+      default: ''
     },
     type: {
       type: String,
@@ -25,9 +25,11 @@
   })
 </script>
 <template>
-<div class="d-flex flex-column ga-3">
+<div class="d-flex flex-column ga-3" style="width: 35%;">
   <VLabel>{{ label }}</VLabel>
-  <VTextField variant="outlined" rounded="xl" :type="type" v-model="value" :placeholder="placeholder" :append-icon="icon ? 'mdi-account-multiple' : ''" v-if="!qtds"></VTextField>
-  <EditionQtdInputs v-for="qtd, i in qtds" :key="i" v-model:value="qtd.value" v-else/>
+  <VTextField variant="outlined" rounded="xl" :type="type" v-model="value" :placeholder="placeholder" :append-inner-icon="icon" v-if="qtds.length === 0"></VTextField>
+  <div class="d-flex justify-center align-center " v-else>
+    <EditionQtdInputs v-for="qtd, i in qtds" :key="i" v-model:value="qtd.value" :placeholder="qtd.placeholder" :icon="qtd.icon"/>
+  </div> 
 </div>
 </template>
