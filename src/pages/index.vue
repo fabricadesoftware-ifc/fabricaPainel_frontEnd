@@ -1,12 +1,9 @@
 <script lang="ts" setup>
-import { useScreen } from "@/composables/composables";
 import { useAuth } from "@/stores/auth";
 import { useDisplay } from "vuetify";
 import { downloadPdf } from "@/utils/user";
 const authStore = useAuth();
 const { lgAndUp } = useDisplay()
-const { isMobile } = useScreen();
-
 
 </script>
 
@@ -57,7 +54,7 @@ const { isMobile } = useScreen();
               </v-btn>
               <v-btn rounded="pill" size="x-large" class="font-weight-medium" append-icon="mdi-download"
                 :variant="lgAndUp ? 'tonal' : 'text'" :color="lgAndUp ? 'white' : 'white'" @click="downloadPdf">
-                Orientações
+                Regimento
               </v-btn>
             </div>
           </div>

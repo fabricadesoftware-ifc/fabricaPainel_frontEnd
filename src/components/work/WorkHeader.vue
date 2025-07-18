@@ -2,8 +2,11 @@
 // @ts-ignore
 import { computed, watch, onMounted, toRefs, defineProps, defineEmits } from "vue";
 import { userCase, validate_user_function } from "@/utils/works";
+import { useDisplay } from "vuetify";
 
 const emits = defineEmits(["buttonAction"]);
+
+const {width} = useDisplay()
 
 const props = defineProps({
   work_status: {
@@ -23,7 +26,7 @@ const props = defineProps({
     required: true,
   },
   grade: {
-    type: [Number, String],
+    type: [Number, String, null],
   },
   user_function: {
     type: String,
@@ -52,7 +55,6 @@ const {
   work_status,
   user_function,
   student_able_to_cancel,
-  advisor_able_to_give_grade,
   evaluator_able_to_give_grade,
   advisor_able_to_aprove_work,
 } = toRefs(props);
@@ -65,15 +67,16 @@ const shouldShowButton = computed(() => {
 
   if (uf === "STUDENT") {
     return student_able_to_cancel.value && ws === 1 || ws === 3;
+  } else if (uf === "COLLABORATOR") {
+    return false
   } else if (uf === "ADVISOR") {
     if (advisor_able_to_aprove_work.value && ws === 1) {
       return true;
-    } else if (advisor_able_to_give_grade.value && ws === 2) {
-      return true;
     }
   } else {
-    return evaluator_able_to_give_grade.value && ws === 2;
+    return evaluator_able_to_give_grade.value && ws === 2 && !props.grade;
   }
+
   return false;
 });
 
@@ -89,44 +92,64 @@ watch(
 
 onMounted(() => {
   validate_user_function(user_function.value, work_status.value);
+  
 });
 </script>
 
 <template>
   <div class="w-100 d-flex justify-space-between flex-wrap ga-8 align-center">
     <div class="d-flex align-center justify-space-between w-100 ga-3">
-      <div class="d-flex align-center ga-3">
-        <h1 style="font-size: 40px">{{ props.title }}</h1>
-
-        <v-chip
-          :color="props.status_color"
-          style="min-width: 150px; display: flex; justify-content: center; align-items: center; font-size: 17px;"
-        >
-          {{ props.status_content }}
-        </v-chip>
-      </div>
-
-      <v-btn
+      <div class="d-flex w-100 align-start ga-10 flex-column">
+        <div class="w-100 d-flex justify-center">
+        <v-btn 
         @click="emits('buttonAction')"
-        v-if="shouldShowButton"
+        v-if="shouldShowButton && width <= 780"
         :prepend-icon="userCase.icon"
         variant="text"
         size="small"
         :style="`color: ${userCase.color}; brightness: 50%;`"
       >
-        <p style="font-size: 15px; font-weight: 600">{{ userCase.text }}</p>
+      
+      
+        <p  :style="{fontWeight: '600', fontSize: '12px'}">{{ userCase.text }}</p>
+      </v-btn>
+      </div>
+      <div :style="{maxWidth: width > 780 ? '80%' : '100%'}" class="d-flex align-center ga-5">
+        <h1 :style="{fontSize: width > 780 ? '40px' : '25px'}">{{ props.title }}</h1>
+
+
+        <v-chip :style="{minWidth: width > 780 ? '100px' : '100px'}" class="d-flex justify-center align-center"
+          :color="props.status_color"
+          :size="width > 780 ? 'large' : 'small'"
+        >
+          {{ props.status_content }}
+        </v-chip>
+        </div>
+      </div>
+
+      <v-btn 
+        @click="emits('buttonAction')"
+        v-if="shouldShowButton && width > 780"
+        :prepend-icon="userCase.icon"
+        variant="text"
+        size="small"
+        :style="`color: ${userCase.color}; brightness: 50%;`"
+      >
+      
+        <p  :style="{fontWeight: '600', fontSize: width > 780 ? '15px' : '10px'}">{{ userCase.text }}</p>
       </v-btn>
     </div>
 
-    <div class="w-100 d-flex align-center ga-5">
-      <p class="opacity-70" style="font-weight: 700; font-size: 20px">
+
+    <div v-if="user_function != 'COLLABORATOR'" class="w-100 d-flex align-center ga-5">
+      <p class="opacity-70" :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">
         Nota do Trabalho:
       </p>
       <v-chip
         :color="props.grade == null ? 'yellow-darken-3' : 'green-darken-3'"
         class="d-flex justify-center align-center"
         label
-        style="width: 150px"
+        :style="{width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px'}"
       >
         {{ !props.grade ? "Nota não Atribuída" : props.grade }}
       </v-chip>

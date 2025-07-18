@@ -6,7 +6,7 @@
       </v-card-title>
 
       <v-card-text>
-        Você foi convidado como orientador deste trabalho. Deseja aceitar?
+          Você foi convidado para ser o orientador deste trabalho. Ao aceitar, o trabalho será automaticamente aprovado e você poderá atribuir uma nota. Deseja aceitar?
       </v-card-text>
 
       <v-card-actions class="justify-end">
@@ -39,6 +39,9 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <div :class="`d-flex justify-center ${width > 780 ? '' : 'w-100'}`" :style="{position: 'absolute', zIndex: '99', top: width > 780 ? '150px' : '70px', right: width > 780 ? '70px' : '0px'}">
+   <v-btn :size="width > 780 ? 'default' : 'small' " @click="show = !show"  v-if="!show && work.advisor_status == 1" color="blue">Decidir Orientação</v-btn>
+   </div>
 </template>
 
 <script setup>
@@ -46,6 +49,7 @@ import { ref, onMounted, defineProps } from "vue";
 import { useAdvisorAcceptance } from "@/stores/advisorAcceptance";
 import { useWork } from "@/stores/work";
 import { useAuth } from "@/stores/auth";
+import { useDisplay } from "vuetify";
 
 const props = defineProps({ work: Object });
 
@@ -55,6 +59,7 @@ const authStore = useAuth();
 
 const show = ref(false);
 const action = ref("");
+const {width} = useDisplay()
 
 // Índice do colaborador no array
 
@@ -86,6 +91,9 @@ const aceitar = async () => {
   workStore.state.currentWork.advisor_status = 2 
   await workStore.getWork(props.work.id)
 
+  await workStore.approveWork(workStore?.currentWork?.verification_token)
+  workStore.state.currentWork.status = 2
+  
 };
 
 const recusar = async () => {
@@ -95,5 +103,7 @@ const recusar = async () => {
   action.value = "";
   workStore.state.currentWork.advisor_status = 3 
 
+  await workStore.rejectWork(workStore?.currentWork?.verification_token)
+  workStore.state.currentWork.status = 4
 };
 </script>

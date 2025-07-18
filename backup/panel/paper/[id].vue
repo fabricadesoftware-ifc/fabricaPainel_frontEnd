@@ -178,14 +178,7 @@ const editWork = async () => {
 const approveWork = async () => {
   await workStore.approveWork();
   await workStore.getWork(work_id);
-  showMessage(
-    "Trabalho aprovado com sucesso",
-    "success",
-    2000,
-    "top-right",
-    "auto",
-    true
-  );
+  
 }
 
 const postWorkGrade = async () => {

@@ -18,6 +18,9 @@ export const useStudentAssessment = defineStore('studentAssessment', () => {
     state.error = message
   }
 
+  const assesment = computed(()=> state.currentAssessment)
+  const assesments = computed(()=> state.assessments)
+
   const fetchAssessments = async () => {
     setLoading(true)
     setError(null)
@@ -31,11 +34,11 @@ export const useStudentAssessment = defineStore('studentAssessment', () => {
     }
   }
 
-  const fetchAssessment = async (id: string) => {
+  const fetchAssessment = async (id: string, work_id: string) => {
     setLoading(true)
     setError(null)
     try {
-      const assessment = await StudentAssessmentService.getAssessment(id)
+      const assessment = await StudentAssessmentService.getAssessment(id, work_id)
       state.currentAssessment = assessment
     } catch (error: any) {
       setError(error.message)
@@ -43,6 +46,20 @@ export const useStudentAssessment = defineStore('studentAssessment', () => {
       setLoading(false)
     }
   }
+
+ const fetchAssessmentReport = async (edition_year: any) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const assessment = await StudentAssessmentService.getAssessmentReport(edition_year)
+      return assessment
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
 
   const createAssessment = async (assessment: any) => {
     setLoading(true)
@@ -105,6 +122,9 @@ export const useStudentAssessment = defineStore('studentAssessment', () => {
 
   return {
     state,
+    assesment,
+    assesments,
+    fetchAssessmentReport,
     fetchAssessments,
     fetchAssessment,
     createAssessment,
