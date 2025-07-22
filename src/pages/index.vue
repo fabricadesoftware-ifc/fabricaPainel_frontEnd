@@ -21,10 +21,12 @@ const { lgAndUp } = useDisplay()
     <v-parallax src="@/assets/home_banner.png" class="custom-parallax" gradient="rgba(0,0,0,0.69)">
       <div class="my-8 mx-6">
         <header class="d-flex justify-space-between">
-          <div class="d-flex align-center" style="user-select: none">
-            <v-img src="@/assets/logotipo_painel_integracao.png" width="50" />
-            <h2 class="font-weight-regular text-white ml-4">Painel</h2>
-          </div>
+          <a href="/about">
+            <div class="d-flex align-center" style="user-select: none">
+              <v-img src="@/assets/logotipo_painel_integracao.png" width="50" />
+              <h2 class="font-weight-regular text-white ml-4">Painel</h2>
+            </div>
+          </a>
           <div v-if="authStore.isLogged">
             <v-btn class="font-weight-bold d-lg-flex d-md-flex d-none" rounded="pill" size="x-large" color="primary"
               to="/panel/works">Acessar Plataforma</v-btn>
@@ -59,12 +61,19 @@ const { lgAndUp } = useDisplay()
             </div>
           </div>
         </div>
-        <div class="d-flex mt-2 justify-lg-end justify-center">
+        <div class="d-flex mt-2 mr-5 justify-lg-end justify-center">
+          <v-btn class="border border-primary" color="info" icon="mdi-help" rounded="xl" size="small" to="/user-support"
+            variant="tonal">
+            <v-icon>mdi-help</v-icon>
+            <v-tooltip activator="parent" location="top">Menu de suporte</v-tooltip>
+          </v-btn>
+        </div>
+        <!-- <div class="d-flex mt-2 justify-lg-end justify-center">
           <v-btn rounded="lg" variant="text" class="d-flex text-h5 align-center text-white" color="white"
             append-icon="mdi-arrow-down-bold-circle" style="">
             <v-text>Explore o painel</v-text>
           </v-btn>
-        </div>
+        </div> -->
       </div>
     </v-parallax>
   </body>
