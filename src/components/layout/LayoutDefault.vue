@@ -1,44 +1,19 @@
 <template>
-  <v-app id="inspire" >
+  <v-app id="inspire">
     <v-app-bar v-if="!isMobile" class="py-4" flat>
       <v-container class="w-lg-75 d-flex align-center justify-center" fluid>
-        <img
-          alt=""
-          class="pr-8 cursor-pointer"
-          src="@/assets/logo.png"
-          @click="$router.push('/')"
-        />
-        <v-btn
-          v-for="link in layoutStore.navbar"
-          :key="link.text"
-          class="mr-1"
-          :color="link.value == layoutStore.currentPage ? 'primary' : ''"
-          rounded="xl"
-          :text="link.text"
-          :to="link.value"
-          variant="text"
-        />
+        <img alt="" style="width: 90px; height: 60px" class="cursor-pointer" src="@/assets/sepe_logo.png"
+          @click="$router.push('/')" />
+        <v-btn v-for="link in layoutStore.navbar" :key="link.text" class="mr-1"
+          :color="link.value == layoutStore.currentPage ? 'primary' : ''" rounded="xl" :text="link.text"
+          :to="link.value" variant="text" />
 
         <v-spacer />
-        <v-btn
-          v-if="!authStore.isLogged"
-          class="d-flex"
-          color="primary"
-          rounded="xl"
-          variant="flat"
-          @click="login"
-        >
+        <v-btn v-if="!authStore.isLogged" class="d-flex" color="primary" rounded="xl" variant="flat" @click="login">
           <p>ENTRAR NO SISTEMA</p>
         </v-btn>
 
-        <v-btn
-          v-else
-          class="d-flex"
-          color="primary"
-          rounded="xl"
-          variant="flat"
-          to="/panel/works"
-        >
+        <v-btn v-else class="d-flex" color="primary" rounded="xl" variant="flat" to="/panel/works">
           <p>ACESSAR PLATAFORMA</p>
         </v-btn>
 
@@ -53,7 +28,7 @@
             <img v-else alt="Fabrica Painel" src="@/assets/logo_mini.png" @click="$router.push('/')"
               class="cursor-pointer" />
           </v-col>
-          <v-col class="d-flex ml-5 justify-end" :class="{'ml-0 pl-0': screenWidth < 580}" style=" width: 35%">
+          <v-col class="d-flex ml-5 justify-end" :class="{ 'ml-0 pl-0': screenWidth < 580 }" style=" width: 35%">
             <div>
               <v-menu activator="parent">
                 <!-- @vue-ignore -->
@@ -77,9 +52,10 @@
                 <v-icon>mdi-login</v-icon>
               </v-btn>
 
-              <v-btn v-else class="d-flex ml-4"  color="primary" rounded="xl" variant="flat" @click="logout">
+              <v-btn v-else class="d-flex ml-4" color="primary" rounded="xl" variant="flat" @click="logout">
                 <p class="d-inline-block text-truncate mr-2" style="max-width: 310px" v-if="screenWidth > 360">
-                  {{ authStore.user.name.split(' ').length >= 4 ? ( authStore.user.name.split(' ')[0] + ' ' + authStore.user.name.split(' ')[1]) : authStore.user.name }}
+                  {{ authStore.user.name.split(' ').length >= 4 ? (authStore.user.name.split(' ')[0] + ' ' +
+                    authStore.user.name.split(' ')[1]) : authStore.user.name }}
                 </p>
                 <v-icon color="red">mdi-logout</v-icon>
               </v-btn>
@@ -88,7 +64,7 @@
         </v-row>
       </v-container>
     </v-app-bar>
-    <v-main :class="{ 'mt-6': screenWidth < 615}">
+    <v-main :class="{ 'mt-6': screenWidth < 615 }">
       <slot />
     </v-main>
     <footer class="pt-16 pb-2 px-6">

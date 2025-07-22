@@ -31,5 +31,6 @@ declare module 'vue-router/auto-routes' {
     '/panel/works/': RouteRecordInfo<'/panel/works/', '/panel/works', Record<never, never>, Record<never, never>>,
     '/panel/works/add/': RouteRecordInfo<'/panel/works/add/', '/panel/works/add', Record<never, never>, Record<never, never>>,
     '/panel/works/view/[id]': RouteRecordInfo<'/panel/works/view/[id]', '/panel/works/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/user-support/': RouteRecordInfo<'/user-support/', '/user-support', Record<never, never>, Record<never, never>>,
   }
 }
