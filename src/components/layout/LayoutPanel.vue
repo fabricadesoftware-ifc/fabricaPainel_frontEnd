@@ -40,48 +40,22 @@ onMounted(() => {
 </script>
 <template>
   <div class="min-h-screen">
-    <v-container
-      v-if="!isMobile"
-      class="mx-auto w-100 d-flex align-center justify-space-between"
-    >
+    <v-container v-if="!isMobile" class="mx-auto w-100 d-flex align-center justify-space-between">
       <div class="d-flex ga-5 align-center h-100">
-        <img
-          alt=""
-          style="width: 90px; height: 60px"
-          class="pr-8 cursor-pointer"
-          src="@/assets/logotipo_painel_integracao.png"
-          @click="$router.push('/')"
-        />
-        <v-btn
-          v-for="link in layoutStore.navbar"
-          :key="link.text"
-          class="mr-1"
-          :color="link.value == layoutStore.currentPage ? 'primary' : ''"
-          rounded="xl"
-          :text="link.text"
-          :to="link.value"
-          variant="text"
-        />
+        <img alt="" style="width: 90px; height: 60px" class="pr-8 cursor-pointer"
+          src="@/assets/logotipo_painel_integracao.png" @click="$router.push('/')" />
+        <v-btn v-for="link in layoutStore.navbar" :key="link.text" class="mr-1"
+          :color="link.value == layoutStore.currentPage ? 'primary' : ''" rounded="xl" :text="link.text"
+          :to="link.value" variant="text" />
       </div>
 
       <UserMenu />
     </v-container>
-    <v-container
-      v-if="isMobile"
-      class="mx-auto d-flex align-center justify-between"
-    >
-      <div
-        class="d-flex justify-space-between ml-5"
-        :class="{ 'justify-items-start': screenWidth > 580 }"
-        style="width: 100%"
-      >
-        <img
-          alt=""
-          style="width: 70px; height: 40px"
-          class="pr-8 cursor-pointer"
-          src="@/assets/logotipo_painel_integracao.png"
-          @click="$router.push('/')"
-        />
+    <v-container v-if="isMobile" class="mx-auto d-flex align-center justify-between">
+      <div class="d-flex justify-space-between ml-5" :class="{ 'justify-items-start': screenWidth > 580 }"
+        style="width: 100%">
+        <img alt="" style="width: 70px; height: 40px" class="pr-8 cursor-pointer"
+          src="@/assets/logotipo_painel_integracao.png" @click="$router.push('/')" />
         <div>
           <v-menu activator="parent">
             <!-- @vue-ignore -->
@@ -90,26 +64,21 @@ onMounted(() => {
                 <v-icon>mdi-menu</v-icon>
               </v-btn>
             </template>
-            <v-list >
+            <v-list>
               <v-list-item class="w-100 d-flex justify-center">
                 <p style="font-size: 15px; font-weight: 500">
                   {{ authStore?.user?.name }}
                 </p>
               </v-list-item>
-              <v-list-item class="d-flex flex-row align-center justify-center"
-                v-for="link in layoutStore.navbar"
-                :key="link.text"
-                :color="link.value == layoutStore.currentPage ? 'primary' : ''"
-                @click="router.push(link.value)"
-              >
+              <v-list-item class="d-flex flex-row align-center justify-center" v-for="link in layoutStore.navbar"
+                :key="link.text" :color="link.value == layoutStore.currentPage ? 'primary' : ''"
+                @click="router.push(link.value)">
                 <v-list-item-title>{{ link.text }}</v-list-item-title>
               </v-list-item>
               <v-list-item @click="authStore.logout()" class="mt-10">
                 <div class="d-flex flex-row justify-center align-center ga-2">
                   <v-icon color="red" icon="mdi-logout" />
-                  <v-list-item-title style="font-weight: 600" class="text-red"
-                    >Encerrar Sessão</v-list-item-title
-                  >
+                  <v-list-item-title style="font-weight: 600" class="text-red">Encerrar Sessão</v-list-item-title>
                 </div>
               </v-list-item>
             </v-list>
@@ -125,20 +94,16 @@ onMounted(() => {
       <v-container>
         <v-row>
           <v-col class="d-flex justify-start align-center" cols="6" md="10">
-            <a href="https://fabricadesoftware.ifc.edu.br/">
+            <a href="/about">
               <img class="h-8" src="@/assets/footer_logos.png" />
             </a>
           </v-col>
           <v-col class="d-flex justify-end align-center" cols="6" md="2">
-            <v-btn
-              class="border border-primary"
-              color="info"
-              icon="mdi-help"
-              rounded="xl"
-              size="small"
-              to="/"
-              variant="tonal"
-            />
+            <v-btn class="border border-primary" color="info" icon="mdi-help" rounded="xl" size="small"
+              to="/user-support" variant="tonal">
+              <v-icon>mdi-help</v-icon>
+              <v-tooltip activator="parent" location="top">Menu de suporte</v-tooltip>
+            </v-btn>
           </v-col>
         </v-row>
       </v-container>
