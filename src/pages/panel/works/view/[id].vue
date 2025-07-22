@@ -173,7 +173,7 @@ const openUserGrade = (member: object) => {
               @open-student-assesment="openUserGrade(student)" />
           </MembersContainer>
 
-          <MembersContainer title="Orientador do Trabalho" :attribute="width > 780 ? 'Status do Convite' : ''">
+          <MembersContainer title="Orientador do Trabalho" :attribute="width > 780 ? 'Status da Proposta' : ''">
             <MembersCard :status="workStore?.currentWork?.advisor_status" :member="workStore.currentWork.advisor"
               :member_id="workStore.currentWork.advisor.id" :user_id="authStore.user.id"
               :work_advisor="workStore?.currentWork?.advisor ?? null" />
