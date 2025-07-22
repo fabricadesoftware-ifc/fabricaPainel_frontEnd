@@ -1,7 +1,7 @@
 <template>
   <v-app-bar v-if="!isMobile" class="py-4" flat flex>
     <v-container class="mx-auto d-flex align-center justify-center">
-      <img alt="" class="pr-8 cursor-pointer" src="@/assets/logo.png" @click="$router.push('/')" />
+      <img alt="" class="pr-8 cursor-pointer" src="@/assets/logo.png" @click="router.push('/')" />
       <v-btn v-for="link in layoutStore.navbarDashboard" :key="link.text" class="mr-2" :color="link.value.split('/')[2] === layoutStore.currentPage.split('/')[2]
           ? 'primary'
           : ''
@@ -29,6 +29,7 @@
 
 <script lang="ts" setup>
 // @ts-ignore
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { uselayout } from "@/stores/app";
 import { useScreen } from "@/composables/composables";
