@@ -22,7 +22,6 @@ const randomBanner = ref(bannerImages[0]);
 onMounted(() => {
   const randomIndex = Math.floor(Math.random() * bannerImages.length);
   randomBanner.value = bannerImages[randomIndex];
-  console.log("Banner image set to:", randomBanner.value);
 });
 
 </script>
