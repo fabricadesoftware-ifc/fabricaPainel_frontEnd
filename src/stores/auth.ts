@@ -68,7 +68,7 @@ export const useAuth = defineStore("user", () => {
 
   const checkAuth = async () => {
     try {
-      if (refresh) {
+      if (refresh.value !== "" && isTokenExpired()) {
         await refreshToken();
         state.value.isLogged = true;
       }
@@ -114,6 +114,7 @@ export const useAuth = defineStore("user", () => {
 
   const refreshToken = async () => {
     try {
+      console.log("Refreshing token..." + state.value.refresh);
       const { access } = await authService.refreshToken(state.value.refresh);
       const decoded_token = jwtDecode(access);
       state.value.token = access;
