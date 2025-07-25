@@ -203,11 +203,11 @@ function showinfo(){
                   <span>{{ edition.evaluators_count }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
-                  <span>Límite Mínimo de Caracteres por Projeto</span>
+                  <span>Limite Mínimo de Caracteres por Projeto</span>
                   <span>{{ edition.words_per_work_min }}</span>
                 </row>
                   <row class="d-flex pr-10" style="justify-content: space-between;">
-                    <span>Límite Máximo de Caracteres por Projeto</span>
+                    <span>Limite Máximo de Caracteres por Projeto</span>
                     <span>{{ edition.words_per_work_max }}</span>
                   </row>
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">

@@ -60,7 +60,7 @@ onMounted(() => {
       <!-- Edição Futuras -->
 
       <div v-if="upcomingEditions?.length" class="mb-8 mt-10 w-100" :class="width > 780 ? 'px-16' : 'px-4'">
-        <h2 class="mb-5">Edição Futuras</h2>
+        <h2 class="mb-5">Edições Futuras</h2>
         <v-card :key="upcomingEditions[0]?.id"  class="border-md w-100" rounded="xl" variant="outlined">
           <div class="d-flex flex-column justify-space-between" style="padding: 40px;">
             <v-row style="justify-content: space-between; display: flex; align-items: center; min-height: 50px; gap: 15px;">
