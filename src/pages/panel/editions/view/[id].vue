@@ -43,6 +43,15 @@ const able_to_download_grades = computed(() => {
   return date > new Date(edition.value?.final_event_date ?? '2100-01-01') && ['TEACHER', 'ADMIN'].includes(authStore.user.user_type)
 })
 
+
+const upcomingEdition = computed<IEdition[]>(() => {
+  return state?.editions?.filter((edition) => {
+    if (!edition.initial_submission_date) return false;
+    return new Date(edition.initial_submission_date) > new Date();
+  });
+});
+
+
 const textButton = ref('Ver Mais')
 const seemore = ref(false)
 function showinfo(){
@@ -66,6 +75,7 @@ function showinfo(){
               {{ edition.edition_name }}
                </h2>
               <VChip v-if="edition.is_open" class="bg-blue d-flex justify-center align-center" pill style="width: 120px;">Em aberto</VChip>
+              <VChip v-else-if="!edition?.is_open && upcomingEdition.some(up => up.id === edition?.id)" class="bg-yellow">Em Breve</VChip>
               <VChip v-else class="bg-red d-flex justify-center align-center" pill style="width: 120px;">Encerrado</VChip>
            </div>
            
@@ -193,9 +203,13 @@ function showinfo(){
                   <span>{{ edition.evaluators_count }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
-                  <span>Límite Máximo de Caracteres por Projeto</span>
-                  <span>{{ edition.words_per_work_max }}</span>
+                  <span>Límite Mínimo de Caracteres por Projeto</span>
+                  <span>{{ edition.words_per_work_min }}</span>
                 </row>
+                  <row class="d-flex pr-10" style="justify-content: space-between;">
+                    <span>Límite Máximo de Caracteres por Projeto</span>
+                    <span>{{ edition.words_per_work_max }}</span>
+                  </row>
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">
                   <span class="text-primary font-weight-bold">LIMITES DE CARGO</span>
                   <VChip class="bg-green d-flex justify-center align-center" pill style="width: 120px; height: 30px;">Professor</VChip>
