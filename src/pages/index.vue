@@ -7,18 +7,12 @@ const { lgAndUp } = useDisplay()
 
 </script>
 
-<style>
-@media (max-width: 1250px) {
-  .custom-parallax {
-    height: 1000px;
-  }
-}
-</style>
+<style></style>
 
 <template>
 
   <body>
-    <v-parallax src="@/assets/home_banner.png" class="custom-parallax" gradient="rgba(0,0,0,0.69)">
+    <v-parallax src="@/assets/home_banner.png" class="custom-parallax" height="100vh" gradient="rgba(0,0,0,0.69)">
       <div class="my-8 mx-6">
         <header class="d-flex justify-space-between">
           <a href="/about">
