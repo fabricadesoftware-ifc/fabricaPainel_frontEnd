@@ -118,46 +118,35 @@ watch(searchQuery, (newValue) => {
 
 <template>
   <div class="position-relative">
-    <v-text-field
-      ref="input"
-      v-model="searchQuery"
-      :focused="focused"
-      :rounded="props.rounded || 'xl'"
-      :density="props.density || 'default'"
-      variant="solo"
-      hide-details="auto"
-      bg-color="grey-lighten-3"
-      required
-      @focus="focused = true"
-      @blur="blurInput()"
-      append-inner-icon="mdi-magnify"
-      :placeholder="placeholder"
-      :disabled="disabled"
-      :hint="hint"
-      persistent-hint
-    />
+    <v-text-field ref="input" v-model="searchQuery" :focused="focused" :rounded="props.rounded || 'xl'"
+      :density="props.density || 'default'" variant="solo" hide-details="auto" bg-color="grey-lighten-3" required
+      @focus="focused = true" @blur="blurInput()" append-inner-icon="mdi-magnify" :placeholder="placeholder"
+      :disabled="disabled" :hint="hint" persistent-hint />
 
-    <v-list
-      class="d-flex flex-column ga-2 overflow-y-auto elevation-1 w-100"
-      style="max-height: 300px; position: absolute; z-index: 1"
-      :style="`top: ${inputHeight}px`"
-      v-if="filteredUsers.length > 0 && focused"
-    >
+    <v-list class="d-flex flex-column ga-2 overflow-y-auto elevation-1 w-100"
+      style="max-height: 300px; position: absolute; z-index: 1" :style="`top: ${inputHeight}px`"
+      v-if="filteredUsers.length > 0 && focused">
       <v-list-item v-for="user in filteredUsers" :key="user.id" class="w-100">
         <v-hover>
           <template #default="{ props, isHovering }">
-            <v-list-item
-              v-bind="props"
-              class="cursor-pointer"
-              :class="{ 'bg-grey-lighten-2': isHovering }"
-              :subtitle="user.email"
-              :title="user.name"
-              @click="addUser(user)"
-            >
-              <template #title="{ title }">
-                <p class="text-capitalize font-weight-medium">
-                  {{ title.toLowerCase() }}
+            <v-list-item v-bind="props" class="cursor-pointer" :class="{ 'bg-grey-lighten-2': isHovering }"
+              @click="addUser(user)">
+              <template #title>
+                <p class="text-capitalize font-weight-medium mb-1">
+                  {{ user.name.toLowerCase() }}
                 </p>
+              </template>
+
+              <template #subtitle>
+                <div class="d-flex flex-column">
+                  <span class="text-body-2 text-medium-emphasis">{{ user.email }}</span>
+                  <div v-if="user.specialities && user.specialities.length > 0" class="mt-2">
+                    <v-chip v-for="speciality in user.specialities" :key="speciality.id" size="x-small"
+                      class="me-1 mb-1" color="primary" variant="outlined">
+                      {{ speciality.name }}
+                    </v-chip>
+                  </div>
+                </div>
               </template>
             </v-list-item>
           </template>
@@ -165,12 +154,8 @@ watch(searchQuery, (newValue) => {
       </v-list-item>
     </v-list>
 
-    <div
-      class="d-flex flex-column ga-2 overflow-y-auto text-center px-2 pb-2 elevation-1 w-100 bg-white"
-      style="max-height: 300px; position: absolute; z-index: 1"
-      :style="`top: ${inputHeight}px`"
-      v-else-if="focused"
-    >
+    <div class="d-flex flex-column ga-2 overflow-y-auto text-center px-2 pb-2 elevation-1 w-100 bg-white"
+      style="max-height: 300px; position: absolute; z-index: 1" :style="`top: ${inputHeight}px`" v-else-if="focused">
       <v-divider></v-divider>
       <p>
         {{ noDataMessage }}

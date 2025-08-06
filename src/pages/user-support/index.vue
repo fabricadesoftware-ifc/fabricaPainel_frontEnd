@@ -46,14 +46,19 @@
                                         </v-chip>
                                         <v-chip color="blue-lighten-4" label>
                                             <v-icon start>mdi-upload</v-icon>
-                                            Problemas com uploads
+                                            Problemas com submissões
                                         </v-chip>
                                     </v-chip-group>
                                 </div>
 
                                 <v-card-text class="pa-0">
-                                    <v-btn :href="`mailto:fabricadesoftware.araquari@ifc.edu.br`" color="primary"
-                                        variant="flat" block class="rounded-xl py-3" size="large">
+                                    <v-alert icon="mdi-information" variant="outlined" type="warning">
+                                        Use o assunto de e-mail: <b>'Suporte Painel de Integração'</b>
+                                    </v-alert>
+
+                                    <v-btn
+                                        :href="`mailto:fabricadesoftware.araquari@ifc.edu.br?subject=Suporte Painel de Integração`"
+                                        color="primary" variant="flat" block class="rounded-xl py-3 mt-3" size="large">
                                         <v-icon start>mdi-email</v-icon>
                                         <span class="text-wrap d-inline-block email-text">
                                             fabricadesoftware.araquari@ifc.edu.br
@@ -100,8 +105,13 @@
                                 </div>
 
                                 <v-card-text class="pa-0">
-                                    <v-btn :href="`mailto:painel.araquari@ifc.edu.br`" color="primary" variant="flat"
-                                        block class="rounded-xl py-3" size="large">
+                                    <v-alert icon="mdi-information" variant="outlined" type="warning">
+                                        Use o assunto de e-mail: <b>'Suporte Painel de
+                                            Integração'</b>
+                                    </v-alert>
+                                    <v-btn
+                                        :href="`mailto:painel.araquari@ifc.edu.br?subject=Suporte Painel de Integração`"
+                                        color="primary" variant="flat" block class="rounded-xl py-3 mt-3" size="large">
                                         <v-icon start>mdi-email</v-icon>
                                         <span class="text-wrap d-inline-block email-text">
                                             painel.araquari@ifc.edu.br
