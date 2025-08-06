@@ -2,15 +2,33 @@
 import { useAuth } from "@/stores/auth";
 import { useDisplay } from "vuetify";
 import { downloadPdf } from "@/utils/user";
+import { ref, onMounted } from 'vue';
+
 const authStore = useAuth();
-const { lgAndUp } = useDisplay()
+const { lgAndUp } = useDisplay();
+
+import banner1 from '@/assets/home_banner.png';
+import banner2 from '@/assets/home_banner2.jpg';
+import banner3 from '@/assets/home_banner3.jpg';
+
+const bannerImages = [
+  banner1,
+  banner2,
+  banner3
+];
+
+const randomBanner = ref(bannerImages[0]);
+
+onMounted(() => {
+  const randomIndex = Math.floor(Math.random() * bannerImages.length);
+  randomBanner.value = bannerImages[randomIndex];
+});
 
 </script>
 
 <style></style>
 
 <template>
-
   <body>
     <v-parallax src="@/assets/home_banner.png" class="custom-parallax" height="100vh" gradient="rgba(0,0,0,0.69)">
       <div class="mt-8 mx-6">
@@ -75,6 +93,5 @@ const { lgAndUp } = useDisplay()
         </div> -->
       </div>
     </v-parallax>
-  </body>
 
 </template>

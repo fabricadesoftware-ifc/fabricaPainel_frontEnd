@@ -19,6 +19,7 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
     '/about/': RouteRecordInfo<'/about/', '/about', Record<never, never>, Record<never, never>>,
     '/auth/accept-invite-team/[id]/[token]': RouteRecordInfo<'/auth/accept-invite-team/[id]/[token]', '/auth/accept-invite-team/:id/:token', { id: ParamValue<true>, token: ParamValue<true> }, { id: ParamValue<false>, token: ParamValue<false> }>,
     '/auth/get-password/': RouteRecordInfo<'/auth/get-password/', '/auth/get-password', Record<never, never>, Record<never, never>>,

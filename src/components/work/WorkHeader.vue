@@ -127,7 +127,7 @@ onMounted(() => {
     </div>
 
 
-    <div v-if="user_function != 'COLLABORATOR'" class="w-100 d-flex align-center ga-5">
+    <div v-if="user_function != 'COLLABORATOR' && title != 'Módulo Comunicação' && title != 'Módulo Territórios'" class="w-100 d-flex align-center ga-5">
       <p class="opacity-70" :style="{ fontWeight: '700', fontSize: width > 780 ? '20px' : '15px' }">
         Nota do Avaliador:
       </p>
