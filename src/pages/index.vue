@@ -13,7 +13,7 @@ const { lgAndUp } = useDisplay()
 
   <body>
     <v-parallax src="@/assets/home_banner.png" class="custom-parallax" height="100vh" gradient="rgba(0,0,0,0.69)">
-      <div class="my-8 mx-6">
+      <div class="mt-8 mx-6">
         <header class="d-flex justify-space-between">
           <a href="/about">
             <div class="d-flex align-center" style="user-select: none">
@@ -33,7 +33,7 @@ const { lgAndUp } = useDisplay()
           </div>
         </header>
         <div class="d-flex flex-column h-100" :class="lgAndUp ? 'w-50' : 'w-100'">
-          <div class="h-screen d-flex flex-column justify-center align-md-center align-lg-start">
+          <div class="h-screen d-flex flex-column justify-center align-md-center align-lg-start flex-wrap">
             <p class="d-flex text-white font-weight-bold"
               :class="lgAndUp ? 'text-start text-h2' : 'text-center text-h4'">
               Painel de Integração IFC Araquari
@@ -53,11 +53,16 @@ const { lgAndUp } = useDisplay()
                 Regimento
               </v-btn>
             </div>
+            <v-btn :class="lgAndUp ? 'd-none' : 'd-flex'" class="border border-primary mt-5 justify-self-center"
+              color="info" prepend-icon="mdi-face-agent" rounded="xl" to="/user-support" variant="tonal">
+              Menu de Suporte
+              <v-tooltip activator="parent" location="top">Menu de suporte</v-tooltip>
+            </v-btn>
           </div>
         </div>
-        <div class="d-flex mt-2 mr-5 justify-lg-end justify-center">
-          <v-btn class="border border-primary" color="info" icon="mdi-help" rounded="xl" size="small" to="/user-support"
-            variant="tonal">
+        <div class="d-flex mr-5 justify-lg-end justify-center">
+          <v-btn :class="lgAndUp ? 'd-flex' : 'd-none'" class="border border-primary" color="info" icon="mdi-help"
+            rounded="xl" size="small" to="/user-support" variant="tonal">
             <v-icon>mdi-help</v-icon>
             <v-tooltip activator="parent" location="top">Menu de suporte</v-tooltip>
           </v-btn>
