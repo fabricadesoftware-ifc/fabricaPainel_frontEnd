@@ -6,6 +6,7 @@ import { useEdition } from "@/stores/edition";
 import { useAuth } from "@/stores/auth";
 import { resolveUserFunction } from "@/utils/works";
 import { useDisplay } from "vuetify";
+import { isSubmissionWindowOpen } from "@/utils/validators/edition/dates";
 
 const workStore = useWork();
 const EditionStore = useEdition();
@@ -38,14 +39,14 @@ const loadSubmissions = async () => {
     submissionsCurrent.value = orderByStatusAndYear(works, true);
     submissionsPast.value = orderByStatusAndYear(works, false);
   } else {
-   
+
     submissionsCurrent.value = {
       advisorWorks: orderByStatusAndYear(workStore?.advisorWorks, true),
       collaboratorWorks: orderByStatusAndYear(workStore?.collaboratorWorks, true),
       evaluatorWorks: orderByStatusAndYear(workStore?.evaluatorWorks, true),
     };
 
-   
+
     submissionsPast.value = {
       advisorWorks: orderByStatusAndYear(workStore?.advisorWorks, false),
       collaboratorWorks: orderByStatusAndYear(workStore?.collaboratorWorks, false),
@@ -66,6 +67,9 @@ const is_submit = computed(() => {
 
 const tokenExpired = UserStore?.isTokenExpired();
 
+// Check if today is within any submission window (first or second)
+const isSubmissionOpen = computed(() => isSubmissionWindowOpen(EditionStore?.currentEdition));
+
 onMounted(async () => {
   if (!tokenExpired) {
     await loadSubmissions();
@@ -74,14 +78,14 @@ onMounted(async () => {
 
 });
 
-const {width} = useDisplay()
+const { width } = useDisplay()
 </script>
 
 <template>
   <LayoutPanel v-if="!tokenExpired && !loading">
     <v-container class="w-100">
       <div v-if="UserStore?.user?.user_type == 'STUDENT'" class="d-flex justify-space-between align-center text-h6">
-        <h1 class="font-weight-bold" :style="{fontSize: width > 780 ? '40px' : '25px'}">Submissões</h1>
+        <h1 class="font-weight-bold" :style="{ fontSize: width > 780 ? '40px' : '25px' }">Submissões</h1>
         <VChip :size="width > 780 ? 'default' : 'x-small'" :class="is_submit ? 'bg-green' : 'bg-red'">
           {{
             is_submit ? "trabalho submetido" : "trabalho ainda não submetido"
@@ -91,164 +95,90 @@ const {width} = useDisplay()
 
       <div class="mb-10 px-16">
         <div v-if="EditionStore?.currentEdition?.edition_name" class="d-flex align-center mt-10 mb-10 ga-5 w-100">
-          <h1 :style="{fontSize: width > 780 ? '30px' : '20px'}" class=" font-weight-bold">
+          <h1 :style="{ fontSize: width > 780 ? '30px' : '20px' }" class=" font-weight-bold">
             {{ EditionStore?.currentEdition?.edition_name }}
           </h1>
-          <VChip :size="width > 780 ? 'default' : 'x-small'"
-            class="bg-blue d-flex justify-center align-center"
-            pill
-            :style="{width: width > 780 ? '120px' : '90px'}"
-            >Em aberto
+          <VChip :size="width > 780 ? 'default' : 'x-small'" class="bg-blue d-flex justify-center align-center" pill
+            :style="{ width: width > 780 ? '120px' : '90px' }">Em aberto
           </VChip>
         </div>
 
-        <CreateWork
-          v-if="!is_submit && UserStore?.user?.user_type == 'STUDENT'"
-          :date_end="
-            new Date() <
-            new Date(EditionStore?.currentEdition?.final_second_submission_date)
-          "
-          :date_start="new Date() >= new Date(EditionStore?.currentEdition?.initial_submission_date)"
+        <CreateWork v-if="!is_submit && UserStore?.user?.user_type == 'STUDENT'" :date_end="isSubmissionOpen"
+          :date_start="isSubmissionOpen" />
+        <div>
+          <v-lazy :min-height="200" :options="{ 'threshold': 0.5 }" transition="fade-transition">
+            <div v-if="UserStore?.user?.user_type == 'STUDENT'">
+              <CardSubmission v-for="(work, index) in submissionsCurrent" :key="index" :work_id="work?.id"
+                :work="work?.edition?.final_submission_date" :work_status="work?.status" />
+            </div>
+            <TeacherContainer v-else :works="submissionsCurrent" :user_type="UserStore?.user?.user_type">
+              <template #evaluate>
+                <CardSubmission v-for="(work, index) in submissionsCurrent.evaluatorWorks" :key="index"
+                  :work_id="work?.id" :work="work?.edition?.final_submission_date" :work_status="work?.status" />
+              </template>
 
-        />
-<div>
-        <v-lazy
-  :min-height="200"
-  :options="{'threshold':0.5}"
-  transition="fade-transition"
->
-<div v-if="UserStore?.user?.user_type == 'STUDENT'">
-        <CardSubmission
-         
-          v-for="(work, index) in submissionsCurrent"
-          :key="index"
-          :work_id="work?.id"
-          :work="work?.edition?.final_submission_date"
-          :work_status="work?.status"
-        />
-</div>
-        <TeacherContainer
-          v-else
-          :works="submissionsCurrent"
-          :user_type="UserStore?.user?.user_type"
-        >
-          <template #evaluate>
-            <CardSubmission
-              v-for="(work, index) in submissionsCurrent.evaluatorWorks"
-              :key="index"
-              :work_id="work?.id"
-              :work="work?.edition?.final_submission_date"
-              :work_status="work?.status"
-            />
-          </template>
+              <template #advise>
+                <CardSubmission v-for="(work, index) in submissionsCurrent.advisorWorks" :key="index"
+                  :work_id="work?.id" :work="work?.edition.final_submission_date" :work_status="work?.status"
+                  :user="UserStore?.user" :work_data="work" />
+              </template>
 
-          <template #advise>
-            <CardSubmission
-              v-for="(work, index) in submissionsCurrent.advisorWorks"
-              :key="index"
-              :work_id="work?.id"
-              :work="work?.edition.final_submission_date"
-              :work_status="work?.status"
-              :user="UserStore?.user"
-              :work_data="work"
-              
-            />
-          </template>
-
-          <template #collaborate>
-            <CardSubmission
-              v-for="(work, index) in submissionsCurrent.collaboratorWorks"
-              :key="index"
-              :work_id="work?.id"
-              :work="work?.edition.final_submission_date"
-              :work_status="work?.status"
-              :user="UserStore?.user"
-              :work_data="work"
-            />
-          </template>
-        </TeacherContainer>
-        </v-lazy>
+              <template #collaborate>
+                <CardSubmission v-for="(work, index) in submissionsCurrent.collaboratorWorks" :key="index"
+                  :work_id="work?.id" :work="work?.edition.final_submission_date" :work_status="work?.status"
+                  :user="UserStore?.user" :work_data="work" />
+              </template>
+            </TeacherContainer>
+          </v-lazy>
         </div>
       </div>
 
       <div class="d-flex justify-space-between align-center text-h6 pb-10">
-        <h1 class="font-weight-bold" :style="{fontSize: width > 780 ? '40px' : '25px'}">
+        <h1 class="font-weight-bold" :style="{ fontSize: width > 780 ? '40px' : '25px' }">
           Edições anteriores
         </h1>
       </div>
 
       <div class="px-16">
-           <v-lazy
-  :min-height="200"
-  :options="{'threshold':0.5}"
-  transition="fade-transition"
->
-        <div
-          v-if="
+        <v-lazy :min-height="200" :options="{ 'threshold': 0.5 }" transition="fade-transition">
+          <div v-if="
             submissionsPast.length > 0 &&
             UserStore?.user.user_type == 'STUDENT'
-          "
-        >
-        
-     
-          <CardSubmission
-            v-for="(works, index) in submissionsPast"
-            :key="works?.id"
-            :work="works?.edition.final_submission_date"
-            :work_id="works?.id"
-            :work_status="works?.status"
-            :edition_title="index == 0 ? works.edition?.edition_name : ''"
-          />
-        </div>
+          ">
 
-        <TeacherContainer
-          v-else-if="UserStore?.user?.user_type != 'STUDENT'"
-          :works="submissionsPast"
-          :user_type="UserStore?.user?.user_type"
-        >
-          <template #evaluate>
-            <CardSubmission
-              v-for="(work, index) in submissionsPast.evaluatorWorks"
-              :key="index"
-              :work_id="work?.id"
-              :work="work?.edition?.final_submission_date"
-              :work_status="work?.status"
-            />
-          </template>
 
-          <template #advise>
-            <CardSubmission
-              v-for="(work, index) in submissionsPast.advisorWorks"
-              :key="index"
-              :work_id="work?.id"
-              :work="work?.edition?.final_submission_date"
-              :work_status="work?.status"
-            />
-          </template>
+            <CardSubmission v-for="(works, index) in submissionsPast" :key="works?.id"
+              :work="works?.edition.final_submission_date" :work_id="works?.id" :work_status="works?.status"
+              :edition_title="index == 0 ? works.edition?.edition_name : ''" />
+          </div>
 
-          <template #collaborate>
-            <CardSubmission
-              v-for="(work, index) in submissionsPast.collaboratorWorks"
-              :key="index"
-              :work_id="work?.id"
-              :work="work?.edition?.final_submission_date"
-              :work_status="work?.status"
-            />
-          </template>
-        </TeacherContainer>
-</v-lazy>
-        <div
-          class="pa-5"
-          v-if="
-            submissionsPast.length <= 0 && UserStore?.user?.user_type == 'STUDENT'
-          "
-        >
+          <TeacherContainer v-else-if="UserStore?.user?.user_type != 'STUDENT'" :works="submissionsPast"
+            :user_type="UserStore?.user?.user_type">
+            <template #evaluate>
+              <CardSubmission v-for="(work, index) in submissionsPast.evaluatorWorks" :key="index" :work_id="work?.id"
+                :work="work?.edition?.final_submission_date" :work_status="work?.status" />
+            </template>
+
+            <template #advise>
+              <CardSubmission v-for="(work, index) in submissionsPast.advisorWorks" :key="index" :work_id="work?.id"
+                :work="work?.edition?.final_submission_date" :work_status="work?.status" />
+            </template>
+
+            <template #collaborate>
+              <CardSubmission v-for="(work, index) in submissionsPast.collaboratorWorks" :key="index"
+                :work_id="work?.id" :work="work?.edition?.final_submission_date" :work_status="work?.status" />
+            </template>
+          </TeacherContainer>
+        </v-lazy>
+        <div class="pa-5" v-if="
+          submissionsPast.length <= 0 && UserStore?.user?.user_type == 'STUDENT'
+        ">
           <h1 class="text-h6 text-center">
             Você não tem trabalhos submetidos em edições anteriores
           </h1>
         </div>
       </div>
-      
+
     </v-container>
   </LayoutPanel>
 
