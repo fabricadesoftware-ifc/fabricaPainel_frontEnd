@@ -29,7 +29,7 @@ onMounted(() => {
 <style></style>
 
 <template>
-  <v-parallax src="@/assets/home_banner.png" class="custom-parallax" height="100vh" gradient="rgba(0,0,0,0.69)">
+  <v-parallax :src="randomBanner" class="custom-parallax" height="100vh" gradient="rgba(0,0,0,0.69)">
     <div class="mt-8 mx-6">
       <header class="d-flex justify-space-between">
         <a href="/about">
