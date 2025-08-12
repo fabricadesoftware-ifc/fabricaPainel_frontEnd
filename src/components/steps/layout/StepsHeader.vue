@@ -25,7 +25,7 @@ import { useDisplay } from 'vuetify';
     <div class="d-flex justify-space-between align-center pa-2">
         <div class="d-flex justify-center align-center">
             <div v-if="width < 950" class="d-flex jusitfy-center align-center ga-2">
-                <VChip class="bg-blue " rounded="15" v-if="step_num">{{ !step_completed ? step_num : '✔'}}</VChip>
+                <VChip class="bg-blue " rounded="15" v-if="step_num">{{ !step_completed ? Number(step_num) : '✔'}}</VChip>
                 <p class="text-blue">{{ step_value }}</p>
             </div>
             <p class="text-blue ms-10" style="font-size: 15px;" v-if="width > 950">Precisa de Ajuda?</p>
