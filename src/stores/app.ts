@@ -35,7 +35,7 @@ export const uselayout = defineStore("layoutDefault", () => {
   });
 
   const eraseWords = (link: any) => {
-    router.currentRoute.value.path = "";
+    // Apenas normaliza o caminho alvo, sem alterar o estado reativo da rota atual
     return "/panel/" + link;
   };
 
