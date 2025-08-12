@@ -29,7 +29,7 @@ const { width } = useDisplay()
     </div>
     <div>
       <div v-for="(step, i) in steps" class="d-flex flex-column justify-center" :key="i">
-        <VStepperItem :value="step.value" :complete="step.complete"
+        <VStepperItem :value="i" :complete="step.complete"
           :color="actualstep === i ? 'blue' : (step.complete ? 'success' : 'grey')" class="pa-2 ms-5">
           <p :class="[
             actualstep === i ? 'text-blue font-weight-bold' :
