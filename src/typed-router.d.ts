@@ -34,4 +34,88 @@ declare module 'vue-router/auto-routes' {
     '/panel/works/view/[id]': RouteRecordInfo<'/panel/works/view/[id]', '/panel/works/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/user-support/': RouteRecordInfo<'/user-support/', '/user-support', Record<never, never>, Record<never, never>>,
   }
+
+  /**
+   * Route file to route info map by unplugin-vue-router.
+   * Used by the volar plugin to automatically type useRoute()
+   *
+   * Each key is a file path relative to the project root with 2 properties:
+   * - routes: union of route names of the possible routes when in this page (passed to useRoute<...>())
+   * - views: names of nested views (can be passed to <RouterView name="...">)
+   *
+   * @internal
+   */
+  export interface _RouteFileInfoMap {
+    'src/pages/index.vue': {
+      routes: '/'
+      views: never
+    }
+    'src/pages/[...all].vue': {
+      routes: '/[...all]'
+      views: never
+    }
+    'src/pages/about/index.vue': {
+      routes: '/about/'
+      views: never
+    }
+    'src/pages/auth/accept-invite-team/[id]/[token].vue': {
+      routes: '/auth/accept-invite-team/[id]/[token]'
+      views: never
+    }
+    'src/pages/auth/get-password/index.vue': {
+      routes: '/auth/get-password/'
+      views: never
+    }
+    'src/pages/auth/login/index.vue': {
+      routes: '/auth/login/'
+      views: never
+    }
+    'src/pages/auth/reset-password/index.vue': {
+      routes: '/auth/reset-password/'
+      views: never
+    }
+    'src/pages/auth/token/index.vue': {
+      routes: '/auth/token/'
+      views: never
+    }
+    'src/pages/panel/editions/index.vue': {
+      routes: '/panel/editions/'
+      views: never
+    }
+    'src/pages/panel/editions/add/index.vue': {
+      routes: '/panel/editions/add/'
+      views: never
+    }
+    'src/pages/panel/editions/view/[id].vue': {
+      routes: '/panel/editions/view/[id]'
+      views: never
+    }
+    'src/pages/panel/works/index.vue': {
+      routes: '/panel/works/'
+      views: never
+    }
+    'src/pages/panel/works/add/index.vue': {
+      routes: '/panel/works/add/'
+      views: never
+    }
+    'src/pages/panel/works/view/[id].vue': {
+      routes: '/panel/works/view/[id]'
+      views: never
+    }
+    'src/pages/user-support/index.vue': {
+      routes: '/user-support/'
+      views: never
+    }
+  }
+
+  /**
+   * Get a union of possible route names in a certain route component file.
+   * Used by the volar plugin to automatically type useRoute()
+   *
+   * @internal
+   */
+  export type _RouteNamesForFilePath<FilePath extends string> =
+    _RouteFileInfoMap extends Record<FilePath, infer Info>
+      ? Info['routes']
+      : keyof RouteNamedMap
 }

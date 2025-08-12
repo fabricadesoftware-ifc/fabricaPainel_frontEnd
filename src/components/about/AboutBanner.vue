@@ -31,7 +31,8 @@ const teamMembers = [
       { name: 'Rafael Bochi Barros', github: 'RafaelBochi' },
       { name: 'Vinícius Nilo Hiansdt', github: 'Hiansdt' },
       { name: 'Jonatas Silva Peraza', github: 'jonatasperaza' },
-      { name: 'Joao Victor Silva De Souza', github: 'Jaotarzan '}
+      { name: 'Joao Victor Silva De Souza', github: 'Jaotarzan '},
+      { name: 'Anthony Gabriel Loche dos Reis', github: 'AnthonyLoche'}
     ]
   }
 ]
@@ -201,22 +202,22 @@ const features = [
 
             <v-row>
               <v-col cols="12" md="6" v-for="team in teamMembers" :key="team.role">
-                <v-card class="pa-4 h-100" variant="outlined" rounded="lg">
+                <v-card class="pa-4 h-100 team-card" variant="outlined" rounded="lg">
                   <h3 class="text-h6 font-weight-bold mb-3 text-primary">{{ team.role }}</h3>
-                  <v-chip-group column>
+                  <div class="chip-list">
                     <v-chip
                       v-for="member in team.members"
                       :key="member.name"
                       :href="`https://github.com/${member.github}`"
                       target="_blank"
-                      color="primary"
-                      variant="outlined"
                       size="small"
+                      class="team-chip"
+                      :ripple="false"
                     >
                       <v-icon start icon="mdi-github"></v-icon>
                       {{ member.name }}
                     </v-chip>
-                  </v-chip-group>
+                  </div>
                 </v-card>
               </v-col>
             </v-row>
@@ -305,5 +306,54 @@ a {
 
 .v-chip:hover {
   transform: scale(1.05);
+}
+
+.v-card{
+  position: relative;
+  z-index: 1;
+}
+.v-slide-group__content {
+  overflow: visible !important;
+}
+
+/* Garante que os chips possam expandir acima do card e não fiquem presos sob outros elementos */
+.team-card {
+  overflow: visible !important;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow: visible;
+}
+
+.team-chip {
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+
+
+/* Hover mais destacado e com elevação visual */
+.team-chip:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  background-color: #1976d2 !important; /* azul primário */
+  border-color: #1976d2 !important;
+  color: #ffffff !important;
+}
+
+/* Impede que o clique deixe estado "ativo" visualmente persistente */
+.team-chip:focus-visible,
+.team-chip:active {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px) scale(1.02);
+  background-color: #1565c0 !important; /* azul um pouco mais escuro no active */
+  border-color: #1565c0 !important;
 }
 </style>
