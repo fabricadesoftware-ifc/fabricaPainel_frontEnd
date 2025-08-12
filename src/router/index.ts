@@ -30,11 +30,10 @@ router.onError((err, to) => {
 })
 const routesBloqued = ['/auth/accept-invite-team/:id/:token', "/auth/get-password/", "/panel/colaborators/", "/panel/editions/view/:id", "/panel/paper/:id", "/panel/works/", "/panel/works/add", "/panel/works/add/" ,  "/panel/paper/:id", "/panel/registration-of-topics/"]
 // TODO: rever logica do works
-const works = JSON.parse(localStorage.getItem("worksstorage") || '{"userWorks": []}')
 //
-const is_authenticated = JSON.parse(localStorage.getItem("state_user") || '{"isLogged": false}')
 
 router.beforeEach((to, from, next) => {
+  const is_authenticated = JSON.parse(localStorage.getItem("state_user") || '{"isLogged": false}')
   if (routesBloqued.includes(to.path) && !is_authenticated.isLogged) {
     return next('/')
   }
@@ -43,6 +42,7 @@ router.beforeEach((to, from, next) => {
 
 
 router.beforeEach((to, from, next) => {
+  const works = JSON.parse(localStorage.getItem("worksstorage") || '{"userWorks": []}')
   const userWork = works?.userWorks[0]
   if (userWork) {
     if (to.path === '/panel/works/add/' && new Date().getFullYear() === userWork.edition.year) {
