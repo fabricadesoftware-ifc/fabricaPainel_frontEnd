@@ -11,7 +11,6 @@ onMounted(async () => {
   themes.value = authStore.userThemes;
 });
 </script>
-
 <template>
   <v-row>
     <v-col v-if="authStore.isLogged && authStore.user.user_type == 'TEACHER'">
