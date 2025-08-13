@@ -37,7 +37,7 @@ export interface IEdition {
   works_per_advisor_max: number;
   words_per_work_min: number;
   words_per_work_max: number;
-
+  words_per_work_min: number;
   workload: number;
 
   // Mídia

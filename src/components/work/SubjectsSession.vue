@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-// @ts-ignore
 import { defineProps } from "vue";
 import { useDisplay } from "vuetify";
 
@@ -35,7 +34,7 @@ const {width} = useDisplay()
                </v-sheet>
             </div>
             <div class="d-flex flex-column ga-5">
-               <p class="opacity-70" :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">Temas Transversal:</p>
+               <p class="opacity-70" :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">Tema Transversal:</p>
                  <v-sheet class="d-flex ga-3 flex-wrap" :style="{maxWidth: width > 780 ? '300px' : '100%', width: width > 780 ? '300px' : '100%'}">
                     <v-chip :style="{fontSize: width > 780 ? '15px' : '12px'}"  label>{{ props.cross_cutting_theme.name }}</v-chip>
                </v-sheet>
