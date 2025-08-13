@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main >
-      <router-view :key="$route.fullPath" />
+      <router-view :key="route.fullPath" />
     </v-main>
     <!-- <div class="index">
       DEV NAV
@@ -22,12 +22,13 @@
 // @ts-ignore
   import { onMounted } from 'vue'
   // @ts-ignore
-  import { useRouter } from 'vue-router'
+  import { useRouter, useRoute } from 'vue-router'
   import { useAuth } from './stores/auth'
   import { globalRouter } from "./plugins/globalRouter";
 
 
   const router = useRouter()
+  const route = useRoute()
   const authStore = useAuth()
 
   globalRouter.router = router

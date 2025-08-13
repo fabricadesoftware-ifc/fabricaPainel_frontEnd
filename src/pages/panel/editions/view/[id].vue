@@ -35,13 +35,22 @@ onMounted(async () => {
     edition.value = state.editions.find((ed: any) => ed.id === Number(id.value));
   });
 
-  
+
 });
 //@ts-ignore
 const able_to_download_grades = computed(() => {
- 
+
   return date > new Date(edition.value?.final_event_date ?? '2100-01-01') && ['TEACHER', 'ADMIN'].includes(authStore.user.user_type)
 })
+
+
+const upcomingEdition = computed<IEdition[]>(() => {
+  return state?.editions?.filter((edition) => {
+    if (!edition.initial_submission_date) return false;
+    return new Date(edition.initial_submission_date) > new Date();
+  });
+});
+
 
 const textButton = ref('Ver Mais')
 const seemore = ref(false)
@@ -66,11 +75,13 @@ function showinfo(){
               {{ edition.edition_name }}
                </h2>
               <VChip v-if="edition.is_open" class="bg-blue d-flex justify-center align-center" pill style="width: 120px;">Em aberto</VChip>
+              <!-- @ts-nocheck -->
+              <VChip v-else-if="!edition?.is_open && upcomingEdition.some((up: IEdition) => up.id === edition?.id)" class="bg-yellow">Em Breve</VChip>
               <VChip v-else class="bg-red d-flex justify-center align-center" pill style="width: 120px;">Encerrado</VChip>
            </div>
-           
+
              <v-btn @click="studentAssesment.fetchAssessmentReport(edition.year)" v-if="able_to_download_grades" color="blue"> <v-icon>mdi-download</v-icon><p class="ml-2">Baixar Relatório de Notas</p></v-btn>
-           
+
             </div>
             <v-row class="ga-10">
               <v-col class="d-flex flex-column ga-4 justify-start mt-10" cols="6">
@@ -193,9 +204,13 @@ function showinfo(){
                   <span>{{ edition.evaluators_count }}</span>
                 </row>
                 <row class="d-flex pr-10" style="justify-content: space-between;">
-                  <span>Límite Máximo de Caracteres por Projeto</span>
-                  <span>{{ edition.words_per_work_max }}</span>
+                  <span>Limite Mínimo de Caracteres por Projeto</span>
+                  <span>{{ edition.words_per_work_min }}</span>
                 </row>
+                  <row class="d-flex pr-10" style="justify-content: space-between;">
+                    <span>Limite Máximo de Caracteres por Projeto</span>
+                    <span>{{ edition.words_per_work_max }}</span>
+                  </row>
                 <div style="display: flex; align-items: center; gap: 10px; margin: 30px 0px 10px">
                   <span class="text-primary font-weight-bold">LIMITES DE CARGO</span>
                   <VChip class="bg-green d-flex justify-center align-center" pill style="width: 120px; height: 30px;">Professor</VChip>

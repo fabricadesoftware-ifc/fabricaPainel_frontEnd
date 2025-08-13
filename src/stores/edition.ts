@@ -191,8 +191,8 @@ export const useEdition = defineStore('edition', () => {
     for (let i = 0; i < newEdtion.value.newedition.length; i++) {
       console.log(newEdtion)
       if (newEdtion.value.newedition[i].hasOwnProperty('qtds')) {
-        newArr.push({ [subtituteObj[i + cont]]: newEdtion.value.newedition[i].qtds[0].value })
-        newArr.push({ [subtituteObj[i + 1 + cont]]: newEdtion.value.newedition[i].qtds[1].value })
+        newArr.push({ [subtituteObj[i + cont]]: newEdtion.value.newedition[i].qtds?.[0]?.value })
+        newArr.push({ [subtituteObj[i + 1 + cont]]: newEdtion.value.newedition[i].qtds?.[1]?.value })
         cont++
       }
       else {

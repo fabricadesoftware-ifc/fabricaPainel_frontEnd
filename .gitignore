@@ -3,6 +3,7 @@ node_modules
 /dist
 
 # local env files
+.env
 .env.local
 .env.*.local
 
@@ -22,5 +23,3 @@ pnpm-debug.log*
 *.sw?
 
 sw.js
-
-.env

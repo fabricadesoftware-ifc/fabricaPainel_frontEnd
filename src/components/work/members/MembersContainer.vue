@@ -12,14 +12,14 @@ const props = defineProps({
     }
 })
 
-const {width} = useDisplay()
+const { width } = useDisplay()
 </script>
 <template>
-        <div class="d-flex flex-column ga-10">
-            <div class="w-100 d-flex justify-space-between opacity-70 mt-10">
-            <p :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">{{ props.title }}:</p>
-            <p :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">{{ props.attribute }}</p>
-            </div>
-            <slot></slot>
+    <div class="d-flex flex-column ga-10">
+        <div class="w-100 d-flex justify-space-between opacity-70 mt-10">
+            <p :style="{ fontWeight: '700', fontSize: width > 780 ? '20px' : '15px' }">{{ props.title }}:</p>
+            <p :style="{ fontWeight: '700', fontSize: width > 780 ? '20px' : '15px' }">{{ props.attribute }}</p>
         </div>
+        <slot></slot>
+    </div>
 </template>

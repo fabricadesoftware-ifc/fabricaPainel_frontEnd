@@ -11,7 +11,7 @@ const editionStore = useEdition()
 const AuthStore = useAuth()
 const actualstep = ref(0)
 const openNav = ref(false)
-const {width} = useDisplay()
+const { width } = useDisplay()
 const open_dialog = ref(false)
 const useractualstep = Number(localStorage.getItem('actualstep'))
 
@@ -19,7 +19,7 @@ const ReturnValidatedtoDisabledBtn = computed(() => {
   if (actualstep.value === 0) {
     return workStore.WorkStorage.team?.length < (editionStore.currentEdition?.members_min || 3)
   }
-  if(actualstep.value === 1){
+  if (actualstep.value === 1) {
     const fieldOk = (workStore.WorkStorage.field || []).length >= (editionStore.currentEdition?.subjects_min || 3)
     const themeOk = Object.keys(workStore.WorkStorage.cross_cutting_theme || {}).length > 0
     const checkCrossCuttingThem = workStore?.WorkStorage?.cross_cutting_theme?.name == 'Escolha Uma Matéria Transversal'
@@ -43,7 +43,7 @@ async function DialogActive(type) {
 
   if (type == 'Sim') {
     workStore.WorkStorage.integrated_project = true
- 
+
   } else if (type == 'Não') {
     workStore.WorkStorage.integrated_project = false
   }
@@ -59,14 +59,14 @@ function NextStep() {
     steps.value[actualstep.value].complete = true
     steps.value[actualstep.value].is_actual = false
     steps.value[actualstep.value + 1].is_actual = true
-    
+
   }
   else if (actualstep.value === 4) {
     steps.value[actualstep.value].complete = true
     steps.value[actualstep.value].is_actual = false
-  
+
   }
-actualstep.value++
+  actualstep.value++
   // localStorage.setItem('actualstep', actualstep.value)
 }
 
@@ -75,29 +75,26 @@ const StepObj = computed(() => {
 })
 
 function PrevStep() {
-  if (actualstep.value <= 0) return 
-  
+  if (actualstep.value <= 0) return
+
   if (actualstep.value < 4) {
     steps.value[actualstep.value].is_actual = false
 
     steps.value[actualstep.value].complete = false
-    }
-    actualstep.value--
+  }
+  actualstep.value--
 
-    steps.value[actualstep.value].is_actual = true
-  
-
-  
+  steps.value[actualstep.value].is_actual = true
 }
 
-onUnmounted(()=> {
+onUnmounted(() => {
   workStore.WorkStorage.team = []
   localStorage.removeItem('actualstep')
   resetSteps()
 
 })
 
-onMounted( async () => {
+onMounted(async () => {
   // Primeiro, verificar se precisa abrir o dialog baseado no localStorage
   // antes de modificar o actualstep
   const shouldShowIntegratedProjectDialog = useractualstep === 0
@@ -129,50 +126,50 @@ onMounted( async () => {
 </script>
 <template>
   <div style="height: 100vh; position: relative;">
-    <VStepper v-model="actualstep" class="d-flex h-100 ">
-      <StepbyStepHeader :steps="steps" :actualstep="actualstep"  v-if="width > 950"/>
+    <VStepper v-model="actualstep" class="d-flex h-100 elevation-0">
+      <StepbyStepHeader :steps="steps" :actualstep="actualstep" v-if="width > 950" />
       <VStepperWindow class="w-100 h-100">
-        <StepsHeader :user="AuthStore.user" :step_num="StepObj?.value" :step_completed="StepObj?.complete" :step_value="StepObj?.title" @openNav="openNav = !openNav"/>
-          <div v-if="actualstep != 6" class="w-100 d-flex justify-center align-center overflow-y-auto" style="height: 80%;">
-            <div  :style="{width: width < 950 ? '100%' : '75%'}" class="d-flex justify-center align-center h-100">
-              <StepOne :me="AuthStore.user" :team="workStore?.team" :isproject_integrated="workStore?.WorkStorage?.integrated_project" v-if="actualstep === 0" />
-              <StepTwo v-if="actualstep === 1" />
-              <StepThree v-if="actualstep === 2" />
-              <StepFour v-if="actualstep === 3" />
-              <StepFive v-if="actualstep === 4" />
-              <FinalStep :form_work="workStore.WorkStorage" v-if="actualstep === 5"
-            @submitPropose="open_dialog = !open_dialog" />
-            </div>
-          </div>  
-          <SuccessStep v-if="actualstep === 6" to="/panel/works/"/>
+        <StepsHeader :user="AuthStore.user" :step_num="StepObj?.value" :step_completed="StepObj?.complete"
+          :step_value="StepObj?.title" @openNav="openNav = !openNav" />
+        <div v-if="actualstep != 6" class="w-100 d-flex justify-center align-center overflow-y-auto"
+          style="height: 80%;">
+          <div :style="{ width: width < 950 ? '100%' : '75%' }" class="d-flex justify-center align-center h-100">
+            <StepOne :me="AuthStore.user" :team="workStore?.team"
+              :isproject_integrated="workStore?.WorkStorage?.integrated_project" v-if="actualstep === 0" />
+            <StepTwo v-if="actualstep === 1" />
+            <StepThree v-if="actualstep === 2" />
+            <StepFour v-if="actualstep === 3" />
+            <StepFive v-if="actualstep === 4" />
+            <FinalStep :form_work="workStore.WorkStorage" v-if="actualstep === 5"
+              @submitPropose="open_dialog = !open_dialog" />
+          </div>
+        </div>
+        <SuccessStep v-if="actualstep === 6" to="/panel/works/" />
         <StepsAction :actualstep="actualstep" :disabledBtn="ReturnValidatedtoDisabledBtn" @PrevStep="PrevStep"
           @NextStep="NextStep" v-if="actualstep !== 6" />
       </VStepperWindow>
     </VStepper>
-    <StepDialog 
-      :btn_cancel_text="actualstep === 0 ? 'Não' : 'Cancelar'"
+    <StepDialog :btn_cancel_text="actualstep === 0 ? 'Não' : 'Cancelar'"
       :btn_confirm_text="actualstep === 0 ? 'Sim' : 'Confirmar'"
       :title="actualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
       :description="actualstep === 0 ? 'Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes' : 'Após submeter o trabalho um email será enviado para os colaboradores e para o orientador do seu projeto'"
-      v-model="open_dialog"
-      @confirmation="DialogActive"
-    />
+      v-model="open_dialog" @confirmation="DialogActive" />
     <VNavigationDrawer v-model="openNav" location="right">
-        <router-link to="/">
-        <div class="d-flex justify-center align-center ga-3 pa-5" >
+      <router-link to="/">
+        <div class="d-flex justify-center align-center ga-3 pa-5">
           <img src="../../../../assets/logotipo_painel_integracao.png" width="50">
           <h1>Painel</h1>
         </div>
-        </router-link>
-        <VDivider></VDivider>
-        <VList>
-            <VListItem prepend-icon="mdi-information">
-                precisa de ajuda?
-            </VListItem>
-            <VListItem prepend-icon="mdi-account">
-               <VListItemTitle>{{ AuthStore.user.name }}</VListItemTitle>
-            </VListItem>
-        </VList>
+      </router-link>
+      <VDivider></VDivider>
+      <VList>
+        <VListItem prepend-icon="mdi-information">
+          precisa de ajuda?
+        </VListItem>
+        <VListItem prepend-icon="mdi-account">
+          <VListItemTitle>{{ AuthStore.user.name }}</VListItemTitle>
+        </VListItem>
+      </VList>
     </VNavigationDrawer>
   </div>
 </template>
