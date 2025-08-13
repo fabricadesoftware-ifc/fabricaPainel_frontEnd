@@ -13,7 +13,6 @@ const RowComputed = computed(() => {
     }
     return 15
 })
-
 </script>
 <template>
     <div class="w-100 pa-2 d-flex flex-column ga-5 max-w-100 ">
@@ -23,10 +22,13 @@ const RowComputed = computed(() => {
             <div>
                 <v-text-field v-model="workStore.WorkStorage.title" maxlength="200"></v-text-field>
             </div>
-            <VLabel >Escreva uma proposta de integração com no máximo {{ editionStore.currentEdition.words_per_work_max }} palavras...</VLabel>
+             <div class="d-flex ga-2 mt-5">
+            <p style="font-size: 12px;">* Limite mínimo de palavras: {{ editionStore.currentEdition.words_per_work_min }}</p>
+            <p style="font-size: 12px;">* Limite máximo de palavras: {{ editionStore.currentEdition.words_per_work_max }}</p>
+        </div>
             <div>
-                <VTextarea v-model="workStore.WorkStorage.abstract" :counter="editionStore.currentEdition.words_per_work_max + 'palavras'" :maxlength="editionStore.currentEdition.words_per_work_max"
-                    variant="outlined" auto-grow rounded="xl" :rows="RowComputed"></VTextarea>
+                <VTextarea v-model="workStore.WorkStorage.abstract" :counter="editionStore.currentEdition.words_per_work_max" :maxlength="editionStore.currentEdition.words_per_work_max" 
+                    variant="outlined" auto-grow rounded="xl" :rows="RowComputed" ></VTextarea>
             </div>
         </div>
     </div>

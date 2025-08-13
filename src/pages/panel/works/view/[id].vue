@@ -143,7 +143,7 @@ const handleWorkHeaderAction = () => {
             :btn_cancel_text="'Rejeitar'"
             :btn_confirm_text="'Confirmar'"
             :title="'Deseja aprovar esta proposta?'"
-            :description="'Ao aprovar a propsta será possível atribuir nota ao trabalho e aos estudantes.'"
+            :description="'Ao aprovar a proposta será possível atribuir nota ao trabalho e aos estudantes.'"
             v-model="aprove"
             @confirmation="confirmsAction"
             @back="aprove = !aprove"

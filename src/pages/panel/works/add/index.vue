@@ -31,8 +31,10 @@ const ReturnValidatedtoDisabledBtn = computed(() => {
     return workStore.WorkStorage.advisor?.length === 0
   }
   if (actualstep.value === 3) {
-    
     return workStore.WorkStorage.collaborators?.length < editionStore?.currentEdition?.collaborators_min
+  }
+  if(actualstep.value === 4){
+    return workStore.WorkStorage.abstract.length < editionStore.currentEdition.words_per_work_min
   }
   return false
 })
@@ -123,13 +125,6 @@ onMounted( async () => {
     }
     actualstep.value = useractualstep
   }
-
-  //@ts-ignore
-  // const newTeam = {
-  //           team_members: workStore.WorkStorage.team.map((member: any) => member.id),
-  //           sender_id: (AuthStore.user as any).id,
-  //           edition: editionStore.currentEdition?.id,
-  //         }
 })
 </script>
 <template>
