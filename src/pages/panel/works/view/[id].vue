@@ -139,11 +139,18 @@ const openUserGrade = (member: object) => {
 
           <StepDialog :has_backButton="true" :btn_cancel_text="'Rejeitar'" :btn_confirm_text="'Confirmar'"
             :title="'Deseja aprovar esta proposta?'"
-            :description="'Ao aprovar a propsta será possível atribuir nota ao trabalho e aos estudantes.'"
-            v-model="aprove" @confirmation="confirmsAction" @back="aprove = !aprove" />
+            :description="'Ao aprovar a proposta será possível atribuir nota ao trabalho e aos estudantes.'"
+            v-model="aprove"
+            @confirmation="confirmsAction"
+            @back="aprove = !aprove"
+          />
 
-          <WorkHeader v-if="isLoaded" :key="work_id" :work_status="uptadeWorkStatus"
-            @buttonAction="handleWorkHeaderAction" :student_able_to_cancel="usersValidation.student_able_to_cancel"
+          <WorkHeader
+            v-if="isLoaded"
+            :key="work_id"
+            :work_status="uptadeWorkStatus"
+            @buttonAction="handleWorkHeaderAction"
+            :student_able_to_cancel="usersValidation.student_able_to_cancel"
             :advisor_able_to_give_grade="usersValidation.advisor_able_to_give_grade"
             :evaluator_able_to_give_grade="usersValidation.evaluator_able_to_give_grade"
             :advisor_able_to_aprove_work="usersValidation.advisor_able_to_aprove_work"
