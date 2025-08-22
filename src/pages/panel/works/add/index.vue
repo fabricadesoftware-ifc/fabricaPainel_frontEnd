@@ -33,8 +33,11 @@ const ReturnValidatedtoDisabledBtn = computed(() => {
   if (actualstep.value === 3) {
     return workStore.WorkStorage.collaborators?.length < editionStore?.currentEdition?.collaborators_min
   }
-  if(actualstep.value === 4){
-    return workStore.WorkStorage.abstract.length < editionStore.currentEdition.words_per_work_min
+  if (actualstep.value === 4) {
+    const min = editionStore.currentEdition?.words_per_work_min || 0
+    const abstract = workStore.WorkStorage.abstract?.trim() || ''
+    const words = abstract ? abstract.split(/\s+/).length : 0
+    return words < min
   }
   return false
 })
