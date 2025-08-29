@@ -166,11 +166,11 @@ onMounted(async () => {
       </router-link>
       <VDivider></VDivider>
       <VList>
-        <VListItem prepend-icon="mdi-information">
-          precisa de ajuda?
-        </VListItem>
         <VListItem prepend-icon="mdi-account">
           <VListItemTitle>{{ AuthStore.user.name }}</VListItemTitle>
+        </VListItem>
+        <VListItem prepend-icon="mdi-information">
+          <router-link to="/user-support">Precisa de ajuda?</router-link>
         </VListItem>
       </VList>
     </VNavigationDrawer>
