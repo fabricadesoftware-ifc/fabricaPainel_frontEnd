@@ -23,38 +23,14 @@
   import { onMounted } from 'vue'
   // @ts-ignore
   import { useRouter, useRoute } from 'vue-router'
-  import { useAuth } from './stores/auth'
   import { globalRouter } from "./plugins/globalRouter";
 
 
   const router = useRouter()
   const route = useRoute()
-  const authStore = useAuth()
 
   globalRouter.router = router
-
-  onMounted(async () => {
-
-    await authStore.checkAuth()
-  })
 </script>
 
 <style scoped>
-.index {
-  background-color: #333;
-  color: #f7fb13;
-  padding: 10px;
-  border-radius: 12px;
-  z-index: 1000;
-  margin: 10px;
-  font-size: .7rem;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  position: fixed;
-  top: 0;
-  right: 0;
-  text-transform: uppercase;
-  cursor: pointer;
-}
 </style>

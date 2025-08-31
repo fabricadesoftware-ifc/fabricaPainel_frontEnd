@@ -51,13 +51,17 @@ export default defineConfig({
       },
     }),
     Fonts({
-      google: {
+      custom: {
         families: [
           {
             name: "Poppins",
-            styles: "wght@100;300;400;500;700;900",
+            src: "src/assets/fonts/Poppins/*.woff2",
+            local: "Poppins",
           },
         ],
+        display: "swap",
+        preload: true,
+        prefetch: true,
       },
     }),
     VitePWA({
