@@ -13,7 +13,7 @@ const editionStore = useEdition()
 
 const hintInput = computed(() => {
     const maxCollaborators = editionStore.currentEdition?.collaborators_max || 5
-    if(WorkStore.WorkStorage.collaborators.length === maxCollaborators){
+    if (WorkStore.WorkStorage.collaborators.length === maxCollaborators) {
         return 'limite máximo atingido'
     }
     return ''
@@ -24,36 +24,36 @@ const AddUser = async (selectedColaborator) => {
     if (selectedColaborator) {
         const userExists = WorkStore.WorkStorage.collaborators.some(stu => stu.email === selectedColaborator.email)
         const isYourAdvisor = WorkStore.WorkStorage.advisor[0].email === selectedColaborator.email
-        if (!userExists && !isYourAdvisor){
-            
+        if (!userExists && !isYourAdvisor) {
+
             if (selectedColaborator.is_collaborator == true) {
-            await WorkStore.fetchUserWorks('TEACHER', selectedColaborator.id)
-            const limiteReached = hasReachedWorkLimit(
-            selectedColaborator,
-            WorkStore.collaboratorWorks,
-            editionStore.currentEdition.works_per_collaborator_max,
-            false
-            )
-            if (limiteReached) {
-                showMessage(
-                'Este colaborador não está mais disponível',
-                "error",
-                1500,
-                "top-right",
-                "auto",
-                false)
-            } else {    
-            WorkStore.WorkStorage.collaborators.push(selectedColaborator)
-            }
+                await WorkStore.fetchUserWorks('TEACHER', selectedColaborator.id)
+                const limiteReached = hasReachedWorkLimit(
+                    selectedColaborator,
+                    WorkStore.collaboratorWorks,
+                    editionStore.currentEdition.works_per_collaborator_max,
+                    false
+                )
+                if (limiteReached) {
+                    showMessage(
+                        'Este colaborador não está mais disponível',
+                        "error",
+                        1500,
+                        "top-right",
+                        "auto",
+                        false)
+                } else {
+                    WorkStore.WorkStorage.collaborators.push(selectedColaborator)
+                }
             } else {
-                 showMessage(
-                "Este professor não é um colaborador",
-                "error",
-                1500,
-                "top-right",
-                "auto",
-                false
-            );
+                showMessage(
+                    "Este professor não é um colaborador",
+                    "error",
+                    1500,
+                    "top-right",
+                    "auto",
+                    false
+                );
             }
         }
         else {
@@ -69,26 +69,34 @@ const AddUser = async (selectedColaborator) => {
     }
 }
 
-function removeUser(email){
+function removeUser(email) {
     const teacherI = WorkStore.WorkStorage.collaborators.findIndex(te => te.email === email)
     WorkStore.WorkStorage.collaborators.splice(teacherI, 1)
 }
 
-const {width} = useDisplay()
+const { width } = useDisplay()
 const heightComputed = computed(() => {
-    if(width.value < 500){
+    if (width.value < 500) {
         return 300
     }
     return 400
 })
 </script>
 <template>
-    <div :style="width > 950 ? {width: '70%'} : {width: '100%'}" class="pa-2 h-100">
-        <TeacherSelected :disabled="WorkStore.WorkStorage.collaborators.length === (editionStore.currentEdition?.collaborators_max || 5)" :hint="hintInput" error_msg="colaborador não encontrado" placeholder="pesquise pelo colaborador" label="pesquise pelo colaborador" user-type="TEACHER" @addUser="AddUser" @removeUser="removeUser"/>
+    <div :style="width > 950 ? { width: '70%' } : { width: '100%' }" class="pa-2 h-100">
+        <TeacherSelected
+            :disabled="WorkStore.WorkStorage.collaborators.length === (editionStore.currentEdition?.collaborators_max || 5)"
+            :hint="hintInput" error_msg="colaborador não encontrado" placeholder="pesquise pelo colaborador"
+            label="pesquise pelo colaborador" :user-type="['TEACHER', 'TAE']" @addUser="AddUser"
+            @removeUser="removeUser" />
         <div class="d-flex ga-2 mt-5">
-            <p style="font-size: 12px;">* Limite máximo de colaboradores: {{ editionStore.currentEdition?.collaborators_max || 5 }}</p>
-            <p style="font-size: 12px;">* Limite minimo de colaboradores: {{ editionStore.currentEdition?.collaborators_min || 0 }}</p>
+            <p style="font-size: 12px;">* Limite máximo de colaboradores: {{
+                editionStore.currentEdition?.collaborators_max || 5 }}</p>
+            <p style="font-size: 12px;">* Limite minimo de colaboradores: {{
+                editionStore.currentEdition?.collaborators_min || 0 }}</p>
         </div>
-        <StepContainer :painel_height="heightComputed" title="Colaboradores do seu projeto" :step_array="WorkStore.WorkStorage.collaborators" :is_subject="false" @RemoveUser="removeUser" :min="editionStore.currentEdition?.collaborators_min || 0" no_arr_msg="Nenhum colaborador selecionado"/>
+        <StepContainer :painel_height="heightComputed" title="Colaboradores do seu projeto"
+            :step_array="WorkStore.WorkStorage.collaborators" :is_subject="false" @RemoveUser="removeUser"
+            :min="editionStore.currentEdition?.collaborators_min || 0" no_arr_msg="Nenhum colaborador selecionado" />
     </div>
 </template>
