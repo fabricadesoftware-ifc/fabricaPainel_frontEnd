@@ -50,18 +50,19 @@ const resendToken = async () => {
 </script>
 
 <template>
-  
 
-     <v-parallax style="height: 100vh;" src="@/assets/home_banner.png" class="custom-parallax d-flex justify-center align-center" gradient="rgba(0,0,0,0.69)">
-      <Loading :loading="loading" />
+
+  <v-parallax style="height: 100vh;" src="@/assets/home_banner.png" class="custom-parallax" gradient="rgba(0,0,0,0.69)">
+    <Loading :loading="loading" />
+    <PanelLogo />
     <v-row>
-      <v-col cols="12" md="6" class="mx-auto d-flex justify-center align-center">
-        <v-card class="pa-5 rounded-xl token-container">
-          <v-card-title class="text-center">
-            <h2 class="text-primary font-weight-bold text-h4">Token</h2>
-          </v-card-title>
-          <v-card-subtitle class="text-center">
-            <p>Insira o token enviado para o seu e-mail.</p>
+      <div cols="12" class="mx-auto d-flex justify-center align-center mt-16 pt-5">
+        <v-card class="pa-6 rounded-xl token-container pt-10">
+            <v-card-subtitle class="text-left">
+            <v-alert title="Token" color="primary" icon="$info" rounded="lg" variant="outlined"
+              text="Digite o token recebido no seu e-mail para continuar o processo." class="break-text">
+
+            </v-alert>
           </v-card-subtitle>
           <v-card-text>
             <v-form @submit.prevent="getToken">
@@ -69,14 +70,15 @@ const resendToken = async () => {
                 v-model="token"
                 label="Token"
                 variant="outlined"
-                rounded="xl"
+                rounded="lg"
                 required
                 type="text"
+                prepend-inner-icon="mdi-key-variant"
               />
               <v-btn
                 block
                 color="primary"
-                rounded="xl"
+                rounded="lg"
                 class="py-6"
                 @click="getToken"
               >
@@ -85,15 +87,11 @@ const resendToken = async () => {
             </v-form>
           </v-card-text>
 
-          <p class="text-center mt-4" style="font-size: 0.9rem">
-            <p
-              @click="resendToken"
-              class="text-decoration-none text-primary cursor-pointer"
-              >Não Recebeu o e-mail? Clique aqui para reenviar</p
-            >
+          <p class="text-center mt-4 text-decoration-none text-primary cursor-pointer" style="font-size: 0.9rem" @click="resendToken"
+              >Não Recebeu o e-mail? Clique aqui para reenviar
           </p>
         </v-card>
-      </v-col>
+      </div>
     </v-row>
   </v-parallax>
 
@@ -109,5 +107,9 @@ const resendToken = async () => {
   width: 90%;
   height: 400px;
 }
+}
+
+::-webkit-scrollbar-corner {
+  display: none;
 }
 </style>

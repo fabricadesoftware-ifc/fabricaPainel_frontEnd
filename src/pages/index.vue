@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { useAuth } from "@/stores/auth";
 import { useDisplay } from "vuetify";
+import { ref, onBeforeMount } from 'vue';
+import { useAuth } from "@/stores/auth";
 import { downloadPdf } from "@/utils/user";
-import { ref, onMounted } from 'vue';
 
 const authStore = useAuth();
 const openNav = ref(false)
@@ -20,7 +20,7 @@ const bannerImages = [
 
 const randomBanner = ref(bannerImages[0]);
 
-onMounted(() => {
+onBeforeMount(() => {
   const randomIndex = Math.floor(Math.random() * bannerImages.length);
   randomBanner.value = bannerImages[randomIndex];
 });

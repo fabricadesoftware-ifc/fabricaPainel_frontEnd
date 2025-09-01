@@ -5,6 +5,7 @@
  */
 
 import 'vue3-toastify/dist/index.css'
+import './styles/global.css'
 
 // Plugins
 import { registerPlugins } from '@/plugins'
