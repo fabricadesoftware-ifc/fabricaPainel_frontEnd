@@ -25,19 +25,6 @@ const getPassword = async () => {
   }
 }
 </script>
-
-<style>
-::-webkit-scrollbar {
-  display: none;
-}
-
-@media (max-width: 1250px) {
-  .custom-parallax {
-    height: 1000px;
-  }
-}
-</style>
-
 <template>
   <v-parallax style="height: 100vh;" src="@/assets/home_banner.png" class="custom-parallax" gradient="rgba(0,0,0,0.69)">
     <Loading :loading="loading" />
