@@ -44,17 +44,17 @@ const getPassword = async () => {
      <PanelLogo />
     <div class="d-flex justify-center mt-16">
       <v-card class="d-flex rounded-xl pa-6 login-card get-password-card">
-        <v-col cols="12">
+        <v-col cols="12" class="pt-5">
           <v-card-subtitle class="text-center">
-            <v-alert title="Senha" color="primary" icon="$warning" rounded="lg" variant="outlined"
-              text="Enviaremos um e-mail com as instruções para recuperar ou obter sua senha." class="break-text">
+            <v-alert title="Senha" color="primary" icon="$info" rounded="lg" variant="outlined"
+              text="Enviaremos um e-mail com as instruções para recuperar sua senha." class="break-text">
 
             </v-alert>
           </v-card-subtitle>
            <v-card-text>
            <v-form @submit.prevent="getPassword">
-           <v-text-field v-model="email" label="Email" variant="outlined" prepend-inner-icon="mdi-email" required
-                rounded="lg" type="email" />
+           <v-text-field class="pb-2" v-model="email" label="Email" variant="outlined" prepend-inner-icon="mdi-email" required
+                rounded="lg" type="email" :rules="[v => /.+@.+\..+/.test(v) || 'E-mail inválido']"/>
          <AuthButton alternative_text="Acessar a Plataforma" router_link="/auth/login" @action="getPassword" />
          </v-form>
          </v-card-text>
