@@ -9,15 +9,16 @@ import Vue from "@vitejs/plugin-vue";
 import VueRouter from "unplugin-vue-router/vite";
 import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import { VitePWA } from "vite-plugin-pwa";
+import Sitemap from "vite-plugin-sitemap"; // Importe o plugin
 
 import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
-   server: {
-    host: '0.0.0.0',
+  server: {
+    host: "0.0.0.0",
     port: 3000,
-    allowedHosts: ['a9ed-191-52-58-163.ngrok-free.app']
+    allowedHosts: ["a9ed-191-52-58-163.ngrok-free.app"],
   },
   plugins: [
     VueRouter({
@@ -86,7 +87,7 @@ export default defineConfig({
             purpose: "maskable",
           },
         ],
-        id: "com.fake-store.app",
+        id: "com.fabricaPainel.app",
         orientation: "any",
         background_color: "#ffffff",
         start_url: ".",
@@ -98,6 +99,19 @@ export default defineConfig({
         enabled: true,
       },
     }),
+    Sitemap({
+      hostname: "https://painel.fabricadesoftware.ifc.edu.br", // Substitua pelo domínio real do seu site
+      dynamicRoutes: ["/", "/about"], // Liste suas rotas ou use lógica para rotas dinâmicas
+      exclude: ["/login"], // Rotas a excluir do sitemap
+      robots: [
+        { userAgent: "*", allow: "/" },
+        { userAgent: "*", disallow: ["/login"] },
+        { sitemap: "https://painel.fabricadesoftware.ifc.edu.br/sitemap.xml" },
+      ],
+      changefreq: "weekly",
+      priority: 0.8,
+      outDir: "dist", // Diretório de saída (padrão para Dokku)
+    }),
   ],
   define: { "process.env": {} },
   resolve: {
@@ -106,5 +120,4 @@ export default defineConfig({
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },
-  
 });
