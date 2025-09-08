@@ -106,7 +106,6 @@ export default defineConfig({
       robots: [
         { userAgent: "*", allow: "/" },
         { userAgent: "*", disallow: ["/login"] },
-        { sitemap: "https://painel.fabricadesoftware.ifc.edu.br/sitemap.xml" },
       ],
       changefreq: "weekly",
       priority: 0.8,
