@@ -109,24 +109,28 @@ const { width } = useDisplay()
           <v-lazy :min-height="200" :options="{ 'threshold': 0.5 }" transition="fade-transition">
             <div v-if="UserStore?.user?.user_type == 'STUDENT'">
               <CardSubmission v-for="(work, index) in submissionsCurrent" :key="index" :work_id="work?.id"
-                :work="work?.edition?.final_submission_date" :work_status="work?.status" />
+                :work="work?.edition?.final_submission_date" :work_status="work?.status"
+                :actual_title="work?.title" />
             </div>
             <TeacherContainer v-else :works="submissionsCurrent" :user_type="UserStore?.user?.user_type">
               <template #evaluate>
                 <CardSubmission v-for="(work, index) in submissionsCurrent.evaluatorWorks" :key="index"
-                  :work_id="work?.id" :work="work?.edition?.final_submission_date" :work_status="work?.status" />
+                  :work_id="work?.id" :work="work?.edition?.final_submission_date" :work_status="work?.status"
+                  :actual_title="work?.title" />
               </template>
 
               <template #advise>
                 <CardSubmission v-for="(work, index) in submissionsCurrent.advisorWorks" :key="index"
                   :work_id="work?.id" :work="work?.edition.final_submission_date" :work_status="work?.status"
-                  :user="UserStore?.user" :work_data="work" />
+                  :user="UserStore?.user" :work_data="work"
+                  :actual_title="work?.title" />
               </template>
 
               <template #collaborate>
                 <CardSubmission v-for="(work, index) in submissionsCurrent.collaboratorWorks" :key="index"
                   :work_id="work?.id" :work="work?.edition.final_submission_date" :work_status="work?.status"
-                  :user="UserStore?.user" :work_data="work" />
+                  :user="UserStore?.user" :work_data="work"
+                  :actual_title="work?.title" />
               </template>
             </TeacherContainer>
           </v-lazy>
@@ -149,7 +153,8 @@ const { width } = useDisplay()
 
             <CardSubmission v-for="(works, index) in submissionsPast" :key="works?.id"
               :work="works?.edition.final_submission_date" :work_id="works?.id" :work_status="works?.status"
-              :edition_title="index == 0 ? works.edition?.edition_name : ''" />
+              :edition_title="index == 0 ? works.edition?.edition_name : ''"
+              :actual_title="works?.title" />
           </div>
 
           <TeacherContainer v-else-if="UserStore?.user?.user_type != 'STUDENT'" :works="submissionsPast"
