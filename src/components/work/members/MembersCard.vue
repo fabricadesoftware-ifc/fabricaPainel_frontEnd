@@ -22,7 +22,7 @@ const props = defineProps({
         default: null
     },
     member_id: {
-        type: [Number,String, null],
+        type: [Number, String, null],
         default: null
     },
     status: {
@@ -37,7 +37,7 @@ const props = defineProps({
         type: Boolean,
         default: false
     }
-    
+
 })
 
 const date = new Date()
@@ -63,7 +63,7 @@ const resolveAdvisorOrCollaboratorStatus = (status: Number | String) => {
             }
         }
         case 4: {
-             return {
+            return {
                 text: 'Expirado',
                 color: 'blue-grey lighten-1'
             }
@@ -83,69 +83,91 @@ const emits = defineEmits([
 const grade = ref<any>(null)
 const watchWork = computed(() => workStore?.currentWork?.id)
 
-onMounted(async ()=> {
-    if (props.member.name && workStore?.currentWork) { 
-    await studentAssesment.fetchAssessment(props.member.name, workStore?.currentWork.id)
-    
-    if (studentAssesment?.assesment[0]) { 
-        console.log(studentAssesment.assesment[0])
-        grade.value = studentAssesment.assesment[0]
-     }
+onMounted(async () => {
+    if (props.member.name && workStore?.currentWork) {
+        await studentAssesment.fetchAssessment(props.member.name, workStore?.currentWork.id)
+
+        if (studentAssesment?.assesment[0]) {
+            console.log(studentAssesment.assesment[0])
+            grade.value = studentAssesment.assesment[0]
+        }
     }
     console.log(props, grade.value)
     console.log(workStore?.currentWork)
 })
 
 watch(studentAssesment.assesments, async (newVal) => {
-        await studentAssesment.fetchAssessment(props.member.name,  workStore?.currentWork.id)
-        grade.value = studentAssesment?.assesment[0]
+    await studentAssesment.fetchAssessment(props.member.name, workStore?.currentWork.id)
+    grade.value = studentAssesment?.assesment[0]
 })
 
 watch(watchWork, async (newVal) => {
-    await studentAssesment.fetchAssessment(props.member.name,  workStore?.currentWork.id)
+    await studentAssesment.fetchAssessment(props.member.name, workStore?.currentWork.id)
 
     grade.value = studentAssesment.assesment[0]
 })
 
-const {width} = useDisplay() 
+const { width } = useDisplay() 
 </script>
 <template>
-      <div class="d-flex align-center justify-space-between flex-wrap">
+    <div class="d-flex align-center justify-space-between flex-wrap">
 
-                <div :style="{width: width > 780 ? '' : '100%'}">
-                    <div  class="d-flex align-center ga-5">
-                        <p :style="{fontSize: width > 780 ? '18px' : '15px'}">{{ props.member.name }}</p>
-                        <v-chip v-if="props.user_id == props.member_id" color="blue-darken-2 d-flex justify-center align-center" style="width: 60px; height: 25px; font-size: 13px;">Você</v-chip>
+        <div :style="{ width: width > 780 ? '' : '100%' }">
+            <div class="d-flex align-center ga-5">
+                <p :style="{ fontSize: width > 780 ? '18px' : '15px' }">{{ props.member.name }}</p>
+                <v-chip v-if="props.user_id == props.member_id" color="blue-darken-2 d-flex justify-center align-center"
+                    style="width: 60px; height: 25px; font-size: 13px;">Você</v-chip>
 
-                    </div>
-                    <p class="opacity-60" :style="{fontSize: width > 780 ? '15px' : '13px'}">{{ props.member.email }}</p>
-                </div>
-                <div :style="{marginTop: width > 780 ? '0px' : '15px'}" class="d-flex ga-5 align-center">
-                <p style="font-weight: 700; font-size: 14px;" class="blue-darken-2 opacity-70" v-if="width <= 780 ? ['ADVISOR'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) ? 'Nota Individual' : ['STUDENT'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) ? 'Nota Individual' : '' : ''"> {{ props.is_student ? 'Nota Individual:' : 'Status: ' }} </p>
-
-                        <v-btn @click="emits('openStudentAssesment')" v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition_year == date.getFullYear() && workStore?.currentWork?.status === 2" color="blue" :style="{width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px'}">Atribuir Nota</v-btn>
-
-                        <v-chip v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition_year != date.getFullYear()"
-                        :color="!grade ? 'yellow-darken-3' : 'green-darken-3'"
-                        class="d-flex justify-center align-center bg-red" label :style="{width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px'}">
-                        {{ !grade ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' : assesmentStore?.currentAssessment[0] && grade ? (Number(assesmentStore?.currentAssessment[0]?.grade) + Number(grade.grade))/2  : 'Aguardando Trabalho'  }}
-                        </v-chip>
-
-                        <v-chip v-if="grade && props.work_advisor.id == props.user_id && props.is_student"
-                        color="green-darken-3"
-                        class="d-flex justify-center align-center" label :style="{width: width > 780 ? '180px' : '150px', fontSize: width > 780 ? '14px' : '12px'}"> 
-                        Nota: {{ grade.grade }} -
-                        Média: 
-                        {{  assesmentStore?.currentAssessment[0] && grade ? (Number(assesmentStore?.currentAssessment[0]?.grade) + Number(grade.grade))/2 :  'Aguardando Trabalho' }}
-                        </v-chip>
-
-                        <v-chip v-if="props.is_student && props.work_advisor.id != props.user_id && !authStore.user.is_collaborator && !authStore.user.is_evaluator && props.is_student"
-                        :color="!grade ? 'yellow-darken-3' : 'green-darken-3'"
-                        class="d-flex justify-center align-center" label :style="{width: width > 780 ? '180px' : '150px', fontSize: width > 780 ? '14px' : '12px'}">
-                        {{ !grade  ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' :  assesmentStore?.currentAssessment[0] && grade ? (Number(assesmentStore?.currentAssessment[0]?.grade) + Number(grade.grade))/2  : 'Aguardando Trabalho' }}
-                        </v-chip>
-                        <v-chip v-if="!props.is_student" class="d-flex justify-center align-center" :color="resolveAdvisorOrCollaboratorStatus(props.status).color" label :style="{width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px'}">{{ resolveAdvisorOrCollaboratorStatus(props.status).text }}</v-chip>
+            </div>
+            <p class="opacity-60" :style="{ fontSize: width > 780 ? '15px' : '13px' }">{{ props.member.email }}</p>
         </div>
+        <div :style="{ marginTop: width > 780 ? '0px' : '15px' }" class="d-flex ga-5 align-center">
+            <p style="font-weight: 700; font-size: 14px;" class="blue-darken-2 opacity-70"
+                v-if="width <= 780 ? ['ADVISOR'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) ? 'Nota Individual' : ['STUDENT'].includes(resolveUserFunction(workStore?.currentWork, authStore?.user)) ? 'Nota Individual' : '' : ''">
+                {{ props.is_student ? 'Nota Individual:' : 'Status: ' }} </p>
 
+            <v-btn @click="emits('openStudentAssesment')"
+                v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition_year == date.getFullYear() && workStore?.currentWork?.status === 2"
+                color="blue"
+                :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px' }">Atribuir
+                Nota</v-btn>
+
+            <v-chip
+                v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition_year != date.getFullYear()"
+                :color="!grade ? 'yellow-darken-3' : 'green-darken-3'" class="d-flex justify-center align-center bg-red"
+                label :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px' }">
+                {{ !grade ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' :
+                    assesmentStore?.currentAssessment[0] && grade ? (Number(assesmentStore?.currentAssessment[0]?.grade) +
+                        Number(grade.grade)) / 2 : 'Aguardando Trabalho' }}
+            </v-chip>
+
+            <div v-if="grade && props.work_advisor.id == props.user_id && props.is_student"
+                class="d-flex ga-3 flex-wrap">
+                <v-chip color="green-darken-3" class="d-flex justify-center align-center" label
+                    :style="{ fontSize: width > 780 ? '14px' : '12px', minWidth: width > 780 ? '140px' : '120px' }">
+                    Nota do Orientador: {{ grade.grade }}
+                </v-chip>
+                <v-chip color="green-darken-3" class="d-flex justify-center align-center" label
+                    :style="{ fontSize: width > 780 ? '14px' : '12px', minWidth: width > 780 ? '140px' : '120px' }">
+                    Nota Final: {{ assesmentStore?.currentAssessment[0] && grade ?
+                        (Number(assesmentStore?.currentAssessment[0]?.grade)
+                            + Number(grade.grade)) / 2 : '-' }}
+                </v-chip>
+            </div>
+
+            <v-chip
+                v-if="props.is_student && props.work_advisor.id != props.user_id && !authStore.user.is_collaborator && !authStore.user.is_evaluator && props.is_student"
+                :color="!grade ? 'yellow-darken-3' : 'green-darken-3'" class="d-flex justify-center align-center" label
+                :style="{ width: width > 780 ? '180px' : '150px', fontSize: width > 780 ? '14px' : '12px' }">
+                {{ !grade ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' :
+                    assesmentStore?.currentAssessment[0] && grade ? (Number(assesmentStore?.currentAssessment[0]?.grade) +
+                        Number(grade.grade)) / 2 : 'Aguardando Trabalho' }}
+            </v-chip>
+            <v-chip v-if="!props.is_student" class="d-flex justify-center align-center"
+                :color="resolveAdvisorOrCollaboratorStatus(props.status).color" label
+                :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px' }">{{
+                    resolveAdvisorOrCollaboratorStatus(props.status).text }}</v-chip>
         </div>
+        <v-divider class="mt-2"></v-divider>
+    </div>
 </template>

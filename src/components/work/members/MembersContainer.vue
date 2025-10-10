@@ -8,7 +8,7 @@ const props = defineProps({
     },
     attribute: {
         type: String,
-        default: 'Nota Individual'
+        default: 'Notas Individuais'
     }
 })
 
