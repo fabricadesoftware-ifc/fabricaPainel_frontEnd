@@ -113,9 +113,7 @@ function showinfo(){
                 </row>
                 <v-btn @click="showinfo()" class="bg-blue">{{textButton}}</v-btn>
               </v-col>
-              <v-col style="width: 400px; height: 500px;">
-                <img style="object-fit: fill;" alt="" class="w-100 h-100 rounded-xl" :src="edition.banner?.file" />
-              </v-col>
+
             </v-row>
           </div>
 
