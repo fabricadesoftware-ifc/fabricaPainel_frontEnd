@@ -186,7 +186,7 @@ export const useEdition = defineStore('edition', () => {
 
   async function CreateObjArr() {
     let newArr = []
-    const subtituteObj = ['edition_name', 'year', 'theme', 'event_date', 'final_event_date', 'initial_advisor_acceptance', 'initial_second_advisor_date', 'initial_submission_date', 'initial_second_submission_date', 'initial_evaluators_date', 'final_advisor_acceptance', 'final_second_advisor_date', 'final_submission_date', 'final_second_submission_date', 'final_evaluators_date', 'members_min', 'members_max', 'collaborators_min', 'collaborators_max', 'subjects_min', 'subjects_max', 'works_per_evaluator_max', 'works_per_advisor_max', 'works_per_collaborator_max', 'words_per_work_max', 'works_per_evaluator_max', 'workload', 'banner']
+    const subtituteObj = ['edition_name', 'year', 'theme', 'event_date', 'final_event_date', 'initial_advisor_acceptance', 'initial_second_advisor_date', 'initial_submission_date', 'initial_second_submission_date', 'initial_evaluators_date', 'final_advisor_acceptance', 'final_second_advisor_date', 'final_submission_date', 'final_second_submission_date', 'final_evaluators_date', 'members_min', 'members_max', 'collaborators_min', 'collaborators_max', 'subjects_min', 'subjects_max', 'works_per_evaluator_max', 'works_per_advisor_max', 'works_per_collaborator_max', 'words_per_work_max', 'evaluators_count', 'workload', 'banner']
     let cont = 0
     for (let i = 0; i < newEdtion.value.newedition.length; i++) {
       console.log(newEdtion)

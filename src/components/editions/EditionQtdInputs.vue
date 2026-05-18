@@ -14,6 +14,10 @@
       type: String,
       default: 'number'
     },
+    hint: {
+      type: String,
+      default: ''
+    },
     error: {
       type: String,
       default: ''
@@ -21,17 +25,34 @@
   })
 </script>
 <template>
-<div class="d-flex justify-center align-center">
+<div class="edition-qtd-field">
   <VTextField
     variant="outlined"
-    rounded="xl"
+    rounded="lg"
+    density="comfortable"
     :type="type"
     v-model="value"
     :placeholder="placeholder"
     :append-inner-icon="icon"
+    :hint="hint"
+    :persistent-hint="Boolean(hint)"
     :error="Boolean(error)"
     :error-messages="error ? [error] : []"
   ></VTextField>
-  <div class="bg-grey-lighten-2 rounded-xl mb-5 mx-10" style="width: 30px; height: 10px;" v-if="placeholder === 'MIN'"></div>
+  <div class="qtd-separator bg-grey-lighten-2 rounded-xl" v-if="placeholder === 'MIN'"></div>
 </div>
 </template>
+<style scoped>
+.edition-qtd-field {
+  display: flex;
+  align-items: flex-start;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.qtd-separator {
+  flex: 0 0 24px;
+  height: 4px;
+  margin: 22px 8px 0;
+}
+</style>
