@@ -1,8 +1,8 @@
 <script setup> 
   import { StepsEdition } from '@/utils/steps/editions';
   import { useEdition } from '@/stores/edition';
-  import router from '@/router';
-  import { ValidateUndefinedItems, validateDates, validateIfDatesAreBetweenEditionDates, validateLimitFields } from '@/utils/validators/edition/edition';
+  import { hasEditionErrors, validateEditionCreation } from '@/utils/validators/edition/edition';
+
   const editionStore = useEdition()
   const actualstep = ref(0)
   const imgPreview = ref(null)
@@ -31,20 +31,32 @@
     }
   })
 
+  const validation = computed(() => validateEditionCreation(editionStore.newEdtion.newedition))
+
+  function inputIndex(edition) {
+    return editionStore.newEdtion.newedition.indexOf(edition)
+  }
+
+  function fieldError(edition) {
+    return validation.value.fieldErrors[inputIndex(edition)] || ''
+  }
+
+  function qtdErrors(edition) {
+    return validation.value.qtdErrors[inputIndex(edition)] || []
+  }
+
   const selectValidator = computed(() => {
     if(actualstep.value === 0){
-      console.log(!ValidateUndefinedItems(editionStore.newEdtion.newedition.slice(0, 5)) && !validateDates(editionStore.newEdtion.newedition.slice(3, 5), 1))
-      return ValidateUndefinedItems(editionStore.newEdtion.newedition.slice(0, 5)) || validateDates(editionStore.newEdtion.newedition.slice(3, 5), 1)
+      return hasEditionErrors(validation.value, 0, 5)
     }
     else if(actualstep.value === 1){
-      console.log(validateIfDatesAreBetweenEditionDates(editionStore.newEdtion.newedition.slice(3, 15)), ValidateUndefinedItems(editionStore.newEdtion.newedition.slice(5, 15)))
-      return validateIfDatesAreBetweenEditionDates(editionStore.newEdtion.newedition.slice(3, 15)) || ValidateUndefinedItems(editionStore.newEdtion.newedition.slice(5, 15))
+      return hasEditionErrors(validation.value, 5, 15)
     }
     else if(actualstep.value === 2){
-      return validateLimitFields(editionStore.newEdtion.newedition.slice(15, 18).map(item => item.qtds)) || ValidateUndefinedItems(editionStore.newEdtion.newedition.slice(15, 18).map(item => item.qtds).slice(0, 3).flat())
+      return hasEditionErrors(validation.value, 15, 18)
     }
     else if(actualstep.value === 3){
-        return ValidateUndefinedItems(editionStore.newEdtion.newedition.slice(18, 24))
+        return hasEditionErrors(validation.value, 18, 24)
     }
     else if(actualstep.value === 4 && imgPreview.value){
       return false
@@ -89,19 +101,49 @@ function PrevStep() {
     <StepbyStepHeader :steps="StepsEdition" :actualstep="actualstep"/>
     <VStepperWindow class="w-100 h-100">
       <div class="d-flex flex-column justify-center align-center flex-wrap w-100 h-100 ga-7 overflow-y" v-if="actualstep < 3">
-          <EditionInputs v-for="edition, i in SelectedArrayItems" :key="i" :placeholder="edition.placeholder" v-model:value="edition.value" :type="edition.type" :label="edition.label" :qtds="edition.qtds"/>
+          <EditionInputs
+            v-for="edition, i in SelectedArrayItems"
+            :key="i"
+            :placeholder="edition.placeholder"
+            v-model:value="edition.value"
+            :type="edition.type"
+            :label="edition.label"
+            :qtds="edition.qtds"
+            :error="fieldError(edition)"
+            :qtd-errors="qtdErrors(edition)"
+          />
       </div>
       <div class="d-flex flex-column ga-10" v-else-if="actualstep === 3">
           <div class="d-flex  flex-column ga-5">
               <h3 class="ms-10">Máximo de trabalhos</h3>
               <div class="d-flex flex-wrap justify-center align-start ga-5">
-                <EditionInputs v-for="edition, i in SelectedArrayItems.slice(0, 3)" :key="i" :placeholder="edition.placeholder" v-model:value="edition.value" :type="edition.type" :label="edition.label" :qtds="edition.qtds"/>
+                <EditionInputs
+                  v-for="edition, i in SelectedArrayItems.slice(0, 3)"
+                  :key="i"
+                  :placeholder="edition.placeholder"
+                  v-model:value="edition.value"
+                  :type="edition.type"
+                  :label="edition.label"
+                  :qtds="edition.qtds"
+                  :error="fieldError(edition)"
+                  :qtd-errors="qtdErrors(edition)"
+                />
               </div>  
             </div>
           <div class="d-flex ga-5 justify-center flex-column">
               <h3 class="ms-10">Configurações</h3>
               <div class="d-flex flex-wrap justify-center align-start ga-5">
-                <EditionInputs v-for="edition, i in SelectedArrayItems.slice(3, 6)" :key="i" :placeholder="edition.placeholder" v-model:value="edition.value" :type="edition.type" :label="edition.label" :qtds="edition.qtds"/>
+                <EditionInputs
+                  v-for="edition, i in SelectedArrayItems.slice(3, 6)"
+                  :key="i"
+                  :placeholder="edition.placeholder"
+                  v-model:value="edition.value"
+                  :type="edition.type"
+                  :label="edition.label"
+                  :qtds="edition.qtds"
+                  :error="fieldError(edition)"
+                  :qtd-errors="qtdErrors(edition)"
+                />
               </div> 
             </div>
       </div>

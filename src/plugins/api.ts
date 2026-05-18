@@ -57,6 +57,10 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as RetriableRequestConfig | undefined;
 
+    if (error.response?.status == 403 || !originalRequest) {
+      useAuth().logout();
+    }
+
     if (error.response?.status !== 401 || !originalRequest) {
       return Promise.reject(error);
     }

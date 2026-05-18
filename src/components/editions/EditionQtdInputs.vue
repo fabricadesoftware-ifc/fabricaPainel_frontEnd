@@ -14,11 +14,24 @@
       type: String,
       default: 'number'
     },
+    error: {
+      type: String,
+      default: ''
+    },
   })
 </script>
 <template>
 <div class="d-flex justify-center align-center">
-  <VTextField variant="outlined" rounded="xl" :type="type" v-model="value" :placeholder="placeholder" :append-inner-icon="icon"></VTextField>
+  <VTextField
+    variant="outlined"
+    rounded="xl"
+    :type="type"
+    v-model="value"
+    :placeholder="placeholder"
+    :append-inner-icon="icon"
+    :error="Boolean(error)"
+    :error-messages="error ? [error] : []"
+  ></VTextField>
   <div class="bg-grey-lighten-2 rounded-xl mb-5 mx-10" style="width: 30px; height: 10px;" v-if="placeholder === 'MIN'"></div>
 </div>
 </template>
