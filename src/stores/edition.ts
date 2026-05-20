@@ -5,6 +5,43 @@ import { showMessage } from '@/utils/toastify'
 import { useStorage } from '@vueuse/core'
 import api from '@/plugins/api'
 
+const defaultEvaluationCriteria = () => [
+  {
+    key: 'work',
+    target: 'work',
+    label: 'Nota do avaliador',
+    weight: 50,
+    criteria: [
+      {
+        key: 'work_general',
+        label: 'Nota geral do trabalho',
+        description: '',
+        weight: 100,
+      },
+    ],
+  },
+  {
+    key: 'student',
+    target: 'student',
+    label: 'Nota do orientador',
+    weight: 50,
+    criteria: [
+      {
+        key: 'student_general',
+        label: 'Nota geral do aluno',
+        description: '',
+        weight: 100,
+      },
+    ],
+  },
+]
+
+const evaluationCriteriaField = () => ({
+  label: 'Critérios de avaliação',
+  value: defaultEvaluationCriteria(),
+  type: 'evaluation_criteria',
+})
+
 export const useEdition = defineStore('edition', () => {
   const state = useStorage('editionstorage', {
     currentEdition: null as IEdition | null,
@@ -13,7 +50,7 @@ export const useEdition = defineStore('edition', () => {
     error: null as string | null,
   })
 
-  const newEdtion = useStorage('neweditionstorage', {
+  const newEdtion = useStorage<{ newedition: any[] }>('neweditionstorage', {
     newedition: [
       {
         label: 'nome da edição',
@@ -179,43 +216,116 @@ export const useEdition = defineStore('edition', () => {
         label: "banner da edição",
         value: '',
       }
-    ]
+    ] as any[]
   })
+
+  function ensureNewEditionEvaluationCriteriaField() {
+    const fields = newEdtion.value.newedition
+    let criteriaIndex = fields.findIndex((field: any) => field?.type === 'evaluation_criteria')
+    const legacyGradeIndex = fields.findIndex((field: any) => field?.type === 'grade_weights')
+
+    if (legacyGradeIndex !== -1) {
+      fields.splice(legacyGradeIndex, 1)
+      criteriaIndex = fields.findIndex((field: any) => field?.type === 'evaluation_criteria')
+    }
+
+    if (criteriaIndex === -1) {
+      const bannerIndex = fields.findIndex((field: any) =>
+        String(field?.label || '').toLowerCase().includes('banner')
+      )
+      fields.splice(bannerIndex >= 0 ? bannerIndex : fields.length, 0, evaluationCriteriaField())
+      criteriaIndex = fields.findIndex((field: any) => field?.type === 'evaluation_criteria')
+    }
+
+    if (criteriaIndex !== 24) {
+      const [criteriaField] = fields.splice(criteriaIndex, 1)
+      fields.splice(24, 0, criteriaField)
+    }
+
+    const criteriaField = fields[24]
+    if (criteriaField && (!Array.isArray(criteriaField.value) || criteriaField.value.length === 0)) {
+      criteriaField.value = defaultEvaluationCriteria()
+    }
+  }
+
+  const normalizeNewEditionDraft = ensureNewEditionEvaluationCriteriaField
+
+  ensureNewEditionEvaluationCriteriaField()
 
   const currentEdition = computed(() => state.value.currentEdition)
 
   async function CreateObjArr() {
-    let newArr = []
-    const subtituteObj = ['edition_name', 'year', 'theme', 'event_date', 'final_event_date', 'initial_advisor_acceptance', 'initial_second_advisor_date', 'initial_submission_date', 'initial_second_submission_date', 'initial_evaluators_date', 'final_advisor_acceptance', 'final_second_advisor_date', 'final_submission_date', 'final_second_submission_date', 'final_evaluators_date', 'members_min', 'members_max', 'collaborators_min', 'collaborators_max', 'subjects_min', 'subjects_max', 'works_per_evaluator_max', 'works_per_advisor_max', 'works_per_collaborator_max', 'words_per_work_max', 'evaluators_count', 'workload', 'banner']
-    let cont = 0
-    for (let i = 0; i < newEdtion.value.newedition.length; i++) {
-      console.log(newEdtion)
-      if (newEdtion.value.newedition[i].hasOwnProperty('qtds')) {
-        newArr.push({ [subtituteObj[i + cont]]: newEdtion.value.newedition[i].qtds?.[0]?.value })
-        newArr.push({ [subtituteObj[i + 1 + cont]]: newEdtion.value.newedition[i].qtds?.[1]?.value })
-        cont++
-      }
-      else {
-        newArr.push({ [subtituteObj[i + cont]]: newEdtion.value.newedition[i].value })
-      }
-    }
-    console.log(newEdtion.value.newedition)
-    console.log(newArr)
-    console.log(subtituteObj.length)
+    ensureNewEditionEvaluationCriteriaField()
 
-    const { data } = await api.post('images/', { file: newArr[27].banner }, {
-      headers: {
-        "Content-Type": 'multipart/form-data'
+    const fieldMap = [
+      ['edition_name'],
+      ['year'],
+      ['theme'],
+      ['event_date'],
+      ['final_event_date'],
+      ['initial_advisor_acceptance'],
+      ['initial_second_advisor_date'],
+      ['initial_submission_date'],
+      ['initial_second_submission_date'],
+      ['initial_evaluators_date'],
+      ['final_advisor_acceptance'],
+      ['final_second_advisor_date'],
+      ['final_submission_date'],
+      ['final_second_submission_date'],
+      ['final_evaluators_date'],
+      ['members_min', 'members_max'],
+      ['collaborators_min', 'collaborators_max'],
+      ['subjects_min', 'subjects_max'],
+      ['works_per_evaluator_max'],
+      ['works_per_advisor_max'],
+      ['works_per_collaborator_max'],
+      ['words_per_work_max'],
+      ['evaluators_count'],
+      ['workload'],
+      ['evaluation_criteria'],
+      ['banner'],
+    ]
+
+    const payload: Record<string, any> = {}
+
+    newEdtion.value.newedition.forEach((field: any, index: number) => {
+      const keys = fieldMap[index]
+      if (!keys) return
+
+      if (field?.qtds) {
+        keys.forEach((key, keyIndex) => {
+          payload[key] = field.qtds?.[keyIndex]?.value
+        })
+        return
       }
+
+      payload[keys[0]] = field?.type === 'evaluation_criteria'
+        ? field.value.map((group: any) => ({
+            key: group.key,
+            target: group.target,
+            label: group.label,
+            weight: Number(group.weight),
+            criteria: (group.criteria || []).map((criterion: any) => ({
+              key: criterion.key,
+              label: criterion.label,
+              description: criterion.description || '',
+              weight: Number(criterion.weight),
+            })),
+          }))
+        : field?.value
     })
 
-    newArr[27].banner = data.attachment_key
+    if (payload.banner) {
+      const { data } = await api.post('images/', { file: payload.banner }, {
+        headers: {
+          "Content-Type": 'multipart/form-data'
+        }
+      })
 
-    const obj = Object.assign({}, ...newArr)
+      payload.banner = data.attachment_key
+    }
 
-    console.log(obj)
-
-    return obj
+    return payload
   }
 
   // const alertStudent = computed(() => 'A data de submissão é de ' + state.value.currentEdition?.initial_submission_date + ' até ' + state.value.currentEdition?.final_submission_date)
@@ -301,9 +411,11 @@ export const useEdition = defineStore('edition', () => {
       setLoading(false)
       newEdtion.value.newedition.forEach(s => {
         if (s?.qtds) {
-          s.qtds.forEach(q => {
+          s.qtds.forEach((q: any) => {
             q.value = "";
           });
+        } else if (s?.type === 'evaluation_criteria') {
+          s.value = defaultEvaluationCriteria()
         } else {
           s.value = "";
         }
@@ -350,6 +462,7 @@ export const useEdition = defineStore('edition', () => {
     updateEdition,
     submitFeedback,
     newEdtion,
-    CreateObjArr
+    CreateObjArr,
+    normalizeNewEditionDraft
   }
 })

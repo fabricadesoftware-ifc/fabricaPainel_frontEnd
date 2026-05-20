@@ -37,26 +37,32 @@ export const StepsEdition = ref<Step[]>([
     is_actual: false
   },
   {
-    title: 'Equipe',
+    title: 'Criterios',
     value: '6',
     complete: false,
     is_actual: false
   },
   {
-    title: 'Trabalhos',
+    title: 'Equipe',
     value: '7',
     complete: false,
     is_actual: false
   },
   {
-    title: 'Proposta',
+    title: 'Trabalhos',
     value: '8',
     complete: false,
     is_actual: false
   },
   {
-    title: 'Banner',
+    title: 'Proposta',
     value: '9',
+    complete: false,
+    is_actual: false
+  },
+  {
+    title: 'Banner',
+    value: '10',
     complete: false,
     is_actual: false
   }

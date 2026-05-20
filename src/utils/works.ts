@@ -124,6 +124,7 @@ export const validate_user_function = (
   user_function: string,
   work_status: Number
 ) => {
+  console.log(user_function, work_status);
   if (user_function === "EVALUATOR" || user_function === "ADVISOR") {
     if (work_status == 2) {
       userCase.text = "Atribuir Nota";

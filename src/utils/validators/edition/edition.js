@@ -74,16 +74,117 @@ function validateDatePair(errors, fields, initialIndex, finalIndex, message) {
   }
 }
 
-function validateDateInsideEdition(errors, fields, index) {
-  const eventStart = toLocalDate(fields[3]?.value)
-  const eventEnd = toLocalDate(fields[4]?.value)
-  const date = toLocalDate(fields[index]?.value)
+function validateEvaluationCriteria(errors, fields, index) {
+  const groups = fields[index]?.value
 
-  if (eventStart && eventEnd && eventStart <= eventEnd && date) {
-    if (date < eventStart || date > eventEnd) {
-      addFieldError(errors, index, "Data fora do periodo da edicao")
-    }
+  if (!Array.isArray(groups) || groups.length === 0) {
+    addFieldError(errors, index, "Informe ao menos um bloco de avaliacao")
+    return
   }
+
+  let groupTotal = 0
+  const groupKeys = new Set()
+  const targets = new Set()
+
+  for (const group of groups) {
+    const key = String(group?.key ?? "").trim()
+    const target = String(group?.target ?? "").trim()
+    const label = String(group?.label ?? "").trim()
+    const weight = Number(group?.weight)
+
+    if (!key || !label || !target) {
+      addFieldError(errors, index, "Todos os blocos precisam de nome e alvo")
+      return
+    }
+
+    if (!["work", "student"].includes(target)) {
+      addFieldError(errors, index, "O alvo deve ser trabalho ou aluno")
+      return
+    }
+
+    if (groupKeys.has(key) || targets.has(target)) {
+      addFieldError(errors, index, "Existem blocos duplicados")
+      return
+    }
+
+    if (!Number.isFinite(weight) || weight <= 0) {
+      addFieldError(errors, index, "Pesos dos blocos devem ser maiores que zero")
+      return
+    }
+
+    if (!Array.isArray(group.criteria) || group.criteria.length === 0) {
+      addFieldError(errors, index, `O bloco ${label} precisa de criterios`)
+      return
+    }
+
+    let criteriaTotal = 0
+    const criteriaKeys = new Set()
+
+    for (const criterion of group.criteria) {
+      const criterionKey = String(criterion?.key ?? "").trim()
+      const criterionLabel = String(criterion?.label ?? "").trim()
+      const criterionWeight = Number(criterion?.weight)
+
+      if (!criterionKey || !criterionLabel) {
+        addFieldError(errors, index, `Todos os criterios de ${label} precisam de nome`)
+        return
+      }
+
+      if (criteriaKeys.has(criterionKey)) {
+        addFieldError(errors, index, `Existem criterios duplicados em ${label}`)
+        return
+      }
+
+      if (!Number.isFinite(criterionWeight) || criterionWeight <= 0) {
+        addFieldError(errors, index, `Pesos dos criterios de ${label} devem ser maiores que zero`)
+        return
+      }
+
+      criteriaKeys.add(criterionKey)
+      criteriaTotal += criterionWeight
+    }
+
+    if (Math.abs(criteriaTotal - 100) > 0.01) {
+      addFieldError(errors, index, `A soma dos criterios de ${label} deve ser 100`)
+      return
+    }
+
+    groupKeys.add(key)
+    targets.add(target)
+    groupTotal += weight
+  }
+
+  if (Math.abs(groupTotal - 100) > 0.01) {
+    addFieldError(errors, index, "A soma dos blocos deve ser 100")
+    return
+  }
+
+  if (!targets.has("work") || !targets.has("student")) {
+    addFieldError(errors, index, "Informe criterios para avaliador e orientador")
+  }
+}
+
+function validateEditionTimeline(errors, fields) {
+  validateDatePair(errors, fields, 3, 4, "Inicio do evento maior que o fim")
+
+  validateDatePair(errors, fields, 7, 12, "Inicio da 1 submissao maior que o fim")
+  validateDatePair(errors, fields, 5, 10, "Inicio do 1 aceite maior que o fim")
+  validateDatePair(errors, fields, 7, 5, "1 aceite nao pode iniciar antes da 1 submissao")
+  validateDatePair(errors, fields, 5, 12, "1 aceite deve iniciar antes do fim da 1 submissao")
+  validateDatePair(errors, fields, 12, 10, "1 aceite deve terminar junto ou depois da 1 submissao")
+  validateDatePair(errors, fields, 10, 8, "1 aceite deve terminar antes da 2 submissao")
+
+  validateDatePair(errors, fields, 8, 13, "Inicio da 2 submissao maior que o fim")
+  validateDatePair(errors, fields, 6, 11, "Inicio do 2 aceite maior que o fim")
+  validateDatePair(errors, fields, 8, 6, "2 aceite nao pode iniciar antes da 2 submissao")
+  validateDatePair(errors, fields, 6, 13, "2 aceite deve iniciar antes do fim da 2 submissao")
+  validateDatePair(errors, fields, 13, 11, "2 aceite deve terminar junto ou depois da 2 submissao")
+  validateDatePair(errors, fields, 11, 3, "2 aceite deve terminar antes do evento")
+
+  validateDatePair(errors, fields, 9, 14, "Inicio da avaliacao maior que o fim")
+  validateDatePair(errors, fields, 3, 9, "Avaliacao nao pode iniciar antes do evento")
+  validateDatePair(errors, fields, 9, 4, "Avaliacao deve iniciar durante o evento")
+  validateDatePair(errors, fields, 4, 14, "Avaliacao deve terminar junto ou depois do evento")
 }
 
 function validateEditionCreation(fields) {
@@ -109,37 +210,7 @@ function validateEditionCreation(fields) {
   ;[3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
     .forEach(index => validateDateField(fieldErrors, fields, index, editionYear))
 
-  validateDatePair(
-    fieldErrors,
-    fields,
-    3,
-    4,
-    "Data inicial maior que a final"
-  )
-
-  ;[5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-    .forEach(index => validateDateInsideEdition(fieldErrors, fields, index))
-
-  validateDatePair(fieldErrors, fields, 5, 10, "Inicio do aceite maior que o fim")
-  validateDatePair(fieldErrors, fields, 6, 11, "Inicio do aceite maior que o fim")
-  validateDatePair(fieldErrors, fields, 7, 12, "Inicio da submissao maior que o fim")
-  validateDatePair(fieldErrors, fields, 8, 13, "Inicio da submissao maior que o fim")
-  validateDatePair(fieldErrors, fields, 9, 14, "Inicio da avaliacao maior que o fim")
-
-  validateDatePair(
-    fieldErrors,
-    fields,
-    10,
-    8,
-    "1 aceite deve terminar antes da 2 submissao"
-  )
-  validateDatePair(
-    fieldErrors,
-    fields,
-    11,
-    9,
-    "2 aceite deve terminar antes da avaliacao"
-  )
+  validateEditionTimeline(fieldErrors, fields)
 
   ;[15, 16, 17].forEach(index => {
     validateRequiredQtd(qtdErrors, fields, index)
@@ -152,6 +223,8 @@ function validateEditionCreation(fields) {
       addQtdError(qtdErrors, index, 1, "Minimo maior que o maximo")
     }
   })
+
+  validateEvaluationCriteria(fieldErrors, fields, 24)
 
   return { fieldErrors, qtdErrors }
 }

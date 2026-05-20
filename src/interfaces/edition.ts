@@ -37,11 +37,27 @@ export interface IEdition {
   works_per_advisor_max: number;
   words_per_work_min: number;
   words_per_work_max: number;
+  evaluation_criteria: Array<{
+    key: string;
+    target: "work" | "student";
+    label: string;
+    weight: number;
+    criteria: Array<{
+      key: string;
+      label: string;
+      description?: string;
+      weight: number;
+    }>;
+  }>;
   workload: number;
 
   // Mídia
   banner: { file: string } | null;
   logo: { file: string } | null;
 
-  is_open: boolean;
+  is_active: boolean;
+  is_open_for_submissions?: boolean;
+  is_open_for_advisors?: boolean;
+  is_open_for_evaluators?: boolean;
+  is_edition_running?: boolean;
 }
