@@ -29,27 +29,53 @@ const formatDate = computed(() => {
   };
 });
 
-const openEdition = computed(() => {
-  return state?.editions?.find(
-    (edition: { is_active: any }) => edition.is_active,
+const dateKey = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const normalizeDateKey = (date?: string | null) => {
+  return date ? date.slice(0, 10) : null;
+};
+
+const isEditionOpen = (edition: IEdition) => {
+  return Boolean(
+    edition.is_active ||
+      edition.is_open_for_submissions ||
+      edition.is_open_for_advisors ||
+      edition.is_open_for_evaluators ||
+      edition.is_edition_running,
   );
+};
+
+const openEdition = computed(() => {
+  return state?.editions?.find((edition: IEdition) => isEditionOpen(edition));
 });
 //tem que ver se qa initial_submission_date será apos a data atual
 const upcomingEditions = computed<IEdition[]>(() => {
-  return state?.editions?.filter(
-    (edition: { initial_submission_date?: string | null }) => {
-      if (!edition.initial_submission_date) return edition;
-      return new Date(edition.initial_submission_date) > new Date();
-    },
-  );
+  const today = dateKey();
+
+  return state?.editions?.filter((edition: IEdition) => {
+    const initialSubmissionDate = normalizeDateKey(edition.initial_submission_date);
+
+    if (isEditionOpen(edition) || !initialSubmissionDate) return false;
+
+    return initialSubmissionDate > today;
+  });
 });
 
 const closedEditions = computed<IEdition[]>(() => {
-  return state?.editions?.filter(
-    (edition: { is_active: any; final_event_date?: string | null }) =>
-      (!edition.is_active && !edition.final_event_date) ||
-      new Date(edition.final_event_date ?? "") < new Date(),
-  );
+  const today = dateKey();
+
+  return state?.editions?.filter((edition: IEdition) => {
+    const finalEventDate = normalizeDateKey(edition.final_event_date);
+
+    if (isEditionOpen(edition)) return false;
+
+    return !finalEventDate || finalEventDate < today;
+  });
 });
 
 onMounted(() => {

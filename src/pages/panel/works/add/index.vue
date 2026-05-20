@@ -54,7 +54,7 @@ async function DialogActive(type) {
     await workStore.sendWork()
     NextStep()
   }
-  open_dialog.value = !open_dialog
+  open_dialog.value = !open_dialog.value
 }
 
 function NextStep() {
@@ -132,7 +132,7 @@ onMounted(async () => {
     <VStepper v-model="actualstep" class="d-flex h-100 elevation-0">
       <StepbyStepHeader :steps="steps" :actualstep="actualstep" v-if="width > 950" />
       <VStepperWindow class="w-100 h-100">
-        <StepsHeader :user="AuthStore.user" :step_num="StepObj?.value" :step_completed="StepObj?.complete"
+        <StepsHeader :user="AuthStore.user" :step_num="Number(StepObj?.value || 0)" :step_completed="StepObj?.complete"
           :step_value="StepObj?.title" @openNav="openNav = !openNav" />
         <div v-if="actualstep != 6" class="w-100 d-flex justify-center align-center overflow-y-auto"
           style="height: 80%;">
