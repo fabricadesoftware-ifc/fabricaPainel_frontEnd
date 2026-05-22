@@ -92,6 +92,21 @@ export const uselayout = defineStore("layoutDefault", () => {
               ],
               actions: [],
             },
+            {
+              text: "Propostas",
+              value: "/panel/works",
+              links: [
+                {
+                  text: "Submissoes",
+                  value: "/panel/works",
+                },
+                {
+                  text: "Acompanhamento",
+                  value: "/panel/works/kanban",
+                },
+              ],
+              actions: [],
+            },
           ],
         },
       };

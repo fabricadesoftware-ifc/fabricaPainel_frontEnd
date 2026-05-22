@@ -16,6 +16,9 @@ const year = new Date().getFullYear();
 const loading = ref(true);
 const submissionsCurrent = ref([]);
 const submissionsPast = ref([]);
+const canUseAdminKanban = computed(() => {
+  return UserStore?.user?.user_type === "ADMIN" || Boolean(UserStore?.user?.is_management)
+})
 
 const orderByStatusAndYear = (work, actualYear) => {
   return work
@@ -84,6 +87,12 @@ const { width } = useDisplay()
 <template>
   <LayoutPanel v-if="!tokenExpired && !loading">
     <v-container class="w-100">
+      <div v-if="canUseAdminKanban" class="d-flex justify-end mb-4">
+        <v-btn color="primary" prepend-icon="mdi-view-dashboard-outline" to="/panel/works/kanban" variant="tonal">
+          Acompanhamento
+        </v-btn>
+      </div>
+
       <div v-if="UserStore?.user?.user_type == 'STUDENT'" class="d-flex justify-space-between align-center text-h6">
         <h1 class="font-weight-bold" :style="{ fontSize: width > 780 ? '40px' : '25px' }">Submissões</h1>
         <VChip :size="width > 780 ? 'default' : 'x-small'" :class="is_submit ? 'bg-green' : 'bg-red'">

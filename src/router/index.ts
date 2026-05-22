@@ -38,6 +38,7 @@ const blockedRoutes = [
   /^\/panel\/paper\/[^/]+\/?$/,
   /^\/panel\/works\/?$/,
   /^\/panel\/works\/add\/?$/,
+  /^\/panel\/works\/kanban\/?$/,
   /^\/panel\/works\/view\/[^/]+\/?$/,
   /^\/panel\/registration-of-topics\/?$/,
 ]

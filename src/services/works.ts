@@ -33,6 +33,15 @@ class WorkService {
     }
   }
 
+  async getAdminKanban(params: { edition?: string | number | null; search?: string } = {}) {
+    try {
+      const { data } = await api.get("/work/admin-kanban/", { params });
+      return data;
+    } catch (error) {
+      this.handleError(error, "fetch admin kanban");
+    }
+  }
+
   async getWorkByCrossCuttingTheme(crossCuttingTheme: string) {
     try {
       const { data } = await api.get(

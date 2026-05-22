@@ -31,6 +31,7 @@ declare module 'vue-router/auto-routes' {
     '/panel/editions/view/[id]': RouteRecordInfo<'/panel/editions/view/[id]', '/panel/editions/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/panel/works/': RouteRecordInfo<'/panel/works/', '/panel/works', Record<never, never>, Record<never, never>>,
     '/panel/works/add/': RouteRecordInfo<'/panel/works/add/', '/panel/works/add', Record<never, never>, Record<never, never>>,
+    '/panel/works/kanban': RouteRecordInfo<'/panel/works/kanban', '/panel/works/kanban', Record<never, never>, Record<never, never>>,
     '/panel/works/view/[id]': RouteRecordInfo<'/panel/works/view/[id]', '/panel/works/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/user-support/': RouteRecordInfo<'/user-support/', '/user-support', Record<never, never>, Record<never, never>>,
   }
@@ -96,6 +97,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/panel/works/add/index.vue': {
       routes: '/panel/works/add/'
+      views: never
+    }
+    'src/pages/panel/works/kanban.vue': {
+      routes: '/panel/works/kanban'
       views: never
     }
     'src/pages/panel/works/view/[id].vue': {
