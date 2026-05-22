@@ -28,6 +28,11 @@ const login = () => {
   router.push("/auth/login");
 };
 
+const isActiveLink = (value: string) => {
+  const current = layoutStore.currentPage;
+  return value === current || value.split("/")[2] === current.split("/")[2];
+};
+
 const screenWidth = ref(0);
 
 onMounted(() => {
@@ -45,7 +50,7 @@ onMounted(() => {
         <img alt="" style="width: 90px; height: 60px" class="pr-8 cursor-pointer"
           src="@/assets/logotipo_painel_integracao.png" @click="$router.push('/')" />
         <v-btn v-for="link in layoutStore.navbar" :key="link.text" class="mr-1"
-          :color="link.value == layoutStore.currentPage ? 'primary' : ''" rounded="xl" :text="link.text"
+          :color="isActiveLink(link.value) ? 'primary' : ''" rounded="xl" :text="link.text"
           :to="link.value" variant="text" />
       </div>
 
@@ -71,7 +76,7 @@ onMounted(() => {
                 </p>
               </v-list-item>
               <v-list-item class="d-flex flex-row align-center justify-center" v-for="link in layoutStore.navbar"
-                :key="link.text" :color="link.value == layoutStore.currentPage ? 'primary' : ''"
+                :key="link.text" :color="isActiveLink(link.value) ? 'primary' : ''"
                 @click="router.push(link.value)">
                 <v-list-item-title>{{ link.text }}</v-list-item-title>
               </v-list-item>

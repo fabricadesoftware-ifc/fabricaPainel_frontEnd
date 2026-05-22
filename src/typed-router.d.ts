@@ -26,12 +26,14 @@ declare module 'vue-router/auto-routes' {
     '/auth/login/': RouteRecordInfo<'/auth/login/', '/auth/login', Record<never, never>, Record<never, never>>,
     '/auth/reset-password/': RouteRecordInfo<'/auth/reset-password/', '/auth/reset-password', Record<never, never>, Record<never, never>>,
     '/auth/token/': RouteRecordInfo<'/auth/token/', '/auth/token', Record<never, never>, Record<never, never>>,
+    '/panel/admin/': RouteRecordInfo<'/panel/admin/', '/panel/admin', Record<never, never>, Record<never, never>>,
+    '/panel/admin/proposals': RouteRecordInfo<'/panel/admin/proposals', '/panel/admin/proposals', Record<never, never>, Record<never, never>>,
+    '/panel/admin/reports': RouteRecordInfo<'/panel/admin/reports', '/panel/admin/reports', Record<never, never>, Record<never, never>>,
     '/panel/editions/': RouteRecordInfo<'/panel/editions/', '/panel/editions', Record<never, never>, Record<never, never>>,
     '/panel/editions/add/': RouteRecordInfo<'/panel/editions/add/', '/panel/editions/add', Record<never, never>, Record<never, never>>,
     '/panel/editions/view/[id]': RouteRecordInfo<'/panel/editions/view/[id]', '/panel/editions/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/panel/works/': RouteRecordInfo<'/panel/works/', '/panel/works', Record<never, never>, Record<never, never>>,
     '/panel/works/add/': RouteRecordInfo<'/panel/works/add/', '/panel/works/add', Record<never, never>, Record<never, never>>,
-    '/panel/works/kanban': RouteRecordInfo<'/panel/works/kanban', '/panel/works/kanban', Record<never, never>, Record<never, never>>,
     '/panel/works/view/[id]': RouteRecordInfo<'/panel/works/view/[id]', '/panel/works/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/user-support/': RouteRecordInfo<'/user-support/', '/user-support', Record<never, never>, Record<never, never>>,
   }
@@ -79,6 +81,18 @@ declare module 'vue-router/auto-routes' {
       routes: '/auth/token/'
       views: never
     }
+    'src/pages/panel/admin/index.vue': {
+      routes: '/panel/admin/'
+      views: never
+    }
+    'src/pages/panel/admin/proposals.vue': {
+      routes: '/panel/admin/proposals'
+      views: never
+    }
+    'src/pages/panel/admin/reports.vue': {
+      routes: '/panel/admin/reports'
+      views: never
+    }
     'src/pages/panel/editions/index.vue': {
       routes: '/panel/editions/'
       views: never
@@ -97,10 +111,6 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/panel/works/add/index.vue': {
       routes: '/panel/works/add/'
-      views: never
-    }
-    'src/pages/panel/works/kanban.vue': {
-      routes: '/panel/works/kanban'
       views: never
     }
     'src/pages/panel/works/view/[id].vue': {
