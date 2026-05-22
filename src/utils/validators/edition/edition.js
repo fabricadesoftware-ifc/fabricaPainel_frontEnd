@@ -170,14 +170,12 @@ function validateEditionTimeline(errors, fields) {
   validateDatePair(errors, fields, 7, 12, "Inicio da 1 submissao maior que o fim")
   validateDatePair(errors, fields, 5, 10, "Inicio do 1 aceite maior que o fim")
   validateDatePair(errors, fields, 7, 5, "1 aceite nao pode iniciar antes da 1 submissao")
-  validateDatePair(errors, fields, 5, 12, "1 aceite deve iniciar antes do fim da 1 submissao")
   validateDatePair(errors, fields, 12, 10, "1 aceite deve terminar junto ou depois da 1 submissao")
   validateDatePair(errors, fields, 10, 8, "1 aceite deve terminar antes da 2 submissao")
 
   validateDatePair(errors, fields, 8, 13, "Inicio da 2 submissao maior que o fim")
   validateDatePair(errors, fields, 6, 11, "Inicio do 2 aceite maior que o fim")
   validateDatePair(errors, fields, 8, 6, "2 aceite nao pode iniciar antes da 2 submissao")
-  validateDatePair(errors, fields, 6, 13, "2 aceite deve iniciar antes do fim da 2 submissao")
   validateDatePair(errors, fields, 13, 11, "2 aceite deve terminar junto ou depois da 2 submissao")
   validateDatePair(errors, fields, 11, 3, "2 aceite deve terminar antes do evento")
 
