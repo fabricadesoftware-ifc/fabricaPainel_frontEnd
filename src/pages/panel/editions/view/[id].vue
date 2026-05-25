@@ -82,7 +82,7 @@ function showinfo() {
               </h2>
               <VChip
                 v-if="edition.is_active"
-                class="bg-blue d-flex justify-center align-center"
+                class="bg-blue d-flex justify-center align-center px-8"
                 pill
                 style="width: 120px"
                 >Em aberto</VChip

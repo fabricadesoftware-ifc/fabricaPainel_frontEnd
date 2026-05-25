@@ -17,6 +17,7 @@ declare module 'vue' {
     AcceptanceAdvisorWork: typeof import('./components/work/acceptanceAdvisorWork.vue')['default']
     AcceptanceWork: typeof import('./components/work/acceptanceWork.vue')['default']
     AddUserGroup: typeof import('./components/auth/AddUserGroup.vue')['default']
+    AdminNavigation: typeof import('./components/admin/AdminNavigation.vue')['default']
     AuthButton: typeof import('./components/auth/layout/AuthButton.vue')['default']
     BackButton: typeof import('./components/globals/buttons/BackButton.vue')['default']
     BtnPrimary: typeof import('./components/globals/buttons/BtnPrimary.vue')['default']

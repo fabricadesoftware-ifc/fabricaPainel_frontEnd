@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import AdminNavigation from "@/components/admin/AdminNavigation.vue";
 import EditionsService from "@/services/editions";
 import WorkService from "@/services/works";
 import { useAuth } from "@/stores/auth";
@@ -237,6 +238,8 @@ onMounted(async () => {
           </v-btn>
         </div>
       </div>
+
+      <AdminNavigation />
 
       <div class="kanban-filters">
         <v-select
