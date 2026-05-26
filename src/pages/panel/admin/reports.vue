@@ -14,9 +14,14 @@ type ReportUser = {
   email?: string
 }
 
+type ReportTeamMember = ReportUser & {
+  classes_label: string
+}
+
 type AdvisorReportRow = {
   id: string
   title: string
+  team_members: ReportTeamMember[]
   team_members_label: string
   classes_label: string
   collaborators: ReportUser[]
@@ -247,15 +252,25 @@ onMounted(async () => {
                   <thead>
                     <tr>
                       <th>Titulo do trabalho</th>
-                      <th>Equipe</th>
-                      <th>Turmas</th>
+                      <th>Equipe / turma</th>
+                      <th>Turmas envolvidas</th>
                       <th>Colaborador</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="row in group.rows" :key="row.id">
                       <td>{{ row.title }}</td>
-                      <td>{{ row.team_members_label }}</td>
+                      <td>
+                        <div v-if="row.team_members?.length" class="team-members">
+                          <div v-for="member in row.team_members" :key="member.id" class="team-member">
+                            <span>{{ personLabel(member) }}</span>
+                            <v-chip color="blue-grey" size="small" variant="tonal">
+                              {{ member.classes_label }}
+                            </v-chip>
+                          </div>
+                        </div>
+                        <span v-else>{{ row.team_members_label }}</span>
+                      </td>
                       <td>{{ row.classes_label }}</td>
                       <td>{{ row.collaborators_label }}</td>
                     </tr>
@@ -405,6 +420,19 @@ onMounted(async () => {
   padding-bottom: 12px;
   padding-top: 12px;
   vertical-align: middle;
+}
+
+.team-members {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.team-member {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .report-empty {
