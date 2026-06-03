@@ -229,7 +229,7 @@
     workload: '',
     banner: null,
     logo: null,
-    is_open: true,
+    is_active: true,
   })
 
   const submitForm = () => {

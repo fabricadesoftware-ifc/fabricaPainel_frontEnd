@@ -33,6 +33,67 @@ class WorkService {
     }
   }
 
+  async getAdminKanban(params: { edition?: string | number | null; search?: string } = {}) {
+    try {
+      const { data } = await api.get("/work/admin-kanban/", { params });
+      return data;
+    } catch (error) {
+      this.handleError(error, "fetch admin kanban");
+    }
+  }
+
+  async getAdminAdvisorProposalReportData(params: { edition?: string | number | null }) {
+    try {
+      const { data } = await api.get("/work/admin-advisor-report-data/", { params });
+      return data;
+    } catch (error) {
+      this.handleError(error, "fetch admin advisor report data");
+    }
+  }
+
+  async downloadAdminAdvisorProposalReport(params: { edition?: string | number | null }) {
+    try {
+      const response = await api.get("/work/admin-advisor-report/", {
+        params,
+        responseType: "blob",
+      });
+      const disposition = response.headers["content-disposition"] || "";
+      const filenameMatch = disposition.match(/filename="?([^";]+)"?/i);
+      const filename = filenameMatch?.[1] || "relatorio_propostas_orientadores.pdf";
+      const fileURL = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/pdf" })
+      );
+
+      const link = document.createElement("a");
+      link.href = fileURL;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => window.URL.revokeObjectURL(fileURL), 1000);
+
+      return response.data;
+    } catch (error: any) {
+      let message = "Nao foi possivel gerar o relatorio.";
+      const payload = error?.response?.data;
+
+      if (payload instanceof Blob) {
+        const text = await payload.text();
+        try {
+          const parsed = JSON.parse(text);
+          message = parsed.error || message;
+        } catch {
+          message = text || message;
+        }
+      } else if (payload?.error) {
+        message = payload.error;
+      }
+
+      throw new Error(message);
+    }
+  }
+
   async getWorkByCrossCuttingTheme(crossCuttingTheme: string) {
     try {
       const { data } = await api.get(

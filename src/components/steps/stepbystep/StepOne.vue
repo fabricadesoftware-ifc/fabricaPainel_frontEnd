@@ -30,7 +30,7 @@ const verifyUserWorks = async (user) => {
     const result = await WorkStore.fetchUserWorks(user.user_type, user.id)
    
 
-    return result.some(work => 
+    return (result || []).some(work =>
     [1, 2, 3].includes(work.status) &&
     work.edition?.year === new Date().getFullYear(),
     
@@ -39,7 +39,7 @@ const verifyUserWorks = async (user) => {
 }
 
 const verifyUserClass = (user) => {
-    return user.user_classes.some((s) => s.year == new Date().getFullYear())
+    return (user.user_classes || []).some((s) => s.year == new Date().getFullYear())
 }
 
 const hintInput = computed(() => {
@@ -69,10 +69,15 @@ function removeUser(email) {
 }
 
 onMounted(async () => {
+    if (!Array.isArray(WorkStore.WorkStorage.team)) {
+        WorkStore.WorkStorage.team = []
+    }
+
     if (WorkStore.WorkStorage.team.length <= 1) {
+    const userTeams = Array.isArray(AuthStore.user?.team) ? AuthStore.user.team : []
     const team = await loadTeamMembers({
       currentUser: AuthStore.user,
-      teamIds: AuthStore.user.team.map(t => t.id),
+      teamIds: userTeams.map(t => t.id),
       currentTeam: WorkStore.WorkStorage.team,
       searchUserFn: AuthStore.searchUsers,  
     })

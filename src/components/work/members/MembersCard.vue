@@ -36,6 +36,10 @@ const props = defineProps({
     is_student: {
         type: Boolean,
         default: false
+    },
+    advisor_able_to_give_grade: {
+        type: Boolean,
+        default: false
     }
 
 })
@@ -127,10 +131,19 @@ const { width } = useDisplay()
                 {{ props.is_student ? 'Nota Individual:' : 'Status: ' }} </p>
 
             <v-btn @click="emits('openStudentAssesment')"
-                v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition_year == date.getFullYear() && workStore?.currentWork?.status === 2"
+                v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && props.advisor_able_to_give_grade && workStore?.currentWork?.edition_year == date.getFullYear() && workStore?.currentWork?.status === 2"
                 color="blue"
                 :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px' }">Atribuir
                 Nota</v-btn>
+
+            <v-chip
+                v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && !props.advisor_able_to_give_grade && workStore?.currentWork?.edition_year == date.getFullYear() && workStore?.currentWork?.status === 2"
+                color="blue-grey-lighten-1"
+                class="d-flex justify-center align-center"
+                label
+                :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px' }">
+                Aguardando periodo
+            </v-chip>
 
             <v-chip
                 v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition_year != date.getFullYear()"

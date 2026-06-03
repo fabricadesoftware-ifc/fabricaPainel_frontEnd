@@ -4,6 +4,7 @@ import { useEdition } from '@/stores/edition';
 import { validateEditionCreation } from '@/utils/validators/edition/edition';
 
 const editionStore = useEdition()
+editionStore.normalizeNewEditionDraft()
 const actualstep = ref(0)
 const imgPreview = ref(null)
 const openDialog = ref(false)
@@ -35,6 +36,12 @@ const stepGroups = [
     fields: [9, 14],
   },
   {
+    title: 'Criterios de avaliacao',
+    description: 'Defina os blocos de avaliacao e os criterios usados em cada nota.',
+    fields: [24],
+    evaluationCriteria: true,
+  },
+  {
     title: 'Equipe e disciplinas',
     description: 'Defina limites minimos e maximos para composicao dos trabalhos.',
     fields: [15, 16, 17],
@@ -52,7 +59,7 @@ const stepGroups = [
   {
     title: 'Banner da edicao',
     description: 'Envie a imagem usada para representar a edicao nas telas do sistema.',
-    fields: [24],
+    fields: [25],
     media: true,
   },
 ]
@@ -82,6 +89,7 @@ const fieldLabels = {
   21: 'Maximo de palavras por proposta',
   22: 'Avaliadores por trabalho',
   23: 'Carga horaria',
+  24: 'Criterios de avaliacao',
 }
 
 const fieldHints = {
@@ -109,6 +117,7 @@ const fieldHints = {
   21: 'Use para evitar propostas longas demais.',
   22: 'Numero de avaliadores que cada trabalho deve receber.',
   23: 'Carga horaria certificada para a edicao.',
+  24: 'A soma dos blocos e dos criterios internos precisa fechar em 100.',
 }
 
 const lastStepIndex = computed(() => stepGroups.length - 1)
@@ -123,7 +132,18 @@ const selectedItems = computed(() => {
   })) ?? []
 })
 
+const evaluationCriteria = computed(() => {
+  const criteriaField = editionStore.newEdtion.newedition.find(item => item?.type === 'evaluation_criteria')
+  const value = criteriaField?.value ?? editionStore.newEdtion.newedition[24]?.value
+  return Array.isArray(value) ? value : []
+})
+
+const evaluationCriteriaTotal = computed(() => {
+  return evaluationCriteria.value.reduce((total, item) => total + Number(item.weight || 0), 0)
+})
+
 onMounted(() => {
+  editionStore.normalizeNewEditionDraft()
   resetSteps()
 })
 
@@ -144,7 +164,7 @@ function changeimg(e) {
   }
 
   imgPreview.value = URL.createObjectURL(file)
-  editionStore.newEdtion.newedition[24].value = file
+  editionStore.newEdtion.newedition[25].value = file
 }
 
 function fieldLabel(index, edition) {
@@ -161,6 +181,41 @@ function fieldError(index) {
 
 function qtdErrors(index) {
   return validation.value.qtdErrors[index] || []
+}
+
+function normalizeCriteriaKey(label) {
+  return String(label || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+}
+
+function syncCriteriaKey(item, fallbackPrefix = 'criterio') {
+  if (item.key) return
+
+  const key = normalizeCriteriaKey(item.label)
+  item.key = key || `${fallbackPrefix}_${Date.now()}`
+}
+
+function criteriaTotal(group) {
+  return (group.criteria || []).reduce((total, item) => total + Number(item.weight || 0), 0)
+}
+
+function addEvaluationCriterion(group) {
+  group.criteria ??= []
+  group.criteria.push({
+    key: '',
+    label: '',
+    description: '',
+    weight: 0,
+  })
+}
+
+function removeEvaluationCriterion(group, index) {
+  if ((group.criteria || []).length <= 1) return
+  group.criteria.splice(index, 1)
 }
 
 function hasCurrentStepErrors() {
@@ -229,7 +284,101 @@ function PrevStep() {
               <p>{{ currentGroup.description }}</p>
             </div>
 
-            <div class="edition-fields-grid" v-if="!currentGroup.media">
+            <div class="evaluation-criteria-step" v-if="currentGroup.evaluationCriteria">
+              <div class="evaluation-criteria-toolbar">
+                <div>
+                  <p class="text-subtitle-2 mb-1">Composicao da nota final</p>
+                  <span class="text-caption text-medium-emphasis">Total dos blocos: {{ evaluationCriteriaTotal }}%</span>
+                </div>
+              </div>
+
+              <VAlert
+                v-if="fieldError(24)"
+                class="mb-4"
+                color="error"
+                density="comfortable"
+                variant="tonal"
+              >
+                {{ fieldError(24) }}
+              </VAlert>
+
+              <div class="evaluation-group" v-for="group in evaluationCriteria" :key="group.key">
+                <div class="evaluation-group-header">
+                  <div>
+                    <p class="text-subtitle-1 font-weight-bold mb-1">{{ group.label }}</p>
+                    <span class="text-caption text-medium-emphasis">
+                      {{ group.target === 'work' ? 'Avaliador / trabalho' : 'Orientador / aluno' }}
+                    </span>
+                  </div>
+                  <VTextField
+                    v-model.number="group.weight"
+                    label="Peso no resultado"
+                    suffix="%"
+                    type="number"
+                    min="0"
+                    max="100"
+                    rounded="lg"
+                    variant="outlined"
+                    density="comfortable"
+                    class="evaluation-group-weight"
+                  />
+                </div>
+
+                <div class="criteria-toolbar">
+                  <span class="text-caption text-medium-emphasis">
+                    Total dos criterios: {{ criteriaTotal(group) }}%
+                  </span>
+                  <VBtn
+                    color="blue"
+                    prepend-icon="mdi-plus"
+                    rounded="lg"
+                    variant="tonal"
+                    @click="addEvaluationCriterion(group)"
+                  >
+                    Adicionar criterio
+                  </VBtn>
+                </div>
+
+                <div class="criterion-row" v-for="criterion, criterionIndex in group.criteria" :key="criterionIndex">
+                  <VTextField
+                    v-model="criterion.label"
+                    label="Criterio"
+                    rounded="lg"
+                    variant="outlined"
+                    density="comfortable"
+                    @update:model-value="syncCriteriaKey(criterion, group.key)"
+                  />
+                  <VTextField
+                    v-model="criterion.description"
+                    label="Descricao"
+                    rounded="lg"
+                    variant="outlined"
+                    density="comfortable"
+                  />
+                  <VTextField
+                    v-model.number="criterion.weight"
+                    label="Peso"
+                    suffix="%"
+                    type="number"
+                    min="0"
+                    max="100"
+                    rounded="lg"
+                    variant="outlined"
+                    density="comfortable"
+                  />
+                  <VBtn
+                    :disabled="group.criteria.length <= 1"
+                    icon="mdi-delete-outline"
+                    rounded="lg"
+                    variant="text"
+                    color="error"
+                    @click="removeEvaluationCriterion(group, criterionIndex)"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="edition-fields-grid" v-else-if="!currentGroup.media">
               <EditionInputs
                 v-for="item in selectedItems"
                 :key="item.index"
@@ -323,6 +472,41 @@ function PrevStep() {
   align-items: start;
 }
 
+.evaluation-criteria-step {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.evaluation-criteria-toolbar,
+.evaluation-group-header,
+.criteria-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.evaluation-group {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+}
+
+.evaluation-group-weight {
+  max-width: 210px;
+}
+
+.criterion-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(220px, 1.2fr) 140px 48px;
+  gap: 14px;
+  align-items: start;
+}
+
 .edition-media-step,
 .edition-success {
   display: flex;
@@ -337,6 +521,21 @@ function PrevStep() {
   }
 
   .edition-fields-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .evaluation-criteria-toolbar,
+  .evaluation-group-header,
+  .criteria-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .evaluation-group-weight {
+    max-width: none;
+  }
+
+  .criterion-row {
     grid-template-columns: 1fr;
   }
 }

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, reactive, computed, ref } from "vue";
+import { onMounted, computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useWork } from "@/stores/work";
 import { useAuth } from "@/stores/auth";
@@ -8,7 +8,6 @@ import { useCollaboratorAcceptance } from "@/stores/collaboratorAcceptance";
 import { useAdvisorAcceptance } from "@/stores/advisorAcceptance";
 import { useAssessmentStore } from "@/stores/assessment";
 import { useStudentAssessment } from "@/stores/studentAssessment";
-import editions from "@/services/editions";
 
 import { buildUserValidations } from "@/utils/work_view/validations";
 
@@ -36,9 +35,7 @@ const studentAssesment = useStudentAssessment();
 const date = new Date();
 const assesmentWork = ref(null)
 
-const usersValidation = reactive(
-  buildUserValidations(date, editionStore, workStore)
-);
+const usersValidation = computed(() => buildUserValidations(date, editionStore, workStore));
 
 const tokenExpired = authStore.isTokenExpired();
 const uptadeWorkStatus = computed(() => workStore.currentWork?.status ?? 1);
@@ -46,7 +43,7 @@ const isLoaded = ref(false);
 
 onMounted(async () => {
   await workStore.getWork(work_id);
-  await editions.getOpenEdition();
+  await editionStore.fetchCurrentEdition();
   await assesmentStore.getAssessmentsByWork(workStore?.currentWork?.id)
   assesmentWork.value = assesmentStore.currentAssessment[0]?.grade
   acceptanceStore.setCollaboratorInfo(workStore?.currentWork);
@@ -60,11 +57,23 @@ const confirmation = ref(false);
 const userGrade = ref(false)
 const memberGrade = ref<any>(null)
 
+const evaluationCriteria = computed(() => {
+  return workStore.currentWork?.edition_evaluation_criteria ?? []
+})
+
+const workEvaluationCriteria = computed(() => {
+  return evaluationCriteria.value.find((group: any) => group?.target === 'work')?.criteria ?? []
+})
+
+const studentEvaluationCriteria = computed(() => {
+  return evaluationCriteria.value.find((group: any) => group?.target === 'student')?.criteria ?? []
+})
+
 const confirmsAction = (confirm: string) => {
   confirmsActionFn(
     confirm,
     authStore,
-    usersValidation,
+    usersValidation.value,
     workStore,
     userCase,
     tokenExpired,
@@ -79,6 +88,7 @@ const confirmsAction = (confirm: string) => {
 interface Grade {
   work_grade: number;
   is_work_grade: boolean;
+  criterion_grades?: any[];
 }
 
 const giveWorkGrade = async (grade: Grade) => {
@@ -92,6 +102,7 @@ const giveWorkGrade = async (grade: Grade) => {
     studentAssesment,
     memberGrade.value,
     grade.is_work_grade,
+    grade.criterion_grades ?? [],
 
     () => (grade.is_work_grade ? workGrade.value = false : userGrade.value = false)
   );
@@ -127,10 +138,20 @@ const openUserGrade = (member: object) => {
           icon="mdi-arrow-left mr-1"></v-icon> Voltar</v-btn>
       <v-fade-transition appear>
         <div class="d-flex flex-column ga-10">
-          <WorkGrade @giveGrade="giveWorkGrade" @close="workGrade = !workGrade" v-model="workGrade" />
+          <WorkGrade
+            :criteria="workEvaluationCriteria"
+            @giveGrade="giveWorkGrade"
+            @close="workGrade = !workGrade"
+            v-model="workGrade"
+          />
 
-          <IndividualGrade :user="memberGrade" @giveGrade="giveWorkGrade" @close="userGrade = !userGrade"
-            v-model="userGrade" />
+          <IndividualGrade
+            :criteria="studentEvaluationCriteria"
+            :user="memberGrade"
+            @giveGrade="giveWorkGrade"
+            @close="userGrade = !userGrade"
+            v-model="userGrade"
+          />
 
           <StepDialog :btn_cancel_text="'Cancelar'" :btn_confirm_text="'Confirmar'"
             :title="'Tens a certeza que deseja cancelar esta proposta?'"
@@ -170,6 +191,7 @@ const openUserGrade = (member: object) => {
               v-for="(student, index) in orderByUserId(workStore.currentWork.team.team_members, authStore.user.id)"
               :member_id="student.id" :member="student" :user_id="authStore.user.id" :key="index"
               :work_advisor="workStore?.currentWork?.advisor ?? null" :is_student="true"
+              :advisor_able_to_give_grade="usersValidation.advisor_able_to_give_grade"
               @open-student-assesment="openUserGrade(student)" />
           </MembersContainer>
 
