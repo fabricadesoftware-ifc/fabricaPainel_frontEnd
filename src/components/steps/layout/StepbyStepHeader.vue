@@ -19,7 +19,7 @@ const props = defineProps({
 const { width } = useDisplay()
 </script>
 <template>
-  <VStepperHeader class="d-flex flex-column align-start justify-start w-25 overflow-hidden" :class="width < 1275 ? 'w-50' : ''"
+  <VStepperHeader class="d-flex flex-column align-start justify-start w-25 overflow-y-auto" :class="width < 1275 ? 'w-50' : ''"
     style="border-top-right-radius: 60px; box-shadow: 1px 1px 20px 1px rgba(33, 148, 236, 0.18)">
     <div class="d-flex align-center pa-10 mb-10">
       <router-link class="text-decoration-none d-flex align-center text-black" to="/">
@@ -38,7 +38,7 @@ const { width } = useDisplay()
             {{ step.title }}
           </p>
         </VStepperItem>
-        <div :class="(i !== 4 && !is_edition)  || (is_edition && i !== 3) ? 'ms-10' : 'd-none'">
+        <div :class="i !== steps.length - 1 ? 'ms-10' : 'd-none'">
           <VDivider vertical style="height: 50px; width: 2px;" class="pa-0"></VDivider>
         </div>
       </div>

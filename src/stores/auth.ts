@@ -66,11 +66,34 @@ export const useAuth = defineStore("user", () => {
     state.value.tokenEmail = email;
   }
 
+  const isJwtExpired = (jwt: string) => {
+    if (!jwt) return true;
+
+    try {
+      const decoded = jwtDecode<{ exp?: number }>(jwt);
+      const now = Date.now() / 1000;
+
+      return !decoded.exp || decoded.exp < now;
+    } catch (error) {
+      return true;
+    }
+  }
+
+  const hasValidRefreshToken = () => {
+    return refresh.value !== "" && !isJwtExpired(refresh.value);
+  }
+
+  const isAccessTokenExpired = () => {
+    return isJwtExpired(token.value);
+  }
+
   const checkAuth = async () => {
     try {
-      if (refresh.value !== "" && isTokenExpired()) {
+      if (hasValidRefreshToken() && isAccessTokenExpired()) {
         await refreshToken();
         state.value.isLogged = true;
+      } else if (state.value.isLogged && isAccessTokenExpired()) {
+        expireSession();
       }
     } catch (error) {
       console.error(error);
@@ -86,40 +109,25 @@ export const useAuth = defineStore("user", () => {
   }
 
   const isTokenExpired = () => {
-
-    if (!token.value) {
-      expireSession()
-     return true
+    if (!isAccessTokenExpired()) {
+      return false;
     }
-    try {
-      const decoded = jwtDecode<{exp?: number}>(token.value)
-      const now = Date.now() / 1000
 
-      if (decoded) {
-        //@ts-ignore
-        const validation = decoded.exp < now
-        if (validation) {
-          expireSession()
-          return true
-        }
-      }
-
-      return false
-
-    } catch (error) {
-      expireSession()
-      return true
+    if (hasValidRefreshToken()) {
+      return false;
     }
+
+    expireSession();
+    return true;
   }
 
   const refreshToken = async () => {
     try {
       const { access } = await authService.refreshToken(state.value.refresh);
-      const decoded_token = jwtDecode(access);
       state.value.token = access;
+      state.value.isLogged = true;
       localStorage.setItem("token", access);
-      // @ts-ignore
-      state.value.user = await authService.getUser(decoded_token?.user_id);
+      return access;
     } catch (error) {
       console.error(error);
       throw error;
@@ -385,6 +393,7 @@ export const useAuth = defineStore("user", () => {
     students,
     team,
     isTokenExpired,
+    refreshToken,
     getStudents,
     getUser,
     getUserInfo,

@@ -26,6 +26,9 @@ declare module 'vue-router/auto-routes' {
     '/auth/login/': RouteRecordInfo<'/auth/login/', '/auth/login', Record<never, never>, Record<never, never>>,
     '/auth/reset-password/': RouteRecordInfo<'/auth/reset-password/', '/auth/reset-password', Record<never, never>, Record<never, never>>,
     '/auth/token/': RouteRecordInfo<'/auth/token/', '/auth/token', Record<never, never>, Record<never, never>>,
+    '/panel/admin/': RouteRecordInfo<'/panel/admin/', '/panel/admin', Record<never, never>, Record<never, never>>,
+    '/panel/admin/proposals': RouteRecordInfo<'/panel/admin/proposals', '/panel/admin/proposals', Record<never, never>, Record<never, never>>,
+    '/panel/admin/reports': RouteRecordInfo<'/panel/admin/reports', '/panel/admin/reports', Record<never, never>, Record<never, never>>,
     '/panel/editions/': RouteRecordInfo<'/panel/editions/', '/panel/editions', Record<never, never>, Record<never, never>>,
     '/panel/editions/add/': RouteRecordInfo<'/panel/editions/add/', '/panel/editions/add', Record<never, never>, Record<never, never>>,
     '/panel/editions/view/[id]': RouteRecordInfo<'/panel/editions/view/[id]', '/panel/editions/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
@@ -76,6 +79,18 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/auth/token/index.vue': {
       routes: '/auth/token/'
+      views: never
+    }
+    'src/pages/panel/admin/index.vue': {
+      routes: '/panel/admin/'
+      views: never
+    }
+    'src/pages/panel/admin/proposals.vue': {
+      routes: '/panel/admin/proposals'
+      views: never
+    }
+    'src/pages/panel/admin/reports.vue': {
+      routes: '/panel/admin/reports'
       views: never
     }
     'src/pages/panel/editions/index.vue': {

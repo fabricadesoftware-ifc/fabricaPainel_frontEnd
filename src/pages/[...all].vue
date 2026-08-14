@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import { onUnmounted } from 'vue'
 
 const router = useRouter()
-const countdown = ref(3)
+const countdown = ref(10)
 
 const timer = setInterval(() => {
   countdown.value--

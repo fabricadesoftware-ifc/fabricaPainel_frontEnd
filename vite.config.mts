@@ -9,22 +9,29 @@ import Vue from "@vitejs/plugin-vue";
 import VueRouter from "unplugin-vue-router/vite";
 import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import { VitePWA } from "vite-plugin-pwa";
-import Sitemap from "vite-plugin-sitemap"; // Importe o plugin
+import Sitemap from "vite-plugin-sitemap";
 
 import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
 
-export default defineConfig({
+const enablePwaDev = process.env.VITE_PWA_DEV === 'true'
+
+
+export default defineConfig(({ command }) => {
+  const isBuild = command === "build";
+  const isServe = command === "serve";
+  const enablePwa = isBuild || enablePwaDev;
+
+  return {
   server: {
     host: "0.0.0.0",
     port: 3000,
-    allowedHosts: ["a9ed-191-52-58-163.ngrok-free.app"],
   },
   plugins: [
     VueRouter({
       dts: "src/typed-router.d.ts",
     }),
-    VueDevTools(),
+    isServe && VueDevTools(),
     Layouts(),
     AutoImport({
       imports: [
@@ -40,7 +47,10 @@ export default defineConfig({
       vueTemplate: true,
     }),
     Components({
-      dts: "src/components.d.ts",
+      dts: 'src/components.d.ts',
+      dirs: ['src/components'],
+      extensions: ['vue'],
+      deep: true,
     }),
     Vue({
       template: { transformAssetUrls },
@@ -65,12 +75,13 @@ export default defineConfig({
         prefetch: true,
       },
     }),
-    VitePWA({
+    enablePwa && VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg", "apple-touch-icon.png", "masked-icon.svg"],
       manifest: {
         name: "Fábrica Painel",
         short_name: "Painel",
+        display: "standalone",
         description: "Gerenciamento para o Painel de Integração",
         theme_color: "#ffffff",
         icons: [
@@ -90,16 +101,35 @@ export default defineConfig({
         id: "com.fabricaPainel.app",
         orientation: "any",
         background_color: "#ffffff",
-        start_url: ".",
+        start_url: "/",
         launch_handler: {
           client_mode: ["navigate-existing", "auto"],
         },
       },
       devOptions: {
-        enabled: true,
+        enabled: enablePwaDev,
       },
+      workbox: {
+  navigateFallback: '/index.html',
+
+  globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+
+  runtimeCaching: [
+    {
+      urlPattern: /^https:\/\/painel\.fabricadesoftware\.ifc\.edu\.br\/api/,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'api-cache',
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 60 * 60 * 24,
+        },
+      },
+    },
+  ],
+},
     }),
-    Sitemap({
+    isBuild && Sitemap({
       hostname: "https://painel.fabricadesoftware.ifc.edu.br", // Substitua pelo domínio real do seu site
       dynamicRoutes: ["/", "/about"], // Liste suas rotas ou use lógica para rotas dinâmicas
       exclude: ["/login"], // Rotas a excluir do sitemap
@@ -119,4 +149,5 @@ export default defineConfig({
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },
+  };
 });

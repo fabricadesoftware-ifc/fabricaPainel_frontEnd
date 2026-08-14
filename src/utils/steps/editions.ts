@@ -7,32 +7,62 @@ type Step = {
 
 export const StepsEdition = ref<Step[]>([
   {
-    title: 'Informações',
+    title: 'Dados basicos',
     value: '1',
     complete: false,
     is_actual: true
   },
   {
-    title: 'Prazos',
+    title: 'Evento',
     value: '2',
     complete: false,
     is_actual: false
   },
   {
-    title: 'Limites de equipes',
+    title: 'Primeira etapa',
     value: '3',
     complete: false,
     is_actual: false
   },
   {
-    title: 'Limites de Avaliação',
+    title: 'Segunda etapa',
     value: '4',
     complete: false,
     is_actual: false
   },
   {
-    title: 'logo e banner da edição',
+    title: 'Avaliacao',
     value: '5',
+    complete: false,
+    is_actual: false
+  },
+  {
+    title: 'Criterios',
+    value: '6',
+    complete: false,
+    is_actual: false
+  },
+  {
+    title: 'Equipe',
+    value: '7',
+    complete: false,
+    is_actual: false
+  },
+  {
+    title: 'Trabalhos',
+    value: '8',
+    complete: false,
+    is_actual: false
+  },
+  {
+    title: 'Proposta',
+    value: '9',
+    complete: false,
+    is_actual: false
+  },
+  {
+    title: 'Banner',
+    value: '10',
     complete: false,
     is_actual: false
   }

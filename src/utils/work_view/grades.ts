@@ -10,6 +10,7 @@ export async function giveWorkGradeFn(
   studentAssesmentStore: any,
   user: any,
   is_work_grade: any,
+  criterion_grades: any[] = [],
   closeDialog: () => void
 ): Promise<void> {
   
@@ -23,8 +24,9 @@ export async function giveWorkGradeFn(
     evaluator: work_evaluator,
     work: work_id,
     grade: grade,
+    criterion_grades,
     date_time: date.toISOString(),
-    comittee_feedback: '',
+    committee_feedback: '',
   };
 
   await assessmentStore.createAssessment(assessment);
@@ -32,6 +34,7 @@ export async function giveWorkGradeFn(
     const assessment: any = {
     work: work_id,
     grade: grade,
+    criterion_grades,
     date_time: date.toISOString(),
     student: user.id,
   };
