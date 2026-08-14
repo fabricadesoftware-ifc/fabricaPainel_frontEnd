@@ -77,6 +77,10 @@ export default defineConfig(({ command }) => {
     }),
     enablePwa && VitePWA({
       registerType: "autoUpdate",
+      // Registramos o SW manualmente em App.vue (via virtual:pwa-register/vue) para
+      // poder avisar o usuário quando uma nova versão estiver pronta, em vez de deixar
+      // o registro automático trocar os arquivos silenciosamente em segundo plano.
+      injectRegister: false,
       includeAssets: ["favicon.svg", "apple-touch-icon.png", "masked-icon.svg"],
       manifest: {
         name: "Fábrica Painel",

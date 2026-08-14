@@ -133,7 +133,7 @@ onMounted(async () => {
       <StepbyStepHeader :steps="steps" :actualstep="actualstep" v-if="width > 950" />
       <VStepperWindow class="w-100 h-100">
         <StepsHeader :user="AuthStore.user" :step_num="Number(StepObj?.value || 0)" :step_completed="StepObj?.complete"
-          :step_value="StepObj?.title" @openNav="openNav = !openNav" />
+          :step_value="StepObj?.title" :total_steps="steps.length" @openNav="openNav = !openNav" />
         <div v-if="actualstep != 6" class="w-100 d-flex justify-center align-center overflow-y-auto"
           style="height: 80%;">
           <div :style="{ width: width < 950 ? '100%' : '75%' }" class="d-flex justify-center align-center h-100">
@@ -157,7 +157,7 @@ onMounted(async () => {
       :title="actualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
       :description="actualstep === 0 ? 'Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes' : 'Após submeter o trabalho um email será enviado para os colaboradores e para o orientador do seu projeto'"
       v-model="open_dialog" @confirmation="DialogActive" />
-    <VNavigationDrawer v-model="openNav" location="right">
+    <VNavigationDrawer v-model="openNav" location="right" width="300">
       <router-link to="/">
         <div class="d-flex justify-center align-center ga-3 pa-5">
           <img src="../../../../assets/logotipo_painel_integracao.png" width="50">
@@ -169,6 +169,25 @@ onMounted(async () => {
         <VListItem prepend-icon="mdi-account">
           <VListItemTitle>{{ AuthStore.user.name }}</VListItemTitle>
         </VListItem>
+      </VList>
+      <VDivider></VDivider>
+      <p class="text-grey px-4 pt-4 pb-1" style="font-size: 12px;">SUA SUBMISSÃO</p>
+      <VList density="compact">
+        <VListItem v-for="(step, i) in steps" :key="i"
+          :class="actualstep === i ? 'bg-blue-lighten-5' : ''">
+          <template #prepend>
+            <VIcon v-if="step.complete" color="success" icon="mdi-check-circle" />
+            <VIcon v-else-if="actualstep === i" color="blue" icon="mdi-circle-slice-8" />
+            <VIcon v-else color="grey-lighten-1" icon="mdi-circle-outline" />
+          </template>
+          <VListItemTitle
+            :class="actualstep === i ? 'text-blue font-weight-bold' : (step.complete ? 'text-grey' : '')">
+            {{ step.title }}
+          </VListItemTitle>
+        </VListItem>
+      </VList>
+      <VDivider></VDivider>
+      <VList>
         <VListItem prepend-icon="mdi-information">
           <router-link to="/user-support">Precisa de ajuda?</router-link>
         </VListItem>

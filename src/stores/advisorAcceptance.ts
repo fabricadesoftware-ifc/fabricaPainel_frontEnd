@@ -52,9 +52,12 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
       await AcceptanceService.acceptAdvisorWork(state.value.verificationToken);
       showMessage('Orientação aceita com sucesso!', 'success', 2000, 'top-right', 'light', true)
       state.value.accepted = true;
-      state.value.advisorStatus = 1;
+      state.value.advisorStatus = 2; // 2 = aceito
+      return true;
     } catch (error: any) {
       setError(error.message);
+      showMessage(error.message, 'error', 3000, 'top-right', 'light', false)
+      return false;
     } finally {
       setLoading(false);
     }
@@ -68,9 +71,12 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
       await AcceptanceService.rejectAdvisorWork(state.value.verificationToken);
       showMessage('Orientação rejeitada com sucesso!', 'success', 2000, 'top-right', 'light', true)
       state.value.rejected = true;
-      state.value.advisorStatus = 2;
+      state.value.advisorStatus = 3; // 3 = cancelado/recusado
+      return true;
     } catch (error: any) {
       setError(error.message);
+      showMessage(error.message, 'error', 3000, 'top-right', 'light', false)
+      return false;
     } finally {
       setLoading(false);
     }

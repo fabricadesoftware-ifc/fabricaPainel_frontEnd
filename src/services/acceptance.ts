@@ -3,7 +3,10 @@ import api from "@/plugins/api";
 class AcceptanceService {
   private handleError(error: any, action: string) {
     console.error(`Error during ${action}:`, error);
-    throw new Error(`Failed to ${action} acceptance`);
+    // Propaga a mensagem real do backend (ex.: "fora do período de aceitação")
+    // em vez de uma mensagem genérica, para o usuário entender o motivo real da falha.
+    const backendMessage = error?.response?.data?.error;
+    throw new Error(backendMessage || `Failed to ${action} acceptance`);
   }
 
     async acceptAdvisorWork(verificationToken: string) {

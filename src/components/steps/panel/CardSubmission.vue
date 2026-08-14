@@ -54,17 +54,16 @@ const { width } = useDisplay()
             <h1 class="font-weight-bold" :style="{ fontSize: width > 780 ? '30px' : '18px' }">{{ edition_title }}</h1>
             <div class="d-flex justify-center align-center">
                         <VCard
-                            :style="{ flexDirection: width > 780 ? 'row' : 'column' }"
+                            :style="{ flexDirection: width > 780 ? 'row' : 'column', maxWidth: '1000px' }"
                             class="d-flex align-center pa-5 justify-space-between w-100"
                             :rounded="width > 780 ? 'lg' : 'xl'"
                             elevation="0"
                             :border="true"
-                            width="1000"
                         >
                             <div class="d-flex w-100" :style="{ flexDirection: width > 780 ? 'row' : 'column' }">
                                 <!-- Coluna do título -->
                                 <div class="card-title-half d-flex align-center justify-start" :style="{ width: width > 780 ? '50%' : '100%' }">
-                                    <VCardTitle :style="{ fontSize: width > 780 ? '20px' : width > 390 ? '15px' : '11px' }"
+                                    <VCardTitle :style="{ fontSize: width > 780 ? '20px' : width > 390 ? '15px' : '13px' }"
                                         class="font-weight-bold w-100">
                                         {{ actual_title }}
                                     </VCardTitle>

@@ -83,25 +83,31 @@ const close = () => {
 
 const aceitar = async () => {
   action.value = "aceitar";
-  await acceptanceStore.acceptAsAdvisor();
-  show.value = false;
+  const success = await acceptanceStore.acceptAsAdvisor();
   action.value = "";
 
+  // Se o backend recusou (ex.: fora do período de aceitação), não segue com os
+  // próximos passos nem mexe no status local — o erro já foi mostrado ao usuário.
+  if (!success) return;
 
-  workStore.state.currentWork.advisor_status = 2 
+  show.value = false;
+  workStore.state.currentWork.advisor_status = 2
   await workStore.getWork(props.work.id)
 
   await workStore.approveWork(workStore?.currentWork?.verification_token)
   workStore.state.currentWork.status = 2
-  
+
 };
 
 const recusar = async () => {
   action.value = "recusar";
-  await acceptanceStore.rejectAsAdvisor();
-  show.value = false;
+  const success = await acceptanceStore.rejectAsAdvisor();
   action.value = "";
-  workStore.state.currentWork.advisor_status = 3 
+
+  if (!success) return;
+
+  show.value = false;
+  workStore.state.currentWork.advisor_status = 3
 
   await workStore.rejectWork(workStore?.currentWork?.verification_token)
   workStore.state.currentWork.status = 4

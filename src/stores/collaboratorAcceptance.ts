@@ -51,9 +51,12 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
       await AcceptanceService.acceptCollaboratorWork(state.value.verificationToken);
          showMessage('Colaboração aceita com sucesso!', 'success', 2000, 'top-right', 'light', true)
       state.value.accepted = true;
-      state.value.collaboratorStatus = 1;
+      state.value.collaboratorStatus = 2; // 2 = aceito
+      return true;
     } catch (error: any) {
       setError(error.message);
+      showMessage(error.message, 'error', 3000, 'top-right', 'light', false)
+      return false;
     } finally {
       setLoading(false);
     }
@@ -65,13 +68,16 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
 
     try {
       if (!state.value.verificationToken) throw new Error("Token de verificação não encontrado.");
-     
+
       await AcceptanceService.rejectCollaboratorWork(state.value.verificationToken);
          showMessage('Colaboração rejeitada com sucesso!', 'success', 2000, 'top-right', 'light', true)
       state.value.rejected = true;
-      state.value.collaboratorStatus = 2;
+      state.value.collaboratorStatus = 3; // 3 = cancelado/recusado
+      return true;
     } catch (error: any) {
       setError(error.message);
+      showMessage(error.message, 'error', 3000, 'top-right', 'light', false)
+      return false;
     } finally {
       setLoading(false);
     }
