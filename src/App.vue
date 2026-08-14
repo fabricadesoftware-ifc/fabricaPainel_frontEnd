@@ -107,7 +107,7 @@
         onNeedRefresh() {
           showUpdatePrompt.value = true
         },
-        onRegisteredSW(_swUrl, registration) {
+        onRegisteredSW(_swUrl: string, registration: ServiceWorkerRegistration | undefined) {
           if (!registration) return
           // Verifica periodicamente se há uma versão nova publicada,
           // já que a aba pode ficar aberta por horas.
