@@ -25,6 +25,15 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
     state.value.error = message;
   };
 
+  // Usado na página de decisão aberta pelo link do email (/decidir-orientacao/[token]),
+  // onde ainda não temos o "work" carregado — só o token que veio na própria URL.
+  const setToken = (token: string) => {
+    state.value.verificationToken = token;
+    state.value.accepted = false;
+    state.value.rejected = false;
+    state.value.error = null;
+  };
+
   const setAdvisorInfo = (work: any) => {
     // console.log("userId logado:", userId);
     // console.log("work_collaborators:", work.work_collaborator);
@@ -84,6 +93,7 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
 
   return {
     state,
+    setToken,
     setAdvisorInfo,
     acceptAsAdvisor,
     rejectAsAdvisor,

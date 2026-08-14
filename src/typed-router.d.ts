@@ -26,6 +26,8 @@ declare module 'vue-router/auto-routes' {
     '/auth/login/': RouteRecordInfo<'/auth/login/', '/auth/login', Record<never, never>, Record<never, never>>,
     '/auth/reset-password/': RouteRecordInfo<'/auth/reset-password/', '/auth/reset-password', Record<never, never>, Record<never, never>>,
     '/auth/token/': RouteRecordInfo<'/auth/token/', '/auth/token', Record<never, never>, Record<never, never>>,
+    '/decidir-colaboracao/[token]': RouteRecordInfo<'/decidir-colaboracao/[token]', '/decidir-colaboracao/:token', { token: ParamValue<true> }, { token: ParamValue<false> }>,
+    '/decidir-orientacao/[token]': RouteRecordInfo<'/decidir-orientacao/[token]', '/decidir-orientacao/:token', { token: ParamValue<true> }, { token: ParamValue<false> }>,
     '/panel/admin/': RouteRecordInfo<'/panel/admin/', '/panel/admin', Record<never, never>, Record<never, never>>,
     '/panel/admin/proposals': RouteRecordInfo<'/panel/admin/proposals', '/panel/admin/proposals', Record<never, never>, Record<never, never>>,
     '/panel/admin/reports': RouteRecordInfo<'/panel/admin/reports', '/panel/admin/reports', Record<never, never>, Record<never, never>>,
@@ -79,6 +81,14 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/auth/token/index.vue': {
       routes: '/auth/token/'
+      views: never
+    }
+    'src/pages/decidir-colaboracao/[token].vue': {
+      routes: '/decidir-colaboracao/[token]'
+      views: never
+    }
+    'src/pages/decidir-orientacao/[token].vue': {
+      routes: '/decidir-orientacao/[token]'
       views: never
     }
     'src/pages/panel/admin/index.vue': {
