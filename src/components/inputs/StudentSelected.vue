@@ -30,7 +30,9 @@ function addEmit(){
 }
 </script>
 <template>
-    <VTextField ref="inputRef" v-model="search" variant="outlined" :placeholder="placeholder" :disabled="disabled" :rounded="rounded" @keyup.enter="addEmit" >
+    <VTextField ref="inputRef" v-model="search" variant="outlined" :label="label" :placeholder="placeholder"
+        :hint="hint" persistent-hint persistent-placeholder :disabled="disabled" :rounded="rounded"
+        @keyup.enter="addEmit">
         <template #append-inner>
             <VIcon class="bg-blue text-white rounded-xl cursor-pointer add-icon" icon="mdi-plus"
                 @click="addEmit"></VIcon>

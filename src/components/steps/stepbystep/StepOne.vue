@@ -28,12 +28,12 @@ const props = defineProps({
 
 const verifyUserWorks = async (user) => {
     const result = await WorkStore.fetchUserWorks(user.user_type, user.id)
-   
+
 
     return (result || []).some(work =>
     [1, 2, 3].includes(work.status) &&
     work.edition?.year === new Date().getFullYear(),
-    
+
 )
 
 }
@@ -79,12 +79,12 @@ onMounted(async () => {
       currentUser: AuthStore.user,
       teamIds: userTeams.map(t => t.id),
       currentTeam: WorkStore.WorkStorage.team,
-      searchUserFn: AuthStore.searchUsers,  
+      searchUserFn: AuthStore.searchUsers,
     })
- 
+
     WorkStore.WorkStorage.team = team
     }
-    
+
 })
 const {width} = useDisplay()
 const heightComputed = computed(() => {
@@ -98,8 +98,9 @@ const heightComputed = computed(() => {
     <div :style="width > 950 ? {width: '70%'} : {width: '100%'}" class="pa-2 h-100">
         <StudentSelected rounded="xl"
             :disabled="WorkStore.WorkStorage.team.length === (editionStore.currentEdition?.members_max || 7)"
-            :hint="hintInput" error_msg="estudante não encontrado" placeholder="pesquise por um estudante"
-            label="pesquise pela matricula do estudante" user-type="STUDENT" @addUser="handleAddUser" />
+            :hint="hintInput" error_msg="estudante não encontrado"
+            placeholder="pesquise pela matricula do estudante" label="Matrícula do estudante" user-type="STUDENT"
+            @addUser="handleAddUser" />
         <div class="d-flex ga-2 mt-5">
             <p style="font-size: 12px;">* Limite máximo de estudantes: {{ editionStore.currentEdition?.members_max || 7
                 }}</p>
