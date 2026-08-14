@@ -93,7 +93,7 @@ const { width } = useDisplay()
         </VChip>
       </div>
 
-      <div class="mb-10 px-16">
+      <div class="mb-10 px-4 px-sm-8 px-md-16">
         <div v-if="EditionStore?.currentEdition?.edition_name" class="d-flex align-center mt-10 mb-10 ga-5 w-100">
           <h1 :style="{ fontSize: width > 780 ? '30px' : '20px' }" class=" font-weight-bold">
             {{ EditionStore?.currentEdition?.edition_name }}
@@ -143,7 +143,7 @@ const { width } = useDisplay()
         </h1>
       </div>
 
-      <div class="px-16">
+      <div class="px-4 px-sm-8 px-md-16">
         <v-lazy :min-height="200" :options="{ 'threshold': 0.5 }" transition="fade-transition">
           <div v-if="
             submissionsPast.length > 0 &&

@@ -34,8 +34,8 @@ const { width } = useDisplay()
 
         </div>
         <div v-else style="min-width: 100%" class="pa-10 d-flex justify-center ga-2 align-center text-center">
-            <p :style="{ width: '500px', fontSize: width > 780 ? '20px' : '15px' }">Não é possível submeter mais
-                propostas, pois o prazo de submissão acabou</p>
+            <p :style="{ maxWidth: '500px', width: '100%', fontSize: width > 780 ? '20px' : '15px' }">Não é possível
+                submeter mais propostas, pois o prazo de submissão acabou</p>
         </div>
     </div>
 </template>

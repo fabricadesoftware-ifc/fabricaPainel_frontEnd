@@ -19,6 +19,7 @@ const props = defineProps({
         default: () => []
     }
 })
+defineEmits(['removeUser'])
 </script>
 <template>
     <div class="d-flex justify-space-between align-center h-25 w-100 mt-5">
@@ -37,8 +38,9 @@ const props = defineProps({
             </div>
         </div>
         <div>
-            <VChip class="cursor-pointer" color="red" v-if="me.email !== email">
-                <p style="font-size: 30px;" @click="$emit('RemoveUser', props.email)">-</p>
+            <VChip class="cursor-pointer" color="red" size="large" v-if="me.email !== email"
+                style="min-width: 44px; min-height: 44px;" @click="$emit('removeUser', props.email)">
+                <p style="font-size: 24px; line-height: 1;">-</p>
             </VChip>
         </div>
     </div>

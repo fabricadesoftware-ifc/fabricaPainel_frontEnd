@@ -68,16 +68,16 @@ const collabIndex = workStore?.currentWork?.work_collaborator?.findIndex(
 );
 const pendingStatus = computed(()=>acceptanceStore.state.collaboratorStatus === 1);
 
-watch(acceptanceStore.state.collaboratorStatus, (newVal)=> {
-  if (acceptanceStore.state.collaboratorStatus === 1) {
+watch(() => acceptanceStore.state.collaboratorStatus, (newVal) => {
+  if (newVal !== 1) {
     show.value = false
   }
 })
 
 function updateShow() {
   const isCollaborator = acceptanceStore.state.isCollaborator;
-  
-  show.value = isCollaborator && pendingStatus;
+
+  show.value = isCollaborator && pendingStatus.value;
 }
 
 onMounted(() => {
@@ -94,10 +94,12 @@ const close = () => {
 
 const aceitar = async () => {
   action.value = "aceitar";
-  await acceptanceStore.acceptAsCollaborator();
-  acceptanceStore.state.collaboratorStatus = 2
-  show.value = false;
+  const success = await acceptanceStore.acceptAsCollaborator();
   action.value = "";
+
+  if (!success) return;
+
+  show.value = false;
   if (collabIndex >= 0) {
     workStore.state.currentWork.work_collaborator[collabIndex].status = 2;
   }
@@ -105,10 +107,12 @@ const aceitar = async () => {
 
 const recusar = async () => {
   action.value = "recusar";
-  await acceptanceStore.rejectAsCollaborator();
-    acceptanceStore.state.collaboratorStatus = 3
-  show.value = false;
+  const success = await acceptanceStore.rejectAsCollaborator();
   action.value = "";
+
+  if (!success) return;
+
+  show.value = false;
   if (collabIndex >= 0) {
     workStore.state.currentWork.work_collaborator[collabIndex].status = 3;
   }
