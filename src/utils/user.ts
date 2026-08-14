@@ -114,7 +114,10 @@ export const AddUser = async ({
                 );
     }
   } else {
-    const sameClass = me.user_classes?.[0]?.class_name === student.user_classes?.[0]?.class_name
+    const currentYear = new Date().getFullYear()
+    const myClass = me.user_classes?.find((c) => c.year === currentYear)
+    const studentClass = student.user_classes?.find((c) => c.year === currentYear)
+    const sameClass = myClass?.class_name === studentClass?.class_name && myClass !== undefined
 
     if (!sameClass) {
       showMessage(
