@@ -94,11 +94,15 @@
   async function registerServiceWorkerUpdatePrompt() {
     // A virtual:pwa-register/vue só existe quando o plugin do PWA está ativo
     // (builds de produção, ou dev com VITE_PWA_DEV=true) — em dev normal esse
-    // import nunca chega a ser disparado.
+    // import nunca chega a ser executado. Montamos o especificador em tempo de
+    // execução (em vez de uma string literal) para o Vite não tentar resolvê-lo
+    // durante a transformação do arquivo — isso quebraria `npm run dev`, já que
+    // o plugin do PWA nem está registrado ali.
     if (!import.meta.env.PROD || !('serviceWorker' in navigator)) return
 
     try {
-      const { useRegisterSW } = await import('virtual:pwa-register/vue')
+      const swRegisterModule = ['virtual:pwa-register', 'vue'].join('/')
+      const { useRegisterSW } = await import(/* @vite-ignore */ swRegisterModule)
       const { updateServiceWorker } = useRegisterSW({
         onNeedRefresh() {
           showUpdatePrompt.value = true
