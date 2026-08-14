@@ -23,6 +23,15 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
     state.value.error = message;
   };
 
+  // Usado na página de decisão aberta pelo link do email (/decidir-colaboracao/[token]),
+  // onde ainda não temos o "work" carregado — só o token que veio na própria URL.
+  const setToken = (token: string) => {
+    state.value.verificationToken = token;
+    state.value.accepted = false;
+    state.value.rejected = false;
+    state.value.error = null;
+  };
+
   const setCollaboratorInfo = (work: any) => {
     const auth = useAuth();
     const userId = auth.user.id;
@@ -85,6 +94,7 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
 
   return {
     state,
+    setToken,
     setCollaboratorInfo,
     acceptAsCollaborator,
     rejectAsCollaborator,

@@ -1,10 +1,11 @@
 <script setup>
 import { ref } from 'vue'
 import { showMessage } from '@/utils/toastify'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '@/stores/auth'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuth()
 const loading = ref(false)
 const visible = ref(false)
@@ -17,7 +18,11 @@ const login = async () => {
     loading.value = true
     await authStore.login(email.value, password.value)
     loading.value = false
-    router.push('/panel/works')
+    // Permite voltar direto para onde o usuário estava (ex.: link de decisão
+    // de orientação/colaboração vindo por email), em vez de sempre cair em
+    // /panel/works.
+    const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/panel/works'
+    router.push(redirect)
   } catch (error) {
     loading.value = false
     showMessage('Credenciais inválidas', 'error', 1500, 'top-right', 'auto', false)
