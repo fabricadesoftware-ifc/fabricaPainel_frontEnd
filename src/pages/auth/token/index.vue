@@ -13,7 +13,7 @@
   const getToken = async () => {
     try {
       loading.value = true
-      await authStore.verifyToken(token.value)
+      await authStore.verifyToken(token.value.trim())
       loading.value = false
       router.push('/auth/reset-password')
     } catch (error) {
