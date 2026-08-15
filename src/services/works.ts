@@ -152,7 +152,7 @@ class WorkService {
   async approveWork(verification_token: string) {
     try {
       
-      const { data } = await api.get(`/accept-work/${verification_token}/`);
+      const { data } = await api.get(`/accept-submission/${verification_token}/`);
       return data;
     } catch (error) {
       this.handleError(error, "approve");
