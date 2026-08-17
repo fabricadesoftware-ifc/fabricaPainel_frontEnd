@@ -85,8 +85,9 @@ export const useWork = defineStore('work', () => {
   }
   const sendWork = async () => {
     setError(null)
+    let teamCreatedInThisCall = false
+    let teamId = null
     try {
-      let teamId = null
 
       // Primeiro verifica se o usuário tem uma equipe, e se tiver compara se alguma das equipes é a mesma que ele colocou no trabalho
       if ((authStore.user as any)?.team && (authStore.user as any).team.length > 0) {
@@ -117,6 +118,7 @@ export const useWork = defineStore('work', () => {
           const createdTeam = await (authStore as any).createTeam(newTeam)
 
           teamId = createdTeam?.id || (authStore.team as any)?.id
+          teamCreatedInThisCall = true
 
         } catch (createError: any) {
           console.error('Erro ao criar equipe:', createError)
@@ -147,6 +149,16 @@ export const useWork = defineStore('work', () => {
 
     } catch (error: any) {
       console.error('Erro completo na submissão:', error)
+
+      // Se a equipe foi criada agora mas o envio do trabalho falhou, desfaz a criação
+      // para não deixar uma equipe órfã travando os alunos numa próxima tentativa
+      if (teamCreatedInThisCall && teamId) {
+        try {
+          await (authStore as any).deleteTeam(teamId)
+        } catch (rollbackError) {
+          console.error('Erro ao desfazer criação da equipe após falha no envio do trabalho:', rollbackError)
+        }
+      }
 
       setError(error.message)
       throw error

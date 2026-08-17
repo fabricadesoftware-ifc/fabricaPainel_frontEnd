@@ -297,6 +297,13 @@ export const useAuth = defineStore("user", () => {
     }
   };
 
+  const deleteTeam = async (id: string | number) => {
+    await authService.deleteTeam(id);
+    if ((state.value.team as any)?.id === id) {
+      state.value.team = null;
+    }
+  };
+
   const updateTeam = async (team: any) => {
     try {
       await authService.updateTeam(team.id, team);
@@ -406,6 +413,7 @@ export const useAuth = defineStore("user", () => {
     getTeam,
     leaveTeam,
     createTeam,
+    deleteTeam,
     updateTeam,
     resendInvite,
     userTeam,
