@@ -30,10 +30,12 @@
   import { useRouter, useRoute } from 'vue-router'
   import { toast } from 'vue3-toastify'
   import { globalRouter } from "./plugins/globalRouter";
+  import { useAuth } from '@/stores/auth'
 
 
   const router = useRouter()
   const route = useRoute()
+  const authStore = useAuth()
 
   globalRouter.router = router
 
@@ -127,6 +129,12 @@
     window.addEventListener('offline', updateStatus)
 
     registerServiceWorkerUpdatePrompt()
+
+    // Ao abrir/recarregar o app, verifica se a sessão salva ainda é válida:
+    // renova silenciosamente se só o access token expirou, ou encerra a sessão
+    // com aviso claro se o refresh também já venceu — em vez de deixar o usuário
+    // preencher uma tela inteira pra só descobrir isso ao submeter algo.
+    authStore.checkAuth()
   })
 
   onUnmounted(() => {

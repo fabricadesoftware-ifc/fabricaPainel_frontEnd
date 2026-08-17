@@ -57,10 +57,8 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as RetriableRequestConfig | undefined;
 
-    if (error.response?.status == 403 || !originalRequest) {
-      useAuth().logout();
-    }
-
+    // 403 = autenticado mas sem permissão para essa ação específica — não é
+    // problema de sessão, então não deve derrubar o login do usuário.
     if (error.response?.status !== 401 || !originalRequest) {
       return Promise.reject(error);
     }

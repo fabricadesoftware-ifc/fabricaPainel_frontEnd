@@ -90,6 +90,10 @@ class AuthService {
     }
   }
 
+  async logout (refresh: string) {
+    await api.post('token/logout/', { refresh })
+  }
+
   async getUserTeam (id: string) {
     try {
       const { data } = await api.get(`team/?team_member_id=${id}`)
