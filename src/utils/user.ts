@@ -83,7 +83,7 @@ export const AddUser = async ({
   //@ts-ignore
   if (selectedStudent.user.toString().length === 10) {
   const users = await searchUsersFn(selectedStudent.user.toString(), selectedStudent.user_type)
-  
+
   if (users.length === 0 || !verifyUserClassFn(users[0])) {
     showMessage(
                 `Estudante não encontrado`,
@@ -156,8 +156,8 @@ export const AddUser = async ({
 
 export function downloadPdf() {
   const link = document.createElement('a');
-  link.href = 'https://eventos.araquari.ifc.edu.br/wp-content/blogs.dir/4/files/sites/157/2025/06/REGIMENTO-PAINEL-DE-INTEGRACAO-2025.pdf';
-  link.download = 'orientacoes.pdf';
+  link.href = '/REGIMENTO-PAINEL-DE-INTEGRACAO-2026-atualizada.docx.pdf';
+  link.download = 'REGIMENTO-PAINEL-DE-INTEGRACAO-2026.pdf';
   link.target = '_blank';
   document.body.appendChild(link);
   link.click();
