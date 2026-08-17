@@ -109,6 +109,10 @@ class AuthService {
     return data
   }
 
+  async deleteTeam (id: string | number) {
+    await api.delete(`team/${id}/`)
+  }
+
   async acceptInvite (team: any) {
     try {
       const { data } = await api.patch('team/', team)
