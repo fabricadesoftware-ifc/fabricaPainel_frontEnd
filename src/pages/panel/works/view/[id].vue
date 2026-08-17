@@ -179,7 +179,7 @@ const openUserGrade = (member: object) => {
             <h2 class="opacity-70" :style="{ fontWeight: '700', fontSize: width > 780 ? '20px' : '15px' }">
               Descrição da Proposta
             </h2>
-            <p :style="{ fontSize: width > 780 ? '16px' : '12px' }">{{ workStore.currentWork.abstract }}</p>
+            <p :style="{ fontSize: width > 780 ? '16px' : '12px', whiteSpace: 'pre-line' }">{{ workStore.currentWork.abstract }}</p>
           </div>
 
           <SubjectsSession :ods="workStore.currentWork.ods" :subjects="workStore.currentWork.field"
