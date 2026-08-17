@@ -46,7 +46,7 @@ const {width} = useDisplay()
         </div>
         <div class="d-flex ga-5 flex-wrap align-center" :class="width < 750 ? 'flex-wrap justify-center align-center' : ''">
             <h1  style="font-size: 20px;" >Resumo do projeto:</h1>
-            <p >{{ form_work.abstract }}</p>
+            <p style="white-space: pre-line;">{{ form_work.abstract }}</p>
         </div>
     </VCard>
     <VBtn color="blue"  class="font-weight-bold text-h6" height="50" width="250"  slim rounded="xl" @click="$emit('submitPropose')">Submeter Proposta</VBtn>
