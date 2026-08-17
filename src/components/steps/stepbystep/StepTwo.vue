@@ -58,7 +58,7 @@ onMounted(async () => {
     ThemeItems.value = await CategoryStore.getCrossCuttingThemes()
     await CategoryStore.getOds() 
   
-  if (WorkStore.WorkStorage.cross_cutting_theme == {}) {
+  if (!WorkStore.WorkStorage.cross_cutting_theme || Object.keys(WorkStore.WorkStorage.cross_cutting_theme).length === 0) {
  WorkStore.WorkStorage.cross_cutting_theme = {name: 'Escolha Uma Matéria Transversal'}
   }
 

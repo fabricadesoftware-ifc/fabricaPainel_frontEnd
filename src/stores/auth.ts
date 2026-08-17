@@ -123,10 +123,12 @@ export const useAuth = defineStore("user", () => {
 
   const refreshToken = async () => {
     try {
-      const { access } = await authService.refreshToken(state.value.refresh);
+      const { access, refresh } = await authService.refreshToken(state.value.refresh);
       state.value.token = access;
+      // Com ROTATE_REFRESH_TOKENS ativo, cada refresh invalida o token anterior
+      // e devolve um novo — precisa ser guardado, senão o próximo refresh falha.
+      if (refresh) state.value.refresh = refresh;
       state.value.isLogged = true;
-      localStorage.setItem("token", access);
       return access;
     } catch (error) {
       console.error(error);
@@ -187,9 +189,18 @@ export const useAuth = defineStore("user", () => {
   };
 
   const logout = () => {
+    const refreshTokenValue = state.value.refresh;
     state.value.isLogged = false;
     state.value.token = "";
     state.value.refresh = "";
+    // Revoga o refresh token no servidor (blacklist) em vez de só limpar o estado local,
+    // para que um token vazado não continue válido pelo resto do prazo dele.
+    // Best-effort: se a revogação falhar (ex: já expirado), o usuário já está deslogado localmente.
+    if (refreshTokenValue) {
+      authService.logout(refreshTokenValue).catch((error) => {
+        console.error("Erro ao revogar token no logout:", error);
+      });
+    }
     state.value.user = {
       id: "",
       name: "",

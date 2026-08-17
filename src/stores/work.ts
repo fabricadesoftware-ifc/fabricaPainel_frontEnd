@@ -169,7 +169,7 @@ export const useWork = defineStore('work', () => {
         WorkStorage.abstract = ''
         WorkStorage.field = []
         WorkStorage.advisor = []
-        WorkStorage.cross_cutting_theme = {} as ICrossCuttingTheme
+        WorkStorage.cross_cutting_theme = { name: 'Escolha Uma Matéria Transversal' } as ICrossCuttingTheme
         WorkStorage.team = []
         WorkStorage.ods = []
         WorkStorage.collaborators = []
