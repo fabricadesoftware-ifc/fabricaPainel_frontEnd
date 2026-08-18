@@ -161,17 +161,20 @@ const { width } = useDisplay()
             :user_type="UserStore?.user?.user_type">
             <template #evaluate>
               <CardSubmission v-for="(work, index) in submissionsPast.evaluatorWorks" :key="index" :work_id="work?.id"
-                :work="work?.edition?.final_submission_date" :work_status="work?.status" />
+                :work="work?.edition?.final_submission_date" :work_status="work?.status"
+                :actual_title="work?.title" />
             </template>
 
             <template #advise>
               <CardSubmission v-for="(work, index) in submissionsPast.advisorWorks" :key="index" :work_id="work?.id"
-                :work="work?.edition?.final_submission_date" :work_status="work?.status" />
+                :work="work?.edition?.final_submission_date" :work_status="work?.status"
+                :user="UserStore?.user" :work_data="work" :actual_title="work?.title" />
             </template>
 
             <template #collaborate>
               <CardSubmission v-for="(work, index) in submissionsPast.collaboratorWorks" :key="index"
-                :work_id="work?.id" :work="work?.edition?.final_submission_date" :work_status="work?.status" />
+                :work_id="work?.id" :work="work?.edition?.final_submission_date" :work_status="work?.status"
+                :user="UserStore?.user" :work_data="work" :actual_title="work?.title" />
             </template>
           </TeacherContainer>
         </v-lazy>

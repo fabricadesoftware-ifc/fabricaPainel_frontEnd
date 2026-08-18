@@ -44,6 +44,40 @@ export const resolveStatus = (status: number) => {
   }
 };
 
+// Orientador e colaborador têm uma escala de status própria — 1 Pendente,
+// 2 Aprovado, 3 Rejeitado, 4 Expirado — que diverge da escala do trabalho a
+// partir do 3 (no trabalho, 3 é "Pendente com Alterações" e 4 é "Rejeitado").
+// Por isso a participação não pode ser traduzida com resolveStatus: uma recusa
+// apareceria como "Necessita de Mudanças" e um expirado como "Rejeitado".
+export const resolveParticipationStatus = (status: number) => {
+  switch (status) {
+    case 1: {
+      return {
+        text: "Pendente",
+        color: "yellow-darken-2",
+      };
+    }
+    case 2: {
+      return {
+        text: "Aceito",
+        color: "green-darken-2",
+      };
+    }
+    case 3: {
+      return {
+        text: "Recusado",
+        color: "red-darken-2",
+      };
+    }
+    case 4: {
+      return {
+        text: "Expirado",
+        color: "blue-grey lighten-1",
+      };
+    }
+  }
+};
+
 type Advisor = { id: number | string };
 
 type Work = {
