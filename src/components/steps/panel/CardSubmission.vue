@@ -1,7 +1,8 @@
 \
 <script setup>
+import { computed } from 'vue';
 import router from '@/router';
-import { resolveStatus } from '@/utils/works';
+import { resolveParticipationStatus, resolveStatus } from '@/utils/works';
 import { useDisplay } from 'vuetify';
 import { formatDate } from '@/utils/global';
 
@@ -28,7 +29,7 @@ const props = defineProps({
         default: null,
     },
     user: {
-        type: [String, Number],
+        type: Object,
         default: null,
     }
 
@@ -36,6 +37,34 @@ const props = defineProps({
 
 
 const { width } = useDisplay()
+
+// O card é usado pelo aluno, pelo orientador, pelo colaborador e pelo avaliador.
+// Para orientador e colaborador o que importa é o status da participação dele (se
+// aceitou ou recusou o convite), e não o status do trabalho — que era o que
+// aparecia antes para todo mundo. Para aluno e avaliador, que não têm status
+// próprio de participação, o status do trabalho continua sendo o correto.
+const displayStatus = computed(() => {
+    const work = props.work_data
+    const userId = props.user?.id
+
+    if (work && userId != null) {
+        // Na listagem (WorkListSerializer) advisor vem como id puro; no detalhe
+        // (WorkDetailSerializer) vem como objeto. O card é usado nos dois casos.
+        const advisorId = work.advisor?.id ?? work.advisor
+        if (advisorId != null && advisorId == userId) {
+            return resolveParticipationStatus(work.advisor_status)
+        }
+
+        const collaboration = work.work_collaborator?.find(
+            (link) => link?.collaborator?.id == userId
+        )
+        if (collaboration) {
+            return resolveParticipationStatus(collaboration.status)
+        }
+    }
+
+    return resolveStatus(props.work_status)
+})
 
 // const widthComputed = computed(()=> {
 //     if (width.value > 780) {
@@ -70,9 +99,9 @@ const { width } = useDisplay()
                                 </div>
                                 <!-- Coluna dos dados -->
                                 <div class="card-data-half d-flex align-center ga-3 flex-wrap justify-center" :style="{ width: width > 780 ? '50%' : '100%' }">
-                                    <V-Chip :size="width > 780 ? 'default' : width > 390 ? 'small' : 'x-small'"
-                                        :color="resolveStatus(props.work_status).color">
-                                        {{ resolveStatus(props.work_status).text }}
+                                    <V-Chip v-if="displayStatus" :size="width > 780 ? 'default' : width > 390 ? 'small' : 'x-small'"
+                                        :color="displayStatus.color">
+                                        {{ displayStatus.text }}
                                     </V-Chip>
                                     <VCardSubtitle>
                                         {{ work ? formatDate(work) : '' }}
