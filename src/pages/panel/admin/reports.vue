@@ -42,6 +42,29 @@ type AdvisorReportData = {
   groups: AdvisorReportGroup[]
 }
 
+type TeamReportRow = {
+  id: string
+  title: string
+  status_label: string
+  advisor_label: string
+  advisor_status_label: string
+  submitted_at?: string | null
+}
+
+type TeamReportGroup = {
+  team_id: number | string
+  team_members: ReportTeamMember[]
+  team_members_label: string
+  classes_label: string
+  count: number
+  rows: TeamReportRow[]
+}
+
+type TeamReportData = {
+  total_works: number
+  groups: TeamReportGroup[]
+}
+
 const router = useRouter();
 const authStore = useAuth();
 
@@ -51,6 +74,10 @@ const loading = ref(true);
 const loadingReport = ref(false);
 const downloading = ref(false);
 const reportData = ref<AdvisorReportData | null>(null);
+
+const loadingTeamReport = ref(false);
+const downloadingTeamReport = ref(false);
+const teamReportData = ref<TeamReportData | null>(null);
 
 const canUseAdminArea = computed(() => {
   return authStore.user?.user_type === "ADMIN" || Boolean(authStore.user?.is_management);
@@ -67,6 +94,9 @@ const reportGroups = computed(() => reportData.value?.groups ?? []);
 const totalWorks = computed(() => reportData.value?.total_works ?? 0);
 const reportAvailable = computed(() => Boolean(reportData.value?.available));
 const reportMessage = computed(() => reportData.value?.message ?? "");
+
+const teamReportGroups = computed(() => teamReportData.value?.groups ?? []);
+const totalTeamWorks = computed(() => teamReportData.value?.total_works ?? 0);
 
 function isEditionOpen(edition: IEdition) {
   return Boolean(
@@ -138,9 +168,48 @@ async function downloadReport() {
   }
 }
 
+async function loadTeamReportData() {
+  teamReportData.value = null;
+
+  if (!selectedEdition.value) {
+    return;
+  }
+
+  loadingTeamReport.value = true;
+  try {
+    teamReportData.value = await WorkService.getAdminTeamProposalReportData({
+      edition: selectedEdition.value,
+    });
+  } catch (error) {
+    showMessage("Nao foi possivel carregar o relatorio por equipe.", "error", 3000, "top-right", "light", false);
+  } finally {
+    loadingTeamReport.value = false;
+  }
+}
+
+async function downloadTeamReport() {
+  if (!selectedEdition.value) return;
+
+  downloadingTeamReport.value = true;
+  try {
+    await WorkService.downloadAdminTeamProposalReport({
+      edition: selectedEdition.value,
+    });
+    showMessage("Relatorio gerado com sucesso.", "success", 2200, "top-right", "light", false);
+  } catch (error: any) {
+    showMessage(error?.message || "Nao foi possivel gerar o relatorio.", "error", 3500, "top-right", "light", false);
+  } finally {
+    downloadingTeamReport.value = false;
+  }
+}
+
+async function loadAllReports() {
+  await Promise.all([loadReportData(), loadTeamReportData()]);
+}
+
 watch(selectedEdition, () => {
   if (!loading.value) {
-    loadReportData();
+    loadAllReports();
   }
 });
 
@@ -151,7 +220,7 @@ onMounted(async () => {
   }
 
   await loadInitialData();
-  await loadReportData();
+  await loadAllReports();
 });
 </script>
 
@@ -288,6 +357,98 @@ onMounted(async () => {
           <p v-if="reportData?.available_after" class="report-date">
             Disponivel a partir de {{ formatDate(reportData.available_after) }}
           </p>
+        </template>
+      </section>
+
+      <section class="report-surface">
+        <div class="report-title-row">
+          <div>
+            <h2>Propostas submetidas por equipe</h2>
+            <p>Alunos que submeteram propostas e seus trabalhos, agrupados por equipe. Disponivel a qualquer momento.</p>
+          </div>
+          <v-chip color="primary" variant="tonal">
+            {{ totalTeamWorks }} trabalhos
+          </v-chip>
+        </div>
+
+        <div class="report-filters">
+          <v-select
+            v-model="selectedEdition"
+            density="comfortable"
+            hide-details
+            item-title="title"
+            item-value="value"
+            :items="editionOptions"
+            label="Edicao"
+            prepend-inner-icon="mdi-calendar"
+            variant="outlined"
+          />
+          <v-btn
+            class="report-download"
+            color="primary"
+            :disabled="!selectedEdition"
+            :loading="downloadingTeamReport"
+            prepend-icon="mdi-file-excel-box"
+            @click="downloadTeamReport"
+          >
+            Exportar XLSX
+          </v-btn>
+        </div>
+
+        <v-skeleton-loader v-if="loading || loadingTeamReport" type="table" />
+
+        <template v-else>
+          <v-alert
+            v-if="!selectedEdition"
+            class="mb-4"
+            color="blue-grey"
+            icon="mdi-alert-circle-outline"
+            variant="tonal"
+          >
+            Selecione uma edicao.
+          </v-alert>
+
+          <div v-if="teamReportGroups.length" class="advisor-groups">
+            <section v-for="group in teamReportGroups" :key="group.team_id" class="advisor-group">
+              <div class="advisor-group-header">
+                <div>
+                  <p>Equipe</p>
+                  <h3>{{ group.team_members_label }}</h3>
+                </div>
+                <v-chip color="blue-grey" size="small" variant="tonal">
+                  {{ group.classes_label }}
+                </v-chip>
+              </div>
+
+              <div class="report-table-wrap">
+                <v-table density="comfortable">
+                  <thead>
+                    <tr>
+                      <th>Trabalho</th>
+                      <th>Status do trabalho</th>
+                      <th>Orientador</th>
+                      <th>Status do orientador</th>
+                      <th>Data da submissao</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="row in group.rows" :key="row.id">
+                      <td>{{ row.title }}</td>
+                      <td>{{ row.status_label }}</td>
+                      <td>{{ row.advisor_label }}</td>
+                      <td>{{ row.advisor_status_label }}</td>
+                      <td>{{ row.submitted_at || "-" }}</td>
+                    </tr>
+                  </tbody>
+                </v-table>
+              </div>
+            </section>
+          </div>
+
+          <div v-else-if="selectedEdition" class="report-empty">
+            <v-icon color="primary" icon="mdi-file-search-outline" size="44" />
+            <p>Nenhum trabalho encontrado para esta edicao.</p>
+          </div>
         </template>
       </section>
     </v-container>
