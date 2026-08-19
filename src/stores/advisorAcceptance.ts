@@ -1,8 +1,17 @@
 import { defineStore } from "pinia";
+import { computed, ref } from "vue";
 import AcceptanceService from "@/services/acceptance";
 import { useSessionStorage } from "@vueuse/core";
 import { showMessage } from "@/utils/toastify";
 import { useAuth } from "./auth";
+
+type AdvisorWorkLimit = {
+  limit: number;
+  accepted_works: number;
+  remaining: number | null;
+  limit_reached: boolean;
+  within_decision_window: boolean;
+};
 
 export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
   const authStore = useAuth()
@@ -15,6 +24,11 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
     isAdvisor: false,
     verificationToken: "",
   });
+  // Fora do sessionStorage de proposito: a contagem de orientacoes muda a cada
+  // aceite, inclusive de outras equipes, e um valor cacheado entre abas mostraria
+  // o botao liberado quando ja nao esta.
+  const limitStatus = ref<AdvisorWorkLimit | null>(null);
+  const limitLoading = ref(false);
   const user = authStore.user
 
   const setLoading = (loading: boolean) => {
@@ -52,6 +66,32 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
       state.value.verificationToken = "";
     }
   };
+
+  // Busca quantas orientações o professor já aceitou nesta edição, para a tela
+  // conseguir desabilitar o botão e explicar o motivo antes do clique.
+  const fetchLimitStatus = async () => {
+    if (!state.value.verificationToken) return null;
+    limitLoading.value = true;
+    try {
+      limitStatus.value = await AcceptanceService.getAdvisorWorkLimit(
+        state.value.verificationToken
+      );
+      return limitStatus.value;
+    } finally {
+      limitLoading.value = false;
+    }
+  };
+
+  const limitReached = computed(() => limitStatus.value?.limit_reached === true);
+
+  const limitMessage = computed(() => {
+    const status = limitStatus.value;
+    if (!status?.limit_reached) return "";
+    return (
+      `Você já aceitou ${status.accepted_works} de ${status.limit} orientações ` +
+      `permitidas nesta edição e não pode aceitar mais este trabalho.`
+    );
+  });
 
   const acceptAsAdvisor = async () => {
     setLoading(true);
@@ -93,6 +133,11 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
 
   return {
     state,
+    limitStatus,
+    limitLoading,
+    limitReached,
+    limitMessage,
+    fetchLimitStatus,
     setToken,
     setAdvisorInfo,
     acceptAsAdvisor,

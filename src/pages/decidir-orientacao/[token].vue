@@ -11,12 +11,16 @@ const acceptanceStore = useAdvisorAcceptance()
 const done = ref(false)
 const actionTaken = ref('')
 
-onMounted(() => {
+onMounted(async () => {
   if (!authStore.isLogged) {
     router.replace(`/auth/login?redirect=${encodeURIComponent(route.fullPath)}`)
     return
   }
   acceptanceStore.setToken(String(route.params.token))
+  // Consulta quantas orientações o professor já aceitou nesta edição: se o limite
+  // já estourou, o botão "Aceitar" nasce desabilitado com o motivo no tooltip,
+  // em vez de deixar ele clicar e tomar o erro do backend.
+  await acceptanceStore.fetchLimitStatus()
 })
 
 async function aceitar() {
@@ -45,17 +49,27 @@ async function recusar() {
           Você foi convidado para orientar um trabalho no Painel de Integração. Ao aceitar, o trabalho será
           automaticamente aprovado e você poderá atribuir uma nota mais adiante.
         </p>
+        <v-alert v-if="acceptanceStore.limitReached" type="warning" variant="tonal" density="compact">
+          {{ acceptanceStore.limitMessage }}
+        </v-alert>
         <div class="w-100 d-flex ga-4">
           <v-btn color="error" variant="outlined" width="50%" @click="recusar"
             :loading="acceptanceStore.state.loading && actionTaken === 'recusar'"
             :disabled="acceptanceStore.state.loading">
             Recusar
           </v-btn>
-          <v-btn color="primary" width="50%" @click="aceitar"
-            :loading="acceptanceStore.state.loading && actionTaken === 'aceitar'"
-            :disabled="acceptanceStore.state.loading">
-            Aceitar
-          </v-btn>
+          <!-- O botão desabilitado não recebe eventos de ponteiro, então o tooltip
+               precisa ficar ancorado neste wrapper e não no próprio v-btn. -->
+          <div style="width: 50%">
+            <v-btn color="primary" block @click="aceitar"
+              :loading="acceptanceStore.state.loading && actionTaken === 'aceitar'"
+              :disabled="acceptanceStore.state.loading || acceptanceStore.limitReached">
+              Aceitar
+            </v-btn>
+            <v-tooltip v-if="acceptanceStore.limitReached" activator="parent" location="top">
+              {{ acceptanceStore.limitMessage }}
+            </v-tooltip>
+          </div>
         </div>
       </template>
       <template v-else>

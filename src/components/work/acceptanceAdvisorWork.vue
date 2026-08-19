@@ -9,9 +9,15 @@
           Você foi convidado para ser o orientador deste trabalho. Ao aceitar, o trabalho será automaticamente aprovado e você poderá atribuir uma nota. Deseja aceitar?
       </v-card-text>
 
+      <v-card-text v-if="acceptanceStore.limitReached" class="pt-0">
+        <v-alert type="warning" variant="tonal" density="compact">
+          {{ acceptanceStore.limitMessage }}
+        </v-alert>
+      </v-card-text>
+
       <v-card-actions class="justify-end">
         <v-btn
-          
+
           @click="close"
           variant="flat"
         >
@@ -27,15 +33,22 @@
           Recusar
         </v-btn>
 
-        <v-btn
-          color="primary"
-          @click="aceitar"
-          :loading="acceptanceStore.state.loading && action === 'aceitar'"
-          :disabled="acceptanceStore.state.loading"
-          variant="flat"
-        >
-          Aceitar
-        </v-btn>
+        <!-- O botão desabilitado não recebe eventos de ponteiro, então o tooltip
+             precisa ficar ancorado neste wrapper e não no próprio v-btn. -->
+        <div>
+          <v-btn
+            color="primary"
+            @click="aceitar"
+            :loading="acceptanceStore.state.loading && action === 'aceitar'"
+            :disabled="acceptanceStore.state.loading || acceptanceStore.limitReached"
+            variant="flat"
+          >
+            Aceitar
+          </v-btn>
+          <v-tooltip v-if="acceptanceStore.limitReached" activator="parent" location="top">
+            {{ acceptanceStore.limitMessage }}
+          </v-tooltip>
+        </div>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -69,11 +82,16 @@ function updateShow() {
   show.value = isAdvisor && pendingStatus;
 }
 
-onMounted(() => {
-  
+onMounted(async () => {
+
   if (props.work) {
     acceptanceStore.setAdvisorInfo(props.work);
     updateShow();
+    // Só faz sentido consultar o limite para quem realmente vai decidir: o
+    // endpoint responde 403 para quem não é o orientador do trabalho.
+    if (acceptanceStore.state.isAdvisor) {
+      await acceptanceStore.fetchLimitStatus();
+    }
   }
 });
 
