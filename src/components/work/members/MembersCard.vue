@@ -87,6 +87,13 @@ const emits = defineEmits([
 const grade = ref<any>(null)
 const watchWork = computed(() => workStore?.currentWork?.id)
 
+const memberTurma = computed(() => {
+    const classes = props.member?.user_classes
+    if (!classes || classes.length === 0) return ''
+    const latest = classes.reduce((a: any, b: any) => (b.year > a.year ? b : a))
+    return latest.class_name
+})
+
 onMounted(async () => {
     if (props.member.name && workStore?.currentWork) {
         await studentAssesment.fetchAssessment(props.member.name, workStore?.currentWork.id)
@@ -118,7 +125,7 @@ const { width } = useDisplay()
 
         <div :style="{ width: width > 780 ? '' : '100%' }">
             <div class="d-flex align-center ga-5">
-                <p :style="{ fontSize: width > 780 ? '18px' : '15px' }">{{ props.member.name }}</p>
+                <p :style="{ fontSize: width > 780 ? '18px' : '15px' }">{{ props.member.name }}{{ memberTurma ? ` - ${memberTurma}` : '' }}</p>
                 <v-chip v-if="props.user_id == props.member_id" color="blue-darken-2 d-flex justify-center align-center"
                     style="width: 60px; height: 25px; font-size: 13px;">Você</v-chip>
 
