@@ -201,6 +201,14 @@ const openUserGrade = (member: object) => {
               :work_advisor="workStore?.currentWork?.advisor ?? null" />
           </MembersContainer>
 
+          <SelectNewAdvisorDialog
+            v-if="
+              workStore?.currentWork?.advisor_status === 3 &&
+              resolveUserFunction(workStore.currentWork, authStore.user) === 'STUDENT'
+            "
+            :work="workStore.currentWork"
+          />
+
           <MembersContainer title="Colaboradores do Trabalho" :attribute="width > 780 ? 'Status do Convite' : ''">
             <MembersCard v-for="(collaborator, index) in workStore.currentWork.work_collaborator"
               :member="collaborator.collaborator" :member_id="collaborator.collaborator.id"
