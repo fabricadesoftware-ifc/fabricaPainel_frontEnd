@@ -53,6 +53,7 @@ declare module 'vue' {
     RecivedTableV: typeof import('./components/RecivedTableV.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SelectNewAdvisorDialog: typeof import('./components/work/SelectNewAdvisorDialog.vue')['default']
     StepbyStepHeader: typeof import('./components/steps/layout/StepbyStepHeader.vue')['default']
     StepbyStepHeaderMobile: typeof import('./components/steps/layout/mobile/StepbyStepHeaderMobile.vue')['default']
     StepContainer: typeof import('./components/inputs/StepContainer.vue')['default']

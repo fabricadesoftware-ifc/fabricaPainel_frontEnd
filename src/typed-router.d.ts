@@ -31,6 +31,8 @@ declare module 'vue-router/auto-routes' {
     '/panel/admin/': RouteRecordInfo<'/panel/admin/', '/panel/admin', Record<never, never>, Record<never, never>>,
     '/panel/admin/proposals': RouteRecordInfo<'/panel/admin/proposals', '/panel/admin/proposals', Record<never, never>, Record<never, never>>,
     '/panel/admin/reports': RouteRecordInfo<'/panel/admin/reports', '/panel/admin/reports', Record<never, never>, Record<never, never>>,
+    '/panel/certificates/': RouteRecordInfo<'/panel/certificates/', '/panel/certificates', Record<never, never>, Record<never, never>>,
+    '/panel/certificates/validate': RouteRecordInfo<'/panel/certificates/validate', '/panel/certificates/validate', Record<never, never>, Record<never, never>>,
     '/panel/editions/': RouteRecordInfo<'/panel/editions/', '/panel/editions', Record<never, never>, Record<never, never>>,
     '/panel/editions/add/': RouteRecordInfo<'/panel/editions/add/', '/panel/editions/add', Record<never, never>, Record<never, never>>,
     '/panel/editions/view/[id]': RouteRecordInfo<'/panel/editions/view/[id]', '/panel/editions/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
@@ -101,6 +103,14 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/panel/admin/reports.vue': {
       routes: '/panel/admin/reports'
+      views: never
+    }
+    'src/pages/panel/certificates/index.vue': {
+      routes: '/panel/certificates/'
+      views: never
+    }
+    'src/pages/panel/certificates/validate.vue': {
+      routes: '/panel/certificates/validate'
       views: never
     }
     'src/pages/panel/editions/index.vue': {
