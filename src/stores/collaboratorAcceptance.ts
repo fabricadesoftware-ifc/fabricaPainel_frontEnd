@@ -10,6 +10,8 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
     error: null as string | null,
     accepted: false,
     rejected: false,
+    // Token não encontrado = decisão já tomada em outro lugar, não é erro pra retry.
+    alreadyDecided: false,
     collaboratorStatus: null as number | null, // 1=pendente, 2=aceito, 3=cancelado
     isCollaborator: false,
     verificationToken: "",
@@ -23,24 +25,19 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
     state.value.error = message;
   };
 
-  // Usado na página de decisão aberta pelo link do email (/decidir-colaboracao/[token]),
-  // onde ainda não temos o "work" carregado — só o token que veio na própria URL.
+  // Usado pela página /decidir-colaboracao/[token], que só tem o token da URL.
   const setToken = (token: string) => {
     state.value.verificationToken = token;
     state.value.accepted = false;
     state.value.rejected = false;
+    state.value.alreadyDecided = false;
     state.value.error = null;
   };
 
   const setCollaboratorInfo = (work: any) => {
     const auth = useAuth();
     const userId = auth.user.id;
-    // console.log("userId logado:", userId);
-    // console.log("work_collaborators:", work.work_collaborator);
     const collab = work.work_collaborator?.find((c: any) => c.collaborator.id == userId);
-    // console.log("collab encontrado:", collab);
-    // console.log("collab status:", collab?.status);
-    // console.log("collab verification_token:", collab?.verification_token);
     if (collab) {
       state.value.isCollaborator = true;
       state.value.collaboratorStatus = collab.status; // 1=pendente, 2=aceito, 3=cancelado
@@ -63,6 +60,10 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
       state.value.collaboratorStatus = 2; // 2 = aceito
       return true;
     } catch (error: any) {
+      if (error.status === 404) {
+        state.value.alreadyDecided = true;
+        return false;
+      }
       setError(error.message);
       showMessage(error.message, 'error', 3000, 'top-right', 'light', false)
       return false;
@@ -84,6 +85,10 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
       state.value.collaboratorStatus = 3; // 3 = cancelado/recusado
       return true;
     } catch (error: any) {
+      if (error.status === 404) {
+        state.value.alreadyDecided = true;
+        return false;
+      }
       setError(error.message);
       showMessage(error.message, 'error', 3000, 'top-right', 'light', false)
       return false;

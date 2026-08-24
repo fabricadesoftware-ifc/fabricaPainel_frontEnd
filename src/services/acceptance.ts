@@ -11,23 +11,30 @@ class AcceptanceService {
     const response = error?.response;
     const backendMessage = response?.data?.error || response?.data?.detail;
 
+    // Status HTTP anexado pra store distinguir 404 (token já usado) de outras falhas.
+    const buildError = (message: string) => {
+      const err = new Error(message);
+      (err as any).status = response?.status;
+      return err;
+    };
+
     if (backendMessage) {
-      throw new Error(backendMessage);
+      throw buildError(backendMessage);
     }
 
     if (!response) {
-      throw new Error(
+      throw buildError(
         "Nao foi possivel conectar ao servidor. Verifique sua conexao e tente novamente."
       );
     }
 
     if (response.status >= 500) {
-      throw new Error(
+      throw buildError(
         "Erro interno no servidor ao registrar sua decisao. Avise a organizacao do evento."
       );
     }
 
-    throw new Error(`Failed to ${action} acceptance`);
+    throw buildError(`Failed to ${action} acceptance`);
   }
 
     async acceptAdvisorWork(verificationToken: string) {

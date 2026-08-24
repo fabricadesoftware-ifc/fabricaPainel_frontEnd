@@ -104,17 +104,11 @@ const aceitar = async () => {
   const success = await acceptanceStore.acceptAsAdvisor();
   action.value = "";
 
-  // Se o backend recusou (ex.: fora do período de aceitação), não segue com os
-  // próximos passos nem mexe no status local — o erro já foi mostrado ao usuário.
   if (!success) return;
 
   show.value = false;
-  workStore.state.currentWork.advisor_status = 2
-  await workStore.getWork(props.work.id)
-
-  await workStore.approveWork(workStore?.currentWork?.verification_token)
-  workStore.state.currentWork.status = 2
-
+  // Store já encadeia accept-advisor-work + accept-submission; só falta atualizar a tela.
+  await workStore.getWork(props.work.id);
 };
 
 const recusar = async () => {
@@ -125,9 +119,7 @@ const recusar = async () => {
   if (!success) return;
 
   show.value = false;
-  workStore.state.currentWork.advisor_status = 3
-
-  await workStore.rejectWork(workStore?.currentWork?.verification_token)
-  workStore.state.currentWork.status = 4
+  // reject-advisor-work já é auto-suficiente no backend, sem segundo passo como no aceite.
+  await workStore.getWork(props.work.id);
 };
 </script>

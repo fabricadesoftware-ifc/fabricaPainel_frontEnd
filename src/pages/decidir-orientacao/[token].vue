@@ -39,10 +39,25 @@ async function recusar() {
 </script>
 
 <template>
-  <v-main class="w-100 h-100 d-flex align-center justify-center">
+  <v-main class="w-100 h-100 d-flex align-center justify-center" style="position: relative">
+    <v-btn
+      icon="mdi-close"
+      variant="text"
+      size="small"
+      style="position: absolute; top: 16px; right: 16px"
+      to="/panel/works"
+      aria-label="Fechar"
+    />
     <v-sheet v-if="authStore.isLogged" class="rounded-xl border pa-6 d-flex flex-column ga-4" max-width="500px"
       min-width="300px">
-      <template v-if="!done">
+      <template v-if="acceptanceStore.state.alreadyDecided">
+        <p class="text-h5 font-weight-bold">Esta decisão já foi tomada</p>
+        <p>
+          Este convite de orientação já foi aceito ou recusado anteriormente — não há mais nada para decidir aqui.
+        </p>
+        <router-link to="/panel/works">Acessar o painel</router-link>
+      </template>
+      <template v-else-if="!done">
         <p class="text-h5 font-weight-bold">Convite para orientação</p>
         <v-divider />
         <p>

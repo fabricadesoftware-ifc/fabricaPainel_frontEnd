@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import AcceptanceService from "@/services/acceptance";
+import WorkService from "@/services/works";
 import { useSessionStorage } from "@vueuse/core";
 import { showMessage } from "@/utils/toastify";
 import { useAuth } from "./auth";
@@ -18,15 +19,15 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
   const state = useSessionStorage("advisorAcceptance", {
     loading: false,
     error: null as string | null,
+    // Token não encontrado = decisão já tomada em outro lugar, não é erro pra retry.
+    alreadyDecided: false,
     accepted: false,
     rejected: false,
     advisorStatus: null as number | null, // 1=pendente, 2=aceito, 3=cancelado
     isAdvisor: false,
     verificationToken: "",
   });
-  // Fora do sessionStorage de proposito: a contagem de orientacoes muda a cada
-  // aceite, inclusive de outras equipes, e um valor cacheado entre abas mostraria
-  // o botao liberado quando ja nao esta.
+  // Fora do sessionStorage: contagem muda a cada aceite de outras equipes também.
   const limitStatus = ref<AdvisorWorkLimit | null>(null);
   const limitLoading = ref(false);
   const user = authStore.user
@@ -39,24 +40,17 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
     state.value.error = message;
   };
 
-  // Usado na página de decisão aberta pelo link do email (/decidir-orientacao/[token]),
-  // onde ainda não temos o "work" carregado — só o token que veio na própria URL.
+  // Usado pela página /decidir-orientacao/[token], que só tem o token da URL.
   const setToken = (token: string) => {
     state.value.verificationToken = token;
     state.value.accepted = false;
     state.value.rejected = false;
+    state.value.alreadyDecided = false;
     state.value.error = null;
   };
 
   const setAdvisorInfo = (work: any) => {
-    // console.log("userId logado:", userId);
-    // console.log("work_collaborators:", work.work_collaborator);
-    
-    // console.log("collab encontrado:", collab);
-    // console.log("collab status:", collab?.status);
-    // console.log("collab verification_token:", collab?.verification_token);
     if (work.advisor.id == user.id) {
-     
       state.value.isAdvisor = true;
       state.value.advisorStatus = work.advisor_status; // 1=pendente, 2=aceito, 3=cancelado
       state.value.verificationToken = work.verification_token;
@@ -93,17 +87,45 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
     );
   });
 
+  // Aceite exige 2 chamadas no backend (accept-advisor-work + accept-submission,
+  // com o token rotacionado entre elas); centralizado aqui pra não repetir/esquecer
+  // esse segundo passo em cada tela que aceita orientação.
+  const finalizeSubmissionApproval = async (token: string, attempt = 1): Promise<void> => {
+    try {
+      await WorkService.approveWork(token);
+    } catch (error: any) {
+      if (attempt < 3) {
+        await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
+        return finalizeSubmissionApproval(token, attempt + 1);
+      }
+      // Decisão do orientador já está salva; só avisa que a aprovação final falhou.
+      console.error("Falha ao finalizar aprovação do trabalho após aceite do orientador:", error);
+      showMessage(
+        'Orientação aceita, mas houve falha ao concluir a aprovação do trabalho. Recarregue a página em instantes ou avise o suporte.',
+        'error', 5000, 'top-right', 'light', false
+      );
+    }
+  };
+
   const acceptAsAdvisor = async () => {
     setLoading(true);
     setError(null);
     try {
       if (!state.value.verificationToken) throw new Error("Token de verificação não encontrado.");
-      await AcceptanceService.acceptAdvisorWork(state.value.verificationToken);
+      const data = await AcceptanceService.acceptAdvisorWork(state.value.verificationToken);
+      if (data?.verification_token) {
+        state.value.verificationToken = data.verification_token;
+        await finalizeSubmissionApproval(data.verification_token);
+      }
       showMessage('Orientação aceita com sucesso!', 'success', 2000, 'top-right', 'light', true)
       state.value.accepted = true;
       state.value.advisorStatus = 2; // 2 = aceito
       return true;
     } catch (error: any) {
+      if (error.status === 404) {
+        state.value.alreadyDecided = true;
+        return false;
+      }
       setError(error.message);
       showMessage(error.message, 'error', 3000, 'top-right', 'light', false)
       return false;
@@ -123,6 +145,10 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
       state.value.advisorStatus = 3; // 3 = cancelado/recusado
       return true;
     } catch (error: any) {
+      if (error.status === 404) {
+        state.value.alreadyDecided = true;
+        return false;
+      }
       setError(error.message);
       showMessage(error.message, 'error', 3000, 'top-right', 'light', false)
       return false;
