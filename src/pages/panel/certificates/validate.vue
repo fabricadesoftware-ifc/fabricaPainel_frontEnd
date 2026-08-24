@@ -162,7 +162,7 @@ const isValidCertificate = () => {
                         Nome do Participante
                       </p>
                       <p class="font-weight-bold text-h6">
-                        {{ certificateStore.validationResult.user }}
+                        {{ certificateStore.validationResult?.user }}
                       </p>
                     </div>
                   </div>
@@ -176,7 +176,7 @@ const isValidCertificate = () => {
                         Título do Trabalho
                       </p>
                       <p class="font-weight-bold text-h6">
-                        {{ certificateStore.validationResult.work }}
+                        {{ certificateStore.validationResult?.work }}
                       </p>
                     </div>
                   </div>
@@ -188,7 +188,7 @@ const isValidCertificate = () => {
                     <div>
                       <p class="text-caption text-grey mb-1">Ano da Edição</p>
                       <p class="font-weight-bold text-h6">
-                        {{ certificateStore.validationResult.year }}
+                        {{ certificateStore.validationResult?.year }}
                       </p>
                     </div>
                   </div>
@@ -205,7 +205,7 @@ const isValidCertificate = () => {
                         class="font-weight-medium text-body-2"
                         style="word-break: break-all"
                       >
-                        {{ certificateStore.validationResult.hash_validate }}
+                        {{ certificateStore.validationResult?.hash_validate }}
                       </p>
                     </div>
                   </div>
