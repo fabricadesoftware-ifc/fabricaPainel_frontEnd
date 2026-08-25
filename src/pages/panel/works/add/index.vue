@@ -13,6 +13,7 @@ const actualstep = ref(0)
 const openNav = ref(false)
 const { width } = useDisplay()
 const open_dialog = ref(false)
+const submitting = ref(false)
 const useractualstep = Number(localStorage.getItem('actualstep'))
 
 const ReturnValidatedtoDisabledBtn = computed(() => {
@@ -46,15 +47,30 @@ async function DialogActive(type) {
 
   if (type == 'Sim') {
     workStore.WorkStorage.integrated_project = true
+    open_dialog.value = !open_dialog.value
 
   } else if (type == 'Não') {
     workStore.WorkStorage.integrated_project = false
+    open_dialog.value = !open_dialog.value
   }
   else if (type == 'Confirmar') {
-    await workStore.sendWork()
-    NextStep()
+    // Envio em andamento: guarda contra clique duplo e, se falhar, mantém o
+    // diálogo aberto (a store já mostra o toast com o motivo) em vez de fechar
+    // como se tivesse dado certo e deixar o aluno sem saber que nada foi enviado.
+    if (submitting.value) return
+    submitting.value = true
+    try {
+      await workStore.sendWork()
+      NextStep()
+      open_dialog.value = !open_dialog.value
+    } catch (error) {
+      console.error('Erro ao enviar trabalho:', error)
+    } finally {
+      submitting.value = false
+    }
+  } else {
+    open_dialog.value = !open_dialog.value
   }
-  open_dialog.value = !open_dialog.value
 }
 
 function NextStep() {
@@ -156,7 +172,7 @@ onMounted(async () => {
       :btn_confirm_text="actualstep === 0 ? 'Sim' : 'Confirmar'"
       :title="actualstep === 0 ? 'Este trabalho origina de um projeto integrador?' : 'AVISO ⚠️'"
       :description="actualstep === 0 ? 'Se caso o trabalho originar de um projeto integrador, será permitido adicionar somente pessoas da mesma turma na proposta. Caso contrário, será permitido alunos de turmas e cursos divergentes' : 'Após submeter o trabalho um email será enviado para os colaboradores e para o orientador do seu projeto'"
-      v-model="open_dialog" @confirmation="DialogActive" />
+      v-model="open_dialog" :loading="submitting" @confirmation="DialogActive" />
     <VNavigationDrawer v-model="openNav" location="right" width="300">
       <router-link to="/">
         <div class="d-flex justify-center align-center ga-3 pa-5">

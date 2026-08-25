@@ -1,9 +1,10 @@
 import api from "@/plugins/api";
+import { buildApiError } from "@/utils/apiError";
 
 class WorkService {
-  private handleError(error: any, action: string) {
-    console.error(`Error during ${action}:`, error);
-    throw new Error(`Failed to ${action} work`);
+  private handleError(error: any, fallbackMessage: string): never {
+    console.error(`Error: ${fallbackMessage}`, error);
+    throw buildApiError(error, fallbackMessage);
   }
 
   async sendWork(work: any) {
@@ -11,7 +12,7 @@ class WorkService {
       const { data } = await api.post("/work/", work);
       return data;
     } catch (error) {
-      this.handleError(error, "create");
+      this.handleError(error, "Não foi possível enviar o trabalho.");
     }
   }
 
@@ -20,7 +21,7 @@ class WorkService {
       const { data } = await api.get(`/work/${id}/`);
       return data;
     } catch (error) {
-      this.handleError(error, "fetch");
+      this.handleError(error, "Não foi possível carregar o trabalho.");
     }
   }
 
@@ -29,7 +30,7 @@ class WorkService {
       const { data } = await api.get("/work/");
       return data;
     } catch (error) {
-      this.handleError(error, "fetch");
+      this.handleError(error, "Não foi possível carregar a lista de trabalhos.");
     }
   }
 
@@ -38,7 +39,7 @@ class WorkService {
       const { data } = await api.get("/work/admin-kanban/", { params });
       return data;
     } catch (error) {
-      this.handleError(error, "fetch admin kanban");
+      this.handleError(error, "Não foi possível carregar o kanban administrativo.");
     }
   }
 
@@ -47,7 +48,7 @@ class WorkService {
       const { data } = await api.get("/work/admin-advisor-report-data/", { params });
       return data;
     } catch (error) {
-      this.handleError(error, "fetch admin advisor report data");
+      this.handleError(error, "Não foi possível carregar o relatório de orientadores.");
     }
   }
 
@@ -75,7 +76,7 @@ class WorkService {
 
       return response.data;
     } catch (error: any) {
-      let message = "Nao foi possivel gerar o relatorio.";
+      let message = "Não foi possível gerar o relatório. Tente novamente em instantes.";
       const payload = error?.response?.data;
 
       if (payload instanceof Blob) {
@@ -99,7 +100,7 @@ class WorkService {
       const { data } = await api.get("/work/admin-team-report-data/", { params });
       return data;
     } catch (error) {
-      this.handleError(error, "fetch admin team report data");
+      this.handleError(error, "Não foi possível carregar o relatório de equipes.");
     }
   }
 
@@ -129,7 +130,7 @@ class WorkService {
 
       return response.data;
     } catch (error: any) {
-      let message = "Nao foi possivel gerar o relatorio.";
+      let message = "Não foi possível gerar o relatório. Tente novamente em instantes.";
       const payload = error?.response?.data;
 
       if (payload instanceof Blob) {
@@ -155,7 +156,7 @@ class WorkService {
       );
       return data;
     } catch (error) {
-      this.handleError(error, "fetch");
+      this.handleError(error, "Não foi possível carregar os trabalhos.");
     }
   }
 
@@ -164,7 +165,7 @@ class WorkService {
       const { data } = await api.patch(`/work/${workId}/`, partialWorkData);
       return data;
     } catch (error) {
-      this.handleError(error, "patch");
+      this.handleError(error, "Não foi possível atualizar o trabalho.");
     }
   }
 
@@ -199,17 +200,17 @@ class WorkService {
 
       return null
     } catch (error) {
-      this.handleError(error, "fetch");
+      this.handleError(error, "Não foi possível carregar seus trabalhos.");
     }
   }
 
   async approveWork(verification_token: string) {
     try {
-      
+
       const { data } = await api.get(`/accept-submission/${verification_token}/`);
       return data;
     } catch (error) {
-      this.handleError(error, "approve");
+      this.handleError(error, "Não foi possível aprovar o trabalho.");
     }
   }
 
@@ -218,7 +219,7 @@ class WorkService {
       const { data } = await api.get(`/reject-submission/${verification_token}/`);
       return data;
     } catch (error) {
-      this.handleError(error, "reject");
+      this.handleError(error, "Não foi possível rejeitar o trabalho.");
     }
   }
 
@@ -229,7 +230,7 @@ class WorkService {
       })
       return data
     } catch (error) {
-      this.handleError(error, "remove work")
+      this.handleError(error, "Não foi possível cancelar a proposta.");
     }
   }
 }

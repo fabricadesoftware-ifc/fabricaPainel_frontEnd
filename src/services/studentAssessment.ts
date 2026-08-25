@@ -1,9 +1,10 @@
 import api from "@/plugins/api";
+import { buildApiError } from "@/utils/apiError";
 
 class StudentAssessmentService {
-  private handleError(error: any, action: string) {
-    console.error(`Error during ${action}:`, error);
-    throw new Error(`Failed to ${action} student assessment`);
+  private handleError(error: any, fallbackMessage: string): never {
+    console.error(`Error: ${fallbackMessage}`, error);
+    throw buildApiError(error, fallbackMessage);
   }
 
   async getAssessments() {
@@ -12,7 +13,7 @@ class StudentAssessmentService {
 
       return data;
     } catch (error) {
-      this.handleError(error, "fetch");
+      this.handleError(error, "Não foi possível carregar as notas dos estudantes.");
     }
   }
 
@@ -23,7 +24,7 @@ class StudentAssessmentService {
       );
       return data;
     } catch (error) {
-      this.handleError(error, "fetch");
+      this.handleError(error, "Não foi possível carregar a nota do estudante.");
     }
   }
 
@@ -48,7 +49,7 @@ class StudentAssessmentService {
 
       return data;
     } catch (error) {
-      this.handleError(error, "fetch");
+      this.handleError(error, "Não foi possível gerar o relatório de notas.");
     }
   }
 
@@ -57,7 +58,7 @@ class StudentAssessmentService {
       const { data } = await api.post("student-assessments/", assessment);
       return data;
     } catch (error) {
-      this.handleError(error, "create");
+      this.handleError(error, "Não foi possível salvar a nota do estudante.");
     }
   }
 
@@ -66,7 +67,7 @@ class StudentAssessmentService {
       const { data } = await api.put(`student-assessments/${id}/`, assessment);
       return data;
     } catch (error) {
-      this.handleError(error, "update");
+      this.handleError(error, "Não foi possível atualizar a nota do estudante.");
     }
   }
 
@@ -78,7 +79,7 @@ class StudentAssessmentService {
       );
       return data;
     } catch (error) {
-      this.handleError(error, "patch");
+      this.handleError(error, "Não foi possível atualizar a nota do estudante.");
     }
   }
 
@@ -86,7 +87,7 @@ class StudentAssessmentService {
     try {
       await api.delete(`student-assessments/${id}/`);
     } catch (error) {
-      this.handleError(error, "delete");
+      this.handleError(error, "Não foi possível remover a nota do estudante.");
     }
   }
 }

@@ -51,6 +51,7 @@ export const useWork = defineStore('work', () => {
       state.value.myWorks = myWorks
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
     } finally {
       setLoading(false)
     }
@@ -69,10 +70,11 @@ export const useWork = defineStore('work', () => {
     setError(null)
     try {
       const works = await WorkService.getWorks()
-      
+
       state.value.works = works
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
     } finally {
       setLoading(false)
     }
@@ -145,7 +147,18 @@ export const useWork = defineStore('work', () => {
         state.value.works.push(newWork)
         showMessage('Trabalho enviado com sucesso!', 'success', 2000, 'top-right', 'light', true)
 
-
+        // Só limpa o formulário depois de confirmar o envio — se limpasse mesmo na
+        // falha, uma queda passageira de rede apagava tudo que o aluno preencheu e
+        // ele tinha que refazer a submissão inteira do zero.
+        WorkStorage.title = ''
+        WorkStorage.abstract = ''
+        WorkStorage.field = []
+        WorkStorage.advisor = []
+        WorkStorage.cross_cutting_theme = { name: 'Escolha Uma Matéria Transversal' } as ICrossCuttingTheme
+        WorkStorage.team = []
+        WorkStorage.ods = []
+        WorkStorage.collaborators = []
+        WorkStorage.integrated_project = false
 
     } catch (error: any) {
       console.error('Erro completo na submissão:', error)
@@ -161,19 +174,10 @@ export const useWork = defineStore('work', () => {
       }
 
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
       throw error
     } finally {
       setLoading(false)
-      // Limpa o WorkStorage
-        WorkStorage.title = ''
-        WorkStorage.abstract = ''
-        WorkStorage.field = []
-        WorkStorage.advisor = []
-        WorkStorage.cross_cutting_theme = { name: 'Escolha Uma Matéria Transversal' } as ICrossCuttingTheme
-        WorkStorage.team = []
-        WorkStorage.ods = []
-        WorkStorage.collaborators = []
-        WorkStorage.integrated_project = false
     }
   }
 
@@ -188,6 +192,8 @@ export const useWork = defineStore('work', () => {
       }
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
+      throw error
     } finally {
       setLoading(false)
     }
@@ -207,6 +213,7 @@ export const useWork = defineStore('work', () => {
       state.value.currentWork = selectedWork
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
     } finally {
       setLoading(false)
     }
@@ -228,6 +235,7 @@ export const useWork = defineStore('work', () => {
       return works
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
     } finally {
       setLoading(false)
     }
@@ -240,9 +248,12 @@ export const useWork = defineStore('work', () => {
 
       await WorkService.approveWork(state.value.currentWork.verification_token)
       state.value.currentWork.status = 2
+      showMessage('Trabalho aprovado com sucesso!', 'success', 2000, 'top-right', 'light', true)
 
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
+      throw error
     } finally {
       setLoading(false)
     }
@@ -259,6 +270,8 @@ export const useWork = defineStore('work', () => {
 
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
+      throw error
     } finally {
       setLoading(false)
     }
@@ -276,6 +289,8 @@ export const useWork = defineStore('work', () => {
 
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
+      throw error
     } finally {
       setLoading(false)
     }

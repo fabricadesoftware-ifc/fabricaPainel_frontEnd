@@ -1,6 +1,7 @@
 import { reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
 import AssessmentService from '@/services/assessment'
+import { showMessage } from '@/utils/toastify'
 
 export const useAssessmentStore = defineStore('assessment', () => {
   const state = reactive({
@@ -40,8 +41,11 @@ export const useAssessmentStore = defineStore('assessment', () => {
     try {
       const newAssessment = await AssessmentService.createAssessment(assessment)
       state.assessments.push(newAssessment)
+      showMessage('Nota salva com sucesso!', 'success', 2000, 'top-right', 'light', true)
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
+      throw error
     } finally {
       setLoading(false)
     }
@@ -82,8 +86,11 @@ export const useAssessmentStore = defineStore('assessment', () => {
       if (index !== -1) {
         state.assessments[index] = updatedAssessment
       }
+      showMessage('Nota atualizada com sucesso!', 'success', 2000, 'top-right', 'light', true)
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
+      throw error
     } finally {
       setLoading(false)
     }
