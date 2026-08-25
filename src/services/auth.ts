@@ -1,9 +1,10 @@
 import api from '@/plugins/api'
+import { buildApiError } from '@/utils/apiError'
 
 class AuthService {
-  private handleError (error: any, action: string) {
-    console.error(`Error during ${action}:`, error)
-    throw new Error(`Failed to ${action} user`)
+  private handleError (error: any, fallbackMessage: string): never {
+    console.error(`Error: ${fallbackMessage}`, error)
+    throw buildApiError(error, fallbackMessage)
   }
 
   async forgetPassword (email: string) {
@@ -11,7 +12,7 @@ class AuthService {
       const { data } = await api.post('forget_password/', { email })
       return data
     } catch (error) {
-      this.handleError(error, 'forgot password')
+      this.handleError(error, 'Não foi possível solicitar a redefinição de senha.')
     }
   }
 
@@ -20,7 +21,7 @@ class AuthService {
       const { data } = await api.post('reset_password/', { new_password, token })
       return data
     } catch (error) {
-      this.handleError(error, 'reset password')
+      this.handleError(error, 'Não foi possível redefinir sua senha.')
     }
   }
 
@@ -29,28 +30,28 @@ class AuthService {
       const { data } = await api.post('validate_password_token/', { token })
       return data
     } catch (error) {
-      this.handleError(error, 'verify token')
+      this.handleError(error, 'Este link de redefinição é inválido ou expirou.')
     }
   }
 
   async login (email: string, password: string) {
     try {
-    
+
       const { data } = await api.post('token/', { email, password },)
-     
+
       return data
     } catch (error) {
-      this.handleError(error, 'login')
+      this.handleError(error, 'Não foi possível entrar. Verifique seu email e senha.')
     }
   }
 
   async getUser (id: string) {
     try {
       const { data } = await api.get(`users/${id}`)
-   
+
       return data
     } catch (error) {
-      this.handleError(error, 'get user')
+      this.handleError(error, 'Não foi possível carregar o usuário.')
     }
   }
 
@@ -59,7 +60,7 @@ class AuthService {
       const { data } = await api.get(`users/me/`)
       return data
     } catch (error) {
-      this.handleError(error, 'get user')
+      this.handleError(error, 'Não foi possível carregar seus dados.')
     }
   }
 
@@ -68,7 +69,7 @@ class AuthService {
       const { data } = await api.get('users/?type=STUDENT')
       return data
     } catch (error) {
-      this.handleError(error, 'get students')
+      this.handleError(error, 'Não foi possível carregar os estudantes.')
     }
   }
 
@@ -77,7 +78,7 @@ class AuthService {
       const { data } = await api.get(`team/${id}`)
       return data
     } catch (error) {
-      this.handleError(error, 'get group')
+      this.handleError(error, 'Não foi possível carregar a equipe.')
     }
   }
 
@@ -86,7 +87,7 @@ class AuthService {
       const { data } = await api.post('token/refresh/', { refresh })
       return data
     } catch (error) {
-      this.handleError(error, 'refresh token')
+      this.handleError(error, 'Sua sessão expirou.')
     }
   }
 
@@ -99,22 +100,34 @@ class AuthService {
       const { data } = await api.get(`team/?team_member_id=${id}`)
       return data
     } catch (error) {
-      this.handleError(error, 'get user team')
+      this.handleError(error, 'Não foi possível carregar sua equipe.')
     }
   }
 
   async updateTeam (id: string, team: any) {
-    const { data } = await api.patch(`team/${id}/`, team)
-    return data
+    try {
+      const { data } = await api.patch(`team/${id}/`, team)
+      return data
+    } catch (error) {
+      this.handleError(error, 'Não foi possível atualizar a equipe.')
+    }
   }
 
   async createTeam (team: any) {
-    const { data } = await api.post('team/', team)
-    return data
+    try {
+      const { data } = await api.post('team/', team)
+      return data
+    } catch (error) {
+      this.handleError(error, 'Não foi possível criar a equipe.')
+    }
   }
 
   async deleteTeam (id: string | number) {
-    await api.delete(`team/${id}/`)
+    try {
+      await api.delete(`team/${id}/`)
+    } catch (error) {
+      this.handleError(error, 'Não foi possível remover a equipe.')
+    }
   }
 
   async acceptInvite (team: any) {
@@ -122,7 +135,7 @@ class AuthService {
       const { data } = await api.patch('team/', team)
       return data
     } catch (error) {
-      this.handleError(error, 'accept invite')
+      this.handleError(error, 'Não foi possível aceitar o convite.')
     }
   }
 
@@ -131,7 +144,7 @@ class AuthService {
       const { data } = await api.post('resend-invite-team/', token)
       return data
     } catch (error) {
-      this.handleError(error, 'resend invite')
+      this.handleError(error, 'Não foi possível reenviar o convite.')
     }
   }
 
@@ -140,7 +153,7 @@ class AuthService {
       const { data } = await api.get(`cross_cutting_theme/?advisor_id=${id}`)
       return data
     } catch (error) {
-      this.handleError(error, 'get user themes')
+      this.handleError(error, 'Não foi possível carregar os temas.')
     }
   }
 

@@ -21,6 +21,10 @@ import { useDisplay } from 'vuetify';
         has_backButton: {
           type: Boolean,
           default: false
+        },
+        loading: {
+          type: Boolean,
+          default: false
         }
     })
   
@@ -34,11 +38,11 @@ import { useDisplay } from 'vuetify';
         </h1>
         <VCardText class="pa-5" style="font-size: 18px;">{{ props.description }}</VCardText>
         <VCardActions class="w-100 d-flex  justify-end">
-          <VBtn v-if="has_backButton" class="font-weight-bold" @click="$emit('back', 'back')">{{ 'Voltar' }}
+          <VBtn v-if="has_backButton" :disabled="loading" class="font-weight-bold" @click="$emit('back', 'back')">{{ 'Voltar' }}
           </VBtn>
-          <VBtn class="font-weight-bold" @click="$emit('confirmation', props.btn_cancel_text)">{{ btn_cancel_text }}
+          <VBtn :disabled="loading" class="font-weight-bold" @click="$emit('confirmation', props.btn_cancel_text)">{{ btn_cancel_text }}
           <template #prepend></template></VBtn>
-          <VBtn class="bg-blue rounded-xl" style="width: 150px;" @click="$emit('confirmation', btn_confirm_text)">{{ btn_confirm_text }}</VBtn>
+          <VBtn class="bg-blue rounded-xl" style="width: 150px;" :loading="loading" @click="$emit('confirmation', btn_confirm_text)">{{ btn_confirm_text }}</VBtn>
         </VCardActions>
       </VCard>
     </div>
