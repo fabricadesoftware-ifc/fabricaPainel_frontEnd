@@ -18,8 +18,7 @@ export async function giveWorkGradeFn(
     (s: any) => s.user.id === Number(authStore?.user?.id)
   )?.id;
 
-  // O diálogo só fecha se a nota realmente foi salva — antes fechava sempre,
-  // então uma falha silenciosa dava a impressão de que a nota tinha sido gravada.
+  // Só fecha o diálogo se a nota realmente foi salva.
   try {
     if (is_work_grade) {
       const assessment: any = {

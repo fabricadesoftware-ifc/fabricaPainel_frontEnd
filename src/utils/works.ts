@@ -87,9 +87,11 @@ type Work = {
 };
 //@ts-ignore
 export const resolveUserFunction = (work: Work, user) => {
-  const advisor = work.advisor.id == user.id;
-  const evaluator = work.evaluator.some((s) => s.user.id == user.id);
-  const collaborator = work.work_collaborator.some(
+  if (!work || !user) return "STUDENT";
+
+  const advisor = work.advisor?.id == user.id;
+  const evaluator = work.evaluator?.some((s) => s.user.id == user.id);
+  const collaborator = work.work_collaborator?.some(
     (s) => s.collaborator.id == user.id
   );
 
@@ -103,8 +105,6 @@ export const resolveUserFunction = (work: Work, user) => {
     return "STUDENT";
   }
 };
-
-// Work Header Functions and Constants
 
 export const userCase = reactive<{
   text: string;
