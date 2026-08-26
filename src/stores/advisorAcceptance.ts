@@ -50,6 +50,12 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
   };
 
   const setAdvisorInfo = (work: any) => {
+    if (!work || !work.advisor) {
+      state.value.isAdvisor = false;
+      state.value.advisorStatus = null;
+      state.value.verificationToken = "";
+      return;
+    }
     if (work.advisor.id == user.id) {
       state.value.isAdvisor = true;
       state.value.advisorStatus = work.advisor_status; // 1=pendente, 2=aceito, 3=cancelado

@@ -35,6 +35,12 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
   };
 
   const setCollaboratorInfo = (work: any) => {
+    if (!work) {
+      state.value.isCollaborator = false;
+      state.value.collaboratorStatus = null;
+      state.value.verificationToken = "";
+      return;
+    }
     const auth = useAuth();
     const userId = auth.user.id;
     const collab = work.work_collaborator?.find((c: any) => c.collaborator.id == userId);

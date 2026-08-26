@@ -91,7 +91,6 @@ export const useWork = defineStore('work', () => {
     let teamId = null
     try {
 
-      // Primeiro verifica se o usuário tem uma equipe, e se tiver compara se alguma das equipes é a mesma que ele colocou no trabalho
       if ((authStore.user as any)?.team && (authStore.user as any).team.length > 0) {
 
         const userTeamData = (authStore.user as any).team
@@ -107,7 +106,6 @@ export const useWork = defineStore('work', () => {
         }
         }
       }
-        // Se não há equipe existente, criar uma nova com os membros do WorkStorage
       if (!teamId) {
 
 
@@ -147,9 +145,8 @@ export const useWork = defineStore('work', () => {
         state.value.works.push(newWork)
         showMessage('Trabalho enviado com sucesso!', 'success', 2000, 'top-right', 'light', true)
 
-        // Só limpa o formulário depois de confirmar o envio — se limpasse mesmo na
-        // falha, uma queda passageira de rede apagava tudo que o aluno preencheu e
-        // ele tinha que refazer a submissão inteira do zero.
+        // Só limpa o formulário depois de confirmar o envio, senão uma falha passageira
+        // apagava tudo que o aluno preencheu e ele tinha que refazer do zero.
         WorkStorage.title = ''
         WorkStorage.abstract = ''
         WorkStorage.field = []
@@ -163,8 +160,7 @@ export const useWork = defineStore('work', () => {
     } catch (error: any) {
       console.error('Erro completo na submissão:', error)
 
-      // Se a equipe foi criada agora mas o envio do trabalho falhou, desfaz a criação
-      // para não deixar uma equipe órfã travando os alunos numa próxima tentativa
+      // Desfaz a equipe criada agora pra não deixar uma órfã travando nova tentativa.
       if (teamCreatedInThisCall && teamId) {
         try {
           await (authStore as any).deleteTeam(teamId)
@@ -199,9 +195,7 @@ export const useWork = defineStore('work', () => {
     }
   }
 
-  // data q vem = 2024-09-28T01:33:06.548Z
   const coverteData = (date: any) => {
-    // converter para dd/mm/aaaa hh:mm
     return new Date(date).toLocaleString('pt-BR')
   }
 
@@ -226,10 +220,9 @@ export const useWork = defineStore('work', () => {
       const works = await WorkService.getUserWorks(user_type, id)
       if (user_type == 'STUDENT') state.value.userWorks = works
       else {
-        state.value.advisorWorks = works.advisor
-        state.value.collaboratorWorks = works.collaborator
-        state.value.evaluatorWorks = works.evaluator
-
+        state.value.advisorWorks = works?.advisor ?? []
+        state.value.collaboratorWorks = works?.collaborator ?? []
+        state.value.evaluatorWorks = works?.evaluator ?? []
       }
     
       return works

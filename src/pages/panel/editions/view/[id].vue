@@ -115,36 +115,62 @@ function showinfo() {
             >
           </div>
           <v-row class="ga-10">
-            <v-col class="d-flex flex-column ga-4 justify-start mt-10" cols="6">
-              <span class="text-primary font-weight-bold">INFORMAÇÕES</span>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Nome:</span>
-                <span>{{ edition.edition_name }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data do Evento:</span>
-                <span>{{ formatDate(edition.event_date) }}</span>
-              </row>
-              <span class="text-primary font-weight-bold">PRAZOS E DATAS</span>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data de início de Submissão:</span>
-                <span>{{ formatDate(edition.initial_submission_date) }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data de fim de Submissão:</span>
-                <span>{{ formatDate(edition.final_submission_date) }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data de início de Avaliações:</span>
-                <span>{{ formatDate(edition.initial_evaluators_date) }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data de fim de Avaliações</span>
-                <span>{{ formatDate(edition.final_evaluators_date) }}</span>
-              </row>
-              <v-btn @click="showinfo()" class="bg-blue">{{
-                textButton
-              }}</v-btn>
+            <v-col cols="12" md="8" class="mt-10">
+              <v-card class="pa-6" rounded="xl" variant="outlined">
+                <div class="d-flex align-center ga-2 mb-3">
+                  <v-icon color="primary">mdi-information-outline</v-icon>
+                  <span class="text-primary font-weight-bold">INFORMAÇÕES</span>
+                </div>
+                <div class="d-flex justify-space-between py-2">
+                  <span class="text-grey-darken-1">Nome</span>
+                  <span class="font-weight-medium">{{ edition.edition_name }}</span>
+                </div>
+                <v-divider />
+                <div class="d-flex justify-space-between py-2">
+                  <span class="text-grey-darken-1">Carga Horária</span>
+                  <span class="font-weight-medium">{{ edition.workload }}H</span>
+                </div>
+                <v-divider />
+                <div class="d-flex justify-space-between py-2">
+                  <span class="text-grey-darken-1">Data do Evento</span>
+                  <span class="font-weight-medium">{{ formatDate(edition.event_date) }} até {{ formatDate(edition.final_event_date) }}</span>
+                </div>
+
+                <div class="d-flex align-center ga-2 mt-8 mb-3">
+                  <v-icon color="primary">mdi-calendar-clock</v-icon>
+                  <span class="text-primary font-weight-bold">PRAZOS E DATAS</span>
+                </div>
+
+                <p class="text-caption text-grey-darken-1 font-weight-bold mb-1">SUBMISSÃO</p>
+                <div class="d-flex justify-space-between py-1">
+                  <span class="text-grey-darken-1">1ª janela</span>
+                  <span class="font-weight-medium">{{ formatDate(edition.initial_submission_date) }} até {{ formatDate(edition.final_submission_date) }}</span>
+                </div>
+                <div class="d-flex justify-space-between py-1">
+                  <span class="text-grey-darken-1">2ª janela</span>
+                  <span class="font-weight-medium">{{ formatDate(edition.initial_second_submission_date) }} até {{ formatDate(edition.final_second_submission_date) }}</span>
+                </div>
+
+                <p class="text-caption text-grey-darken-1 font-weight-bold mt-4 mb-1">ACEITE DO ORIENTADOR</p>
+                <div class="d-flex justify-space-between py-1">
+                  <span class="text-grey-darken-1">1ª janela</span>
+                  <span class="font-weight-medium">{{ formatDate(edition.initial_advisor_acceptance) }} até {{ formatDate(edition.final_advisor_acceptance) }}</span>
+                </div>
+                <div class="d-flex justify-space-between py-1">
+                  <span class="text-grey-darken-1">2ª janela</span>
+                  <span class="font-weight-medium">{{ formatDate(edition.initial_second_advisor_date) }} até {{ formatDate(edition.final_second_advisor_date) }}</span>
+                </div>
+
+                <p class="text-caption text-grey-darken-1 font-weight-bold mt-4 mb-1">AVALIAÇÕES</p>
+                <div class="d-flex justify-space-between py-1">
+                  <span class="text-grey-darken-1">Período</span>
+                  <span class="font-weight-medium">{{ formatDate(edition.initial_evaluators_date) }} até {{ formatDate(edition.final_evaluators_date) }}</span>
+                </div>
+
+                <v-btn @click="showinfo()" class="bg-blue mt-6" variant="flat">{{
+                  textButton
+                }}</v-btn>
+              </v-card>
             </v-col>
           </v-row>
         </div>
@@ -183,84 +209,6 @@ function showinfo() {
                 padding-bottom: 50px;
               "
             >
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  gap: 10px;
-                  margin: 30px 0px 10px;
-                "
-              >
-                <span class="text-primary font-weight-bold">INFORMAÇÕES</span>
-                <VChip
-                  class="bg-blue d-flex justify-center align-center"
-                  pill
-                  style="width: 120px; height: 30px"
-                  >Todos</VChip
-                >
-              </div>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Nome:</span>
-                <span>{{ edition.edition_name }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data do Evento:</span>
-                <span>{{ formatDate(edition.event_date) }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Carga Horária</span>
-                <span>{{ edition.workload }}H</span>
-              </row>
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  gap: 10px;
-                  margin: 30px 0px 10px;
-                "
-              >
-                <span class="text-primary font-weight-bold"
-                  >PRAZOS E DATAS</span
-                >
-                <VChip
-                  class="bg-blue d-flex justify-center align-center"
-                  pill
-                  style="width: 120px; height: 30px"
-                  >Todos</VChip
-                >
-              </div>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data do Final do Evento:</span>
-                <span>{{ formatDate(edition.final_event_date) }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data de início de Submissão:</span>
-                <span>{{ formatDate(edition.initial_submission_date) }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data de fim de Submissão:</span>
-                <span>{{ formatDate(edition.final_submission_date) }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Segunda Data de início de Submissão:</span>
-                <span>{{
-                  formatDate(edition.initial_second_submission_date)
-                }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Segunda Data de fim de Submissão:</span>
-                <span>{{
-                  formatDate(edition.final_second_submission_date)
-                }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data de início de Avaliações:</span>
-                <span>{{ formatDate(edition.initial_evaluators_date) }}</span>
-              </row>
-              <row class="d-flex pr-10" style="justify-content: space-between">
-                <span>Data de fim de Avaliações</span>
-                <span>{{ formatDate(edition.final_evaluators_date) }}</span>
-              </row>
               <div
                 style="
                   display: flex;

@@ -198,7 +198,8 @@ class WorkService {
         return works;
       }
 
-      return null
+      // ADMIN não tem orientação/colaboração/avaliação — vazio, não null, senão quebra quem lê works.advisor.
+      return { advisor: [], collaborator: [], evaluator: [] } as userWorks
     } catch (error) {
       this.handleError(error, "Não foi possível carregar seus trabalhos.");
     }

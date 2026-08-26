@@ -1,7 +1,4 @@
-// Prioridade: motivo real do backend > sem conexão > erro de servidor > fallback
-// da própria chamada. Sem isso toda falha de rede/servidor virava a mesma frase
-// genérica em inglês ("Failed to create work"), escondendo se o problema era do
-// usuário (dado inválido) ou passageiro (rede/servidor, vale tentar de novo).
+// Prioridade: motivo real do backend > sem conexão > erro de servidor > fallback da chamada.
 export function buildApiError(error: any, fallbackMessage: string): Error {
   const response = error?.response;
   const backendMessage = response?.data?.error || response?.data?.detail;

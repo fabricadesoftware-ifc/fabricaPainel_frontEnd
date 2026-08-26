@@ -31,9 +31,7 @@ export async function confirmsActionFn(
   router: any,
   close: any
 ): Promise<void> {
-  // Fecha o diálogo / navega só depois de confirmar que a chamada deu certo — antes
-  // isso acontecia sempre, então uma falha de rede fechava tudo como se tivesse
-  // funcionado e o usuário não tinha como saber que nada foi salvo.
+  // Só fecha/navega depois de confirmar sucesso, senão uma falha parecia ter funcionado.
   try {
     if (confirm === "Confirmar") {
       if (authStore.user.is_advisor && dateValidation.advisor_able_to_aprove_work) {
@@ -48,8 +46,6 @@ export async function confirmsActionFn(
       close.aprove();
     }
   } catch (error) {
-    // Store já mostrou o toast com o motivo; aqui só evita que o diálogo feche
-    // e a navegação aconteça como se a ação tivesse funcionado.
     console.error("Erro ao confirmar ação do trabalho:", error);
   }
 

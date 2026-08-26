@@ -43,12 +43,16 @@ const isLoaded = ref(false);
 
 onMounted(async () => {
   await workStore.getWork(work_id);
+  isLoaded.value = true;
+
+  // Evita rodar o resto do onMounted em cima de um work nulo se getWork falhou.
+  if (!workStore.currentWork) return;
+
   await editionStore.fetchCurrentEdition();
   await assesmentStore.getAssessmentsByWork(workStore?.currentWork?.id)
   assesmentWork.value = assesmentStore.currentAssessment[0]?.grade
   acceptanceStore.setCollaboratorInfo(workStore?.currentWork);
   advisorAcceptanceStore.setAdvisorInfo(workStore?.currentWork);
-  isLoaded.value = true;
 });
 
 const aprove = ref(false);
@@ -233,7 +237,13 @@ const openUserGrade = (member: object) => {
     </v-container>
   </LayoutPanel>
 
-  <div v-else class="d-flex align-center justify-center h-100 w-100">
+  <div v-else-if="!isLoaded" class="d-flex align-center justify-center h-100 w-100">
     <v-progress-circular indeterminate color="primary" size="64" />
+  </div>
+
+  <div v-else class="d-flex flex-column align-center justify-center h-100 w-100 ga-4">
+    <v-icon size="64" color="grey-lighten-1">mdi-alert-circle-outline</v-icon>
+    <p class="text-grey-darken-1">Não foi possível carregar este trabalho.</p>
+    <v-btn color="primary" to="/panel/works">Voltar para Propostas</v-btn>
   </div>
 </template>

@@ -54,9 +54,8 @@ async function DialogActive(type) {
     open_dialog.value = !open_dialog.value
   }
   else if (type == 'Confirmar') {
-    // Envio em andamento: guarda contra clique duplo e, se falhar, mantém o
-    // diálogo aberto (a store já mostra o toast com o motivo) em vez de fechar
-    // como se tivesse dado certo e deixar o aluno sem saber que nada foi enviado.
+    // Guarda contra clique duplo; se falhar, mantém o diálogo aberto em vez de
+    // fechar como se tivesse dado certo.
     if (submitting.value) return
     submitting.value = true
     try {
@@ -86,7 +85,6 @@ function NextStep() {
 
   }
   actualstep.value++
-  // localStorage.setItem('actualstep', actualstep.value)
 }
 
 const StepObj = computed(() => {
@@ -114,27 +112,12 @@ onUnmounted(() => {
 })
 
 onMounted(async () => {
-  // Primeiro, verificar se precisa abrir o dialog baseado no localStorage
-  // antes de modificar o actualstep
   const shouldShowIntegratedProjectDialog = useractualstep === 0
 
-  // Verificar se o usuário já tem uma equipe e pular para o próximo step
-  // if (AuthStore.user.team && AuthStore.user.team.length > 0 && actualstep.value === 0) {
-  //   // Marcar o step 0 como completo e ir para o step 1
-  //   steps.value[0].complete = true
-  //   steps.value[0].is_actual = false
-  //   steps.value[1].is_actual = true
-  //   actualstep.value = 1
-  //   localStorage.setItem('actualstep', '1')
-  // }
-
-  // Só mostrar o dialog se for primeira vez (useractualstep === 0) E não tiver equipe existente
-  // ou se for o step final (useractualstep === 6)
   if ((shouldShowIntegratedProjectDialog && actualstep.value === 0) || useractualstep === 6) {
     open_dialog.value = true
   }
 
-  // Restaurar progresso do usuário se existir
   if (useractualstep && useractualstep > 0) {
     for (let i = 0; i < useractualstep; i++) {
       steps.value[i].complete = true
