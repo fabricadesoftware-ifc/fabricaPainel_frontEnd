@@ -297,7 +297,7 @@ export const useAuth = defineStore("user", () => {
       await getTeam(data.id);
     } catch (error: any) {
       showMessage(
-        error.response.data.error,
+        error.message,
         "error",
         3000,
         "top-right",
@@ -321,7 +321,7 @@ export const useAuth = defineStore("user", () => {
       await getTeam(team.id);
     } catch (error: any) {
       showMessage(
-        error.response.data.error,
+        error.message,
         "error",
         3000,
         "top-right",
