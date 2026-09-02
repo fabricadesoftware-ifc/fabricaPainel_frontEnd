@@ -150,9 +150,14 @@ export default defineConfig(({ command }) => {
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vue: ["vue", "vue-router", "pinia"],
-          vuetify: ["vuetify"],
+        manualChunks(id: string) {
+          if (id.includes("node_modules/vuetify")) return "vuetify";
+          if (
+            id.includes("node_modules/vue-router") ||
+            id.includes("node_modules/pinia") ||
+            /node_modules\/vue\//.test(id)
+          )
+            return "vue";
         },
       },
     },
