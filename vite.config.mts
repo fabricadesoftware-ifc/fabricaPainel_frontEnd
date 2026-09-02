@@ -10,6 +10,7 @@ import VueRouter from "unplugin-vue-router/vite";
 import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import { VitePWA } from "vite-plugin-pwa";
 import Sitemap from "vite-plugin-sitemap";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
@@ -133,6 +134,11 @@ export default defineConfig(({ command }) => {
   ],
 },
     }),
+    isBuild && ViteImageOptimizer({
+      png: { quality: 75 },
+      jpg: { quality: 75 },
+      jpeg: { quality: 75 },
+    }),
     isBuild && Sitemap({
       hostname: "https://painel.fabricadesoftware.ifc.edu.br", // Substitua pelo domínio real do seu site
       dynamicRoutes: ["/", "/about"], // Liste suas rotas ou use lógica para rotas dinâmicas
@@ -147,6 +153,16 @@ export default defineConfig(({ command }) => {
     }),
   ],
   define: { "process.env": {} },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vue: ["vue", "vue-router", "pinia"],
+          vuetify: ["vuetify"],
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
