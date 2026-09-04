@@ -13,10 +13,16 @@ const { width } = useDisplay();
 const loading = ref(true);
 const downloadingYear = ref<number | null>(null);
 
-// Agrupa trabalhos por edição/ano - filtra apenas trabalhos aprovados (status 2)
+// Agrupa trabalhos por edição/ano - filtra trabalhos aprovados (status 2)
+// cuja edição já foi finalizada (certificado só existe após o fim da edição)
 const worksWithEditions = computed(() => {
   const works = workStore.userWorks || [];
-  return works.filter((work: any) => work.status === 2);
+  const today = new Date().toISOString().slice(0, 10);
+  return works.filter((work: any) => {
+    if (work.status !== 2) return false;
+    const finalEventDate = work.edition?.final_event_date;
+    return !!finalEventDate && finalEventDate <= today;
+  });
 });
 
 // Verifica se já existe certificado para determinado trabalho
