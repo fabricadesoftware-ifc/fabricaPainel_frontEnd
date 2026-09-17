@@ -65,6 +65,20 @@ type TeamReportData = {
   groups: TeamReportGroup[]
 }
 
+type TeacherWorkloadRow = {
+  teacher: ReportUser | null
+  advising_count: number
+  advising_titles: string[]
+  collaboration_count: number
+  collaboration_titles: string[]
+  total_count: number
+}
+
+type TeacherWorkloadReportData = {
+  total_teachers: number
+  groups: TeacherWorkloadRow[]
+}
+
 const router = useRouter();
 const authStore = useAuth();
 
@@ -78,6 +92,10 @@ const reportData = ref<AdvisorReportData | null>(null);
 const loadingTeamReport = ref(false);
 const downloadingTeamReport = ref(false);
 const teamReportData = ref<TeamReportData | null>(null);
+
+const loadingTeacherReport = ref(false);
+const downloadingTeacherReport = ref(false);
+const teacherReportData = ref<TeacherWorkloadReportData | null>(null);
 
 const canUseAdminArea = computed(() => {
   return authStore.user?.user_type === "ADMIN" || Boolean(authStore.user?.is_management);
@@ -97,6 +115,9 @@ const reportMessage = computed(() => reportData.value?.message ?? "");
 
 const teamReportGroups = computed(() => teamReportData.value?.groups ?? []);
 const totalTeamWorks = computed(() => teamReportData.value?.total_works ?? 0);
+
+const teacherReportGroups = computed(() => teacherReportData.value?.groups ?? []);
+const totalTeachers = computed(() => teacherReportData.value?.total_teachers ?? 0);
 
 function isEditionOpen(edition: IEdition) {
   return Boolean(
@@ -203,8 +224,43 @@ async function downloadTeamReport() {
   }
 }
 
+async function loadTeacherReportData() {
+  teacherReportData.value = null;
+
+  if (!selectedEdition.value) {
+    return;
+  }
+
+  loadingTeacherReport.value = true;
+  try {
+    teacherReportData.value = await WorkService.getAdminTeacherWorkloadReportData({
+      edition: selectedEdition.value,
+    });
+  } catch (error) {
+    showMessage("Nao foi possivel carregar o relatorio de orientacao e colaboracao.", "error", 3000, "top-right", "light", false);
+  } finally {
+    loadingTeacherReport.value = false;
+  }
+}
+
+async function downloadTeacherReport() {
+  if (!selectedEdition.value) return;
+
+  downloadingTeacherReport.value = true;
+  try {
+    await WorkService.downloadAdminTeacherWorkloadReport({
+      edition: selectedEdition.value,
+    });
+    showMessage("Relatorio gerado com sucesso.", "success", 2200, "top-right", "light", false);
+  } catch (error: any) {
+    showMessage(error?.message || "Nao foi possivel gerar o relatorio.", "error", 3500, "top-right", "light", false);
+  } finally {
+    downloadingTeacherReport.value = false;
+  }
+}
+
 async function loadAllReports() {
-  await Promise.all([loadReportData(), loadTeamReportData()]);
+  await Promise.all([loadReportData(), loadTeamReportData(), loadTeacherReportData()]);
 }
 
 watch(selectedEdition, () => {
@@ -448,6 +504,82 @@ onMounted(async () => {
           <div v-else-if="selectedEdition" class="report-empty">
             <v-icon color="primary" icon="mdi-file-search-outline" size="44" />
             <p>Nenhum trabalho encontrado para esta edicao.</p>
+          </div>
+        </template>
+      </section>
+
+      <section class="report-surface">
+        <div class="report-title-row">
+          <div>
+            <h2>Orientacao e colaboracao por professor</h2>
+            <p>Quantidade de trabalhos que cada professor orienta e nos quais colabora.</p>
+          </div>
+          <v-chip color="primary" variant="tonal">
+            {{ totalTeachers }} professores
+          </v-chip>
+        </div>
+
+        <div class="report-filters">
+          <v-select
+            v-model="selectedEdition"
+            density="comfortable"
+            hide-details
+            item-title="title"
+            item-value="value"
+            :items="editionOptions"
+            label="Edicao"
+            prepend-inner-icon="mdi-calendar"
+            variant="outlined"
+          />
+          <v-btn
+            class="report-download"
+            color="primary"
+            :disabled="!selectedEdition"
+            :loading="downloadingTeacherReport"
+            prepend-icon="mdi-file-excel-box"
+            @click="downloadTeacherReport"
+          >
+            Exportar XLSX
+          </v-btn>
+        </div>
+
+        <v-skeleton-loader v-if="loading || loadingTeacherReport" type="table" />
+
+        <template v-else>
+          <v-alert
+            v-if="!selectedEdition"
+            class="mb-4"
+            color="blue-grey"
+            icon="mdi-alert-circle-outline"
+            variant="tonal"
+          >
+            Selecione uma edicao.
+          </v-alert>
+
+          <div v-if="teacherReportGroups.length" class="report-table-wrap">
+            <v-table density="comfortable">
+              <thead>
+                <tr>
+                  <th>Professor</th>
+                  <th>Orientacoes</th>
+                  <th>Colaboracoes</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in teacherReportGroups" :key="personLabel(row.teacher)">
+                  <td>{{ personLabel(row.teacher) }}</td>
+                  <td>{{ row.advising_count }}</td>
+                  <td>{{ row.collaboration_count }}</td>
+                  <td>{{ row.total_count }}</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </div>
+
+          <div v-else-if="selectedEdition" class="report-empty">
+            <v-icon color="primary" icon="mdi-file-search-outline" size="44" />
+            <p>Nenhum professor encontrado para esta edicao.</p>
           </div>
         </template>
       </section>
