@@ -151,7 +151,6 @@ export default defineConfig(({ command }) => {
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          if (id.includes("node_modules/vuetify")) return "vuetify";
           if (
             id.includes("node_modules/vue-router") ||
             id.includes("node_modules/pinia") ||

@@ -100,23 +100,41 @@
     // execução (em vez de uma string literal) para o Vite não tentar resolvê-lo
     // durante a transformação do arquivo — isso quebraria `npm run dev`, já que
     // o plugin do PWA nem está registrado ali.
+    // Registro direto em vez de virtual:pwa-register/vue: esse módulo virtual só
+    // existe no bundle e, com o import montado em runtime, nunca carregava em
+    // produção. Resultado: o SW não instalava (sem cache offline) e o aviso de
+    // nova versão nunca aparecia.
     if (!import.meta.env.PROD || !('serviceWorker' in navigator)) return
 
     try {
-      const swRegisterModule = ['virtual:pwa-register', 'vue'].join('/')
-      const { useRegisterSW } = await import(/* @vite-ignore */ swRegisterModule)
-      const { updateServiceWorker } = useRegisterSW({
-        onNeedRefresh() {
-          showUpdatePrompt.value = true
-        },
-        onRegisteredSW(_swUrl: string, registration: ServiceWorkerRegistration | undefined) {
-          if (!registration) return
-          // Verifica periodicamente se há uma versão nova publicada,
-          // já que a aba pode ficar aberta por horas.
-          setInterval(() => registration.update(), 60 * 60 * 1000)
-        },
+      const hadController = !!navigator.serviceWorker.controller
+      const registration = await navigator.serviceWorker.register('/sw.js')
+
+      // Recarrega só quando a troca é de uma versão anterior já controlando a aba
+      // (não na primeira instalação).
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (hadController) window.location.reload()
       })
-      doUpdateServiceWorker = () => updateServiceWorker(true)
+
+      const promptIfWaiting = (worker: ServiceWorker | null) => {
+        if (worker && navigator.serviceWorker.controller) showUpdatePrompt.value = true
+      }
+
+      // Versão nova já esperando (aba aberta antes do deploy).
+      promptIfWaiting(registration.waiting)
+
+      registration.addEventListener('updatefound', () => {
+        const worker = registration.installing
+        worker?.addEventListener('statechange', () => {
+          if (worker.state === 'installed') promptIfWaiting(worker)
+        })
+      })
+
+      doUpdateServiceWorker = () => registration.waiting?.postMessage({ type: 'SKIP_WAITING' })
+
+      // Verifica periodicamente se há uma versão nova publicada,
+      // já que a aba pode ficar aberta por horas.
+      setInterval(() => registration.update(), 60 * 60 * 1000)
     } catch (error) {
       console.error('Falha ao registrar o service worker:', error)
     }

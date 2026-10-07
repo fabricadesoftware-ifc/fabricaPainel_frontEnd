@@ -7,6 +7,7 @@ import { useEdition } from "@/stores/edition";
 import { IEdition } from "@/interfaces/edition";
 import { useAuth } from "@/stores/auth";
 import { useStudentAssessment } from "@/stores/studentAssessment";
+import { parseDateValue } from "@/utils/global";
 const { state, fetchEditions } = useEdition();
 
 const router = useRoute();
@@ -23,7 +24,7 @@ const formatDate = computed(() => {
       month: "2-digit",
       day: "2-digit",
     };
-    return new Date(dateTime || "").toLocaleDateString("pt-BR", options);
+    return parseDateValue(dateTime || "").toLocaleDateString("pt-BR", options);
   };
 });
 
@@ -48,7 +49,7 @@ const able_to_download_grades = computed(() => {
 const upcomingEdition = computed<IEdition[]>(() => {
   return state?.editions?.filter((edition) => {
     if (!edition.initial_submission_date) return false;
-    return new Date(edition.initial_submission_date) > new Date();
+    return parseDateValue(edition.initial_submission_date) > new Date();
   });
 });
 

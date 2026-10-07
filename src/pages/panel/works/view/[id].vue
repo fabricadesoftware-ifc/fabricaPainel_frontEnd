@@ -50,7 +50,7 @@ onMounted(async () => {
 
   await editionStore.fetchCurrentEdition();
   await assesmentStore.getAssessmentsByWork(workStore?.currentWork?.id)
-  assesmentWork.value = assesmentStore.currentAssessment[0]?.grade
+  assesmentWork.value = assesmentStore.currentAssessment?.[0]?.grade
   acceptanceStore.setCollaboratorInfo(workStore?.currentWork);
   advisorAcceptanceStore.setAdvisorInfo(workStore?.currentWork);
 });
@@ -113,9 +113,9 @@ const giveWorkGrade = async (grade: Grade) => {
 
   if (grade.is_work_grade) {
     await assesmentStore.getAssessmentsByWork(workStore?.currentWork?.id)
-    assesmentWork.value = assesmentStore.currentAssessment[0].grade
+    assesmentWork.value = assesmentStore.currentAssessment?.[0]?.grade
   } else {
-    await studentAssesment.fetchAssessment(memberGrade.value.name, workStore?.currentWork?.id)
+    await studentAssesment.fetchAssessment(memberGrade.value.id, workStore?.currentWork?.id)
   }
 };
 

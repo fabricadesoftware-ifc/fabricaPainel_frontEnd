@@ -42,6 +42,7 @@ export const useAdvisorAcceptance = defineStore("AdvisorAcceptance", () => {
 
   // Usado pela página /decidir-orientacao/[token], que só tem o token da URL.
   const setToken = (token: string) => {
+    state.value.loading = false;
     state.value.verificationToken = token;
     state.value.accepted = false;
     state.value.rejected = false;

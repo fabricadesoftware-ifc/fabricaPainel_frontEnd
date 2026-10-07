@@ -8,7 +8,7 @@ const authStore = useAuth();
 const openNav = ref(false)
 const { lgAndUp } = useDisplay();
 
-import banner1 from '@/assets/home_banner.png';
+import banner1 from '@/assets/home_banner.webp';
 import banner2 from '@/assets/home_banner2.jpg';
 import banner3 from '@/assets/home_banner3.jpg';
 

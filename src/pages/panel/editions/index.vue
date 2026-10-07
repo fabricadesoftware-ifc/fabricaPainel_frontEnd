@@ -7,6 +7,7 @@ import { useEdition } from "@/stores/edition";
 import { useAuth } from "@/stores/auth";
 import { useDisplay } from "vuetify";
 import { IEdition } from "@/interfaces/edition";
+import { parseDateValue } from "@/utils/global";
 
 const { user } = useAuth();
 const { width } = useDisplay();
@@ -25,7 +26,7 @@ const formatDate = computed(() => {
       month: "2-digit",
       day: "2-digit",
     };
-    return new Date(dateTime).toLocaleDateString("pt-BR", options);
+    return parseDateValue(dateTime).toLocaleDateString("pt-BR", options);
   };
 });
 

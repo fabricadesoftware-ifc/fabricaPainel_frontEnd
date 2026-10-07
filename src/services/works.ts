@@ -239,14 +239,17 @@ class WorkService {
           collaborator: [],
           evaluator: [],
         }
-        let response = await api.get(`/work/?advisor_id=${userId}`);
-        response.data.forEach((item: any) => works.advisor.push(item));
-        response = await api.get(`/work/?collaborator_id=${userId}`);
-        response.data.forEach((item: any) => {
+        // Requisições independentes: em paralelo para não somar a latência de cada uma (conexão ruim).
+        const [advisorRes, collaboratorRes, evaluatorRes] = await Promise.all([
+          api.get(`/work/?advisor_id=${userId}`),
+          api.get(`/work/?collaborator_id=${userId}`),
+          api.get(`/work/?evaluator_id=${userId}`),
+        ]);
+        advisorRes.data.forEach((item: any) => works.advisor.push(item));
+        collaboratorRes.data.forEach((item: any) => {
           if (!works.collaborator.find((work: any) => work.id === item.id)) works.collaborator.push(item);
         });
-        response = await api.get(`/work/?evaluator_id=${userId}`);
-        response.data.forEach((item: any) => {
+        evaluatorRes.data.forEach((item: any) => {
           if (!works.evaluator.find((work: any) => work.id === item.id)) works.evaluator.push(item);
         });
         return works;

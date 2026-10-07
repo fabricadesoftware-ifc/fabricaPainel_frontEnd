@@ -98,7 +98,7 @@ export const AddUser = async ({
 
   const student = users[0]
   const isAlreadyInTeam = await verifyUserWorksFn(student)
-  const isRepeated = team.some(stu => stu.registration === Number(selectedStudent.user))
+  const isRepeated = team.some(stu => stu.id === student.id)
 
   if (!isProjectIntegrated) {
     if (!isAlreadyInTeam && !isRepeated) {

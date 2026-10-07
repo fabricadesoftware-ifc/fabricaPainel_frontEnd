@@ -27,6 +27,7 @@ export const useCollaboratorAcceptance = defineStore("collaboratorAcceptance", (
 
   // Usado pela página /decidir-colaboracao/[token], que só tem o token da URL.
   const setToken = (token: string) => {
+    state.value.loading = false;
     state.value.verificationToken = token;
     state.value.accepted = false;
     state.value.rejected = false;

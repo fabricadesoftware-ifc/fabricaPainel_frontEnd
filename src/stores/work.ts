@@ -202,6 +202,7 @@ export const useWork = defineStore('work', () => {
   const getWork = async (workId: string) => {
     setLoading(true)
     setError(null)
+    if (state.value.currentWork?.id !== workId) state.value.currentWork = null
     try {
       const selectedWork = await WorkService.getWork(workId)
       state.value.currentWork = selectedWork

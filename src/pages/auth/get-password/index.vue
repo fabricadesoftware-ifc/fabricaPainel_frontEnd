@@ -26,7 +26,7 @@ const getPassword = async () => {
 }
 </script>
 <template>
-  <v-parallax style="height: 100vh;" src="@/assets/home_banner.png" class="custom-parallax" gradient="rgba(0,0,0,0.69)">
+  <v-parallax style="height: 100vh;" src="@/assets/home_banner.webp" class="custom-parallax" gradient="rgba(0,0,0,0.69)">
     <Loading :loading="loading" />
      <PanelLogo />
     <div class="d-flex justify-center mt-16">
