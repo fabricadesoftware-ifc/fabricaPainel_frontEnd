@@ -95,27 +95,22 @@ const memberTurma = computed(() => {
 })
 
 onMounted(async () => {
-    if (props.member.name && workStore?.currentWork) {
-        await studentAssesment.fetchAssessment(props.member.name, workStore?.currentWork.id)
-
-        if (studentAssesment?.assesment[0]) {
-            console.log(studentAssesment.assesment[0])
-            grade.value = studentAssesment.assesment[0]
-        }
+    if (props.member.id && workStore?.currentWork) {
+        const assessments = await studentAssesment.fetchAssessment(props.member.id, workStore?.currentWork.id)
+        grade.value = assessments?.[0] ?? null
     }
     console.log(props, grade.value)
     console.log(workStore?.currentWork)
 })
 
 watch(studentAssesment.assesments, async (newVal) => {
-    await studentAssesment.fetchAssessment(props.member.name, workStore?.currentWork.id)
-    grade.value = studentAssesment?.assesment[0]
+    const assessments = await studentAssesment.fetchAssessment(props.member.id, workStore?.currentWork.id)
+    grade.value = assessments?.[0] ?? null
 })
 
 watch(watchWork, async (newVal) => {
-    await studentAssesment.fetchAssessment(props.member.name, workStore?.currentWork.id)
-
-    grade.value = studentAssesment.assesment[0]
+    const assessments = await studentAssesment.fetchAssessment(props.member.id, workStore?.currentWork.id)
+    grade.value = assessments?.[0] ?? null
 })
 
 const { width } = useDisplay() 
@@ -157,7 +152,7 @@ const { width } = useDisplay()
                 :color="!grade ? 'yellow-darken-3' : 'green-darken-3'" class="d-flex justify-center align-center bg-red"
                 label :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px' }">
                 {{ !grade ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' :
-                    assesmentStore?.currentAssessment[0] && grade ? (Number(assesmentStore?.currentAssessment[0]?.grade) +
+                    assesmentStore?.currentAssessment?.[0] && grade ? (Number(assesmentStore?.currentAssessment?.[0]?.grade) +
                         Number(grade.grade)) / 2 : 'Aguardando Trabalho' }}
             </v-chip>
 
@@ -169,9 +164,9 @@ const { width } = useDisplay()
                 </v-chip>
                 <v-chip color="green-darken-3" class="d-flex justify-center align-center" label
                     :style="{ fontSize: width > 780 ? '14px' : '12px', minWidth: width > 780 ? '140px' : '120px' }">
-                    Nota Final: {{ assesmentStore?.currentAssessment[0] && grade ?
-                        (Number(assesmentStore?.currentAssessment[0]?.grade)
-                            + Number(grade.grade)) / 2 : '-' }}
+                    Nota Final: {{ assesmentStore?.currentAssessment?.[0] && grade ?
+                        ((Number(assesmentStore?.currentAssessment?.[0]?.grade)
+                            + Number(grade.grade)) / 2).toFixed(2) : '-' }}
                 </v-chip>
             </div>
 
@@ -180,7 +175,7 @@ const { width } = useDisplay()
                 :color="!grade ? 'yellow-darken-3' : 'green-darken-3'" class="d-flex justify-center align-center" label
                 :style="{ width: width > 780 ? '180px' : '150px', fontSize: width > 780 ? '14px' : '12px' }">
                 {{ !grade ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' :
-                    assesmentStore?.currentAssessment[0] && grade ? (Number(assesmentStore?.currentAssessment[0]?.grade) +
+                    assesmentStore?.currentAssessment?.[0] && grade ? (Number(assesmentStore?.currentAssessment?.[0]?.grade) +
                         Number(grade.grade)) / 2 : 'Aguardando Trabalho' }}
             </v-chip>
             <v-chip v-if="!props.is_student" class="d-flex justify-center align-center"

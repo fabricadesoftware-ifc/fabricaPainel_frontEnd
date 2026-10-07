@@ -11,28 +11,21 @@ const props = defineProps({
 
 const emits = defineEmits(['giveGrade', 'close'])
 const { width } = useDisplay()
-const singleGrade = ref(0)
+const singleGrade = ref('0')
 const criterionGrades = reactive({})
 
-function clampGrade(value) {
-  const grade = Math.abs(Number(value) || 0)
-  if (grade > 10) return 10
-  return Number(grade.toFixed(2))
+function parseGrade(value) {
+  const grade = Math.abs(parseFloat(String(value ?? '').replace(',', '.')))
+  if (Number.isNaN(grade)) return 0
+  return Math.min(Number(grade.toFixed(2)), 10)
 }
-
-watch(singleGrade, value => {
-  const normalized = clampGrade(value)
-  if (Number(value) !== normalized) {
-    singleGrade.value = normalized
-  }
-})
 
 watch(
   () => props.criteria,
   criteria => {
     ;(criteria || []).forEach(criterion => {
       if (criterionGrades[criterion.key] === undefined) {
-        criterionGrades[criterion.key] = 0
+        criterionGrades[criterion.key] = '0'
       }
     })
   },
@@ -42,17 +35,25 @@ watch(
 const hasCriteria = computed(() => props.criteria?.length > 0)
 
 const finalGrade = computed(() => {
-  if (!hasCriteria.value) return clampGrade(singleGrade.value)
+  if (!hasCriteria.value) return parseGrade(singleGrade.value)
 
   const total = props.criteria.reduce((sum, criterion) => {
-    return sum + (clampGrade(criterionGrades[criterion.key]) * Number(criterion.weight || 0)) / 100
+    return sum + (parseGrade(criterionGrades[criterion.key]) * Number(criterion.weight || 0)) / 100
   }, 0)
 
   return Number(total.toFixed(2))
 })
 
 function updateCriterionGrade(key, value) {
-  criterionGrades[key] = clampGrade(value)
+  criterionGrades[key] = value
+}
+
+function normalizeCriterionGrade(key) {
+  criterionGrades[key] = String(parseGrade(criterionGrades[key]))
+}
+
+function normalizeSingleGrade() {
+  singleGrade.value = String(parseGrade(singleGrade.value))
 }
 
 function criterionPayload() {
@@ -60,7 +61,7 @@ function criterionPayload() {
 
   return props.criteria.map(criterion => ({
     key: criterion.key,
-    grade: clampGrade(criterionGrades[criterion.key]),
+    grade: parseGrade(criterionGrades[criterion.key]),
   }))
 }
 
@@ -94,14 +95,13 @@ function sendWorkData() {
             </div>
             <VTextField
               :model-value="criterionGrades[criterion.key]"
-              type="number"
-              min="0"
-              max="10"
-              step="0.01"
+              type="text"
+              inputmode="decimal"
               label="Nota"
               variant="outlined"
               density="comfortable"
               @update:model-value="updateCriterionGrade(criterion.key, $event)"
+              @blur="normalizeCriterionGrade(criterion.key)"
             />
           </div>
         </div>
@@ -111,7 +111,9 @@ function sendWorkData() {
             v-model="singleGrade"
             style="outline: none; height: 100px; font-size: 25px;"
             class="text-center align-center"
-            type="Number"
+            type="text"
+            inputmode="decimal"
+            @blur="normalizeSingleGrade"
           >
           <div style="width: 200px; height: 3px;" class="bg-blue-darken-2"></div>
         </div>

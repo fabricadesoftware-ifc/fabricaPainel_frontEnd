@@ -8,7 +8,15 @@ const router = useRouter();
 defineProps({
     to: {
        type: String,
-       required: true 
+       required: true
+    },
+    title: {
+       type: String,
+       default: 'Submissão de proposta realizada com sucesso!'
+    },
+    subtitle: {
+       type: String,
+       default: 'Agora basta esperar sua proposta ser avaliada e aprovada.'
     }
 })
 </script>
@@ -21,8 +29,8 @@ defineProps({
             <h1 :style="{fontSize: width < 750 ? '35px' : '80px', color: '#1F8BDD85', letterSpacing: '15px', top: width < 750 ? '80px':'125px'}" class="position-absolute">SUCESSO</h1>
             <VImg src="../../../assets/trophy.png"  :width="width < 750 ? '200' : '300'" ></VImg>
             <VDivider></VDivider>
-            <VCardTitle class="font-weight-bold text-h5 text-wrap">Submissão de proposta realizada com sucesso!</VCardTitle>
-            <VCardSubtitle class="text-wrap">Agora basta esperar sua proposta ser avaliada e aprovada.</VCardSubtitle>
+            <VCardTitle class="font-weight-bold text-h5 text-wrap">{{ title }}</VCardTitle>
+            <VCardSubtitle class="text-wrap">{{ subtitle }}</VCardSubtitle>
         </div>
     </div>
 </template>

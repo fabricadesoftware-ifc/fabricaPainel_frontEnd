@@ -6,6 +6,8 @@
 
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
+// Subset da fonte de ícones (só os usados): sobrescreve o @font-face acima.
+import '@/assets/mdi/mdi-subset.css'
 import 'vuetify/styles'
 import { pt } from 'vuetify/locale'
 // Composables

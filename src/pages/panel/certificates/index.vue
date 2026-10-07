@@ -4,6 +4,7 @@ import { useAuth } from "@/stores/auth";
 import { useWork } from "@/stores/work";
 import { useCertificate } from "@/stores/certificate";
 import { useDisplay } from "vuetify";
+import { parseDateValue } from "@/utils/global";
 
 const authStore = useAuth();
 const workStore = useWork();
@@ -47,7 +48,7 @@ const handleDownloadCertificate = async (year: number) => {
 };
 
 const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("pt-BR", {
+  return parseDateValue(dateString).toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
