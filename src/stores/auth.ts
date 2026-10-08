@@ -98,6 +98,10 @@ export const useAuth = defineStore("user", () => {
     } catch (error) {
       console.error(error);
     }
+
+    // O usuario so era gravado no login; mudancas feitas depois (flag de gestao,
+    // nome, turma...) so apareciam saindo e entrando de novo. Atualiza ao abrir o app.
+    if (state.value.isLogged) await refreshUser(true);
   };
 
   function expireSession() {
@@ -229,10 +233,26 @@ export const useAuth = defineStore("user", () => {
   const getUserInfo = async () => {
     try {
       const data = await authService.getUser(state.value.user.id);
-      state.value.user = data;
+      // Mescla (nao troca): campos que so existem no cliente, como team, nao se perdem.
+      if (data) state.value.user = { ...state.value.user, ...data };
     } catch (error) {
       console.error(error);
     }
+  };
+
+  // Releitura silenciosa do usuario logado. Sem `force`, respeita um intervalo minimo
+  // pra nao bater na API toda vez que o usuario volta pra aba.
+  let lastUserRefresh = 0;
+  const USER_REFRESH_MIN_INTERVAL_MS = 60_000;
+
+  const refreshUser = async (force = false) => {
+    if (!state.value.isLogged || !state.value.user?.id) return;
+
+    const now = Date.now();
+    if (!force && now - lastUserRefresh < USER_REFRESH_MIN_INTERVAL_MS) return;
+
+    lastUserRefresh = now;
+    await getUserInfo();
   };
 
   const getUser = async (id: string) => {
@@ -419,6 +439,7 @@ export const useAuth = defineStore("user", () => {
     resetPassword,
     verifyToken,
     checkAuth,
+    refreshUser,
     login,
     logout,
     getTeam,
