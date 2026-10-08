@@ -41,6 +41,7 @@ export const useStudentAssessment = defineStore('studentAssessment', () => {
     try {
       const assessment = await StudentAssessmentService.getAssessment(id, work_id)
       state.currentAssessment = assessment
+      return assessment
     } catch (error: any) {
       setError(error.message)
     } finally {

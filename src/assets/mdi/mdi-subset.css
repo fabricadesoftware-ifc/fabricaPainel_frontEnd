@@ -1,0 +1,13 @@
+/*
+ * Sobrescreve o @font-face do @mdi/font com um subset só com os ícones usados
+ * (gerado a partir de src/ + ícones padrão do Vuetify). Carregar depois do
+ * materialdesignicons.css: a última declaração de mesma família/peso vence.
+ * Se usar um ícone novo, regenere o subset com `python scripts/subset-mdi.py`.
+ */
+@font-face {
+  font-family: "Material Design Icons";
+  src: url("./mdi-subset.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

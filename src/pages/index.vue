@@ -8,7 +8,7 @@ const authStore = useAuth();
 const openNav = ref(false)
 const { lgAndUp } = useDisplay();
 
-import banner1 from '@/assets/home_banner.png';
+import banner1 from '@/assets/home_banner.webp';
 import banner2 from '@/assets/home_banner2.jpg';
 import banner3 from '@/assets/home_banner3.jpg';
 
@@ -29,6 +29,7 @@ onBeforeMount(() => {
 <template>
   <v-parallax
     :src="randomBanner"
+    alt="Vista aérea do campus do IFC Araquari"
     class="custom-parallax"
     height="100vh"
     gradient="rgba(0,0,0,0.69)"
@@ -37,7 +38,7 @@ onBeforeMount(() => {
       <header class="d-flex justify-space-between">
         <a href="/about">
           <div class="d-flex align-center" style="user-select: none">
-            <v-img src="@/assets/logotipo_painel_integracao.png" width="50" />
+            <v-img src="@/assets/logotipo_painel_integracao.png" width="50" alt="" />
             <h2 class="font-weight-regular text-white ml-4">Painel</h2>
           </div>
         </a>
@@ -151,6 +152,7 @@ onBeforeMount(() => {
           size="small"
           to="/user-support"
           variant="tonal"
+          aria-label="Menu de suporte"
         >
           <v-icon>mdi-help</v-icon>
           <v-tooltip activator="parent" location="top">Menu de suporte</v-tooltip>

@@ -400,7 +400,7 @@ function PrevStep() {
         </div>
 
         <div class="edition-success" v-else>
-          <SuccessStep to="/panel/editions/"/>
+          <SuccessStep to="/panel/editions/" title="Edição cadastrada com sucesso!" subtitle="Ela já aparece na lista de edições." />
         </div>
 
         <StepsAction
