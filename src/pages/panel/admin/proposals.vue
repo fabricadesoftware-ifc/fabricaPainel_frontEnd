@@ -63,6 +63,40 @@ type KanbanResponse = {
   columns: KanbanColumn[]
 }
 
+type GradingStudentEntry = {
+  student: KanbanUser
+  grade: string | null
+}
+
+type GradingEvaluatorEntry = {
+  evaluator: KanbanUser
+  grade: string | null
+}
+
+type GradingWork = {
+  id: string
+  title: string
+  status_label: string
+  advisor: KanbanUser
+  advisor_done: boolean
+  student_grades: GradingStudentEntry[]
+  evaluator_done: boolean
+  evaluator_grades: GradingEvaluatorEntry[]
+}
+
+type GradingColumn = {
+  key: string
+  title: string
+  count: number
+  items: GradingWork[]
+}
+
+type GradingResponse = {
+  edition: { id: number; year: number; edition_name: string } | null
+  summary: Array<{ key: string; title: string; count: number }>
+  columns: GradingColumn[]
+}
+
 const router = useRouter();
 const authStore = useAuth();
 
@@ -73,8 +107,17 @@ const loading = ref(true);
 const ready = ref(false);
 const drawer = ref(false);
 const boardRef = ref<HTMLElement | null>(null);
+const gradingBoardRef = ref<HTMLElement | null>(null);
 const selectedWork = ref<KanbanWork | null>(null);
 const kanban = ref<KanbanResponse>({
+  edition: null,
+  summary: [],
+  columns: [],
+});
+
+const activeTab = ref<"proposals" | "grading">("proposals");
+const gradingLoading = ref(false);
+const grading = ref<GradingResponse>({
   edition: null,
   summary: [],
   columns: [],
@@ -97,6 +140,12 @@ const totalWorks = computed(() => {
 
 const hasWorks = computed(() => totalWorks.value > 0);
 
+const totalGradingWorks = computed(() => {
+  return grading.value.columns.reduce((total, column) => total + column.count, 0);
+});
+
+const hasGradingWorks = computed(() => totalGradingWorks.value > 0);
+
 const columnAccent: Record<string, string> = {
   waiting_advisor: "#f59e0b",
   advisor_rejected: "#ef4444",
@@ -105,6 +154,9 @@ const columnAccent: Record<string, string> = {
   approved: "#16a34a",
   rejected: "#dc2626",
   expired: "#64748b",
+  advisor_only: "#0ea5e9",
+  evaluator_only: "#6366f1",
+  complete: "#16a34a",
 };
 
 const workStatusMeta: Record<number, { label: string; color: string }> = {
@@ -158,6 +210,21 @@ async function loadKanban() {
   loading.value = false;
 }
 
+async function loadGradingOverview() {
+  gradingLoading.value = true;
+  const data = await WorkService.getAdminGradingOverview({
+    edition: selectedEdition.value,
+    search: search.value.trim(),
+  });
+  grading.value = data;
+  gradingLoading.value = false;
+}
+
+function loadActiveTab() {
+  if (activeTab.value === "grading") return loadGradingOverview();
+  return loadKanban();
+}
+
 function openWork(work: KanbanWork) {
   selectedWork.value = work;
   drawer.value = true;
@@ -179,8 +246,8 @@ function formatDateTime(value?: string | null) {
   }).format(date);
 }
 
-function scrollBoard(direction: -1 | 1) {
-  const board = boardRef.value;
+function scrollBoard(direction: -1 | 1, target: "proposals" | "grading" = "proposals") {
+  const board = target === "grading" ? gradingBoardRef.value : boardRef.value;
   if (!board) return;
 
   board.scrollBy({
@@ -192,15 +259,19 @@ function scrollBoard(direction: -1 | 1) {
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
 watch(selectedEdition, () => {
-  if (ready.value) loadKanban();
+  if (ready.value) loadActiveTab();
 });
 
 watch(search, () => {
   if (!ready.value) return;
   if (searchTimeout) clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
-    loadKanban();
+    loadActiveTab();
   }, 300);
+});
+
+watch(activeTab, () => {
+  if (ready.value) loadActiveTab();
 });
 
 onMounted(async () => {
@@ -225,13 +296,14 @@ onMounted(async () => {
         </div>
         <div class="kanban-header-actions">
           <v-chip color="primary" variant="tonal">
-            {{ totalWorks }} propostas
+            {{ activeTab === "grading" ? totalGradingWorks : totalWorks }}
+            {{ activeTab === "grading" ? "trabalhos aprovados" : "propostas" }}
           </v-chip>
           <v-btn
             color="primary"
             icon="mdi-refresh"
             variant="tonal"
-            @click="loadKanban"
+            @click="loadActiveTab"
           >
             <v-icon icon="mdi-refresh" />
             <v-tooltip activator="parent" location="bottom">Atualizar</v-tooltip>
@@ -240,6 +312,11 @@ onMounted(async () => {
       </div>
 
       <AdminNavigation />
+
+      <v-tabs v-model="activeTab" class="kanban-tabs" color="primary">
+        <v-tab value="proposals">Propostas</v-tab>
+        <v-tab value="grading">Notas lançadas</v-tab>
+      </v-tabs>
 
       <div class="kanban-filters">
         <v-select
@@ -264,115 +341,219 @@ onMounted(async () => {
         />
       </div>
 
-      <div v-if="loading" class="kanban-loading">
-        <v-progress-circular color="primary" indeterminate size="48" />
-      </div>
-
-      <div v-else-if="!hasWorks" class="kanban-empty">
-        <v-icon color="primary" icon="mdi-clipboard-text-search-outline" size="40" />
-        <h2>Nenhuma proposta encontrada</h2>
-        <p>Altere a edicao ou a busca para conferir outros registros.</p>
-      </div>
-
-      <template v-else>
-        <div class="kanban-scroll-actions">
-          <v-btn
-            color="primary"
-            icon="mdi-chevron-left"
-            variant="tonal"
-            @click="scrollBoard(-1)"
-          >
-            <v-icon icon="mdi-chevron-left" />
-            <v-tooltip activator="parent" location="bottom">Mover para esquerda</v-tooltip>
-          </v-btn>
-          <v-btn
-            color="primary"
-            icon="mdi-chevron-right"
-            variant="tonal"
-            @click="scrollBoard(1)"
-          >
-            <v-icon icon="mdi-chevron-right" />
-            <v-tooltip activator="parent" location="bottom">Mover para direita</v-tooltip>
-          </v-btn>
+      <template v-if="activeTab === 'proposals'">
+        <div v-if="loading" class="kanban-loading">
+          <v-progress-circular color="primary" indeterminate size="48" />
         </div>
 
-      <div ref="boardRef" class="kanban-board">
-        <section
-          v-for="column in kanban.columns"
-          :key="column.key"
-          class="kanban-column"
-          :style="{ '--accent': columnAccent[column.key] || '#64748b' }"
-        >
-          <header class="kanban-column-header">
-            <span>{{ column.title }}</span>
-            <v-chip size="small" variant="tonal">{{ column.count }}</v-chip>
-          </header>
+        <div v-else-if="!hasWorks" class="kanban-empty">
+          <v-icon color="primary" icon="mdi-clipboard-text-search-outline" size="40" />
+          <h2>Nenhuma proposta encontrada</h2>
+          <p>Altere a edicao ou a busca para conferir outros registros.</p>
+        </div>
 
-          <div class="kanban-column-items">
-            <button
-              v-for="work in column.items"
-              :key="work.id"
-              class="kanban-card"
-              type="button"
-              @click="openWork(work)"
+        <template v-else>
+          <div class="kanban-scroll-actions">
+            <v-btn
+              color="primary"
+              icon="mdi-chevron-left"
+              variant="tonal"
+              @click="scrollBoard(-1)"
             >
-              <span class="kanban-card-title">{{ work.title }}</span>
+              <v-icon icon="mdi-chevron-left" />
+              <v-tooltip activator="parent" location="bottom">Mover para esquerda</v-tooltip>
+            </v-btn>
+            <v-btn
+              color="primary"
+              icon="mdi-chevron-right"
+              variant="tonal"
+              @click="scrollBoard(1)"
+            >
+              <v-icon icon="mdi-chevron-right" />
+              <v-tooltip activator="parent" location="bottom">Mover para direita</v-tooltip>
+            </v-btn>
+          </div>
 
-              <div class="kanban-card-chips">
-                <v-chip
-                  :color="statusMeta(workStatusMeta, work.status).color"
-                  size="x-small"
-                  variant="tonal"
-                >
-                  {{ statusMeta(workStatusMeta, work.status).label }}
-                </v-chip>
-                <v-chip
-                  :color="statusMeta(inviteStatusMeta, work.advisor_status).color"
-                  size="x-small"
-                  variant="outlined"
-                >
-                  Orientador {{ statusMeta(inviteStatusMeta, work.advisor_status).label.toLowerCase() }}
-                </v-chip>
-              </div>
+        <div ref="boardRef" class="kanban-board">
+          <section
+            v-for="column in kanban.columns"
+            :key="column.key"
+            class="kanban-column"
+            :style="{ '--accent': columnAccent[column.key] || '#64748b' }"
+          >
+            <header class="kanban-column-header">
+              <span>{{ column.title }}</span>
+              <v-chip size="small" variant="tonal">{{ column.count }}</v-chip>
+            </header>
 
-              <div class="kanban-card-row">
-                <v-icon icon="mdi-account-school-outline" size="16" />
-                <span>{{ formatPeople(work.team_members) }}</span>
-              </div>
-              <div class="kanban-card-row">
-                <v-icon icon="mdi-account-tie-outline" size="16" />
-                <span>{{ work.advisor?.name || work.advisor?.email }}</span>
-              </div>
+            <div class="kanban-column-items">
+              <button
+                v-for="work in column.items"
+                :key="work.id"
+                class="kanban-card"
+                type="button"
+                @click="openWork(work)"
+              >
+                <span class="kanban-card-title">{{ work.title }}</span>
 
-              <div class="kanban-collaborators">
-                <template v-if="work.has_collaborators">
+                <div class="kanban-card-chips">
                   <v-chip
-                    v-for="link in work.collaborators"
-                    :key="link.id"
-                    :color="statusMeta(inviteStatusMeta, link.status).color"
+                    :color="statusMeta(workStatusMeta, work.status).color"
                     size="x-small"
                     variant="tonal"
                   >
-                    {{ link.collaborator?.name || link.collaborator?.email }}:
-                    {{ statusMeta(inviteStatusMeta, link.status).label }}
+                    {{ statusMeta(workStatusMeta, work.status).label }}
                   </v-chip>
-                </template>
-                <v-chip v-else color="grey" size="x-small" variant="tonal">
-                  Sem colaboradores indicados
-                </v-chip>
+                  <v-chip
+                    :color="statusMeta(inviteStatusMeta, work.advisor_status).color"
+                    size="x-small"
+                    variant="outlined"
+                  >
+                    Orientador {{ statusMeta(inviteStatusMeta, work.advisor_status).label.toLowerCase() }}
+                  </v-chip>
+                </div>
+
+                <div class="kanban-card-row">
+                  <v-icon icon="mdi-account-school-outline" size="16" />
+                  <span>{{ formatPeople(work.team_members) }}</span>
+                </div>
+                <div class="kanban-card-row">
+                  <v-icon icon="mdi-account-tie-outline" size="16" />
+                  <span>{{ work.advisor?.name || work.advisor?.email }}</span>
+                </div>
+
+                <div class="kanban-collaborators">
+                  <template v-if="work.has_collaborators">
+                    <v-chip
+                      v-for="link in work.collaborators"
+                      :key="link.id"
+                      :color="statusMeta(inviteStatusMeta, link.status).color"
+                      size="x-small"
+                      variant="tonal"
+                    >
+                      {{ link.collaborator?.name || link.collaborator?.email }}:
+                      {{ statusMeta(inviteStatusMeta, link.status).label }}
+                    </v-chip>
+                  </template>
+                  <v-chip v-else color="grey" size="x-small" variant="tonal">
+                    Sem colaboradores indicados
+                  </v-chip>
+                </div>
+
+                <span class="kanban-last-event">
+                  {{ work.last_event?.event || "Sem historico registrado" }}
+                </span>
+              </button>
+
+              <div v-if="column.count === 0" class="kanban-column-empty">
+                Nenhuma proposta
               </div>
-
-              <span class="kanban-last-event">
-                {{ work.last_event?.event || "Sem historico registrado" }}
-              </span>
-            </button>
-
-            <div v-if="column.count === 0" class="kanban-column-empty">
-              Nenhuma proposta
             </div>
+          </section>
+        </div>
+        </template>
+      </template>
+
+      <template v-else>
+        <div v-if="gradingLoading" class="kanban-loading">
+          <v-progress-circular color="primary" indeterminate size="48" />
+        </div>
+
+        <div v-else-if="!hasGradingWorks" class="kanban-empty">
+          <v-icon color="primary" icon="mdi-clipboard-check-outline" size="40" />
+          <h2>Nenhum trabalho aprovado avaliado ainda</h2>
+          <p>Altere a edicao ou a busca para conferir outros registros.</p>
+        </div>
+
+        <template v-else>
+          <div class="kanban-scroll-actions">
+            <v-btn
+              color="primary"
+              icon="mdi-chevron-left"
+              variant="tonal"
+              @click="scrollBoard(-1, 'grading')"
+            >
+              <v-icon icon="mdi-chevron-left" />
+              <v-tooltip activator="parent" location="bottom">Mover para esquerda</v-tooltip>
+            </v-btn>
+            <v-btn
+              color="primary"
+              icon="mdi-chevron-right"
+              variant="tonal"
+              @click="scrollBoard(1, 'grading')"
+            >
+              <v-icon icon="mdi-chevron-right" />
+              <v-tooltip activator="parent" location="bottom">Mover para direita</v-tooltip>
+            </v-btn>
           </div>
-        </section>
-      </div>
+
+          <div ref="gradingBoardRef" class="kanban-board">
+            <section
+              v-for="column in grading.columns"
+              :key="column.key"
+              class="kanban-column"
+              :style="{ '--accent': columnAccent[column.key] || '#64748b' }"
+            >
+              <header class="kanban-column-header">
+                <span>{{ column.title }}</span>
+                <v-chip size="small" variant="tonal">{{ column.count }}</v-chip>
+              </header>
+
+              <div class="kanban-column-items">
+                <div v-for="work in column.items" :key="work.id" class="kanban-card kanban-card-static">
+                  <span class="kanban-card-title">{{ work.title }}</span>
+
+                  <div class="kanban-card-row">
+                    <v-icon icon="mdi-account-tie-outline" size="16" />
+                    <span>{{ work.advisor?.name || work.advisor?.email }}</span>
+                  </div>
+
+                  <div class="grading-group">
+                    <p class="grading-group-title">
+                      <v-icon :icon="work.advisor_done ? 'mdi-check-circle' : 'mdi-clock-outline'"
+                        :color="work.advisor_done ? 'green-darken-2' : 'grey'" size="14" />
+                      Nota do orientador
+                    </p>
+                    <div class="grading-entries">
+                      <v-chip
+                        v-for="entry in work.student_grades"
+                        :key="entry.student.id"
+                        :color="entry.grade ? 'green-darken-2' : 'grey'"
+                        size="x-small"
+                        variant="tonal"
+                      >
+                        {{ entry.student.name || entry.student.email }}: {{ entry.grade ?? "sem nota" }}
+                      </v-chip>
+                    </div>
+                  </div>
+
+                  <div class="grading-group">
+                    <p class="grading-group-title">
+                      <v-icon :icon="work.evaluator_done ? 'mdi-check-circle' : 'mdi-clock-outline'"
+                        :color="work.evaluator_done ? 'green-darken-2' : 'grey'" size="14" />
+                      Nota da banca
+                    </p>
+                    <div class="grading-entries">
+                      <v-chip
+                        v-for="entry in work.evaluator_grades"
+                        :key="entry.evaluator.id"
+                        :color="entry.grade ? 'green-darken-2' : 'grey'"
+                        size="x-small"
+                        variant="tonal"
+                      >
+                        {{ entry.evaluator.name || entry.evaluator.email }}: {{ entry.grade ?? "sem nota" }}
+                      </v-chip>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="column.count === 0" class="kanban-column-empty">
+                  Nenhum trabalho nesse grupo
+                </div>
+              </div>
+            </section>
+          </div>
+        </template>
       </template>
     </v-container>
 
@@ -496,6 +677,10 @@ onMounted(async () => {
   gap: 8px;
 }
 
+.kanban-tabs {
+  margin-bottom: 16px;
+}
+
 .kanban-filters {
   display: grid;
   gap: 12px;
@@ -598,6 +783,31 @@ onMounted(async () => {
 
 .kanban-card:hover {
   border-color: rgb(var(--v-theme-primary));
+}
+
+.kanban-card-static {
+  cursor: default;
+}
+
+.kanban-card-static:hover {
+  border-color: rgba(var(--v-border-color), var(--v-border-opacity));
+}
+
+.grading-group-title {
+  align-items: center;
+  color: rgba(var(--v-theme-on-surface), 0.68);
+  display: flex;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 6px;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.grading-entries {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .kanban-card-title {
