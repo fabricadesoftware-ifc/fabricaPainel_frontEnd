@@ -101,12 +101,20 @@ export const useStudentAssessment = defineStore('studentAssessment', () => {
     setError(null)
     try {
       const patchedAssessment = await StudentAssessmentService.patchAssessment(id, partialData)
+      // Mexe no mesmo array (nao troca por outro): quem observa a lista
+      // (cards dos alunos) precisa ser avisado pra recarregar a nota.
       const index = state.assessments.findIndex(a => a.id === id)
       if (index !== -1) {
         state.assessments[index] = patchedAssessment
+      } else {
+        state.assessments.push(patchedAssessment)
       }
+      showMessage('Nota atualizada com sucesso!', 'success', 2000, 'top-right', 'light', true)
+      return patchedAssessment
     } catch (error: any) {
       setError(error.message)
+      showMessage(error.message, 'error', 4000, 'top-right', 'light', false)
+      throw error
     } finally {
       setLoading(false)
     }

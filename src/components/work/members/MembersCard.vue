@@ -84,6 +84,19 @@ const emits = defineEmits([
     'openStudentAssesment'
 ])
 
+// Orientador do trabalho, periodo aberto: pode editar a nota ja lancada
+// clicando nela (mesmas condicoes pra lancar uma nota nova).
+const canEditGrade = computed(() =>
+    Boolean(
+        grade.value &&
+        props.is_student &&
+        props.work_advisor?.id == props.user_id &&
+        props.advisor_able_to_give_grade &&
+        workStore?.currentWork?.edition_year == date.getFullYear() &&
+        workStore?.currentWork?.status === 2
+    )
+)
+
 const grade = ref<any>(null)
 const watchWork = computed(() => workStore?.currentWork?.id)
 
@@ -159,7 +172,8 @@ const { width } = useDisplay()
             <div v-if="grade && props.work_advisor.id == props.user_id && props.is_student"
                 class="d-flex ga-3 flex-wrap">
                 <v-chip color="green-darken-3" class="d-flex justify-center align-center" label
-                    :style="{ fontSize: width > 780 ? '14px' : '12px', minWidth: width > 780 ? '140px' : '120px' }">
+                    :style="{ fontSize: width > 780 ? '14px' : '12px', minWidth: width > 780 ? '140px' : '120px', cursor: canEditGrade ? 'pointer' : undefined }"
+                    v-bind="canEditGrade ? { appendIcon: 'mdi-pencil', onClick: () => emits('openStudentAssesment', grade), title: 'Editar nota' } : {}">
                     Nota do Orientador: {{ grade.grade }}
                 </v-chip>
                 <v-chip color="green-darken-3" class="d-flex justify-center align-center" label

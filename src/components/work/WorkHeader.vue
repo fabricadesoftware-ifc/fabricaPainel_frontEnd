@@ -4,7 +4,7 @@ import { computed, watch, onMounted, toRefs, defineProps, defineEmits } from "vu
 import { userCase, validate_user_function } from "@/utils/works";
 import { useDisplay } from "vuetify";
 
-const emits = defineEmits(["buttonAction"]);
+const emits = defineEmits(["buttonAction", "editGrade"]);
 
 const { width } = useDisplay()
 
@@ -45,6 +45,11 @@ const props = defineProps({
     default: false,
   },
   evaluator_blocked_by_daily_window: {
+    type: Boolean,
+    default: false,
+  },
+  // Avaliador dono da nota, com o periodo/horario aberto: pode editar clicando na nota.
+  can_edit_grade: {
     type: Boolean,
     default: false,
   },
@@ -178,7 +183,8 @@ onMounted(() => {
       </p>
       <v-chip :color="props.grade == null ? 'yellow-darken-3' : 'green-darken-3'"
         class="d-flex justify-center align-center" label
-        :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px' }">
+        :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px', cursor: props.can_edit_grade && props.grade ? 'pointer' : undefined }"
+        v-bind="props.can_edit_grade && props.grade ? { appendIcon: 'mdi-pencil', onClick: () => emits('editGrade'), title: 'Editar nota' } : {}">
         {{ !props.grade ? "Nota não Atribuída" : props.grade }}
       </v-chip>
     </div>
