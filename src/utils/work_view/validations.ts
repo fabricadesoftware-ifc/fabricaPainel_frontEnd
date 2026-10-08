@@ -4,10 +4,16 @@ type EditionLike = {
   final_evaluators_date?: string | null
 }
 
+type EvaluatorWindow = {
+  is_open_now: boolean
+  next_open_at?: string | null
+}
+
 type WorkLike = {
   edition_final_second_submission_date?: string | null
   edition_initial_evaluators_date?: string | null
   edition_final_evaluators_date?: string | null
+  edition_evaluator_window?: EvaluatorWindow | null
 }
 
 type GradePeriod = {
@@ -74,6 +80,21 @@ export function buildUserValidations(date: Date, editionStore: any, workStore: a
   const evaluatorPeriod = evaluatorGradePeriod(edition)
   const advisorPeriod = advisorGradePeriod(edition)
 
+  const evaluatorWithinPeriod = isDateInPeriod(
+    date,
+    evaluatorPeriod.initialDate,
+    evaluatorPeriod.finalDate,
+  )
+
+  // Recorte diario de horario (ex.: avaliacao das 8h as 22h). Edicao sem
+  // nenhum dia cadastrado manda `edition_evaluator_window: null` e nao
+  // restringe nada alem do periodo geral, igual antes desse recurso existir.
+  const evaluatorWindow = workStore.currentWork?.edition_evaluator_window as
+    | EvaluatorWindow
+    | null
+    | undefined
+  const evaluatorWindowOpenNow = !evaluatorWindow || evaluatorWindow.is_open_now
+
   return {
     student_able_to_cancel: isDateBeforeOrEqual(date, edition?.final_second_submission_date),
 
@@ -83,11 +104,13 @@ export function buildUserValidations(date: Date, editionStore: any, workStore: a
       advisorPeriod.finalDate,
     ),
 
-    evaluator_able_to_give_grade: isDateInPeriod(
-      date,
-      evaluatorPeriod.initialDate,
-      evaluatorPeriod.finalDate,
-    ),
+    evaluator_able_to_give_grade: evaluatorWithinPeriod && evaluatorWindowOpenNow,
+
+    // Dentro do periodo geral, mas fechado agora por causa do horario do
+    // dia — usado pra desabilitar o botao (em vez de esconder) e mostrar
+    // quando ele reabre.
+    evaluator_blocked_by_daily_window: evaluatorWithinPeriod && !evaluatorWindowOpenNow,
+    evaluator_next_open_at: evaluatorWindow?.next_open_at ?? undefined,
 
     advisor_able_to_aprove_work:
       isDateBeforeOrEqual(date, edition?.final_second_submission_date) &&
