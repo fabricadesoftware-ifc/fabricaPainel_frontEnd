@@ -43,6 +43,15 @@ class WorkService {
     }
   }
 
+  async getAdminWorkDetail(workId: string) {
+    try {
+      const { data } = await api.get(`/work/${workId}/admin-detail/`);
+      return data;
+    } catch (error) {
+      this.handleError(error, "Não foi possível carregar os detalhes do trabalho.");
+    }
+  }
+
   async getAdminGradingOverview(params: { edition?: string | number | null; search?: string } = {}) {
     try {
       const { data } = await api.get("/work/admin-grading-overview/", { params });

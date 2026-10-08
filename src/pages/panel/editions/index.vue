@@ -239,7 +239,7 @@ onMounted(() => {
             Ainda não há uma edição cadastrada neste ano!
           </h1>
           <v-btn
-            v-if="user?.user_type == 'ADMIN'"
+            v-if="user?.user_type == 'ADMIN' || user?.is_management"
             flat
             class="text-primary"
             to="/panel/editions/add"
