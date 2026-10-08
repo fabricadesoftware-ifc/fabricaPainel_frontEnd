@@ -44,6 +44,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  evaluator_blocked_by_daily_window: {
+    type: Boolean,
+    default: false,
+  },
+  evaluator_next_open_at: {
+    type: String,
+    default: null,
+  },
   advisor_able_to_aprove_work: {
     type: Boolean,
     default: false,
@@ -56,6 +64,7 @@ const {
   user_function,
   student_able_to_cancel,
   evaluator_able_to_give_grade,
+  evaluator_blocked_by_daily_window,
   advisor_able_to_aprove_work,
 } = toRefs(props);
 
@@ -78,6 +87,32 @@ const shouldShowButton = computed(() => {
   }
 
   return false;
+});
+
+// Dentro do periodo geral de avaliacao, mas fechado agora por causa do
+// horario do dia (edicao com janela diaria cadastrada) — mostra o botao
+// desabilitado em vez de some-lo.
+const shouldShowDisabledButton = computed(() => {
+  const uf = user_function.value;
+  const ws = work_status.value;
+
+  if (uf === "STUDENT" || uf === "COLLABORATOR" || uf === "ADVISOR") return false;
+
+  return evaluator_blocked_by_daily_window.value && ws === 2 && !props.grade;
+});
+
+const reopenAtText = computed(() => {
+  if (!props.evaluator_next_open_at) return "Fechado no momento";
+
+  const date = new Date(props.evaluator_next_open_at);
+  const today = new Date();
+  const isToday = date.toDateString() === today.toDateString();
+
+  const time = date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  if (isToday) return `Abre hoje às ${time}`;
+
+  const day = date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+  return `Abre em ${day} às ${time}`;
 });
 
 // Validação reativa
@@ -107,6 +142,11 @@ onMounted(() => {
 
             <p :style="{ fontWeight: '600', fontSize: '12px' }">{{ userCase.text }}</p>
           </v-btn>
+
+          <v-btn v-else-if="shouldShowDisabledButton && width <= 780" disabled variant="text" size="small"
+            prepend-icon="mdi-clock-outline">
+            <p :style="{ fontWeight: '600', fontSize: '12px' }">{{ reopenAtText }}</p>
+          </v-btn>
         </div>
         <div :style="{ maxWidth: width > 780 ? '80%' : '100%' }" class="d-flex align-center ga-5">
           <h1 :style="{ fontSize: width > 780 ? '40px' : '25px' }">{{ props.title }}</h1>
@@ -123,6 +163,11 @@ onMounted(() => {
         variant="text" size="small" :style="`color: ${userCase.color}; brightness: 50%;`">
 
         <p :style="{ fontWeight: '600', fontSize: width > 780 ? '15px' : '10px' }">{{ userCase.text }}</p>
+      </v-btn>
+
+      <v-btn v-else-if="shouldShowDisabledButton && width > 780" disabled variant="text" size="small"
+        prepend-icon="mdi-clock-outline">
+        <p :style="{ fontWeight: '600', fontSize: width > 780 ? '15px' : '10px' }">{{ reopenAtText }}</p>
       </v-btn>
     </div>
 

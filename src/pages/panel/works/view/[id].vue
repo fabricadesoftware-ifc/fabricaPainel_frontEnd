@@ -171,6 +171,8 @@ const openUserGrade = (member: object) => {
             @buttonAction="handleWorkHeaderAction" :student_able_to_cancel="usersValidation.student_able_to_cancel"
             :advisor_able_to_give_grade="usersValidation.advisor_able_to_give_grade"
             :evaluator_able_to_give_grade="usersValidation.evaluator_able_to_give_grade"
+            :evaluator_blocked_by_daily_window="usersValidation.evaluator_blocked_by_daily_window"
+            :evaluator_next_open_at="usersValidation.evaluator_next_open_at"
             :advisor_able_to_aprove_work="usersValidation.advisor_able_to_aprove_work"
             :user_function="resolveUserFunction(workStore.currentWork, authStore.user)" :grade="assesmentWork"
             :status_content="resolveStatus(workStore.currentWork.status)?.text || 'Não informado'"
