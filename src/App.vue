@@ -93,6 +93,11 @@
     else showOfflineToast()
   }
 
+  // Voltou pra aba: pega mudancas feitas no cadastro enquanto ela estava aberta.
+  function refreshUserOnFocus() {
+    if (document.visibilityState === 'visible') authStore.refreshUser()
+  }
+
   async function registerServiceWorkerUpdatePrompt() {
     // A virtual:pwa-register/vue só existe quando o plugin do PWA está ativo
     // (builds de produção, ou dev com VITE_PWA_DEV=true) — em dev normal esse
@@ -145,6 +150,7 @@
 
     window.addEventListener('online', updateStatus)
     window.addEventListener('offline', updateStatus)
+    document.addEventListener('visibilitychange', refreshUserOnFocus)
 
     registerServiceWorkerUpdatePrompt()
 
@@ -158,6 +164,7 @@
   onUnmounted(() => {
     window.removeEventListener('online', updateStatus)
     window.removeEventListener('offline', updateStatus)
+    document.removeEventListener('visibilitychange', refreshUserOnFocus)
   })
 
 </script>
