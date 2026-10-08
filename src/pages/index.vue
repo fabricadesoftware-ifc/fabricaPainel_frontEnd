@@ -29,6 +29,7 @@ onBeforeMount(() => {
 <template>
   <v-parallax
     :src="randomBanner"
+    alt="Vista aérea do campus do IFC Araquari"
     class="custom-parallax"
     height="100vh"
     gradient="rgba(0,0,0,0.69)"
@@ -37,7 +38,7 @@ onBeforeMount(() => {
       <header class="d-flex justify-space-between">
         <a href="/about">
           <div class="d-flex align-center" style="user-select: none">
-            <v-img src="@/assets/logotipo_painel_integracao.png" width="50" />
+            <v-img src="@/assets/logotipo_painel_integracao.png" width="50" alt="" />
             <h2 class="font-weight-regular text-white ml-4">Painel</h2>
           </div>
         </a>
@@ -151,6 +152,7 @@ onBeforeMount(() => {
           size="small"
           to="/user-support"
           variant="tonal"
+          aria-label="Menu de suporte"
         >
           <v-icon>mdi-help</v-icon>
           <v-tooltip activator="parent" location="top">Menu de suporte</v-tooltip>
