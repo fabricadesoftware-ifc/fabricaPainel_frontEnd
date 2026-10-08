@@ -35,6 +35,21 @@ const studentAssesment = useStudentAssessment();
 const date = new Date();
 const assesmentWork = ref(null)
 
+// Nota da banca lancada pelo proprio usuario (se ele for avaliador deste trabalho).
+const myWorkAssessment = computed<any>(() => {
+  const evaluatorId = workStore.currentWork?.evaluator?.find(
+    (item: any) => item.user.id === Number(authStore.user?.id)
+  )?.id;
+  if (!evaluatorId) return null;
+
+  const list = Array.isArray(assesmentStore.currentAssessment) ? assesmentStore.currentAssessment : [];
+  return list.find((item: any) => item.evaluator === evaluatorId) ?? null;
+});
+
+// Avaliador mostra a propria nota no cabecalho; os demais veem a primeira lancada (como antes).
+const headerGrade = () =>
+  (myWorkAssessment.value ?? assesmentStore.currentAssessment?.[0])?.grade;
+
 const usersValidation = computed(() => buildUserValidations(date, editionStore, workStore));
 
 const tokenExpired = authStore.isTokenExpired();
@@ -50,7 +65,7 @@ onMounted(async () => {
 
   await editionStore.fetchCurrentEdition();
   await assesmentStore.getAssessmentsByWork(workStore?.currentWork?.id)
-  assesmentWork.value = assesmentStore.currentAssessment?.[0]?.grade
+  assesmentWork.value = headerGrade()
   acceptanceStore.setCollaboratorInfo(workStore?.currentWork);
   advisorAcceptanceStore.setAdvisorInfo(workStore?.currentWork);
 });
@@ -60,6 +75,16 @@ const workGrade = ref(false);
 const confirmation = ref(false);
 const userGrade = ref(false)
 const memberGrade = ref<any>(null)
+// Nota ja lancada que esta sendo editada (null = dialogo de lancamento novo).
+const editingWorkAssessment = ref<any>(null)
+const editingStudentAssessment = ref<any>(null)
+
+const canEditWorkGrade = computed(
+  () =>
+    Boolean(myWorkAssessment.value) &&
+    usersValidation.value.evaluator_able_to_give_grade &&
+    workStore.currentWork?.status === 2
+)
 
 const evaluationCriteria = computed(() => {
   return workStore.currentWork?.edition_evaluation_criteria ?? []
@@ -92,6 +117,7 @@ const confirmsAction = (confirm: string) => {
 interface Grade {
   work_grade: number;
   is_work_grade: boolean;
+  assessment_id?: string | number | null;
   criterion_grades?: any[];
 }
 
@@ -108,12 +134,13 @@ const giveWorkGrade = async (grade: Grade) => {
     grade.is_work_grade,
     grade.criterion_grades ?? [],
 
-    () => (grade.is_work_grade ? workGrade.value = false : userGrade.value = false)
+    () => (grade.is_work_grade ? workGrade.value = false : userGrade.value = false),
+    grade.assessment_id ?? null
   );
 
   if (grade.is_work_grade) {
     await assesmentStore.getAssessmentsByWork(workStore?.currentWork?.id)
-    assesmentWork.value = assesmentStore.currentAssessment?.[0]?.grade
+    assesmentWork.value = headerGrade()
   } else {
     await studentAssesment.fetchAssessment(memberGrade.value.id, workStore?.currentWork?.id)
   }
@@ -122,16 +149,25 @@ const giveWorkGrade = async (grade: Grade) => {
 const handleWorkHeaderAction = () => {
   handleWorkHeaderActionFn(workStore, authStore, uptadeWorkStatus.value, {
     confirmation: () => (confirmation.value = !confirmation.value),
-    workGrade: () => (workGrade.value = !workGrade.value),
+    workGrade: () => {
+      editingWorkAssessment.value = null;
+      workGrade.value = !workGrade.value;
+    },
     aprove: () => (aprove.value = !aprove.value),
   });
 
 
 };
 
-const openUserGrade = (member: object) => {
+const openUserGrade = (member: object, existingAssessment: any = null) => {
+  editingStudentAssessment.value = existingAssessment
   userGrade.value = !userGrade.value
   memberGrade.value = member
+}
+
+const openWorkGradeEdit = () => {
+  editingWorkAssessment.value = myWorkAssessment.value
+  workGrade.value = true
 }
 </script>
 
@@ -144,6 +180,7 @@ const openUserGrade = (member: object) => {
         <div class="d-flex flex-column ga-10">
           <WorkGrade
             :criteria="workEvaluationCriteria"
+            :assessment="editingWorkAssessment"
             @giveGrade="giveWorkGrade"
             @close="workGrade = !workGrade"
             v-model="workGrade"
@@ -152,6 +189,7 @@ const openUserGrade = (member: object) => {
           <IndividualGrade
             :criteria="studentEvaluationCriteria"
             :user="memberGrade"
+            :assessment="editingStudentAssessment"
             @giveGrade="giveWorkGrade"
             @close="userGrade = !userGrade"
             v-model="userGrade"
@@ -168,7 +206,8 @@ const openUserGrade = (member: object) => {
             v-model="aprove" @confirmation="confirmsAction" @back="aprove = !aprove" />
 
           <WorkHeader v-if="isLoaded" :key="work_id" :work_status="uptadeWorkStatus"
-            @buttonAction="handleWorkHeaderAction" :student_able_to_cancel="usersValidation.student_able_to_cancel"
+            @buttonAction="handleWorkHeaderAction" @editGrade="openWorkGradeEdit"
+            :can_edit_grade="canEditWorkGrade" :student_able_to_cancel="usersValidation.student_able_to_cancel"
             :advisor_able_to_give_grade="usersValidation.advisor_able_to_give_grade"
             :evaluator_able_to_give_grade="usersValidation.evaluator_able_to_give_grade"
             :evaluator_blocked_by_daily_window="usersValidation.evaluator_blocked_by_daily_window"
@@ -198,7 +237,7 @@ const openUserGrade = (member: object) => {
               :member_id="student.id" :member="student" :user_id="authStore.user.id" :key="index"
               :work_advisor="workStore?.currentWork?.advisor ?? null" :is_student="true"
               :advisor_able_to_give_grade="usersValidation.advisor_able_to_give_grade"
-              @open-student-assesment="openUserGrade(student)" />
+              @open-student-assesment="openUserGrade(student, $event)" />
           </MembersContainer>
 
           <MembersContainer title="Orientador do Trabalho" :attribute="width > 780 ? 'Status da Proposta' : ''">

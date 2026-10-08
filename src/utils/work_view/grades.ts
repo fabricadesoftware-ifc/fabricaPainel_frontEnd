@@ -14,7 +14,8 @@ export async function giveWorkGradeFn(
   user: any,
   is_work_grade: any,
   criterion_grades: any[] = [],
-  closeDialog: () => void
+  closeDialog: () => void,
+  assessmentId: string | number | null = null
 ): Promise<void> {
   
   const work_evaluator = workStore?.currentWork?.evaluator.find(
@@ -26,13 +27,21 @@ export async function giveWorkGradeFn(
     return;
   }
 
+  const isEdit = assessmentId !== null && assessmentId !== undefined
   const requestKey = is_work_grade ? `work:${work_id}` : `student:${user?.id}:${work_id}`
   if (gradesInFlight.has(requestKey)) return
   gradesInFlight.add(requestKey)
 
   // Só fecha o diálogo se a nota realmente foi salva.
   try {
-    if (is_work_grade) {
+    if (isEdit) {
+      // Edicao: so nota e criterios mudam; trabalho/avaliador/aluno e a data
+      // original ficam como estao (o backend ignora/forca de qualquer jeito).
+      const changes: any = { grade: grade, criterion_grades }
+
+      if (is_work_grade) await assessmentStore.updateAssessment(assessmentId, changes)
+      else await studentAssesmentStore.patchAssessment(assessmentId, changes)
+    } else if (is_work_grade) {
       const assessment: any = {
         evaluator: work_evaluator,
         work: work_id,

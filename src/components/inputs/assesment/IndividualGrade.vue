@@ -8,9 +8,18 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  // Nota ja lancada (modo edicao). Sem ela, o dialogo e de lancamento novo.
+  assessment: {
+    type: Object,
+    default: null,
+  },
+  modelValue: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emits = defineEmits(['giveGrade', 'close'])
+const emits = defineEmits(['giveGrade', 'close', 'update:modelValue'])
 const { width } = useDisplay()
 const singleGrade = ref('0')
 const criterionGrades = reactive({})
@@ -34,6 +43,32 @@ watch(
 )
 
 const hasCriteria = computed(() => props.criteria?.length > 0)
+const isEditing = computed(() => Boolean(props.assessment?.id))
+
+// Ao abrir: pre-preenche com a nota existente (edicao) ou zera (lancamento novo),
+// pra nao sobrar o valor digitado da ultima vez.
+function fillFromAssessment() {
+  const saved = props.assessment
+  const savedByKey = {}
+  ;(saved?.criterion_grades || []).forEach(item => {
+    savedByKey[item.key] = item.grade
+  })
+
+  ;(props.criteria || []).forEach(criterion => {
+    const value = savedByKey[criterion.key]
+    criterionGrades[criterion.key] = value === undefined ? '0' : String(value)
+  })
+
+  singleGrade.value = saved && !saved.criterion_grades?.length ? String(saved.grade) : '0'
+}
+
+watch(
+  () => props.modelValue,
+  open => {
+    if (open) fillFromAssessment()
+  },
+  { immediate: true }
+)
 
 const finalGrade = computed(() => {
   if (!hasCriteria.value) return parseGrade(singleGrade.value)
@@ -70,6 +105,7 @@ function sendWorkData() {
   emits('giveGrade', {
     work_grade: finalGrade.value,
     is_work_grade: false,
+    assessment_id: props.assessment?.id ?? null,
     criterion_grades: criterionPayload(),
   })
   singleGrade.value = '0'
@@ -77,12 +113,12 @@ function sendWorkData() {
 </script>
 
 <template>
-  <v-dialog scrollable fullscreen :overlay="false" transition="dialog-transition">
+  <v-dialog :model-value="modelValue" @update:model-value="emits('update:modelValue', $event)" scrollable fullscreen :overlay="false" transition="dialog-transition">
     <div :class="`${width > 780 ? 'w-100' : 'w-75'} h-100 mx-auto d-flex justify-center align-center`">
       <div class="grade-dialog bg-white d-flex flex-column rounded-lg pa-5">
         <div class="d-flex flex-column ga-2">
           <h2 :style="{ fontSize: width > 780 ? '25px' : '20px' }" class="text-grey-darken-4">
-            Atribuir nota ao aluno
+            {{ isEditing ? 'Editar nota do aluno' : 'Atribuir nota ao aluno' }}
           </h2>
           <p :style="{ fontSize: width > 780 ? '20px' : '15px' }" class="text-grey-darken-3">
             Nota final: {{ finalGrade.toFixed(2) }}
@@ -131,7 +167,7 @@ function sendWorkData() {
 
         <VCardActions class="w-100 d-flex justify-end">
           <VBtn class="font-weight-bold" @click="emits('close')">cancelar</VBtn>
-          <VBtn class="bg-blue rounded-xl" style="width: 150px;" @click="sendWorkData">confirmar</VBtn>
+          <VBtn class="bg-blue rounded-xl" style="width: 150px;" @click="sendWorkData">{{ isEditing ? 'salvar' : 'confirmar' }}</VBtn>
         </VCardActions>
       </div>
     </div>
