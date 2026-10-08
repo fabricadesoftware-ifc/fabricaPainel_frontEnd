@@ -12,17 +12,15 @@ const props = defineProps({
     }
 })
 
-const emits = defineEmits([
-    'action'
-])
-
-// const email = defineModel('email')
+// Botao de submit de verdade: quem trata o envio e o <v-form @submit.prevent> em volta.
+// (Com type="button" + @click o navegador nao enxerga um formulario sendo enviado e nao
+// oferece "salvar senha".) Enter nos campos tambem envia, sem handler extra.
 </script>
 <template>
 
 
 
-<v-btn block color="primary" class="py-6" rounded="lg" @click="emits('action')">
+<v-btn block color="primary" class="py-6" rounded="lg" type="submit">
     Enviar
 </v-btn>
 

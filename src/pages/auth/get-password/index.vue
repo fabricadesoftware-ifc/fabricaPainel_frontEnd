@@ -40,9 +40,10 @@ const getPassword = async () => {
           </v-card-subtitle>
            <v-card-text>
            <v-form @submit.prevent="getPassword">
-           <v-text-field class="pb-2" v-model="email" label="Email" variant="outlined" prepend-inner-icon="mdi-email" required
+           <v-text-field class="pb-2" id="recover-email" v-model="email" name="email" autocomplete="email" inputmode="email"
+                label="Email" variant="outlined" prepend-inner-icon="mdi-email" required
                 rounded="lg" type="email" :rules="[v => /.+@.+\..+/.test(v) || 'E-mail inválido']"/>
-         <AuthButton alternative_text="Acessar a Plataforma" router_link="/auth/login" @action="getPassword" />
+         <AuthButton alternative_text="Acessar a Plataforma" router_link="/auth/login" />
          </v-form>
          </v-card-text>
         </v-col>

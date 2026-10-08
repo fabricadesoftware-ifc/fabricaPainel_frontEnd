@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import AdminNavigation from "@/components/admin/AdminNavigation.vue";
+import AdminWorkDetailDialog from "@/components/admin/AdminWorkDetailDialog.vue";
 import EditionsService from "@/services/editions";
 import WorkService from "@/services/works";
 import { useAuth } from "@/stores/auth";
@@ -114,6 +115,14 @@ const kanban = ref<KanbanResponse>({
   summary: [],
   columns: [],
 });
+
+const detailOpen = ref(false);
+const detailWorkId = ref<string | null>(null);
+
+function openWorkDetail(workId: string) {
+  detailWorkId.value = workId;
+  detailOpen.value = true;
+}
 
 const activeTab = ref<"proposals" | "grading">("proposals");
 const gradingLoading = ref(false);
@@ -500,7 +509,13 @@ onMounted(async () => {
               </header>
 
               <div class="kanban-column-items">
-                <div v-for="work in column.items" :key="work.id" class="kanban-card kanban-card-static">
+                <button
+                  v-for="work in column.items"
+                  :key="work.id"
+                  class="kanban-card"
+                  type="button"
+                  @click="openWorkDetail(work.id)"
+                >
                   <span class="kanban-card-title">{{ work.title }}</span>
 
                   <div class="kanban-card-row">
@@ -545,7 +560,12 @@ onMounted(async () => {
                       </v-chip>
                     </div>
                   </div>
-                </div>
+
+                  <span class="grading-open-hint">
+                    <v-icon icon="mdi-eye" size="14" />
+                    Ver visao completa
+                  </span>
+                </button>
 
                 <div v-if="column.count === 0" class="kanban-column-empty">
                   Nenhum trabalho nesse grupo
@@ -556,6 +576,8 @@ onMounted(async () => {
         </template>
       </template>
     </v-container>
+
+    <AdminWorkDetailDialog v-model="detailOpen" :work-id="detailWorkId" />
 
     <v-navigation-drawer
       v-model="drawer"
@@ -785,12 +807,13 @@ onMounted(async () => {
   border-color: rgb(var(--v-theme-primary));
 }
 
-.kanban-card-static {
-  cursor: default;
-}
-
-.kanban-card-static:hover {
-  border-color: rgba(var(--v-border-color), var(--v-border-opacity));
+.grading-open-hint {
+  align-items: center;
+  color: rgb(var(--v-theme-primary));
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 4px;
 }
 
 .grading-group-title {

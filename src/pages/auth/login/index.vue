@@ -58,15 +58,17 @@ const login = async () => {
               </h2>
             </v-card-title>
             <v-card-text class="d-flex flex-column justify-space-between" style="margin-top: 15%;">
-              <v-form class="d-flex flex-column" @submit.prevent="login" @keydown.enter="login">
-                <v-text-field v-model="email" label="Email" required prepend-inner-icon="mdi-email" rounded="lg"
-                  type="email" variant="outlined" />
-                <v-text-field v-model="password" label="Senha" required rounded="lg"
+              <v-form class="d-flex flex-column" @submit.prevent="login">
+                <!-- name/autocomplete/id: o navegador reconhece login e oferece preencher/salvar -->
+                <v-text-field id="login-email" v-model="email" name="email" autocomplete="username" inputmode="email"
+                  label="Email" required prepend-inner-icon="mdi-email" rounded="lg" type="email" variant="outlined" />
+                <v-text-field id="login-password" v-model="password" name="password" autocomplete="current-password"
+                  label="Senha" required rounded="lg"
                   :type="visible ? 'text' : 'password'" variant="outlined"
                   :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" prepend-inner-icon="mdi-lock-outline"
                   @click:append-inner="visible = !visible" />
-                  
-                <AuthButton alternative_text="Esqueceu sua senha? Clique aqui" router_link="/auth/get-password" @action="login()" />
+
+                <AuthButton alternative_text="Esqueceu sua senha? Clique aqui" router_link="/auth/get-password" />
               </v-form>
              
             </v-card-text>

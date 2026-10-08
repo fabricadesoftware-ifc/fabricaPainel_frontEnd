@@ -85,9 +85,13 @@
             <p>Insira a nova senha e confirme.</p>
           </v-card-subtitle>
           <v-card-text>
-            <v-form @submit.prevent="resetPassword" @keydown.enter="resetPassword">
+            <v-form @submit.prevent="resetPassword">
+              <!-- new-password: o navegador sugere senha forte e oferece salvar a nova -->
               <v-text-field
+                id="new-password"
                 v-model="password"
+                name="new-password"
+                autocomplete="new-password"
                 label="Nova Senha"
                 variant="outlined"
                 rounded="xl"
@@ -95,14 +99,17 @@
                 type="password"
               />
               <v-text-field
+                id="confirm-new-password"
                 v-model="confirmPassword"
+                name="confirm-new-password"
+                autocomplete="new-password"
                 label="Confirmar Senha"
                 variant="outlined"
                 rounded="xl"
                 required
                 type="password"
               />
-              <v-btn block color="primary" class="py-6" rounded="xl" @click="resetPassword">
+              <v-btn block color="primary" class="py-6" rounded="xl" type="submit">
                 Enviar
               </v-btn>
             </v-form>
