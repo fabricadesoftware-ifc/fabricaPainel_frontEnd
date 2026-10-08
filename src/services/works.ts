@@ -43,6 +43,15 @@ class WorkService {
     }
   }
 
+  async getAdminGradingOverview(params: { edition?: string | number | null; search?: string } = {}) {
+    try {
+      const { data } = await api.get("/work/admin-grading-overview/", { params });
+      return data;
+    } catch (error) {
+      this.handleError(error, "Não foi possível carregar as notas já lançadas.");
+    }
+  }
+
   async getAdminAdvisorProposalReportData(params: { edition?: string | number | null }) {
     try {
       const { data } = await api.get("/work/admin-advisor-report-data/", { params });
