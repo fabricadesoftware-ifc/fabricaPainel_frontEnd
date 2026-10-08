@@ -79,12 +79,21 @@ type TeacherWorkloadReportData = {
   groups: TeacherWorkloadRow[]
 }
 
+type ReportTab = "advisor" | "team" | "teacher";
+
+// Com poucos grupos batendo na busca, abre todos sozinho; com muitos, deixa fechado.
+const AUTO_OPEN_LIMIT = 12;
+
 const router = useRouter();
 const authStore = useAuth();
 
 const editions = ref<IEdition[]>([]);
 const selectedEdition = ref<number | string | null>(null);
+const activeTab = ref<ReportTab>("advisor");
+const search = ref("");
+const debouncedSearch = ref("");
 const loading = ref(true);
+
 const loadingReport = ref(false);
 const downloading = ref(false);
 const reportData = ref<AdvisorReportData | null>(null);
@@ -97,6 +106,9 @@ const loadingTeacherReport = ref(false);
 const downloadingTeacherReport = ref(false);
 const teacherReportData = ref<TeacherWorkloadReportData | null>(null);
 
+const advisorOpen = ref<string[]>([]);
+const teacherExpanded = ref<string[]>([]);
+
 const canUseAdminArea = computed(() => {
   return authStore.user?.user_type === "ADMIN" || Boolean(authStore.user?.is_management);
 });
@@ -108,16 +120,33 @@ const editionOptions = computed(() => {
   }));
 });
 
-const reportGroups = computed(() => reportData.value?.groups ?? []);
-const totalWorks = computed(() => reportData.value?.total_works ?? 0);
-const reportAvailable = computed(() => Boolean(reportData.value?.available));
-const reportMessage = computed(() => reportData.value?.message ?? "");
+// Busca sem acento e sem diferenca de maiuscula, igual pra todas as abas.
+function normalize(value?: string | null) {
+  return (value ?? "")
+    .toString()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase();
+}
 
-const teamReportGroups = computed(() => teamReportData.value?.groups ?? []);
-const totalTeamWorks = computed(() => teamReportData.value?.total_works ?? 0);
+const query = computed(() => normalize(debouncedSearch.value.trim()));
 
-const teacherReportGroups = computed(() => teacherReportData.value?.groups ?? []);
-const totalTeachers = computed(() => teacherReportData.value?.total_teachers ?? 0);
+function matches(...parts: Array<string | null | undefined>) {
+  if (!query.value) return true;
+  return parts.some((part) => normalize(part).includes(query.value));
+}
+
+function personLabel(user?: ReportUser | null) {
+  return user?.name || user?.email || "Orientador nao informado";
+}
+
+function formatDate(value?: string | null) {
+  if (!value) return "";
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("pt-BR").format(date);
+}
 
 function isEditionOpen(edition: IEdition) {
   return Boolean(
@@ -129,17 +158,109 @@ function isEditionOpen(edition: IEdition) {
   );
 }
 
-function formatDate(value?: string | null) {
-  if (!value) return "";
-  const date = new Date(`${value}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return "";
+/* ---------- Por orientador ---------- */
 
-  return new Intl.DateTimeFormat("pt-BR").format(date);
-}
+const reportAvailable = computed(() => Boolean(reportData.value?.available));
+const reportMessage = computed(() => reportData.value?.message ?? "");
+const totalWorks = computed(() => reportData.value?.total_works ?? 0);
 
-function personLabel(user?: ReportUser | null) {
-  return user?.name || user?.email || "Orientador nao informado";
-}
+const advisorKey = (group: AdvisorReportGroup) =>
+  String(group.advisor?.id ?? personLabel(group.advisor));
+
+const filteredAdvisorGroups = computed(() => {
+  const groups = reportData.value?.groups ?? [];
+  if (!query.value) return groups;
+
+  return groups
+    .map((group) => {
+      const advisorHit = matches(personLabel(group.advisor), group.advisor?.email);
+      const rows = advisorHit
+        ? group.rows
+        : group.rows.filter((row) =>
+            matches(
+              row.title,
+              row.team_members_label,
+              row.classes_label,
+              row.collaborators_label,
+              ...(row.team_members ?? []).map((member) => personLabel(member)),
+            ),
+          );
+      return { ...group, rows, count: rows.length };
+    })
+    .filter((group) => group.rows.length > 0);
+});
+
+const advisorShownWorks = computed(() =>
+  filteredAdvisorGroups.value.reduce((total, group) => total + group.rows.length, 0),
+);
+
+/* ---------- Por equipe ---------- */
+
+const totalTeamWorks = computed(() => teamReportData.value?.total_works ?? 0);
+
+// Cada equipe costuma ter 1 trabalho so: agrupar por equipe vira 100+ grupos de 1 linha.
+// Entao aqui e uma tabela unica (paginada e ordenavel), com a equipe como coluna.
+const teamHeaders: any[] = [
+  { title: "Trabalho", key: "title", sortable: true },
+  { title: "Equipe", key: "team", sortable: true },
+  { title: "Turma", key: "classes", sortable: true },
+  { title: "Status do trabalho", key: "status", sortable: true },
+  { title: "Orientador", key: "advisor", sortable: true },
+  { title: "Status do orientador", key: "advisor_status", sortable: true },
+  { title: "Data da submissao", key: "submitted_at", sortable: false },
+];
+
+const teamRows = computed(() => {
+  const groups = teamReportData.value?.groups ?? [];
+
+  return groups
+    .flatMap((group) =>
+      group.rows.map((row) => ({
+        key: `${group.team_id}-${row.id}`,
+        title: row.title,
+        team: group.team_members_label,
+        classes: group.classes_label,
+        status: row.status_label,
+        advisor: row.advisor_label,
+        advisor_status: row.advisor_status_label,
+        submitted_at: row.submitted_at || "-",
+      })),
+    )
+    .filter((row) => matches(row.title, row.team, row.classes, row.advisor, row.status));
+});
+
+/* ---------- Por professor ---------- */
+
+const teacherHeaders: any[] = [
+  { title: "Professor", key: "name", sortable: true },
+  { title: "Orientacoes", key: "advising_count", sortable: true, align: "end" },
+  { title: "Colaboracoes", key: "collaboration_count", sortable: true, align: "end" },
+  { title: "Total", key: "total_count", sortable: true, align: "end" },
+  { title: "", key: "data-table-expand", sortable: false },
+];
+
+const teacherItems = computed(() => {
+  const groups = teacherReportData.value?.groups ?? [];
+
+  return groups
+    .map((row) => ({
+      key: String(row.teacher?.id ?? personLabel(row.teacher)),
+      name: personLabel(row.teacher),
+      email: row.teacher?.email,
+      advising_count: row.advising_count,
+      advising_titles: row.advising_titles ?? [],
+      collaboration_count: row.collaboration_count,
+      collaboration_titles: row.collaboration_titles ?? [],
+      total_count: row.total_count,
+    }))
+    .filter((item) =>
+      matches(item.name, item.email, ...item.advising_titles, ...item.collaboration_titles),
+    );
+});
+
+const totalTeachers = computed(() => teacherReportData.value?.total_teachers ?? 0);
+
+/* ---------- Carregamento (so a aba ativa, sob demanda) ---------- */
 
 async function loadInitialData() {
   loading.value = true;
@@ -156,10 +277,7 @@ async function loadInitialData() {
 
 async function loadReportData() {
   reportData.value = null;
-
-  if (!selectedEdition.value) {
-    return;
-  }
+  if (!selectedEdition.value) return;
 
   loadingReport.value = true;
   try {
@@ -173,28 +291,9 @@ async function loadReportData() {
   }
 }
 
-async function downloadReport() {
-  if (!selectedEdition.value) return;
-
-  downloading.value = true;
-  try {
-    await WorkService.downloadAdminAdvisorProposalReport({
-      edition: selectedEdition.value,
-    });
-    showMessage("Relatorio gerado com sucesso.", "success", 2200, "top-right", "light", false);
-  } catch (error: any) {
-    showMessage(error?.message || "Nao foi possivel gerar o relatorio.", "error", 3500, "top-right", "light", false);
-  } finally {
-    downloading.value = false;
-  }
-}
-
 async function loadTeamReportData() {
   teamReportData.value = null;
-
-  if (!selectedEdition.value) {
-    return;
-  }
+  if (!selectedEdition.value) return;
 
   loadingTeamReport.value = true;
   try {
@@ -208,28 +307,9 @@ async function loadTeamReportData() {
   }
 }
 
-async function downloadTeamReport() {
-  if (!selectedEdition.value) return;
-
-  downloadingTeamReport.value = true;
-  try {
-    await WorkService.downloadAdminTeamProposalReport({
-      edition: selectedEdition.value,
-    });
-    showMessage("Relatorio gerado com sucesso.", "success", 2200, "top-right", "light", false);
-  } catch (error: any) {
-    showMessage(error?.message || "Nao foi possivel gerar o relatorio.", "error", 3500, "top-right", "light", false);
-  } finally {
-    downloadingTeamReport.value = false;
-  }
-}
-
 async function loadTeacherReportData() {
   teacherReportData.value = null;
-
-  if (!selectedEdition.value) {
-    return;
-  }
+  if (!selectedEdition.value) return;
 
   loadingTeacherReport.value = true;
   try {
@@ -243,30 +323,89 @@ async function loadTeacherReportData() {
   }
 }
 
-async function downloadTeacherReport() {
+// Carrega a aba aberta se ainda nao tiver dados dessa edicao (ou se forcar).
+async function loadActiveTab(force = false) {
   if (!selectedEdition.value) return;
 
-  downloadingTeacherReport.value = true;
+  if (activeTab.value === "advisor" && (force || !reportData.value)) await loadReportData();
+  if (activeTab.value === "team" && (force || !teamReportData.value)) await loadTeamReportData();
+  if (activeTab.value === "teacher" && (force || !teacherReportData.value)) await loadTeacherReportData();
+}
+
+async function runDownload(
+  setBusy: (busy: boolean) => void,
+  action: () => Promise<unknown>,
+) {
+  if (!selectedEdition.value) return;
+
+  setBusy(true);
   try {
-    await WorkService.downloadAdminTeacherWorkloadReport({
-      edition: selectedEdition.value,
-    });
+    await action();
     showMessage("Relatorio gerado com sucesso.", "success", 2200, "top-right", "light", false);
   } catch (error: any) {
     showMessage(error?.message || "Nao foi possivel gerar o relatorio.", "error", 3500, "top-right", "light", false);
   } finally {
-    downloadingTeacherReport.value = false;
+    setBusy(false);
   }
 }
 
-async function loadAllReports() {
-  await Promise.all([loadReportData(), loadTeamReportData(), loadTeacherReportData()]);
+const downloadReport = () =>
+  runDownload((busy) => (downloading.value = busy), () =>
+    WorkService.downloadAdminAdvisorProposalReport({ edition: selectedEdition.value }),
+  );
+
+const downloadTeamReport = () =>
+  runDownload((busy) => (downloadingTeamReport.value = busy), () =>
+    WorkService.downloadAdminTeamProposalReport({ edition: selectedEdition.value }),
+  );
+
+const downloadTeacherReport = () =>
+  runDownload((busy) => (downloadingTeacherReport.value = busy), () =>
+    WorkService.downloadAdminTeacherWorkloadReport({ edition: selectedEdition.value }),
+  );
+
+/* ---------- Paineis abertos ---------- */
+
+function expandAll() {
+  if (activeTab.value === "advisor") advisorOpen.value = filteredAdvisorGroups.value.map(advisorKey);
 }
+
+function collapseAll() {
+  advisorOpen.value = [];
+}
+
+function syncOpenPanelsWithSearch() {
+  if (!query.value) {
+    collapseAll();
+    return;
+  }
+
+  advisorOpen.value =
+    filteredAdvisorGroups.value.length <= AUTO_OPEN_LIMIT ? filteredAdvisorGroups.value.map(advisorKey) : [];
+}
+
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
+watch(search, (value) => {
+  if (searchTimeout) clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    debouncedSearch.value = value ?? "";
+    syncOpenPanelsWithSearch();
+  }, 250);
+});
 
 watch(selectedEdition, () => {
-  if (!loading.value) {
-    loadAllReports();
-  }
+  if (loading.value) return;
+
+  reportData.value = null;
+  teamReportData.value = null;
+  teacherReportData.value = null;
+  collapseAll();
+  loadActiveTab();
+});
+
+watch(activeTab, () => {
+  loadActiveTab();
 });
 
 onMounted(async () => {
@@ -276,7 +415,7 @@ onMounted(async () => {
   }
 
   await loadInitialData();
-  await loadAllReports();
+  await loadActiveTab();
 });
 </script>
 
@@ -290,10 +429,10 @@ onMounted(async () => {
         </div>
         <v-btn
           color="primary"
-          :disabled="loading || loadingReport"
+          :disabled="loading"
           icon="mdi-refresh"
           variant="tonal"
-          @click="loadReportData"
+          @click="loadActiveTab(true)"
         >
           <v-icon icon="mdi-refresh" />
           <v-tooltip activator="parent" location="bottom">Atualizar</v-tooltip>
@@ -302,39 +441,91 @@ onMounted(async () => {
 
       <AdminNavigation />
 
-      <section class="report-surface">
-        <div class="report-title-row">
-          <div>
-            <h2>Propostas por orientador</h2>
-            <p>Relatorio completo da edicao organizado por professor orientador.</p>
-          </div>
-          <v-chip color="primary" variant="tonal">
-            {{ totalWorks }} trabalhos
-          </v-chip>
-        </div>
+      <div class="report-toolbar">
+        <v-select
+          v-model="selectedEdition"
+          density="comfortable"
+          hide-details
+          item-title="title"
+          item-value="value"
+          :items="editionOptions"
+          label="Edicao"
+          prepend-inner-icon="mdi-calendar"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="search"
+          clearable
+          density="comfortable"
+          hide-details
+          label="Buscar por trabalho, professor, aluno ou turma"
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+        />
+      </div>
 
-        <div class="report-filters">
-          <v-select
-            v-model="selectedEdition"
-            density="comfortable"
-            hide-details
-            item-title="title"
-            item-value="value"
-            :items="editionOptions"
-            label="Edicao"
-            prepend-inner-icon="mdi-calendar"
-            variant="outlined"
-          />
-          <v-btn
-            class="report-download"
-            color="primary"
-            :disabled="!reportAvailable || !selectedEdition"
-            :loading="downloading"
-            prepend-icon="mdi-file-pdf-box"
-            @click="downloadReport"
-          >
-            Emitir PDF
-          </v-btn>
+      <v-tabs v-model="activeTab" class="report-tabs" color="primary">
+        <v-tab value="advisor">
+          Por orientador
+          <v-chip v-if="reportData" class="ml-2" size="x-small" variant="tonal">{{ totalWorks }}</v-chip>
+        </v-tab>
+        <v-tab value="team">
+          Por equipe
+          <v-chip v-if="teamReportData" class="ml-2" size="x-small" variant="tonal">{{ totalTeamWorks }}</v-chip>
+        </v-tab>
+        <v-tab value="teacher">
+          Por professor
+          <v-chip v-if="teacherReportData" class="ml-2" size="x-small" variant="tonal">{{ totalTeachers }}</v-chip>
+        </v-tab>
+      </v-tabs>
+
+      <v-alert
+        v-if="!loading && !selectedEdition"
+        class="mb-4"
+        color="blue-grey"
+        icon="mdi-alert-circle-outline"
+        variant="tonal"
+      >
+        Selecione uma edicao.
+      </v-alert>
+
+      <!-- ===== Por orientador ===== -->
+      <section v-if="activeTab === 'advisor'" class="report-surface">
+        <div class="report-actions">
+          <p class="report-summary">
+            <template v-if="reportData && reportAvailable">
+              <strong>{{ advisorShownWorks }}</strong> de {{ totalWorks }} trabalhos em
+              <strong>{{ filteredAdvisorGroups.length }}</strong> orientadores
+            </template>
+            <template v-else>Relatorio completo da edicao, organizado por professor orientador.</template>
+          </p>
+          <div class="report-buttons">
+            <v-btn
+              v-if="reportAvailable && filteredAdvisorGroups.length"
+              prepend-icon="mdi-unfold-more-horizontal"
+              variant="text"
+              @click="expandAll"
+            >
+              Expandir tudo
+            </v-btn>
+            <v-btn
+              v-if="reportAvailable && filteredAdvisorGroups.length"
+              prepend-icon="mdi-unfold-less-horizontal"
+              variant="text"
+              @click="collapseAll"
+            >
+              Recolher tudo
+            </v-btn>
+            <v-btn
+              color="primary"
+              :disabled="!reportAvailable || !selectedEdition"
+              :loading="downloading"
+              prepend-icon="mdi-file-pdf-box"
+              @click="downloadReport"
+            >
+              Emitir PDF
+            </v-btn>
+          </div>
         </div>
 
         <v-skeleton-loader v-if="loading || loadingReport" type="table" />
@@ -350,64 +541,58 @@ onMounted(async () => {
             {{ reportMessage }}
           </v-alert>
 
-          <v-alert
-            v-else-if="!selectedEdition"
-            class="mb-4"
-            color="blue-grey"
-            icon="mdi-alert-circle-outline"
-            variant="tonal"
+          <v-expansion-panels
+            v-if="reportAvailable && filteredAdvisorGroups.length"
+            v-model="advisorOpen"
+            multiple
+            variant="accordion"
           >
-            Selecione uma edicao.
-          </v-alert>
-
-          <div v-if="reportAvailable && reportGroups.length" class="advisor-groups">
-            <section v-for="group in reportGroups" :key="personLabel(group.advisor)" class="advisor-group">
-              <div class="advisor-group-header">
-                <div>
-                  <p>Orientador</p>
-                  <h3>{{ personLabel(group.advisor) }}</h3>
+            <v-expansion-panel v-for="group in filteredAdvisorGroups" :key="advisorKey(group)" :value="advisorKey(group)">
+              <v-expansion-panel-title>
+                <div class="group-title">
+                  <v-icon icon="mdi-account-tie-outline" size="20" />
+                  <span class="group-name">{{ personLabel(group.advisor) }}</span>
+                  <v-chip color="primary" size="small" variant="tonal">{{ group.count }} trabalhos</v-chip>
                 </div>
-                <v-chip color="primary" size="small" variant="tonal">
-                  {{ group.count }} trabalhos
-                </v-chip>
-              </div>
-
-              <div class="report-table-wrap">
-                <v-table density="comfortable">
-                  <thead>
-                    <tr>
-                      <th>Titulo do trabalho</th>
-                      <th>Equipe / turma</th>
-                      <th>Turmas envolvidas</th>
-                      <th>Colaborador</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="row in group.rows" :key="row.id">
-                      <td>{{ row.title }}</td>
-                      <td>
-                        <div v-if="row.team_members?.length" class="team-members">
-                          <div v-for="member in row.team_members" :key="member.id" class="team-member">
-                            <span>{{ personLabel(member) }}</span>
-                            <v-chip color="blue-grey" size="small" variant="tonal">
-                              {{ member.classes_label }}
-                            </v-chip>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <div class="report-table-wrap">
+                  <v-table density="comfortable">
+                    <thead>
+                      <tr>
+                        <th>Titulo do trabalho</th>
+                        <th>Equipe / turma</th>
+                        <th>Turmas envolvidas</th>
+                        <th>Colaborador</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="row in group.rows" :key="row.id">
+                        <td>{{ row.title }}</td>
+                        <td>
+                          <div v-if="row.team_members?.length" class="team-members">
+                            <div v-for="member in row.team_members" :key="member.id" class="team-member">
+                              <span>{{ personLabel(member) }}</span>
+                              <v-chip color="blue-grey" size="small" variant="tonal">
+                                {{ member.classes_label }}
+                              </v-chip>
+                            </div>
                           </div>
-                        </div>
-                        <span v-else>{{ row.team_members_label }}</span>
-                      </td>
-                      <td>{{ row.classes_label }}</td>
-                      <td>{{ row.collaborators_label }}</td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </div>
-            </section>
-          </div>
+                          <span v-else>{{ row.team_members_label }}</span>
+                        </td>
+                        <td>{{ row.classes_label }}</td>
+                        <td>{{ row.collaborators_label }}</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                </div>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
 
-          <div v-else-if="reportAvailable" class="report-empty">
+          <div v-else-if="reportAvailable && selectedEdition" class="report-empty">
             <v-icon color="primary" icon="mdi-file-search-outline" size="44" />
-            <p>Nenhum trabalho encontrado para esta edicao.</p>
+            <p>{{ query ? "Nenhum resultado para a busca." : "Nenhum trabalho encontrado para esta edicao." }}</p>
           </div>
 
           <p v-if="reportData?.available_after" class="report-date">
@@ -416,171 +601,103 @@ onMounted(async () => {
         </template>
       </section>
 
-      <section class="report-surface">
-        <div class="report-title-row">
-          <div>
-            <h2>Propostas submetidas por equipe</h2>
-            <p>Alunos que submeteram propostas e seus trabalhos, agrupados por equipe. Disponivel a qualquer momento.</p>
+      <!-- ===== Por equipe ===== -->
+      <section v-else-if="activeTab === 'team'" class="report-surface">
+        <div class="report-actions">
+          <p class="report-summary">
+            <template v-if="teamReportData">
+              <strong>{{ teamRows.length }}</strong> de {{ totalTeamWorks }} trabalhos submetidos
+            </template>
+            <template v-else>Alunos que submeteram propostas e seus trabalhos, por equipe.</template>
+          </p>
+          <div class="report-buttons">
+            <v-btn
+              color="primary"
+              :disabled="!selectedEdition"
+              :loading="downloadingTeamReport"
+              prepend-icon="mdi-file-excel-box"
+              @click="downloadTeamReport"
+            >
+              Exportar XLSX
+            </v-btn>
           </div>
-          <v-chip color="primary" variant="tonal">
-            {{ totalTeamWorks }} trabalhos
-          </v-chip>
-        </div>
-
-        <div class="report-filters">
-          <v-select
-            v-model="selectedEdition"
-            density="comfortable"
-            hide-details
-            item-title="title"
-            item-value="value"
-            :items="editionOptions"
-            label="Edicao"
-            prepend-inner-icon="mdi-calendar"
-            variant="outlined"
-          />
-          <v-btn
-            class="report-download"
-            color="primary"
-            :disabled="!selectedEdition"
-            :loading="downloadingTeamReport"
-            prepend-icon="mdi-file-excel-box"
-            @click="downloadTeamReport"
-          >
-            Exportar XLSX
-          </v-btn>
         </div>
 
         <v-skeleton-loader v-if="loading || loadingTeamReport" type="table" />
 
-        <template v-else>
-          <v-alert
-            v-if="!selectedEdition"
-            class="mb-4"
-            color="blue-grey"
-            icon="mdi-alert-circle-outline"
-            variant="tonal"
-          >
-            Selecione uma edicao.
-          </v-alert>
-
-          <div v-if="teamReportGroups.length" class="advisor-groups">
-            <section v-for="group in teamReportGroups" :key="group.team_id" class="advisor-group">
-              <div class="advisor-group-header">
-                <div>
-                  <p>Equipe</p>
-                  <h3>{{ group.team_members_label }}</h3>
-                </div>
-                <v-chip color="blue-grey" size="small" variant="tonal">
-                  {{ group.classes_label }}
-                </v-chip>
-              </div>
-
-              <div class="report-table-wrap">
-                <v-table density="comfortable">
-                  <thead>
-                    <tr>
-                      <th>Trabalho</th>
-                      <th>Status do trabalho</th>
-                      <th>Orientador</th>
-                      <th>Status do orientador</th>
-                      <th>Data da submissao</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="row in group.rows" :key="row.id">
-                      <td>{{ row.title }}</td>
-                      <td>{{ row.status_label }}</td>
-                      <td>{{ row.advisor_label }}</td>
-                      <td>{{ row.advisor_status_label }}</td>
-                      <td>{{ row.submitted_at || "-" }}</td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </div>
-            </section>
-          </div>
-
-          <div v-else-if="selectedEdition" class="report-empty">
-            <v-icon color="primary" icon="mdi-file-search-outline" size="44" />
-            <p>Nenhum trabalho encontrado para esta edicao.</p>
-          </div>
+        <template v-else-if="selectedEdition">
+          <v-data-table
+            density="comfortable"
+            :headers="teamHeaders"
+            item-value="key"
+            :items="teamRows"
+            :items-per-page="25"
+            :items-per-page-options="[10, 25, 50, 100]"
+            no-data-text="Nenhum trabalho encontrado."
+          />
         </template>
       </section>
 
-      <section class="report-surface">
-        <div class="report-title-row">
-          <div>
-            <h2>Orientacao e colaboracao por professor</h2>
-            <p>Quantidade de trabalhos que cada professor orienta e nos quais colabora.</p>
+      <!-- ===== Por professor ===== -->
+      <section v-else class="report-surface">
+        <div class="report-actions">
+          <p class="report-summary">
+            <template v-if="teacherReportData">
+              <strong>{{ teacherItems.length }}</strong> de {{ totalTeachers }} professores — abra a linha pra ver os trabalhos
+            </template>
+            <template v-else>Quantidade de trabalhos que cada professor orienta e nos quais colabora.</template>
+          </p>
+          <div class="report-buttons">
+            <v-btn
+              color="primary"
+              :disabled="!selectedEdition"
+              :loading="downloadingTeacherReport"
+              prepend-icon="mdi-file-excel-box"
+              @click="downloadTeacherReport"
+            >
+              Exportar XLSX
+            </v-btn>
           </div>
-          <v-chip color="primary" variant="tonal">
-            {{ totalTeachers }} professores
-          </v-chip>
-        </div>
-
-        <div class="report-filters">
-          <v-select
-            v-model="selectedEdition"
-            density="comfortable"
-            hide-details
-            item-title="title"
-            item-value="value"
-            :items="editionOptions"
-            label="Edicao"
-            prepend-inner-icon="mdi-calendar"
-            variant="outlined"
-          />
-          <v-btn
-            class="report-download"
-            color="primary"
-            :disabled="!selectedEdition"
-            :loading="downloadingTeacherReport"
-            prepend-icon="mdi-file-excel-box"
-            @click="downloadTeacherReport"
-          >
-            Exportar XLSX
-          </v-btn>
         </div>
 
         <v-skeleton-loader v-if="loading || loadingTeacherReport" type="table" />
 
-        <template v-else>
-          <v-alert
-            v-if="!selectedEdition"
-            class="mb-4"
-            color="blue-grey"
-            icon="mdi-alert-circle-outline"
-            variant="tonal"
+        <template v-else-if="selectedEdition">
+          <v-data-table
+            v-model:expanded="teacherExpanded"
+            density="comfortable"
+            :headers="teacherHeaders"
+            item-value="key"
+            :items="teacherItems"
+            :items-per-page="25"
+            :items-per-page-options="[10, 25, 50, 100]"
+            no-data-text="Nenhum professor encontrado."
+            show-expand
+            :sort-by="[{ key: 'total_count', order: 'desc' }]"
           >
-            Selecione uma edicao.
-          </v-alert>
-
-          <div v-if="teacherReportGroups.length" class="report-table-wrap">
-            <v-table density="comfortable">
-              <thead>
-                <tr>
-                  <th>Professor</th>
-                  <th>Orientacoes</th>
-                  <th>Colaboracoes</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="row in teacherReportGroups" :key="personLabel(row.teacher)">
-                  <td>{{ personLabel(row.teacher) }}</td>
-                  <td>{{ row.advising_count }}</td>
-                  <td>{{ row.collaboration_count }}</td>
-                  <td>{{ row.total_count }}</td>
-                </tr>
-              </tbody>
-            </v-table>
-          </div>
-
-          <div v-else-if="selectedEdition" class="report-empty">
-            <v-icon color="primary" icon="mdi-file-search-outline" size="44" />
-            <p>Nenhum professor encontrado para esta edicao.</p>
-          </div>
+            <template #expanded-row="{ columns, item }">
+              <tr class="teacher-expanded">
+                <td :colspan="columns.length">
+                  <div class="teacher-titles">
+                    <div>
+                      <p>Orienta ({{ item.advising_count }})</p>
+                      <ul v-if="item.advising_titles.length">
+                        <li v-for="title in item.advising_titles" :key="title">{{ title }}</li>
+                      </ul>
+                      <span v-else>Nenhum trabalho.</span>
+                    </div>
+                    <div>
+                      <p>Colabora ({{ item.collaboration_count }})</p>
+                      <ul v-if="item.collaboration_titles.length">
+                        <li v-for="title in item.collaboration_titles" :key="title">{{ title }}</li>
+                      </ul>
+                      <span v-else>Nenhum trabalho.</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
         </template>
       </section>
     </v-container>
@@ -617,81 +734,59 @@ onMounted(async () => {
   margin: 0;
 }
 
+.report-toolbar {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(220px, 320px) minmax(260px, 1fr);
+  margin-bottom: 16px;
+}
+
+.report-tabs {
+  margin-bottom: 16px;
+}
+
 .report-surface {
-  padding: 22px;
+  padding: 18px;
   border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
   border-radius: 8px;
   background: rgba(var(--v-theme-surface), 1);
 }
 
-.report-title-row {
+.report-actions {
+  align-items: center;
   display: flex;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
-.report-title-row h2 {
-  color: rgba(var(--v-theme-on-surface), 1);
-  font-size: 20px;
-  font-weight: 700;
+.report-summary {
+  color: rgba(var(--v-theme-on-surface), 0.72);
+  font-size: 0.94rem;
   margin: 0;
 }
 
-.report-title-row p {
-  color: rgba(var(--v-theme-on-surface), 0.68);
-  margin: 4px 0 0;
-  font-size: 0.94rem;
-}
-
-.report-filters {
-  display: grid;
-  grid-template-columns: minmax(220px, 1fr) auto;
-  gap: 12px;
+.report-buttons {
   align-items: center;
-  margin-bottom: 18px;
-}
-
-.report-download {
-  min-height: 48px;
-}
-
-.advisor-groups {
   display: flex;
-  flex-direction: column;
-  gap: 18px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.advisor-group {
-  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.advisor-group-header {
+.group-title {
   align-items: center;
-  background: rgba(var(--v-theme-background), 1);
   display: flex;
-  gap: 16px;
-  justify-content: space-between;
-  padding: 14px 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-width: 0;
 }
 
-.advisor-group-header p {
-  color: rgba(var(--v-theme-on-surface), 0.6);
-  font-size: 12px;
-  font-weight: 700;
-  margin: 0 0 2px;
-  text-transform: uppercase;
-}
-
-.advisor-group-header h3 {
-  color: rgba(var(--v-theme-on-surface), 1);
-  font-size: 17px;
+.group-name {
+  font-size: 16px;
   font-weight: 700;
   line-height: 1.25;
-  margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .report-table-wrap {
@@ -728,6 +823,31 @@ onMounted(async () => {
   gap: 6px;
 }
 
+.teacher-titles {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  padding: 8px 0 12px;
+}
+
+.teacher-titles p {
+  color: rgba(var(--v-theme-on-surface), 0.62);
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.teacher-titles ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.teacher-titles li {
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
 .report-empty {
   min-height: 220px;
   display: flex;
@@ -755,15 +875,17 @@ onMounted(async () => {
     padding: 16px;
   }
 
-  .reports-header,
-  .report-title-row,
-  .advisor-group-header {
+  .reports-header {
     align-items: stretch;
     flex-direction: column;
   }
 
-  .report-filters {
+  .report-toolbar {
     grid-template-columns: 1fr;
+  }
+
+  .report-surface {
+    padding: 12px;
   }
 }
 </style>
