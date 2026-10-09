@@ -251,7 +251,10 @@ class WorkService {
       if (userType === "STUDENT") {
         const { data } = await api.get(`/work/?team_member_id=${userId}`);
         return data;
-      } else if (userType === "TEACHER") {
+      } else if (userType) {
+        // Qualquer usuario que nao seja aluno (professor, admin, TAE...): quem tem vinculo
+        // enxerga os trabalhos. Avaliador e colaborador podem ser de qualquer tipo; so
+        // orientador exige professor — e o proprio backend filtra por vinculo.
         const works:userWorks = {
           advisor: [],
           collaborator: [],
@@ -273,7 +276,7 @@ class WorkService {
         return works;
       }
 
-      // ADMIN não tem orientação/colaboração/avaliação — vazio, não null, senão quebra quem lê works.advisor.
+      // Sem tipo de usuario (nao logado): vazio, nao null, senao quebra quem le works.advisor.
       return { advisor: [], collaborator: [], evaluator: [] } as userWorks
     } catch (error) {
       this.handleError(error, "Não foi possível carregar seus trabalhos.");

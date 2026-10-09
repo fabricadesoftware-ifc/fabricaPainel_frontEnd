@@ -71,7 +71,12 @@ api.interceptors.response.use(
     originalRequest._retry = true;
 
     try {
-      const token = await refreshAccessToken();
+      // Se outra requisição já renovou o token enquanto esta estava em voo, o 401
+      // veio do token antigo: basta repetir com o atual, sem gastar outro refresh
+      // (o refresh token é de uso único).
+      const sentWith = String(originalRequest.headers?.Authorization || "").replace(/^Bearer\s+/i, "");
+      const current = useAuth().token;
+      const token = current && sentWith && current !== sentWith ? current : await refreshAccessToken();
       originalRequest.headers.Authorization = `Bearer ${token}`;
       return api(originalRequest);
     } catch (refreshError) {
