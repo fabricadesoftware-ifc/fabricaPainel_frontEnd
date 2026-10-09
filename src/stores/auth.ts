@@ -125,19 +125,33 @@ export const useAuth = defineStore("user", () => {
     return true;
   }
 
-  const refreshToken = async () => {
-    try {
-      const { access, refresh } = await authService.refreshToken(state.value.refresh);
-      state.value.token = access;
-      // Com ROTATE_REFRESH_TOKENS ativo, cada refresh invalida o token anterior
-      // e devolve um novo — precisa ser guardado, senão o próximo refresh falha.
-      if (refresh) state.value.refresh = refresh;
-      state.value.isLogged = true;
-      return access;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  // Renovação única: com ROTATE_REFRESH_TOKENS + blacklist, o refresh token só vale
+  // uma vez. Se checkAuth (ao abrir o app) e o interceptor de 401 renovassem ao
+  // mesmo tempo, a segunda chamada caía em "token não é válido para qualquer tipo
+  // de token" e derrubava a sessão. Quem chega durante uma renovação espera a mesma.
+  let refreshInFlight: Promise<string> | null = null;
+
+  const refreshToken = () => {
+    if (refreshInFlight) return refreshInFlight;
+
+    refreshInFlight = (async () => {
+      try {
+        const { access, refresh } = await authService.refreshToken(state.value.refresh);
+        state.value.token = access;
+        // Com ROTATE_REFRESH_TOKENS ativo, cada refresh invalida o token anterior
+        // e devolve um novo — precisa ser guardado, senão o próximo refresh falha.
+        if (refresh) state.value.refresh = refresh;
+        state.value.isLogged = true;
+        return access as string;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    })().finally(() => {
+      refreshInFlight = null;
+    });
+
+    return refreshInFlight;
   };
 
   const getPassword = async () => {
