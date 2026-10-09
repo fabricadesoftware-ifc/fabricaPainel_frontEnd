@@ -116,7 +116,11 @@ export default defineConfig(({ command }) => {
       workbox: {
   navigateFallback: '/index.html',
 
-  globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+  // Imagens (logos, banner) entram no precache: sem isso elas eram buscadas na rede
+  // toda vez, e depois de um deploy o HTML antigo (em cache) apontava para um arquivo
+  // com hash que nao existe mais — o static.json responde index.html pra qualquer
+  // caminho inexistente, entao a logo aparecia quebrada.
+  globPatterns: ['**/*.{js,css,html,ico,svg,woff2,png,webp,jpg}'],
 
   runtimeCaching: [
     {
