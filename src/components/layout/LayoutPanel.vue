@@ -80,6 +80,9 @@ onMounted(() => {
                 @click="router.push(link.value)">
                 <v-list-item-title>{{ link.text }}</v-list-item-title>
               </v-list-item>
+              <v-divider class="my-2" />
+              <ThemeOptions />
+              <v-divider class="my-2" />
               <v-list-item @click="authStore.logout()" class="mt-10">
                 <div class="d-flex flex-row justify-center align-center ga-2">
                   <v-icon color="red" icon="mdi-logout" />

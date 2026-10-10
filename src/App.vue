@@ -26,11 +26,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, onUnmounted } from 'vue'
+  import { onMounted, onUnmounted, watch } from 'vue'
+  import { useTheme } from 'vuetify'
   import { useRouter, useRoute } from 'vue-router'
   import { toast } from 'vue3-toastify'
   import { globalRouter } from "./plugins/globalRouter";
   import { useAuth } from '@/stores/auth'
+  import { uselayout } from '@/stores/app'
 
 
   const router = useRouter()
@@ -38,6 +40,16 @@
   const authStore = useAuth()
 
   globalRouter.router = router
+
+  // Modo escuro: o store guarda a escolha (ou a preferencia do sistema) e o Vuetify
+  // troca de tema em cima disso. Funciona em todas as telas, nao so no painel.
+  const theme = useTheme()
+  const layoutStore = uselayout()
+  watch(
+    () => layoutStore.darkMode,
+    (dark) => { theme.global.name.value = dark ? 'dark' : 'light' },
+    { immediate: true }
+  )
 
   // Aviso de nova versão disponível (Service Worker / PWA).
   // Sem isso, o usuário fica rodando os arquivos antigos em cache e só percebe

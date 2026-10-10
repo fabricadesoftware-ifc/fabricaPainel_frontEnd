@@ -124,7 +124,7 @@ onMounted(() => {
                 <div>
                   <p style="color: gray">
                     {{ formatDate(upcomingEditions[0]?.event_date ?? "") }}
-                    <span style="color: black">até</span>
+                    <span>até</span>
                     {{
                       formatDate(upcomingEditions[0]?.final_event_date ?? "")
                     }}
@@ -189,7 +189,7 @@ onMounted(() => {
                 <div>
                   <p style="color: gray">
                     {{ formatDate(openEdition?.event_date ?? "") }}
-                    <span style="color: black">até</span>
+                    <span>até</span>
                     {{ formatDate(openEdition?.final_event_date ?? "") }}
                   </p>
                 </div>
@@ -289,7 +289,7 @@ onMounted(() => {
                 <div>
                   <p style="color: gray">
                     {{ formatDate(edition?.event_date ?? "") }}
-                    <span style="color: black">até</span>
+                    <span>até</span>
                     {{ formatDate(edition?.final_event_date ?? "") }}
                   </p>
                 </div>

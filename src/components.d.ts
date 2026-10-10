@@ -71,6 +71,7 @@ declare module 'vue' {
     SuccessStep: typeof import('./components/steps/layout/SuccessStep.vue')['default']
     TeacherContainer: typeof import('./components/work/members/TeacherContainer.vue')['default']
     TeacherSelected: typeof import('./components/inputs/TeacherSelected.vue')['default']
+    ThemeOptions: typeof import('./components/globals/ThemeOptions.vue')['default']
     TitleH1: typeof import('./components/globals/TitleH1.vue')['default']
     UserList: typeof import('./components/auth/UserList.vue')['default']
     UserMenu: typeof import('./components/globals/UserMenu.vue')['default']

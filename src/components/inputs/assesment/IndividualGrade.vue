@@ -115,21 +115,21 @@ function sendWorkData() {
 <template>
   <v-dialog :model-value="modelValue" @update:model-value="emits('update:modelValue', $event)" scrollable fullscreen :overlay="false" transition="dialog-transition">
     <div :class="`${width > 780 ? 'w-100' : 'w-75'} h-100 mx-auto d-flex justify-center align-center`">
-      <div class="grade-dialog bg-white d-flex flex-column rounded-lg pa-5">
+      <div class="grade-dialog bg-surface text-high-emphasis d-flex flex-column rounded-lg pa-5">
         <div class="d-flex flex-column ga-2">
-          <h2 :style="{ fontSize: width > 780 ? '25px' : '20px' }" class="text-grey-darken-4">
+          <h2 :style="{ fontSize: width > 780 ? '25px' : '20px' }" class="text-high-emphasis">
             {{ isEditing ? 'Editar nota do aluno' : 'Atribuir nota ao aluno' }}
           </h2>
-          <p :style="{ fontSize: width > 780 ? '20px' : '15px' }" class="text-grey-darken-3">
+          <p :style="{ fontSize: width > 780 ? '20px' : '15px' }" class="text-medium-emphasis">
             Nota final: {{ finalGrade.toFixed(2) }}
           </p>
         </div>
 
         <div class="d-flex flex-column ga-2 align-center">
-          <p :style="{ fontSize: width > 780 ? '25px' : '20px', fontWeight: '600' }" class="text-blue-darken-2">
+          <p :style="{ fontSize: width > 780 ? '25px' : '20px', fontWeight: '600' }" class="text-primary">
             {{ props.user?.name }}
           </p>
-          <p :style="{ fontSize: width > 780 ? '18px' : '15px' }" class="text-grey-darken-3">
+          <p :style="{ fontSize: width > 780 ? '18px' : '15px' }" class="text-medium-emphasis">
             {{ props.user?.email }}
           </p>
         </div>
@@ -156,13 +156,13 @@ function sendWorkData() {
         <div v-else class="w-100 d-flex flex-column justify-center align-center ga-5">
           <input
             v-model="singleGrade"
-            style="outline: none; height: 100px; font-size: 25px;"
+            style="outline: none; height: 100px; font-size: 25px; color: inherit; background: transparent;"
             class="text-center align-center"
             type="text"
             inputmode="decimal"
             @blur="normalizeSingleGrade"
           >
-          <div style="width: 200px; height: 3px;" class="bg-blue-darken-2"></div>
+          <div style="width: 200px; height: 3px;" class="bg-primary"></div>
         </div>
 
         <VCardActions class="w-100 d-flex justify-end">

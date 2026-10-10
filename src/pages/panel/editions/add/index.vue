@@ -430,7 +430,7 @@ function PrevStep() {
 }
 
 .edition-stepper {
-  background: #fff;
+  background: rgb(var(--v-theme-surface));
 }
 
 .edition-window {

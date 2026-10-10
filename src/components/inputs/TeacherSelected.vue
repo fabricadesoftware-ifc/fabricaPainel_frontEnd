@@ -129,7 +129,7 @@ watch(searchQuery, (newValue) => {
       <v-list-item v-for="user in filteredUsers" :key="user.id" class="w-100">
         <v-hover>
           <template #default="{ props, isHovering }">
-            <v-list-item v-bind="props" class="cursor-pointer" :class="{ 'bg-grey-lighten-2': isHovering }"
+            <v-list-item v-bind="props" class="cursor-pointer" :class="{ 'bg-surface-variant': isHovering }"
               @click="addUser(user)">
               <template #title>
                 <p class="text-capitalize font-weight-medium mb-1">
@@ -154,7 +154,7 @@ watch(searchQuery, (newValue) => {
       </v-list-item>
     </v-list>
 
-    <div class="d-flex flex-column ga-2 overflow-y-auto text-center px-2 pb-2 elevation-1 w-100 bg-white"
+    <div class="d-flex flex-column ga-2 overflow-y-auto text-center px-2 pb-2 elevation-1 w-100 bg-surface"
       style="max-height: 300px; position: absolute; z-index: 1" :style="`top: ${inputHeight}px`" v-else-if="focused">
       <v-divider></v-divider>
       <p>
