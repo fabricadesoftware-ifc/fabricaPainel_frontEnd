@@ -13,12 +13,14 @@ import { pt } from 'vuetify/locale'
 // Composables
 import { createVuetify } from "vuetify";
 
-// Tema inicial: escolha salva do usuario (chave usada pelo store de layout) ou,
-// se nunca escolheu, a preferencia do sistema. Decidido aqui para nao piscar claro.
+// Tema inicial: escolha salva do usuario (chave `themeMode` do store de layout:
+// 'light' | 'dark' | 'system') ou, em 'system'/sem escolha, a preferencia do
+// sistema. Decidido aqui para nao piscar claro antes do Vue montar.
 function initialTheme() {
   try {
-    const saved = localStorage.getItem('darkMode')
-    if (saved !== null) return saved === 'true' ? 'dark' : 'light'
+    const saved = localStorage.getItem('themeMode')
+    if (saved === '"dark"' || saved === 'dark') return 'dark'
+    if (saved === '"light"' || saved === 'light') return 'light'
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   } catch {
     return 'light'

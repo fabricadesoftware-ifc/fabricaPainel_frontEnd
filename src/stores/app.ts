@@ -1,4 +1,4 @@
-import { computed, reactive } from "vue";
+import { computed, reactive, ref } from "vue";
 import { defineStore } from "pinia";
 import { useStorage } from "@vueuse/core";
 import { useRouter } from "vue-router";
@@ -28,11 +28,21 @@ export const uselayout = defineStore("layoutDefault", () => {
   const navbar = computed(() => filterByPermission(state.value.layout.navbar ?? []));
   const navbarDashboard = computed(() => filterByPermission(state.value.layout.navbarDashboard ?? []));
   const colorTheme = computed(() => state.value.layout.theme);
-  // Sem escolha salva, segue a preferencia do sistema (mesma regra do plugins/vuetify.ts).
-  const darkMode = useStorage(
-    "darkMode",
-    typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches
+  // Tema: 'system' (padrao, acompanha o sistema operacional ao vivo), 'light' ou 'dark'.
+  // Chave nova (`themeMode`): a antiga `darkMode` guardava `false` pra quem nunca
+  // escolheu nada, o que prenderia todo mundo no claro.
+  type ThemeMode = "system" | "light" | "dark";
+  const themeMode = useStorage<ThemeMode>("themeMode", "system");
+  const systemDark = ref(false);
+  if (typeof window !== "undefined" && window.matchMedia) {
+    const query = window.matchMedia("(prefers-color-scheme: dark)");
+    systemDark.value = query.matches;
+    query.addEventListener("change", (event) => (systemDark.value = event.matches));
+  }
+  const darkMode = computed(() =>
+    themeMode.value === "system" ? systemDark.value : themeMode.value === "dark"
   );
+  const setThemeMode = (mode: ThemeMode) => (themeMode.value = mode);
   const links = computed(() => {
     const result = navbarDashboard.value.filter((i: any) => {
       return i.value.split("/")[2] === currentPage.value.split("/")[2];
@@ -52,7 +62,6 @@ export const uselayout = defineStore("layoutDefault", () => {
   };
 
   const toggleDrawer = () => (state.value.drawer = !state.value.drawer);
-  const toggleDarkMode = () => (darkMode.value = !darkMode.value);
   const getSettings = async () => {
     try {
       const data = {
@@ -153,11 +162,12 @@ export const uselayout = defineStore("layoutDefault", () => {
     drawer,
     loading,
     darkMode,
+    themeMode,
+    setThemeMode,
     links,
     actionLinks,
     currentPage,
     getSettings,
     toggleDrawer,
-    toggleDarkMode,
   };
 });
