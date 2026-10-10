@@ -195,7 +195,7 @@ function showinfo() {
           "
         >
           <v-col
-            class="d-flex flex-column ga-4 justify-center bg-white rounded"
+            class="d-flex flex-column ga-4 justify-center bg-surface rounded"
             style="height: 90%; padding: 100px 40px; max-height: 80vw"
             cols="6"
           >

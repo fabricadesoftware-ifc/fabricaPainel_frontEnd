@@ -4,10 +4,12 @@ import { onMounted, ref } from "vue";
 // @ts-ignore
 import { useRouter } from "vue-router"
 import { useAuth } from "@/stores/auth";
+import { uselayout } from "@/stores/app";
 import { usersData } from "@/utils/userMenu";
 import { downloadPdf } from "@/utils/user";
 import { useDisplay } from "vuetify";
 const authStore = useAuth()
+const layoutStore = uselayout()
 const router = useRouter()
 const username = ref('')
 
@@ -45,6 +47,12 @@ onMounted(() => {
         <v-list-item-title>
           {{ item.name }}
         </v-list-item-title>
+      </v-list-item>
+      <v-list-item @click="layoutStore.toggleDarkMode()" class="d-flex flex-row align-center justify-center">
+        <div class="d-flex flex-row justify-center align-center ga-2">
+          <v-icon :icon="layoutStore.darkMode ? 'mdi-white-balance-sunny' : 'mdi-weather-night'" />
+          <v-list-item-title>{{ layoutStore.darkMode ? 'Modo claro' : 'Modo escuro' }}</v-list-item-title>
+        </div>
       </v-list-item>
       <v-list-item @click="authStore.logout()" class="mt-6">
         <div class="d-flex flex-row justify-center align-center ga-2">

@@ -2,7 +2,7 @@
   <v-container class="d-flex flex-wrap pa-0 w-lg-75" fluid>
     <v-row>
       <v-col cols="2">
-        <v-sheet>
+        <v-sheet color="transparent">
           <v-card variant="tonal">
             <v-card-text>
               <h2 class="text-h6 mb-2">Categorias</h2>
@@ -21,7 +21,7 @@
         </v-sheet>
       </v-col>
       <v-col>
-        <v-sheet class="ml-auto mr-0 d-flex flex-wrap ga-2" style="justify-content: space-between">
+        <v-sheet color="transparent" class="ml-auto mr-0 d-flex flex-wrap ga-2" style="justify-content: space-between">
           <v-card v-for="edition in filteredEditions" :key="edition.id" class="border-b border-white" height="15vw"
             :hover="true" rounded="xl" variant="outlined" width="20vw" @click="selectCard(edition.edition_name)">
             <div class="h-100 d-flex flex-column justify-space-between pa-6">

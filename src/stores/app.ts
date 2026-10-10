@@ -28,7 +28,11 @@ export const uselayout = defineStore("layoutDefault", () => {
   const navbar = computed(() => filterByPermission(state.value.layout.navbar ?? []));
   const navbarDashboard = computed(() => filterByPermission(state.value.layout.navbarDashboard ?? []));
   const colorTheme = computed(() => state.value.layout.theme);
-  const darkMode = useStorage("darkMode", false);
+  // Sem escolha salva, segue a preferencia do sistema (mesma regra do plugins/vuetify.ts).
+  const darkMode = useStorage(
+    "darkMode",
+    typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
   const links = computed(() => {
     const result = navbarDashboard.value.filter((i: any) => {
       return i.value.split("/")[2] === currentPage.value.split("/")[2];

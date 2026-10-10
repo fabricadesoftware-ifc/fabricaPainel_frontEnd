@@ -80,6 +80,12 @@ onMounted(() => {
                 @click="router.push(link.value)">
                 <v-list-item-title>{{ link.text }}</v-list-item-title>
               </v-list-item>
+              <v-list-item @click="layoutStore.toggleDarkMode()" class="d-flex flex-row align-center justify-center">
+                <div class="d-flex flex-row justify-center align-center ga-2">
+                  <v-icon :icon="layoutStore.darkMode ? 'mdi-white-balance-sunny' : 'mdi-weather-night'" />
+                  <v-list-item-title>{{ layoutStore.darkMode ? 'Modo claro' : 'Modo escuro' }}</v-list-item-title>
+                </div>
+              </v-list-item>
               <v-list-item @click="authStore.logout()" class="mt-10">
                 <div class="d-flex flex-row justify-center align-center ga-2">
                   <v-icon color="red" icon="mdi-logout" />
