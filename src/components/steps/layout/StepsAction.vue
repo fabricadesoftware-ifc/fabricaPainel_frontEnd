@@ -43,7 +43,7 @@ const computedMB = computed(() => {
       <VBtn
         v-if="actualstep !== successStep"
         v-bind="props"
-        class="border-none text-blue bg-white"
+        class="border-none text-blue bg-surface"
         :class="actualstep === 0 ? 'position-absolute right-0 mb-9 me-6' : ''"
         @click="$emit('NextStep')"
         :disabled="isDisabledValue"

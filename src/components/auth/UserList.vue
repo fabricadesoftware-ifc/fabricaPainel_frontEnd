@@ -6,7 +6,7 @@ const props = defineProps(['user', 'myUser'])
 
 <template>
   <v-list-item
-    class="bg-grey-lighten-4 rounded-lg pa-2 px-4 overflow-hidden"
+    class="bg-surface-light rounded-lg pa-2 px-4 overflow-hidden"
     :subtitle="props.user.email"
     :title="props.user.name"
   >

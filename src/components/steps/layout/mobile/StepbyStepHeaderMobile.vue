@@ -17,7 +17,7 @@ const { width } = useDisplay()
 <template>
   <div class="d-flex flex-column align-start justify-start w-25 overflow-hidden">
     <div class="d-flex align-center pa-10 mb-10">
-      <router-link class="text-decoration-none d-flex align-center text-black" to="/">
+      <router-link class="text-decoration-none d-flex align-center text-high-emphasis" to="/">
         <img src="../../../assets/sepe_logo.png" width="75" />
         <h1 class="font-weight-medium">Painel</h1>
       </router-link>
@@ -27,7 +27,7 @@ const { width } = useDisplay()
         <VListItem :value="step.value" :complete="step.complete" :color="actualstep === i ? 'blue' : (step.complete ? 'success' : 'grey')" class="pa-2 ms-5">
           <p :class="[
             actualstep === i ? 'text-blue font-weight-bold' :
-              (step.complete ? 'text-grey' : 'text-black')
+              (step.complete ? 'text-grey' : 'text-high-emphasis')
           ]" class="ms-2">
             {{ step.title }}
           </p>

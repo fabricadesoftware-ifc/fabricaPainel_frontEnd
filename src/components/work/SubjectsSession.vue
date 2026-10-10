@@ -28,19 +28,19 @@ const {width} = useDisplay()
      <div class="d-flex ga-10 flex-wrap">
             <div class="d-flex flex-column ga-5">
                <p class="opacity-70" :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">Disciplinas:</p>
-               <v-sheet class="d-flex ga-3 flex-wrap" :style="{maxWidth: width > 780 ? '300px' : '100%', width: width > 780 ? '300px' : '100%'}">
+               <v-sheet color="transparent" class="d-flex ga-3 flex-wrap" :style="{maxWidth: width > 780 ? '300px' : '100%', width: width > 780 ? '300px' : '100%'}">
                     <v-chip :style="{fontSize: width > 780 ? '15px' : '12px'}" v-for="(subject, index) in props.subjects" :key="index" label>{{ subject.name }}</v-chip>
                </v-sheet>
             </div>
             <div class="d-flex flex-column ga-5">
                <p class="opacity-70" :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">Tema Transversal:</p>
-                 <v-sheet class="d-flex ga-3 flex-wrap" :style="{maxWidth: width > 780 ? '300px' : '100%', width: width > 780 ? '300px' : '100%'}">
+                 <v-sheet color="transparent" class="d-flex ga-3 flex-wrap" :style="{maxWidth: width > 780 ? '300px' : '100%', width: width > 780 ? '300px' : '100%'}">
                     <v-chip :style="{fontSize: width > 780 ? '15px' : '12px'}"  label>{{ props.cross_cutting_theme.name }}</v-chip>
                </v-sheet>
             </div>
             <div class="d-flex flex-column ga-5">
                <p class="opacity-70 text-break" :style="{fontWeight: '700', fontSize: width > 780 ? '20px' : '15px'}">Objetivos de Desenvolvimento Sustentável:</p>
-               <v-sheet class="d-flex ga-3 flex-wrap" :style="{maxWidth: width > 780 ? '500px' : '100%', width: width > 780 ? '500px' : '100%'}">
+               <v-sheet color="transparent" class="d-flex ga-3 flex-wrap" :style="{maxWidth: width > 780 ? '500px' : '100%', width: width > 780 ? '500px' : '100%'}">
                     <v-chip :style="{fontSize: width > 780 ? '15px' : '12px'}" v-for="(od, index) in props.ods" :key="index" label>{{ od.name }}</v-chip>
                </v-sheet>
             </div>

@@ -39,7 +39,7 @@
     :error="Boolean(error)"
     :error-messages="error ? [error] : []"
   ></VTextField>
-  <div class="qtd-separator bg-grey-lighten-2 rounded-xl" v-if="placeholder === 'MIN'"></div>
+  <div class="qtd-separator bg-surface-variant rounded-xl" v-if="placeholder === 'MIN'"></div>
 </div>
 </template>
 <style scoped>
