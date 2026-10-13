@@ -15,10 +15,13 @@ export async function giveWorkGradeFn(
   is_work_grade: any,
   criterion_grades: any[] = [],
   closeDialog: () => void,
-  assessmentId: string | number | null = null
+  assessmentId: string | number | null = null,
+  onBehalfEvaluatorId: string | number | null = null
 ): Promise<void> {
-  
-  const work_evaluator = workStore?.currentWork?.evaluator.find(
+
+  // Admin lanca em nome de um avaliador ja atribuido (o backend valida que ele
+  // pertence ao trabalho); o proprio avaliador usa o seu id.
+  const work_evaluator = onBehalfEvaluatorId ?? workStore?.currentWork?.evaluator.find(
     (s: any) => s.user.id === Number(authStore?.user?.id)
   )?.id;
 
