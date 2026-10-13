@@ -90,11 +90,17 @@ const canEditGrade = computed(() =>
     Boolean(
         grade.value &&
         props.is_student &&
-        props.work_advisor?.id == props.user_id &&
+        isGrader.value &&
         props.advisor_able_to_give_grade &&
         workStore?.currentWork?.edition_year == date.getFullYear() &&
         workStore?.currentWork?.status === 2
     )
+)
+
+// Orientador do trabalho, ou admin lancando em nome do orientador (que nao
+// consegue acessar o sistema).
+const isGrader = computed(
+    () => authStore.user?.user_type === 'ADMIN' || props.work_advisor?.id == props.user_id
 )
 
 const grade = ref<any>(null)
@@ -146,13 +152,13 @@ const { width } = useDisplay()
                 {{ props.is_student ? 'Nota Individual:' : 'Status: ' }} </p>
 
             <v-btn @click="emits('openStudentAssesment')"
-                v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && props.advisor_able_to_give_grade && workStore?.currentWork?.edition_year == date.getFullYear() && workStore?.currentWork?.status === 2"
+                v-if="!grade && isGrader && props.is_student && props.advisor_able_to_give_grade && workStore?.currentWork?.edition_year == date.getFullYear() && workStore?.currentWork?.status === 2"
                 color="blue"
                 :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px' }">Atribuir
                 Nota</v-btn>
 
             <v-chip
-                v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && !props.advisor_able_to_give_grade && workStore?.currentWork?.edition_year == date.getFullYear() && workStore?.currentWork?.status === 2"
+                v-if="!grade && isGrader && props.is_student && !props.advisor_able_to_give_grade && workStore?.currentWork?.edition_year == date.getFullYear() && workStore?.currentWork?.status === 2"
                 color="blue-grey-lighten-1"
                 class="d-flex justify-center align-center"
                 label
@@ -161,7 +167,7 @@ const { width } = useDisplay()
             </v-chip>
 
             <v-chip
-                v-if="!grade && props.work_advisor.id == props.user_id && props.is_student && workStore?.currentWork?.edition_year != date.getFullYear()"
+                v-if="!grade && isGrader && props.is_student && workStore?.currentWork?.edition_year != date.getFullYear()"
                 :color="!grade ? 'yellow-darken-3' : 'green-darken-3'" class="d-flex justify-center align-center bg-red"
                 label :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px' }">
                 {{ !grade ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' :
@@ -169,7 +175,7 @@ const { width } = useDisplay()
                         Number(grade.grade)) / 2 : 'Aguardando Trabalho' }}
             </v-chip>
 
-            <div v-if="grade && props.work_advisor.id == props.user_id && props.is_student"
+            <div v-if="grade && isGrader && props.is_student"
                 class="d-flex ga-3 flex-wrap">
                 <v-chip color="green-darken-3" class="d-flex justify-center align-center" label
                     :style="{ fontSize: width > 780 ? '14px' : '12px', minWidth: width > 780 ? '140px' : '120px', cursor: canEditGrade ? 'pointer' : undefined }"
@@ -185,7 +191,7 @@ const { width } = useDisplay()
             </div>
 
             <v-chip
-                v-if="props.is_student && props.work_advisor.id != props.user_id && !authStore.user.is_collaborator && !authStore.user.is_evaluator && props.is_student"
+                v-if="props.is_student && !isGrader && !authStore.user.is_collaborator && !authStore.user.is_evaluator && props.is_student"
                 :color="!grade ? 'yellow-darken-3' : 'green-darken-3'" class="d-flex justify-center align-center" label
                 :style="{ width: width > 780 ? '180px' : '150px', fontSize: width > 780 ? '14px' : '12px' }">
                 {{ !grade ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' :

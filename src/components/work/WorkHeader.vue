@@ -61,6 +61,16 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // Admin lanca nota em nome do avaliador: o botao aparece enquanto houver
+  // avaliador atribuido sem nota (nao so quando nao ha nenhuma nota).
+  is_admin: {
+    type: Boolean,
+    default: false,
+  },
+  admin_can_grade: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Torna as props reativas
@@ -88,7 +98,8 @@ const shouldShowButton = computed(() => {
       return true;
     }
   } else {
-    return evaluator_able_to_give_grade.value && ws === 2 && !props.grade;
+    const noGradeYet = props.is_admin ? props.admin_can_grade : !props.grade;
+    return evaluator_able_to_give_grade.value && ws === 2 && noGradeYet;
   }
 
   return false;
@@ -103,7 +114,8 @@ const shouldShowDisabledButton = computed(() => {
 
   if (uf === "STUDENT" || uf === "COLLABORATOR" || uf === "ADVISOR") return false;
 
-  return evaluator_blocked_by_daily_window.value && ws === 2 && !props.grade;
+  const noGradeYet = props.is_admin ? props.admin_can_grade : !props.grade;
+  return evaluator_blocked_by_daily_window.value && ws === 2 && noGradeYet;
 });
 
 const reopenAtText = computed(() => {

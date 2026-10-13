@@ -16,12 +16,20 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // Admin lancando em nome de um avaliador ja atribuido: [{ id, label }].
+  // Sem a lista, a nota e do proprio avaliador logado (fluxo normal).
+  evaluators: {
+    type: Array,
+    default: () => [],
+  },
 })
 
 const emits = defineEmits(['giveGrade', 'close', 'update:modelValue'])
 const { width } = useDisplay()
 const singleGrade = ref('0')
 const criterionGrades = reactive({})
+const selectedEvaluator = ref(null)
+const needsEvaluator = computed(() => props.evaluators.length > 0)
 
 function parseGrade(value) {
   const grade = Math.abs(parseFloat(String(value ?? '').replace(',', '.')))
@@ -59,6 +67,7 @@ function fillFromAssessment() {
   })
 
   singleGrade.value = saved && !saved.criterion_grades?.length ? String(saved.grade) : '0'
+  selectedEvaluator.value = props.evaluators.length === 1 ? props.evaluators[0].id : null
 }
 
 watch(
@@ -106,6 +115,7 @@ function sendWorkData() {
     is_work_grade: true,
     assessment_id: props.assessment?.id ?? null,
     criterion_grades: criterionPayload(),
+    evaluator_id: needsEvaluator.value ? selectedEvaluator.value : null,
   })
 }
 </script>
@@ -122,6 +132,18 @@ function sendWorkData() {
             Nota final: {{ finalGrade.toFixed(2) }}
           </p>
         </div>
+
+        <VSelect
+          v-if="needsEvaluator"
+          v-model="selectedEvaluator"
+          :items="evaluators"
+          item-title="label"
+          item-value="id"
+          label="Nota em nome do avaliador"
+          variant="outlined"
+          density="comfortable"
+          hide-details
+        />
 
         <div v-if="hasCriteria" class="d-flex flex-column ga-4">
           <div v-for="criterion in criteria" :key="criterion.key" class="criterion-grade-row">
@@ -156,7 +178,7 @@ function sendWorkData() {
 
         <VCardActions class="w-100 d-flex justify-end">
           <VBtn class="font-weight-bold" @click="emits('close')">cancelar</VBtn>
-          <VBtn class="bg-blue rounded-xl" style="width: 150px;" @click="sendWorkData">{{ isEditing ? 'salvar' : 'confirmar' }}</VBtn>
+          <VBtn class="bg-blue rounded-xl" style="width: 150px;" :disabled="needsEvaluator && !selectedEvaluator" @click="sendWorkData">{{ isEditing ? 'salvar' : 'confirmar' }}</VBtn>
         </VCardActions>
       </div>
     </div>
