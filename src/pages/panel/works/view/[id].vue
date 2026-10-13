@@ -50,6 +50,26 @@ const myWorkAssessment = computed<any>(() => {
 const headerGrade = () =>
   (myWorkAssessment.value ?? assesmentStore.currentAssessment?.[0])?.grade;
 
+// Admin (so o tipo ADMIN, nao basta is_management) lanca a nota em nome de
+// professor que nao consegue acessar o sistema. Nao altera a banca: so escolhe
+// entre os avaliadores ja atribuidos que ainda nao tem nota.
+const isAdmin = computed(() => authStore.user?.user_type === "ADMIN");
+
+const pendingEvaluators = computed<any[]>(() => {
+  const graded = new Set(
+    (Array.isArray(assesmentStore.currentAssessment) ? assesmentStore.currentAssessment : []).map(
+      (item: any) => item.evaluator
+    )
+  );
+  return (workStore.currentWork?.evaluator ?? [])
+    .filter((item: any) => !graded.has(item.id))
+    .map((item: any) => ({ id: item.id, label: item.user?.name || item.user?.email || `Avaliador ${item.id}` }));
+});
+
+const headerUserFunction = computed(() =>
+  isAdmin.value ? "EVALUATOR" : resolveUserFunction(workStore.currentWork, authStore.user)
+);
+
 const usersValidation = computed(() => buildUserValidations(date, editionStore, workStore));
 
 const tokenExpired = authStore.isTokenExpired();
@@ -117,6 +137,7 @@ const confirmsAction = (confirm: string) => {
 interface Grade {
   work_grade: number;
   is_work_grade: boolean;
+  evaluator_id?: string | number | null;
   assessment_id?: string | number | null;
   criterion_grades?: any[];
 }
@@ -135,7 +156,8 @@ const giveWorkGrade = async (grade: Grade) => {
     grade.criterion_grades ?? [],
 
     () => (grade.is_work_grade ? workGrade.value = false : userGrade.value = false),
-    grade.assessment_id ?? null
+    grade.assessment_id ?? null,
+    isAdmin.value ? grade.evaluator_id ?? null : null
   );
 
   if (grade.is_work_grade) {
@@ -181,6 +203,7 @@ const openWorkGradeEdit = () => {
           <WorkGrade
             :criteria="workEvaluationCriteria"
             :assessment="editingWorkAssessment"
+            :evaluators="isAdmin ? pendingEvaluators : []"
             @giveGrade="giveWorkGrade"
             @close="workGrade = !workGrade"
             v-model="workGrade"
@@ -207,13 +230,14 @@ const openWorkGradeEdit = () => {
 
           <WorkHeader v-if="isLoaded" :key="work_id" :work_status="uptadeWorkStatus"
             @buttonAction="handleWorkHeaderAction" @editGrade="openWorkGradeEdit"
-            :can_edit_grade="canEditWorkGrade" :student_able_to_cancel="usersValidation.student_able_to_cancel"
+            :can_edit_grade="canEditWorkGrade" :is_admin="isAdmin" :admin_can_grade="pendingEvaluators.length > 0"
+            :student_able_to_cancel="usersValidation.student_able_to_cancel"
             :advisor_able_to_give_grade="usersValidation.advisor_able_to_give_grade"
             :evaluator_able_to_give_grade="usersValidation.evaluator_able_to_give_grade"
             :evaluator_blocked_by_daily_window="usersValidation.evaluator_blocked_by_daily_window"
             :evaluator_next_open_at="usersValidation.evaluator_next_open_at"
             :advisor_able_to_aprove_work="usersValidation.advisor_able_to_aprove_work"
-            :user_function="resolveUserFunction(workStore.currentWork, authStore.user)" :grade="assesmentWork"
+            :user_function="headerUserFunction" :grade="assesmentWork"
             :status_content="resolveStatus(workStore.currentWork.status)?.text || 'Não informado'"
             :status_color="resolveStatus(workStore.currentWork.status)?.color || 'Não informado'"
             :title="workStore.currentWork.title" />

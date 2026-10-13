@@ -10,7 +10,9 @@ export function handleWorkHeaderActionFn(
   //@ts-ignore
   const userFunction = resolveUserFunction(workStore?.currentWork, authStore.user);
 
-  if ([1, 2, 3].includes(updateStatus) && userFunction === 'STUDENT') {
+  if (authStore?.user?.user_type === 'ADMIN' && updateStatus === 2) {
+    toggle.workGrade();
+  } else if ([1, 2, 3].includes(updateStatus) && userFunction === 'STUDENT') {
     toggle.confirmation();
   } else if (updateStatus === 2 && userFunction !== 'EVALUATOR') {
     toggle.confirmation();
