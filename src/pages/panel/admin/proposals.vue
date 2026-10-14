@@ -577,7 +577,7 @@ onMounted(async () => {
       </template>
     </v-container>
 
-    <AdminWorkDetailDialog v-model="detailOpen" :work-id="detailWorkId" />
+    <AdminWorkDetailDialog v-model="detailOpen" :work-id="detailWorkId" @graded="loadGradingOverview" />
 
     <v-navigation-drawer
       v-model="drawer"
