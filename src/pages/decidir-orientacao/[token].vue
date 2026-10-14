@@ -51,9 +51,10 @@ async function recusar() {
     <v-sheet v-if="authStore.isLogged" class="rounded-xl border pa-6 d-flex flex-column ga-4" max-width="500px"
       min-width="300px">
       <template v-if="acceptanceStore.state.alreadyDecided">
-        <p class="text-h5 font-weight-bold">Esta decisão já foi tomada</p>
+        <p class="text-h5 font-weight-bold">Este link não está mais ativo</p>
         <p>
-          Este convite de orientação já foi aceito ou recusado anteriormente — não há mais nada para decidir aqui.
+          Este convite de orientação já foi aceito ou recusado, ou foi renovado e substituído por um mais recente.
+          Abra o painel para ver a situação atual do trabalho ou use o convite mais recente que você recebeu por e-mail.
         </p>
         <router-link to="/panel/works">Acessar o painel</router-link>
       </template>
