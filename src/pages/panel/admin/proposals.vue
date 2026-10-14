@@ -163,6 +163,7 @@ const columnAccent: Record<string, string> = {
   approved: "#16a34a",
   rejected: "#dc2626",
   expired: "#64748b",
+  not_graded: "#f59e0b",
   advisor_only: "#0ea5e9",
   evaluator_only: "#6366f1",
   complete: "#16a34a",
