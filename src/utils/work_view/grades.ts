@@ -25,7 +25,8 @@ export async function giveWorkGradeFn(
     (s: any) => s.user.id === Number(authStore?.user?.id)
   )?.id;
 
-  if (is_work_grade && !work_evaluator) {
+  // Edicao nao precisa do avaliador (o backend confere de quem e a nota).
+  if (is_work_grade && !work_evaluator && (assessmentId === null || assessmentId === undefined)) {
     showMessage('Você não é avaliador deste trabalho.', 'error', 4000, 'top-right', 'light', false);
     return;
   }
