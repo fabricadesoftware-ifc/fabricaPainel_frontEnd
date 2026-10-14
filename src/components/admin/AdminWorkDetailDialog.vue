@@ -2,6 +2,11 @@
 import { computed, ref, watch } from "vue";
 import { useDisplay } from "vuetify";
 import WorkService from "@/services/works";
+import { useAuth } from "@/stores/auth";
+import { useAssessmentStore } from "@/stores/assessment";
+import { useStudentAssessment } from "@/stores/studentAssessment";
+import WorkGrade from "@/components/inputs/assesment/WorkGrade.vue";
+import IndividualGrade from "@/components/inputs/assesment/IndividualGrade.vue";
 
 type DetailUser = {
   id: number | string
@@ -17,6 +22,7 @@ type CriterionGrade = {
 }
 
 type DetailAssessment = {
+  id?: string
   grade: string
   criterion_grades: CriterionGrade[]
   date_time?: string | null
@@ -58,6 +64,7 @@ type WorkDetail = {
   ods: string[]
   advisor: DetailUser | null
   weights: { work: number; student: number }
+  criteria?: { work?: any[]; student?: any[] }
   evaluators: DetailEvaluator[]
   work_grade_average: string | null
   team_members: DetailMember[]
@@ -71,9 +78,89 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (event: "update:modelValue", value: boolean): void
+  (event: "graded"): void
 }>();
 
 const { smAndDown } = useDisplay();
+const authStore = useAuth();
+const assessmentStore = useAssessmentStore();
+const studentAssessmentStore = useStudentAssessment();
+
+// Admin (tipo ADMIN) registra a nota em nome do professor que nao consegue
+// acessar o sistema. A banca nao muda: so os avaliadores ja atribuidos.
+const isAdmin = computed(() => authStore.user?.user_type === "ADMIN");
+const canGrade = computed(() => isAdmin.value && detail.value?.status === 2);
+
+const workGradeOpen = ref(false);
+const studentGradeOpen = ref(false);
+const gradingEvaluator = ref<DetailEvaluator | null>(null);
+const gradingMember = ref<DetailMember | null>(null);
+const gradingAssessment = ref<DetailAssessment | null>(null);
+
+function openWorkGrade(evaluator: DetailEvaluator) {
+  gradingEvaluator.value = evaluator;
+  gradingAssessment.value = evaluator.assessment;
+  workGradeOpen.value = true;
+}
+
+function openStudentGrade(member: DetailMember) {
+  gradingMember.value = member;
+  gradingAssessment.value = member.advisor_assessment;
+  studentGradeOpen.value = true;
+}
+
+async function saveWorkGrade(payload: any) {
+  if (!detail.value || !gradingEvaluator.value) return;
+
+  try {
+    if (payload.assessment_id) {
+      await assessmentStore.updateAssessment(payload.assessment_id, {
+        grade: payload.work_grade,
+        criterion_grades: payload.criterion_grades,
+      });
+    } else {
+      await assessmentStore.createAssessment({
+        evaluator: gradingEvaluator.value.id,
+        work: detail.value.id,
+        grade: payload.work_grade,
+        criterion_grades: payload.criterion_grades,
+        date_time: new Date().toISOString(),
+        committee_feedback: "",
+      });
+    }
+    workGradeOpen.value = false;
+    await load();
+    emit("graded");
+  } catch (error) {
+    // a store ja mostra o motivo (periodo, duplicidade...); o dialogo fica aberto
+  }
+}
+
+async function saveStudentGrade(payload: any) {
+  if (!detail.value || !gradingMember.value) return;
+
+  try {
+    if (payload.assessment_id) {
+      await studentAssessmentStore.patchAssessment(payload.assessment_id, {
+        grade: payload.work_grade,
+        criterion_grades: payload.criterion_grades,
+      });
+    } else {
+      await studentAssessmentStore.createAssessment({
+        work: detail.value.id,
+        student: gradingMember.value.id,
+        grade: payload.work_grade,
+        criterion_grades: payload.criterion_grades,
+        date_time: new Date().toISOString(),
+      });
+    }
+    studentGradeOpen.value = false;
+    await load();
+    emit("graded");
+  } catch (error) {
+    // idem: erro ja exibido pela store
+  }
+}
 
 const detail = ref<WorkDetail | null>(null);
 const loading = ref(false);
@@ -139,6 +226,22 @@ watch(
 </script>
 
 <template>
+  <WorkGrade
+    v-model="workGradeOpen"
+    :criteria="detail?.criteria?.work ?? []"
+    :assessment="gradingAssessment ?? undefined"
+    @giveGrade="saveWorkGrade"
+    @close="workGradeOpen = false"
+  />
+  <IndividualGrade
+    v-model="studentGradeOpen"
+    :user="gradingMember ?? undefined"
+    :criteria="detail?.criteria?.student ?? []"
+    :assessment="gradingAssessment ?? undefined"
+    @giveGrade="saveStudentGrade"
+    @close="studentGradeOpen = false"
+  />
+
   <v-dialog v-model="open" :fullscreen="smAndDown" max-width="920" scrollable>
     <v-card>
       <v-card-title class="detail-header">
@@ -237,6 +340,16 @@ watch(
                       Nota final: {{ member.final_grade ?? "-" }}
                       <template v-if="member.situation"> · {{ member.situation }}</template>
                     </v-chip>
+                    <v-btn
+                      v-if="canGrade"
+                      color="primary"
+                      size="small"
+                      variant="tonal"
+                      :prepend-icon="member.advisor_assessment ? 'mdi-pencil' : 'mdi-star-plus-outline'"
+                      @click="openStudentGrade(member)"
+                    >
+                      {{ member.advisor_assessment ? "Editar nota" : "Atribuir nota" }}
+                    </v-btn>
                   </div>
                 </div>
                 <ul v-if="hasBreakdown(member.advisor_assessment)" class="detail-breakdown">
@@ -271,6 +384,16 @@ watch(
                   >
                     Nota do trabalho: {{ evaluator.assessment?.grade ?? "sem nota" }}
                   </v-chip>
+                  <v-btn
+                    v-if="canGrade"
+                    color="primary"
+                    size="small"
+                    variant="tonal"
+                    :prepend-icon="evaluator.assessment ? 'mdi-pencil' : 'mdi-star-plus-outline'"
+                    @click="openWorkGrade(evaluator)"
+                  >
+                    {{ evaluator.assessment ? "Editar nota" : "Atribuir nota" }}
+                  </v-btn>
                 </div>
                 <ul v-if="hasBreakdown(evaluator.assessment)" class="detail-breakdown">
                   <li v-for="criterion in evaluator.assessment?.criterion_grades" :key="criterion.key">

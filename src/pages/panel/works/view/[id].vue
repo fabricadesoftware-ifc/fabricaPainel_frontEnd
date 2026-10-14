@@ -99,9 +99,17 @@ const memberGrade = ref<any>(null)
 const editingWorkAssessment = ref<any>(null)
 const editingStudentAssessment = ref<any>(null)
 
+// Nota da banca que o usuario pode editar: a propria (avaliador) ou, para o
+// admin, a que esta em destaque no cabecalho (corrige lancamento em nome do professor).
+const editableWorkAssessment = computed<any>(() =>
+  isAdmin.value
+    ? (Array.isArray(assesmentStore.currentAssessment) ? assesmentStore.currentAssessment[0] : null) ?? null
+    : myWorkAssessment.value
+);
+
 const canEditWorkGrade = computed(
   () =>
-    Boolean(myWorkAssessment.value) &&
+    Boolean(editableWorkAssessment.value) &&
     usersValidation.value.evaluator_able_to_give_grade &&
     workStore.currentWork?.status === 2
 )
@@ -188,7 +196,7 @@ const openUserGrade = (member: object, existingAssessment: any = null) => {
 }
 
 const openWorkGradeEdit = () => {
-  editingWorkAssessment.value = myWorkAssessment.value
+  editingWorkAssessment.value = editableWorkAssessment.value
   workGrade.value = true
 }
 </script>
@@ -203,7 +211,7 @@ const openWorkGradeEdit = () => {
           <WorkGrade
             :criteria="workEvaluationCriteria"
             :assessment="editingWorkAssessment"
-            :evaluators="isAdmin ? pendingEvaluators : []"
+            :evaluators="isAdmin && !editingWorkAssessment ? pendingEvaluators : []"
             @giveGrade="giveWorkGrade"
             @close="workGrade = !workGrade"
             v-model="workGrade"

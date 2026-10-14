@@ -6,6 +6,7 @@ import { resolveUserFunction } from '@/utils/works'
 import { useAuth } from '@/stores/auth'
 import { useWork } from '@/stores/work'
 import { useDisplay } from 'vuetify'
+import { computeFinalGrade } from '@/utils/work_view/finalGrade'
 
 const studentAssesment = useStudentAssessment()
 const assesmentStore = useAssessmentStore()
@@ -104,6 +105,16 @@ const isGrader = computed(
 )
 
 const grade = ref<any>(null)
+
+// Media ponderada pelos pesos da edicao (igual ao relatorio de notas).
+const finalGrade = computed(() =>
+    computeFinalGrade(
+        assesmentStore?.currentAssessment?.[0]?.grade,
+        grade.value?.grade,
+        workStore?.currentWork?.edition_evaluation_criteria
+    )
+)
+
 const watchWork = computed(() => workStore?.currentWork?.id)
 
 const memberTurma = computed(() => {
@@ -171,8 +182,7 @@ const { width } = useDisplay()
                 :color="!grade ? 'yellow-darken-3' : 'green-darken-3'" class="d-flex justify-center align-center bg-red"
                 label :style="{ width: width > 780 ? '150px' : '130px', fontSize: width > 780 ? '14px' : '12px' }">
                 {{ !grade ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' :
-                    assesmentStore?.currentAssessment?.[0] && grade ? (Number(assesmentStore?.currentAssessment?.[0]?.grade) +
-                        Number(grade.grade)) / 2 : 'Aguardando Trabalho' }}
+                    finalGrade !== null ? finalGrade.toFixed(2) : 'Aguardando Trabalho' }}
             </v-chip>
 
             <div v-if="grade && isGrader && props.is_student"
@@ -184,9 +194,7 @@ const { width } = useDisplay()
                 </v-chip>
                 <v-chip color="green-darken-3" class="d-flex justify-center align-center" label
                     :style="{ fontSize: width > 780 ? '14px' : '12px', minWidth: width > 780 ? '140px' : '120px' }">
-                    Nota Final: {{ assesmentStore?.currentAssessment?.[0] && grade ?
-                        ((Number(assesmentStore?.currentAssessment?.[0]?.grade)
-                            + Number(grade.grade)) / 2).toFixed(2) : '-' }}
+                    Nota Final: {{ finalGrade !== null ? finalGrade.toFixed(2) : '-' }}
                 </v-chip>
             </div>
 
@@ -195,8 +203,7 @@ const { width } = useDisplay()
                 :color="!grade ? 'yellow-darken-3' : 'green-darken-3'" class="d-flex justify-center align-center" label
                 :style="{ width: width > 780 ? '180px' : '150px', fontSize: width > 780 ? '14px' : '12px' }">
                 {{ !grade ? "Nota não Atribuída" : props.user_id != props.member_id ? 'Nota Atribuída' :
-                    assesmentStore?.currentAssessment?.[0] && grade ? (Number(assesmentStore?.currentAssessment?.[0]?.grade) +
-                        Number(grade.grade)) / 2 : 'Aguardando Trabalho' }}
+                    finalGrade !== null ? finalGrade.toFixed(2) : 'Aguardando Trabalho' }}
             </v-chip>
             <v-chip v-if="!props.is_student" class="d-flex justify-center align-center"
                 :color="resolveAdvisorOrCollaboratorStatus(props.status).color" label
