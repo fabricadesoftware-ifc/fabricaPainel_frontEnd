@@ -122,7 +122,10 @@ const workEvaluationCriteria = computed(() => {
   return evaluationCriteria.value.find((group: any) => group?.target === 'work')?.criteria ?? []
 })
 
+// Modulo (Territorios/Comunicacao) tem nota fisica: a nota do aluno e lancada
+// direto, sem criterios, e ja e a nota final.
 const studentEvaluationCriteria = computed(() => {
+  if (workStore.currentWork?.work_kind && workStore.currentWork.work_kind !== 'regular') return []
   return evaluationCriteria.value.find((group: any) => group?.target === 'student')?.criteria ?? []
 })
 

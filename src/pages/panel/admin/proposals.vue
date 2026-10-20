@@ -79,6 +79,8 @@ type GradingWork = {
   title: string
   status_label: string
   advisor: KanbanUser
+  work_kind: string
+  work_kind_label: string
   advisor_done: boolean
   student_grades: GradingStudentEntry[]
   evaluator_done: boolean
@@ -528,7 +530,7 @@ onMounted(async () => {
                     <p class="grading-group-title">
                       <v-icon :icon="work.advisor_done ? 'mdi-check-circle' : 'mdi-clock-outline'"
                         :color="work.advisor_done ? 'green-darken-2' : 'grey'" size="14" />
-                      Nota do orientador
+                      {{ work.work_kind === 'regular' ? 'Nota do orientador' : `Nota fisica (${work.work_kind_label})` }}
                     </p>
                     <div class="grading-entries">
                       <v-chip
@@ -543,7 +545,7 @@ onMounted(async () => {
                     </div>
                   </div>
 
-                  <div class="grading-group">
+                  <div v-if="work.work_kind === 'regular'" class="grading-group">
                     <p class="grading-group-title">
                       <v-icon :icon="work.evaluator_done ? 'mdi-check-circle' : 'mdi-clock-outline'"
                         :color="work.evaluator_done ? 'green-darken-2' : 'grey'" size="14" />

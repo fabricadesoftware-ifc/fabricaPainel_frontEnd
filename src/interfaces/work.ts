@@ -53,4 +53,5 @@ export interface IWorkStorage {
   team: ITeamMember[]
   collaborators: IAdvisor[]
   integrated_project: boolean
+  work_kind?: string
 }

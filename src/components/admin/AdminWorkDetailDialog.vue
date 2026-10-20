@@ -57,6 +57,9 @@ type WorkDetail = {
   advisor_status: number
   advisor_status_label: string
   integrated_project: boolean
+  work_kind: string
+  work_kind_label: string
+  is_module: boolean
   feedback?: string | null
   edition: { id: number; year: number; edition_name: string }
   cross_cutting_theme: string | null
@@ -236,7 +239,7 @@ watch(
   <IndividualGrade
     v-model="studentGradeOpen"
     :user="gradingMember ?? undefined"
-    :criteria="detail?.criteria?.student ?? []"
+    :criteria="detail?.is_module ? [] : (detail?.criteria?.student ?? [])"
     :assessment="gradingAssessment ?? undefined"
     @giveGrade="saveStudentGrade"
     @close="studentGradeOpen = false"
@@ -277,6 +280,9 @@ watch(
               Orientador {{ detail.advisor_status_label.toLowerCase() }}
             </v-chip>
             <v-chip color="blue-grey" variant="tonal">{{ detail.edition.edition_name }}</v-chip>
+            <v-chip v-if="detail.is_module" color="deep-purple" variant="tonal">
+              {{ detail.work_kind_label }}
+            </v-chip>
             <v-chip v-if="detail.integrated_project" color="primary" variant="tonal">
               Projeto integrado
             </v-chip>
@@ -316,7 +322,12 @@ watch(
             <div class="detail-section-title">
               <h3>Equipe e notas</h3>
               <span class="detail-muted">
-                Nota final = orientador ({{ detail.weights.student }}%) + banca ({{ detail.weights.work }}%), aprovado com 6 ou mais
+                <template v-if="detail.is_module">
+                  Modulo com nota fisica: a nota lancada para o aluno e a final, aprovado com 6 ou mais
+                </template>
+                <template v-else>
+                  Nota final = orientador ({{ detail.weights.student }}%) + banca ({{ detail.weights.work }}%), aprovado com 6 ou mais
+                </template>
               </span>
             </div>
 
@@ -361,7 +372,7 @@ watch(
             </div>
           </section>
 
-          <section class="detail-section">
+          <section v-if="!detail.is_module" class="detail-section">
             <div class="detail-section-title">
               <h3>Banca avaliadora</h3>
               <span v-if="detail.work_grade_average" class="detail-muted">
