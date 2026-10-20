@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import EditionsService from '@/services/editions'
 import { IEdition } from '@/interfaces/edition'
-import { showMessage } from '@/utils/toastify'
 import { useStorage } from '@vueuse/core'
 import api from '@/plugins/api'
 
@@ -439,20 +438,6 @@ export const useEdition = defineStore('edition', () => {
     }
   }
 
-  const submitFeedback = async (editionId: string, feedback: string) => {
-    setLoading(true)
-    setError(null)
-    try {
-      await EditionsService.submitFeedback(editionId, feedback)
-      showMessage('Feedback enviado com sucesso', 'success', 3000, 'top-right', 'light', false)
-    } catch (error: any) {
-      setError(error.message)
-      throw error
-    } finally {
-      setLoading(false)
-    }
-  }
-
   return {
     state,
     currentEdition,
@@ -460,7 +445,6 @@ export const useEdition = defineStore('edition', () => {
     fetchCurrentEdition,
     createEdition,
     updateEdition,
-    submitFeedback,
     newEdtion,
     CreateObjArr,
     normalizeNewEditionDraft
