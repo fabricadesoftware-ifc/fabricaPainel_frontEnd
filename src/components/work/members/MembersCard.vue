@@ -107,13 +107,23 @@ const isGrader = computed(
 const grade = ref<any>(null)
 
 // Media ponderada pelos pesos da edicao (igual ao relatorio de notas).
-const finalGrade = computed(() =>
-    computeFinalGrade(
+const isModuleWork = computed(() => {
+    const kind = workStore?.currentWork?.work_kind
+    return Boolean(kind) && kind !== 'regular'
+})
+
+// Modulo (nota fisica): a nota lancada para o aluno ja e a final, sem banca.
+const finalGrade = computed(() => {
+    if (isModuleWork.value) {
+        const physical = Number(grade.value?.grade)
+        return grade.value?.grade == null || Number.isNaN(physical) ? null : physical
+    }
+    return computeFinalGrade(
         assesmentStore?.currentAssessment?.[0]?.grade,
         grade.value?.grade,
         workStore?.currentWork?.edition_evaluation_criteria
     )
-)
+})
 
 const watchWork = computed(() => workStore?.currentWork?.id)
 
@@ -190,7 +200,7 @@ const { width } = useDisplay()
                 <v-chip color="green-darken-3" class="d-flex justify-center align-center" label
                     :style="{ fontSize: width > 780 ? '14px' : '12px', minWidth: width > 780 ? '140px' : '120px', cursor: canEditGrade ? 'pointer' : undefined }"
                     v-bind="canEditGrade ? { appendIcon: 'mdi-pencil', onClick: () => emits('openStudentAssesment', grade), title: 'Editar nota' } : {}">
-                    Nota do Orientador: {{ grade.grade }}
+                    {{ isModuleWork ? 'Nota' : 'Nota do Orientador' }}: {{ grade.grade }}
                 </v-chip>
                 <v-chip color="green-darken-3" class="d-flex justify-center align-center" label
                     :style="{ fontSize: width > 780 ? '14px' : '12px', minWidth: width > 780 ? '140px' : '120px' }">
