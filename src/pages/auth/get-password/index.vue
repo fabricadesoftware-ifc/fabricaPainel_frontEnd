@@ -13,7 +13,7 @@ const email = ref('')
 const getPassword = async () => {
   try {
     loading.value = true
-    authStore.setTokenEmail(email.value)
+    authStore.setTokenEmail(email.value.trim().toLowerCase())
     await authStore.getPassword()
     loading.value = false
     router.push('/auth/token')
