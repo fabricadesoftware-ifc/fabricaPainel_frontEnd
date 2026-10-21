@@ -13,12 +13,12 @@
   const getToken = async () => {
     try {
       loading.value = true
-      await authStore.verifyToken(token.value.trim())
+      await authStore.verifyToken(token.value.trim().toLowerCase())
       loading.value = false
       router.push('/auth/reset-password')
     } catch (error) {
       loading.value = false
-      showMessage('Token inválido', 'error', 1500, 'top-right', 'auto', false)
+      showMessage('Código inválido ou expirado. Use o código do e-mail mais recente (vale por 20 minutos).', 'error', 5000, 'top-right', 'auto', false)
     }
   }
 
@@ -73,6 +73,11 @@ const resendToken = async () => {
                 rounded="lg"
                 required
                 type="text"
+                autocapitalize="off"
+                autocorrect="off"
+                autocomplete="off"
+                spellcheck="false"
+                inputmode="text"
                 prepend-inner-icon="mdi-key-variant"
               />
               <v-btn
