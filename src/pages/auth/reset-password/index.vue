@@ -27,9 +27,9 @@
 
     if (password.value.length < 8 || !/\d/.test(password.value)) {
       showMessage(
-        'A senha deve ter no mínimo 8 caracteres e conter letras e números',
+        'A senha deve ter no mínimo 8 caracteres e conter pelo menos um número',
         'error',
-        1500,
+        4000,
         'top-right',
         'auto',
         false
