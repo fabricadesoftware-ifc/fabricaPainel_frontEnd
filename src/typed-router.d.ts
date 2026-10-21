@@ -40,6 +40,8 @@ declare module 'vue-router/auto-routes' {
     '/panel/works/add/': RouteRecordInfo<'/panel/works/add/', '/panel/works/add', Record<never, never>, Record<never, never>>,
     '/panel/works/view/[id]': RouteRecordInfo<'/panel/works/view/[id]', '/panel/works/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/user-support/': RouteRecordInfo<'/user-support/', '/user-support', Record<never, never>, Record<never, never>>,
+    '/validar-certificado/': RouteRecordInfo<'/validar-certificado/', '/validar-certificado', Record<never, never>, Record<never, never>>,
+    '/validar-certificado/[hash]': RouteRecordInfo<'/validar-certificado/[hash]', '/validar-certificado/:hash', { hash: ParamValue<true> }, { hash: ParamValue<false> }>,
   }
 
   /**
@@ -139,6 +141,14 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/user-support/index.vue': {
       routes: '/user-support/'
+      views: never
+    }
+    'src/pages/validar-certificado/index.vue': {
+      routes: '/validar-certificado/'
+      views: never
+    }
+    'src/pages/validar-certificado/[hash].vue': {
+      routes: '/validar-certificado/[hash]'
       views: never
     }
   }
