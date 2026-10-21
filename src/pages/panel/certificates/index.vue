@@ -199,6 +199,11 @@ onMounted(async () => {
           trabalho. Clique em "Baixar Certificado" para obter o documento em
           PDF.
         </p>
+        <p class="mt-2">
+          Para conferir a autenticidade de um certificado, use a
+          <a href="/validar-certificado">página pública de validação</a>. O PDF
+          também traz um QR code que abre essa página.
+        </p>
       </v-alert>
     </v-container>
   </LayoutPanel>
