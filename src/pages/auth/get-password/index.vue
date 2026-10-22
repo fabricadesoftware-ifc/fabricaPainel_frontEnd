@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { showMessage } from '@/utils/toastify'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/stores/auth'
+import { isValidEmail, EMAIL_REQUIRED_MESSAGE } from '@/utils/validators/email'
 
 const router = useRouter()
 const authStore = useAuth()
@@ -11,6 +12,10 @@ const loading = ref(false)
 const email = ref('')
 
 const getPassword = async () => {
+  if (!isValidEmail(email.value)) {
+    showMessage(EMAIL_REQUIRED_MESSAGE, 'error', 5000, 'top-right', 'auto', false)
+    return
+  }
   try {
     loading.value = true
     authStore.setTokenEmail(email.value.trim().toLowerCase())
@@ -42,7 +47,7 @@ const getPassword = async () => {
            <v-form @submit.prevent="getPassword">
            <v-text-field class="pb-2" id="recover-email" v-model="email" name="email" autocomplete="email" inputmode="email"
                 label="Email" variant="outlined" prepend-inner-icon="mdi-email" required
-                rounded="lg" type="email" :rules="[v => /.+@.+\..+/.test(v) || 'E-mail inválido']"/>
+                rounded="lg" type="email" :rules="[v => isValidEmail(v || '') || 'Digite um e-mail válido']"/>
          <AuthButton alternative_text="Acessar a Plataforma" router_link="/auth/login" />
          </v-form>
          </v-card-text>
