@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { showMessage } from '@/utils/toastify'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '@/stores/auth'
+import { isValidEmail, EMAIL_REQUIRED_MESSAGE } from '@/utils/validators/email'
 
 const router = useRouter()
 const route = useRoute()
@@ -14,9 +15,13 @@ const email = ref('')
 const password = ref('')
 
 const login = async () => {
+  if (!isValidEmail(email.value)) {
+    showMessage(EMAIL_REQUIRED_MESSAGE, 'error', 5000, 'top-right', 'auto', false)
+    return
+  }
   try {
     loading.value = true
-    await authStore.login(email.value, password.value)
+    await authStore.login(email.value.trim(), password.value)
     loading.value = false
     // Permite voltar direto para onde o usuário estava (ex.: link de decisão
     // de orientação/colaboração vindo por email), em vez de sempre cair em
@@ -61,7 +66,7 @@ const login = async () => {
               <v-form class="d-flex flex-column" @submit.prevent="login">
                 <!-- name/autocomplete/id: o navegador reconhece login e oferece preencher/salvar -->
                 <v-text-field id="login-email" v-model="email" name="email" autocomplete="username" inputmode="email"
-                  label="Email" required prepend-inner-icon="mdi-email" rounded="lg" type="email" variant="outlined" />
+                  label="E-mail" hint="Use o e-mail cadastrado, não o nome de usuário" required prepend-inner-icon="mdi-email" rounded="lg" type="email" variant="outlined" />
                 <v-text-field id="login-password" v-model="password" name="password" autocomplete="current-password"
                   label="Senha" required rounded="lg"
                   :type="visible ? 'text' : 'password'" variant="outlined"
