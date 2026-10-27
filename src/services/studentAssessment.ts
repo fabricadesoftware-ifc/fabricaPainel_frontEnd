@@ -53,6 +53,19 @@ class StudentAssessmentService {
     }
   }
 
+  async getAssessmentReportStatus(edition_year: number | string) {
+    try {
+      const { data } = await api.get(`assessment-report-status/${edition_year}/`);
+      return data as {
+        available: boolean;
+        available_after: string | null;
+        message: string | null;
+      };
+    } catch (error) {
+      this.handleError(error, "Não foi possível consultar o relatório de notas.");
+    }
+  }
+
   async createAssessment(assessment: any) {
     try {
       const { data } = await api.post("student-assessments/", assessment);
