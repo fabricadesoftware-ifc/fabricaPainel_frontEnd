@@ -5,17 +5,12 @@ import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useEdition } from "@/stores/edition";
 import { IEdition } from "@/interfaces/edition";
-import { useAuth } from "@/stores/auth";
-import { useStudentAssessment } from "@/stores/studentAssessment";
 import { parseDateValue } from "@/utils/global";
 const { state, fetchEditions } = useEdition();
 
 const router = useRoute();
 const id = ref(null);
 const edition = ref<IEdition | null>(null);
-const authStore = useAuth();
-const studentAssesment = useStudentAssessment();
-const date = new Date();
 
 const formatDate = computed(() => {
   return (dateTime: string | any) => {
@@ -38,14 +33,6 @@ onMounted(async () => {
     );
   });
 });
-//@ts-ignore
-const able_to_download_grades = computed(() => {
-  return (
-    date > new Date(edition.value?.final_event_date ?? "2100-01-01") &&
-    ["TEACHER", "ADMIN"].includes(authStore.user.user_type)
-  );
-});
-
 const upcomingEdition = computed<IEdition[]>(() => {
   return state?.editions?.filter((edition) => {
     if (!edition.initial_submission_date) return false;
@@ -106,14 +93,6 @@ function showinfo() {
               >
             </div>
 
-            <v-btn
-              @click="studentAssesment.fetchAssessmentReport(edition.year)"
-              v-if="able_to_download_grades"
-              color="blue"
-            >
-              <v-icon>mdi-download</v-icon>
-              <p class="ml-2">Baixar Relatório de Notas</p></v-btn
-            >
           </div>
           <v-row class="ga-10">
             <v-col cols="12" md="8" class="mt-10">

@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import AdminNavigation from "@/components/admin/AdminNavigation.vue";
 import EditionsService from "@/services/editions";
 import WorkService from "@/services/works";
+import StudentAssessmentService from "@/services/studentAssessment";
 import { useAuth } from "@/stores/auth";
 import { showMessage } from "@/utils/toastify";
 import type { IEdition } from "@/interfaces/edition";
@@ -79,7 +80,7 @@ type TeacherWorkloadReportData = {
   groups: TeacherWorkloadRow[]
 }
 
-type ReportTab = "advisor" | "team" | "teacher";
+type ReportTab = "advisor" | "team" | "teacher" | "grades";
 
 // Com poucos grupos batendo na busca, abre todos sozinho; com muitos, deixa fechado.
 const AUTO_OPEN_LIMIT = 12;
@@ -105,6 +106,20 @@ const teamReportData = ref<TeamReportData | null>(null);
 const loadingTeacherReport = ref(false);
 const downloadingTeacherReport = ref(false);
 const teacherReportData = ref<TeacherWorkloadReportData | null>(null);
+
+type GradesReportStatus = {
+  available: boolean;
+  available_after: string | null;
+  message: string | null;
+};
+
+const loadingGrades = ref(false);
+const downloadingGrades = ref(false);
+const gradesStatus = ref<GradesReportStatus | null>(null);
+
+const selectedYear = computed(
+  () => editions.value.find((edition) => edition.id === selectedEdition.value)?.year ?? null,
+);
 
 const advisorOpen = ref<string[]>([]);
 const teacherExpanded = ref<string[]>([]);
@@ -324,12 +339,27 @@ async function loadTeacherReportData() {
 }
 
 // Carrega a aba aberta se ainda nao tiver dados dessa edicao (ou se forcar).
+async function loadGradesStatus() {
+  gradesStatus.value = null;
+  if (!selectedYear.value) return;
+
+  loadingGrades.value = true;
+  try {
+    gradesStatus.value = (await StudentAssessmentService.getAssessmentReportStatus(selectedYear.value)) ?? null;
+  } catch (error) {
+    showMessage("Nao foi possivel consultar o relatorio de notas.", "error", 3000, "top-right", "light", false);
+  } finally {
+    loadingGrades.value = false;
+  }
+}
+
 async function loadActiveTab(force = false) {
   if (!selectedEdition.value) return;
 
   if (activeTab.value === "advisor" && (force || !reportData.value)) await loadReportData();
   if (activeTab.value === "team" && (force || !teamReportData.value)) await loadTeamReportData();
   if (activeTab.value === "teacher" && (force || !teacherReportData.value)) await loadTeacherReportData();
+  if (activeTab.value === "grades" && (force || !gradesStatus.value)) await loadGradesStatus();
 }
 
 async function runDownload(
@@ -357,6 +387,11 @@ const downloadReport = () =>
 const downloadTeamReport = () =>
   runDownload((busy) => (downloadingTeamReport.value = busy), () =>
     WorkService.downloadAdminTeamProposalReport({ edition: selectedEdition.value }),
+  );
+
+const downloadGradesReport = () =>
+  runDownload((busy) => (downloadingGrades.value = busy), () =>
+    StudentAssessmentService.getAssessmentReport(selectedYear.value),
   );
 
 const downloadTeacherReport = () =>
@@ -400,6 +435,7 @@ watch(selectedEdition, () => {
   reportData.value = null;
   teamReportData.value = null;
   teacherReportData.value = null;
+  gradesStatus.value = null;
   collapseAll();
   loadActiveTab();
 });
@@ -477,6 +513,7 @@ onMounted(async () => {
           Por professor
           <v-chip v-if="teacherReportData" class="ml-2" size="x-small" variant="tonal">{{ totalTeachers }}</v-chip>
         </v-tab>
+        <v-tab value="grades">Notas</v-tab>
       </v-tabs>
 
       <v-alert
@@ -639,7 +676,7 @@ onMounted(async () => {
       </section>
 
       <!-- ===== Por professor ===== -->
-      <section v-else class="report-surface">
+      <section v-else-if="activeTab === 'teacher'" class="report-surface">
         <div class="report-actions">
           <p class="report-summary">
             <template v-if="teacherReportData">
@@ -698,6 +735,44 @@ onMounted(async () => {
               </tr>
             </template>
           </v-data-table>
+        </template>
+      </section>
+
+      <!-- ===== Notas ===== -->
+      <section v-else class="report-surface">
+        <div class="report-actions">
+          <p class="report-summary">
+            Notas finais dos alunos da edicao, por turma, com a situacao de cada um.
+          </p>
+          <div class="report-buttons">
+            <v-btn
+              color="primary"
+              :disabled="!gradesStatus?.available || !selectedYear"
+              :loading="downloadingGrades"
+              prepend-icon="mdi-file-pdf-box"
+              @click="downloadGradesReport"
+            >
+              Emitir PDF
+            </v-btn>
+          </div>
+        </div>
+
+        <v-skeleton-loader v-if="loading || loadingGrades" type="paragraph" />
+
+        <template v-else-if="gradesStatus">
+          <v-alert
+            v-if="!gradesStatus.available"
+            class="mb-4"
+            color="amber"
+            icon="mdi-lock-clock"
+            variant="tonal"
+          >
+            <strong>Em breve.</strong>
+            {{ gradesStatus.message }}
+          </v-alert>
+          <p v-if="gradesStatus.available_after" class="report-date">
+            Disponivel a partir de {{ formatDate(gradesStatus.available_after) }}
+          </p>
         </template>
       </section>
     </v-container>
