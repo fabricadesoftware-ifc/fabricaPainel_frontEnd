@@ -2,6 +2,17 @@
 
 A Semana de Ensino, Pesquisa e Extensão é um evento central em nossa instituição, promovendo a socialização do conhecimento e a divulgação de pesquisas regionais e nacionais. O evento conta com a participação de palestrantes convidados, brasileiros e estrangeiros, e a realização de diversas atividades, como congressos, cursos, palestras e painéis de integração de conhecimentos. As áreas contempladas incluem Medicina Veterinária, Informática, Licenciaturas e muitos outros temas acadêmicos.
 
+## Rodando na sua máquina
+
+Pré-requisitos: Node 24 e a API (`fabricaPainel_backEnd`) rodando em http://localhost:8000.
+
+1. Instale as dependências: `npm ci`
+2. Copie `.env.example` para `.env` (por padrão aponta para a API local)
+3. Suba o front: `npm run dev` (http://localhost:3000)
+4. Para gerar o build de produção: `npm run build`
+
+Licença: [MIT](LICENSE).
+
 ## Excelência e Imparcialidade
 
 Nosso sistema visa a excelência e imparcialidade na avaliação de trabalhos, garantindo uma avaliação diversificada e de alta qualidade. O Painel de Integração da SEPE possibilita a escolha aleatória de alunos orientadores e avaliadores, promovendo uma diversidade nas avaliações. Os participantes têm a oportunidade de compartilhar seus interesses acadêmicos e, ao final do processo, podem acessar as avaliações dos seus trabalhos.
