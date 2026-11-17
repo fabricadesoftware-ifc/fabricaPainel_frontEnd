@@ -17,7 +17,7 @@
                     <v-row class="mb-8">
                         <!-- Card Fábrica de Software -->
                         <v-col cols="12" md="6">
-                            <v-card class="h-100 pa-6 rounded-xl" elevation="3" hover>
+                            <v-card class="h-100 pa-6 rounded-xl" elevation="3">
                                 <div class="text-center mb-4">
                                     <v-icon color="primary" size="64" class="mb-2">
                                         mdi-monitor-dashboard
@@ -70,7 +70,7 @@
 
                         <!-- Card Coordenação do Painel -->
                         <v-col cols="12" md="6">
-                            <v-card class="h-100 pa-6 rounded-xl" elevation="3" hover>
+                            <v-card class="h-100 pa-6 rounded-xl" elevation="3">
                                 <div class="text-center mb-4">
                                     <v-icon color="primary" size="64" class="mb-2">
                                         mdi-account-supervisor
@@ -226,13 +226,6 @@ onMounted(() => {
     margin-bottom: 8px;
 }
 
-.v-card {
-    transition: transform 0.2s ease-in-out;
-}
-
-.v-card:hover {
-    transform: translateY(-2px);
-}
 
 .email-text {
     word-break: break-all;
