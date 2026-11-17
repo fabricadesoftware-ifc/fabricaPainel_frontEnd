@@ -803,6 +803,7 @@ onMounted(async () => {
   gap: 10px;
   padding: 12px;
   text-align: left;
+  transition: border-color 0.15s ease-out;
   width: 100%;
 }
 

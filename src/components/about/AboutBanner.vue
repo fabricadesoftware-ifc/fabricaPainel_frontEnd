@@ -284,7 +284,9 @@ const features = [
 }
 
 .feature-card {
-  transition: all 0.3s ease;
+  transition-property: border-color, transform, box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out;
   border: 1px solid rgba(0,0,0,0.1);
 }
 
@@ -293,7 +295,7 @@ const features = [
 }
 
 .feature-card:hover {
-  border-color: #1976d2;
+  border-color: rgb(var(--v-theme-primary));
 }
 
 a {
@@ -301,7 +303,9 @@ a {
 }
 
 .v-chip {
-  transition: all 0.2s ease;
+  transition-property: transform, background-color, border-color, color, box-shadow;
+  transition-duration: 0.15s;
+  transition-timing-function: ease-out;
 }
 
 .v-chip:hover {
@@ -343,8 +347,8 @@ a {
 .team-chip:hover {
   transform: translateY(-2px) scale(1.04);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  background-color: #1976d2 !important; /* azul primário */
-  border-color: #1976d2 !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
+  border-color: rgb(var(--v-theme-primary)) !important;
   color: #ffffff !important;
 }
 
@@ -353,7 +357,7 @@ a {
 .team-chip:active {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
   transform: translateY(-1px) scale(1.02);
-  background-color: #1565c0 !important; /* azul um pouco mais escuro no active */
-  border-color: #1565c0 !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
+  border-color: rgb(var(--v-theme-primary)) !important;
 }
 </style>
