@@ -1,0 +1,87 @@
+/*
+ * Detalhes de acabamento que valem para o app inteiro.
+ * Carregado depois do Vuetify, então vence os estilos dele sem !important.
+ */
+
+/* Texto mais nítido no macOS. */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Títulos sem linha final com uma palavra só; texto corrido sem palavra órfã. */
+h1, h2, h3, h4, h5, h6,
+.text-h1, .text-h2, .text-h3, .text-h4, .text-h5, .text-h6,
+.v-card-title,
+.v-toolbar-title {
+  text-wrap: balance;
+}
+
+p,
+.v-card-text,
+.v-card-subtitle,
+.v-alert__content,
+.v-list-item-subtitle {
+  text-wrap: pretty;
+}
+
+/* Números que mudam (notas, contadores, tabelas) não empurram o layout. */
+.tabular-nums,
+.grade-input,
+.v-table td,
+.v-data-table td,
+.v-chip,
+.v-badge__badge {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Resposta tátil ao pressionar botão. A classe `static` desliga onde o movimento atrapalha. */
+.v-btn {
+  transition-property: box-shadow, transform, opacity, background, scale;
+  transition-duration: 0.28s, 0.28s, 0.28s, 0.28s, 0.15s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1), cubic-bezier(0.4, 0, 0.2, 1),
+    cubic-bezier(0.4, 0, 0.2, 1), cubic-bezier(0.4, 0, 0.2, 1), ease-out;
+}
+
+.v-btn:not(.v-btn--disabled, .v-btn--loading, .static):active {
+  scale: 0.96;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v-btn:active {
+    scale: none !important;
+  }
+}
+
+/* Campo grande de nota: sem contorno do navegador, mas com foco visível pelo teclado. */
+.grade-input {
+  outline: none;
+  border-radius: 8px;
+}
+
+.grade-input:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 4px;
+}
+
+/* Contorno sutil em fotos de avatar: preto puro no tema claro, branco puro no escuro. */
+.v-avatar:has(.v-img) {
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+
+.v-theme--dark .v-avatar:has(.v-img),
+.v-theme--dark.v-avatar:has(.v-img) {
+  outline-color: oklch(1 0 0 / 0.1);
+}
+
+/* As classes de tipografia do Vuetify pedem Roboto, que o app não carrega: os títulos caíam
+   na fonte padrão do sistema (Arial) enquanto o resto usa Poppins. */
+.v-application [class*='text-h'],
+.v-application [class*='text-subtitle'],
+.v-application [class*='text-body'],
+.v-application .text-caption,
+.v-application .text-overline,
+.v-application .text-button {
+  font-family: 'Poppins', sans-serif !important;
+}

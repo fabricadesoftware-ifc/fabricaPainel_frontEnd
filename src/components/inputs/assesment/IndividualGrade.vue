@@ -156,8 +156,8 @@ function sendWorkData() {
         <div v-else class="w-100 d-flex flex-column justify-center align-center ga-5">
           <input
             v-model="singleGrade"
-            style="outline: none; height: 100px; font-size: 25px; color: inherit; background: transparent;"
-            class="text-center align-center"
+            style="height: 100px; font-size: 25px; color: inherit; background: transparent;"
+            class="grade-input text-center align-center"
             type="text"
             inputmode="decimal"
             @blur="normalizeSingleGrade"

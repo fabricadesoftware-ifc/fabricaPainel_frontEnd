@@ -125,10 +125,10 @@ const displayStatus = computed(() => {
 <style scoped>
 .hover-button {
     border-radius: 30px;
+    transition: background-color 0.15s ease-out;
 }
 
 .hover-button:hover {
-    transition: 0.5s ease-in-out;
     background-color: rgba(28, 150, 231, 0.3);
 }
 .custom-break {

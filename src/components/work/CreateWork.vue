@@ -42,11 +42,11 @@ const { width } = useDisplay()
 <style scoped>
 .hover-create {
     border-radius: 40px;
+    transition: background-color 0.15s ease-out;
 
 }
 
 .hover-create:hover {
-    transition: 0.5s ease-in-out;
     background-color: rgba(28, 150, 231, 0.3);
 
 }
